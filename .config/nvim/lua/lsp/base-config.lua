@@ -25,7 +25,7 @@ M.setup = function(_)
       },
     },
   })
-  vim.lsp.set_log_level("warn")
+  vim.lsp.log.set_level(vim.log.levels.WARN)
 end
 
 
@@ -69,19 +69,13 @@ M.lsp_keymaps = function(bufnr)
 
   keyn("<C-s>h", vim.lsp.buf.document_highlight, getopts("vim.lsp.buf.document_highlight"))
   keyn("<C-s>c", vim.lsp.buf.clear_references,   getopts("vim.lsp.buf.clear_references"))
-
-  --keyn("<C-s>f", vim.lsp.buf.format({async = true}), getopts("vim.lsp.buf.format({async = true})"))
 end
 
 
 M.get_capabilities = function(server_name)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-  -- shared capabilities
-  capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly     = true,
-  }
+  -- shared override capabilities
   capabilities.textDocument.completion.completionItem = {
     snippetSupport = false,
   }
