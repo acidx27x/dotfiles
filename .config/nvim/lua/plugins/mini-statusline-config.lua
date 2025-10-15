@@ -2,6 +2,18 @@
 local M = require("mini.statusline")
 
 
+M.section_diagnostics = function(args)
+  if M.is_truncated(args.trunc_width) then return '' end
+
+  local diag_str = vim.diagnostic.status()
+  if not diag_str or diag_str == '' then return '' end
+
+  local icon = args.icon
+
+  return icon .. ' ' .. diag_str
+end
+
+
 M.section_fileinfo = function(args)
   local encoding = vim.bo.fileencoding or vim.bo.encoding
 
@@ -21,14 +33,14 @@ M.setup({
   use_icons = false,
 
   default_content_active = function()  -- TODO mb change trunc_width in future
-    local mode, mode_hl = M.section_mode({ trunc_width = 120 })
-    local git           = M.section_git({ trunc_width = 40 })
-    local diff          = M.section_diff({ trunc_width = 75 })
-    local diagnostics   = M.section_diagnostics({ trunc_width = 75 })
-    local lsp           = M.section_lsp({ trunc_width = 75 })
-    local filename      = M.section_filename({ trunc_width = 140 })
-    local fileinfo      = M.section_fileinfo({ trunc_width = 40 })
-    local location      = M.section_location({ trunc_width = 75 })
+    local mode, mode_hl = M.section_mode       ({ trunc_width = 120, })
+    local git           = M.section_git        ({ trunc_width = 40, icon = '', })
+    local diff          = M.section_diff       ({ trunc_width = 75, icon = '', })
+    local diagnostics   = M.section_diagnostics({ trunc_width = 75, icon = '', })
+    local lsp           = M.section_lsp        ({ trunc_width = 75, })
+    local filename      = M.section_filename   ({ trunc_width = 140, })
+    local fileinfo      = M.section_fileinfo   ({ trunc_width = 40, })
+    local location      = M.section_location   ({ trunc_width = 75, })
 
     return M.combine_groups({
       { hl = mode_hl,                  strings = { mode, } },
