@@ -1,0 +1,70 @@
+
+local dragon_colors  = require("kanagawa.colors").setup({ theme = "dragon" })
+local dragon_palette = dragon_colors.palette
+
+
+require("kanagawa").setup({
+  compile     = false,
+  dimInactive = true,
+
+  theme = "dragon",
+  background = {
+    dark  = "dragon",
+    light = "lotus"
+  },
+
+
+  colors = {
+    theme = {
+      dragon = {
+        ui = {
+          pmenu = {
+            fg = dragon_palette.oldWhite,
+            bg = dragon_palette.dragonBlack0,
+          },
+          float = {
+            fg_border = dragon_palette.waveBlue2,
+            bg_border = dragon_palette.dragonBlack0,
+          },
+        },
+        syn = {
+          type       = dragon_palette.dragonOrange2,
+          constant   = dragon_palette.carpYellow,
+          parameter  = dragon_palette.waveAqua2,
+          identifier = dragon_palette.sakuraPink,
+          statement  = dragon_palette.dragonAqua,
+        },
+        diag = {
+          error   = dragon_palette.waveRed,
+          warning = dragon_palette.surimiOrange,
+        },
+      },
+    },
+  },
+
+
+  overrides = function(colors)
+    local theme = colors.theme
+
+    local is_dragon = theme.name == "dragon"
+    local is_lotus  = theme.name == "lotus"
+    local is_wave   = theme.name == "wave"
+
+    return {
+      -- default hl
+      WinBar      = { link = "StatusLine",   force = true, },
+      WinBarNC    = { link = "StatusLineNC", force = true, },
+      EndOfBuffer = { link = "NonText",      force = true, },
+      --
+
+      -- plugin hl
+      NavicText = { link = "NonText", force = true, },
+
+      MiniIndentscopeSymbol = { link = "NonText", force = true, },
+
+      BlinkCmpMenuBorder = { link = "FloatBorder", force = true, },
+      --
+    }
+  end,
+})
+
