@@ -8,7 +8,7 @@ M.section_diagnostics = function(args)
   local diag_str = vim.diagnostic.status()
   if not diag_str or diag_str == '' then return '' end
 
-  local icon = args.icon
+  local icon = ''  -- force use icon, cant access to internal data
 
   return icon .. ' ' .. diag_str
 end
@@ -28,30 +28,7 @@ end
 
 
 M.setup({
-  -- dont like icons and anyway
-  -- cant access to internals bc override default function below
-  use_icons = false,
-
-  default_content_active = function()  -- TODO mb change trunc_width in future
-    local mode, mode_hl = M.section_mode       ({ trunc_width = 120, })
-    local git           = M.section_git        ({ trunc_width = 40, icon = '', })
-    local diff          = M.section_diff       ({ trunc_width = 75, icon = '', })
-    local diagnostics   = M.section_diagnostics({ trunc_width = 75, icon = '', })
-    local lsp           = M.section_lsp        ({ trunc_width = 75, })
-    local filename      = M.section_filename   ({ trunc_width = 140, })
-    local fileinfo      = M.section_fileinfo   ({ trunc_width = 40, })
-    local location      = M.section_location   ({ trunc_width = 75, })
-
-    return M.combine_groups({
-      { hl = mode_hl,                  strings = { mode, } },
-      { hl = 'MiniStatuslineDevinfo',  strings = { git, diff, diagnostics, lsp, } },
-      '%<', -- Mark general truncate point
-      { hl = 'MiniStatuslineFilename', strings = { filename, } },
-      '%=', -- End left alignment
-      { hl = 'MiniStatuslineFileinfo', strings = { fileinfo, } },
-      { hl = mode_hl,                  strings = { location, } },
-    })
-  end
+  use_icons = true,
 })
 
 
