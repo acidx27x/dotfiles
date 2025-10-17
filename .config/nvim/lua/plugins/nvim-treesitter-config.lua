@@ -33,7 +33,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr   = "v:lua.vim.treesitter.foldexpr()"
     else
-      vim.opt.foldmethod = "syntax"
+      vim.opt.foldmethod = "manual"
       vim.opt.foldexpr   = "0"
     end
   end,
@@ -50,7 +50,7 @@ parser_config.verilogams = {
 
     branch = "main",
     generate_requires_npm = false,
-    requires_generate_from_grammar = true, 
+    requires_generate_from_grammar = true,
   },
   filetype = { "va", "vams", },
 }
