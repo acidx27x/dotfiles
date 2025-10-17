@@ -4,14 +4,14 @@ local function keymap_ns(mode, key, func, desc)
 end
 
 -- Key mappings
-vim.g.mapleader = " "  -- Set leader key to space
+vim.g.mapleader      = " "  -- Set leader key to space
 vim.g.maplocalleader = " "  -- Set local leader key (NEW)
 
 vim.keymap.set({ 'n', 'v' }, "<Space>", "<Nop>", { silent = true })
 
 
 -- Normal mode mappings
-keymap_ns("n", "<leader>hc", ":nohlsearch<CR>", "Clear search highlights")
+keymap_ns("n", "<leader>nh", ":nohlsearch<CR>", "Clear search highlights")
 
 
 -- Center screen when jumping
@@ -32,10 +32,14 @@ keymap_ns("n", "<leader>bp", ":bprevious<CR>", "Previous buffer")
 
 
 -- Better window navigation
-keymap_ns("n", "<C-h>", "<C-w>h", "Move to left window")
-keymap_ns("n", "<C-j>", "<C-w>j", "Move to bottom window")
-keymap_ns("n", "<C-k>", "<C-w>k", "Move to top window")
-keymap_ns("n", "<C-l>", "<C-w>l", "Move to right window")
+keymap_ns("n", "<A-h>", "<C-w>h", "Move to left window")
+keymap_ns("n", "<M-h>", "<C-w>h", "Move to left window")
+keymap_ns("n", "<A-j>", "<C-w>j", "Move to bottom window")
+keymap_ns("n", "<M-j>", "<C-w>j", "Move to bottom window")
+keymap_ns("n", "<A-k>", "<C-w>k", "Move to top window")
+keymap_ns("n", "<M-k>", "<C-w>k", "Move to top window")
+keymap_ns("n", "<A-l>", "<C-w>l", "Move to right window")
+keymap_ns("n", "<M-l>", "<C-w>l", "Move to right window")
 
 
 -- Splitting & Resizing
@@ -55,21 +59,9 @@ keymap_ns("n", "<A-Right>", ":vertical resize -2<CR>", "Increase window width")
 keymap_ns("n", "<M-Right>", ":vertical resize -2<CR>", "Increase window width")
 
 
--- Move lines up/down
-keymap_ns("n", "<A-j>", ":m .+1<CR>==", "Move line down")
-keymap_ns("n", "<M-j>", ":m .+1<CR>==", "Move line down")
-keymap_ns("n", "<A-k>", ":m .-2<CR>==", "Move line up")
-keymap_ns("n", "<M-k>", ":m .-2<CR>==", "Move line up")
-
-keymap_ns("v", "<A-j>", ":m '>+1<CR>gv=gv", "Move selection down")
-keymap_ns("v", "<M-j>", ":m '>+1<CR>gv=gv", "Move selection down")
-keymap_ns("v", "<A-k>", ":m '<-2<CR>gv=gv", "Move selection up")
-keymap_ns("v", "<M-k>", ":m '<-2<CR>gv=gv", "Move selection up")
-
-
 -- Better indenting in visual mode
-keymap_ns("v", "<", "<gv", "Indent left and reselect")
-keymap_ns("v", ">", ">gv", "Indent right and reselect")
+-- keymap_ns("v", "<", "<gv", "Indent left and reselect")
+-- keymap_ns("v", ">", ">gv", "Indent right and reselect")
 
 
 -- Better J behavior
