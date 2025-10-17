@@ -5,12 +5,12 @@ local M = {}
 M.setup = function(_)
   vim.diagnostic.config({
     virtual_text = {
+      prefix = '▣',
       source = "if_many",
-      prefix = "● ",
     },
-    underline = true,
+    underline        = true,
+    severity_sort    = true,
     update_in_insert = false,
-    severity_sort = true,
     float = {
       focusable = true,
       style     = "minimal",
@@ -20,8 +20,16 @@ M.setup = function(_)
     },
     signs = {
       numhl = {
-        [vim.diagnostic.severity.ERROR] = "ErrorMsg",
-        [vim.diagnostic.severity.WARN]  = "WarningMsg",
+        [vim.diagnostic.severity.ERROR] = "DiagnosticError",
+        [vim.diagnostic.severity.WARN]  = "DiagnosticWarn",
+        [vim.diagnostic.severity.INFO]  = "DiagnosticInfo",
+        [vim.diagnostic.severity.HINT]  = "DiagnosticHint",
+      },
+      linehl = {
+        [vim.diagnostic.severity.ERROR] = "DiagnosticErrorLn",
+        [vim.diagnostic.severity.WARN]  = "DiagnosticWarnLn",
+        [vim.diagnostic.severity.INFO]  = "DiagnosticInfoLn",
+        [vim.diagnostic.severity.HINT]  = "DiagnosticHintLn",
       },
     },
   })
@@ -69,6 +77,18 @@ M.lsp_keymaps = function(bufnr)
 
   keyn("<C-s>h", vim.lsp.buf.document_highlight, getopts("vim.lsp.buf.document_highlight"))
   keyn("<C-s>c", vim.lsp.buf.clear_references,   getopts("vim.lsp.buf.clear_references"))
+
+  -- delete remapped combinations
+  vim.keymap.set('n', 'K',      "<Nop>", { buffer = bufnr })  -- hover
+  vim.keymap.set('n', "gri",    "<Nop>", { buffer = bufnr })  -- implementation
+  vim.keymap.set('n', "grn",    "<Nop>", { buffer = bufnr })  -- rename
+  vim.keymap.set('n', "grr",    "<Nop>", { buffer = bufnr })  -- references
+  vim.keymap.set('n', "grt",    "<Nop>", { buffer = bufnr })  -- type_definition
+  vim.keymap.set('n', "gO",     "<Nop>", { buffer = bufnr })  -- document_symbol
+  vim.keymap.set('n', "<C-w>d", "<Nop>", { buffer = bufnr })  -- open_float
+
+  vim.keymap.set({'n', 'v'}, "gra",   "<Nop>", { buffer = bufnr })  -- code_action
+  vim.keymap.set( 'i',       "<C-s>", "<Nop>", { buffer = bufnr })  -- signature_help
 end
 
 
@@ -76,6 +96,11 @@ M.get_capabilities = function(server_name)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
 
   -- shared override capabilities
+  if capabilities.textDocument.foldingRange then
+    vim.o.foldmethod = "expr"
+    vim.o.foldexpr   = "v:lua.vim.lsp.foldexpr()"
+  end
+
   capabilities.textDocument.completion.completionItem = {
     snippetSupport = false,
   }
@@ -88,6 +113,13 @@ end
 M.on_attach = function(client, bufnr)
   M.lsp_keymaps(bufnr)
 
+  -- shared override capabilities
+  vim.bo[bufnr].formatexpr = ""
+  client.server_capabilities.documentFormattingProvider       = false
+  client.server_capabilities.documentRangeFormattingProvider  = false
+  client.server_capabilities.documentOnTypeFormattingProvider = false
+  --
+
   if client.server_capabilities.documentSymbolProvider then
     require("nvim-navic").attach(client, bufnr)
   end
@@ -97,7 +129,7 @@ M.on_attach = function(client, bufnr)
   end
 
   -- i use swap files, buf swap uses update time builtin option, so cant set it to very low time
-  --if client.server_capabilities.documentHighlightProvider then
+  -- if client.server_capabilities.documentHighlightProvider then
   --  local group = vim.api.nvim_create_augroup("LspHighlightCursorSymbol", {clear = false})
 
   --  vim.api.nvim_clear_autocmds({buffer = bufnr, group = group})
