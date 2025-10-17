@@ -24,6 +24,11 @@ vim.pack.add({
   { src = "https://github.com/SmiteshP/nvim-navic" },
 })
 require("nvim-navic-config")
+
+vim.pack.add({
+  { src = "https://github.com/stevearc/conform.nvim" },
+})
+require("conform-nvim-config")
 --
 
 
@@ -62,6 +67,26 @@ vim.pack.add({
   { src = "https://github.com/nvim-mini/mini.tabline" },
 })
 require("mini-tabline-config")
+
+vim.pack.add({
+  { src = "https://github.com/nvim-mini/mini.comment" },
+})
+require("mini-comment-config")
+
+vim.pack.add({
+  { src = "https://github.com/nvim-mini/mini.hipatterns" },
+})
+require("mini-hipatterns-config")
+
+vim.pack.add({
+  { src = "https://github.com/nvim-mini/mini.move" },
+})
+require("mini-move-config")
+
+vim.pack.add({
+  { src = "https://github.com/nvim-mini/mini.surround" },
+})
+require("mini-surround-config")
 --
 
 
@@ -74,6 +99,17 @@ vim.pack.add({
   { src = "https://github.com/mcauley-penney/visual-whitespace.nvim" },
 })
 require("visual-whitespace-nvim-config")
+
+vim.pack.add({
+  { src = "https://github.com/rcarriga/nvim-notify" },
+})
+require("nvim-notify-config")
+
+vim.pack.add({
+  { src = "https://github.com/MunifTanjim/nui.nvim" },
+  { src = "https://github.com/m4xshen/hardtime.nvim" },
+})
+require("hardtime-nvim-config")
 --
 
 
