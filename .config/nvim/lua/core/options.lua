@@ -29,7 +29,7 @@ vim.opt.incsearch  = true
 
 -- Visual settings
 --vim.opt.termguicolors = true
-vim.opt.winborder     = "bold"
+vim.opt.winborder     = "rounded"
 --vim.opt.pumborder     = "bold"
 vim.opt.signcolumn    = "yes"
 vim.opt.colorcolumn   = "80"
@@ -92,6 +92,7 @@ vim.opt.clipboard:append("unnamedplus")  -- Use system clipboard
 -- Folding settings
 vim.opt.foldmethod = "manual"
 vim.opt.foldlevel  = 99  -- Start with all folds open
+vim.opt.formatexpr = ""
 
 
 -- Command-line completion
@@ -107,49 +108,4 @@ vim.opt.diffopt:append("linematch:60")
 -- Performance improvements
 vim.opt.redrawtime    = 10000
 vim.opt.maxmempattern = 20000
-
-
--- Disabled because use custom pluggins
--- Tab and Status display settings
---vim.opt.showtabline = 2  -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
---vim.o.tabline       = "%!v:lua.CustomTabLine()"
---
---function _G.CustomTabLine()
---  local s = ""
---  local num_tabs = vim.fn.tabpagenr('$')
---
---  for i = 1, num_tabs do
---    local winnr = vim.fn.tabpagewinnr(i)
---    local buflist = vim.fn.tabpagebuflist(i)
---    local bufnr = buflist[winnr]
---    local bufname = vim.fn.bufname(bufnr)
---    local modified = vim.fn.getbufvar(bufnr, "&modified")
---
---    -- Get only the filename
---    local fname = vim.fn.fnamemodify(bufname, ":t")
---    if fname == "" then
---      fname = "[No Name]"
---    end
---
---    -- Highlight the active tab
---    if i == vim.fn.tabpagenr() then
---      s = s .. "%#TabLineSel#"
---    else
---      s = s .. "%#TabLine#"
---    end
---
---    -- Add tab number and file name
---    s = s .. " " .. i .. ": " .. fname
---
---    -- Add [+] if modified
---    if modified == 1 then
---      s = s .. " [+]"
---    end
---
---    s = s .. " "
---  end
---
---  s = s .. "%#TabLineFill#"
---  return s
---end
 
