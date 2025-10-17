@@ -4,7 +4,7 @@ local dragon_palette = dragon_colors.palette
 
 
 require("kanagawa").setup({
-  compile     = false,
+  compile     = true,
   dimInactive = true,
 
   theme = "dragon",
@@ -52,17 +52,31 @@ require("kanagawa").setup({
 
     return {
       -- default hl
-      WinBar      = { link = "StatusLine",   force = true, },
-      WinBarNC    = { link = "StatusLineNC", force = true, },
-      EndOfBuffer = { link = "NonText",      force = true, },
+      CursorLineNr = { fg = theme.ui.special, },
+
+      WinBar   = { link = "StatusLine",   force = true, },
+      WinBarNC = { link = "StatusLineNC", force = true, },
+
+      EndOfBuffer = { link = "NonText", force = true, },
+
+      DiagnosticError = { bold = true, italic = false, nocombine = true, },
+      DiagnosticWarn  = { bold = true, italic = false, nocombine = true, },
+      DiagnosticInfo  = { bold = true, italic = false, nocombine = true, },
+      DiagnosticHint  = { bold = true, italic = false, nocombine = true, },
+      DiagnosticOk    = { bold = true, italic = false, nocombine = true, },
       --
 
       -- plugin hl
       NavicText = { link = "NonText", force = true, },
 
+      BlinkCmpMenuBorder = { link = "FloatBorder", force = true, },
+
       MiniIndentscopeSymbol = { link = "NonText", force = true, },
 
-      BlinkCmpMenuBorder = { link = "FloatBorder", force = true, },
+      MiniHipatternsFixme = { bold = true, italic = false, nocombine = true, },
+      MiniHipatternsHack  = { bold = true, italic = false, nocombine = true, },
+      MiniHipatternsNote  = { bold = true, italic = false, nocombine = true, },
+      MiniHipatternsTodo  = { bold = true, italic = false, nocombine = true, },
       --
     }
   end,
