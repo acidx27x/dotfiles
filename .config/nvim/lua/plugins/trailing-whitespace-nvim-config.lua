@@ -55,10 +55,18 @@ end
 whitespace.toggle = function()
   config.enabled = not config.enabled
   if config.enabled then
-    vim.notify("[trailing‑whitespace] enabled")
+    vim.notify(
+      "[trailing‑whitespace] enabled",
+      vim.log.levels.INFO,
+      { title = "trailing-whitespace", }
+    )
     whitespace.highlight()
   else
-    vim.notify("[trailing‑whitespace] disabled")
+    vim.notify(
+      "[trailing‑whitespace] disabled",
+      vim.log.levels.INFO,
+      { title = "trailing-whitespace", }
+    )
     whitespace.clear_highlight()
   end
 end
