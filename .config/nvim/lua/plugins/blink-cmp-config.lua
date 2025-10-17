@@ -100,7 +100,7 @@ require("blink.cmp").setup({
 
     ghost_text = {
       enabled        = true,
-      show_with_menu = true,
+      show_with_menu = false,
     },
   },
 
@@ -114,7 +114,15 @@ require("blink.cmp").setup({
       if type == ':' or type == '@' then return { "cmdline", "buffer" } end
       return {}
     end,
-    completion = { menu = { auto_show = false, }, },
+    completion = {
+      list = {
+        selection = {
+          preselect   = false,
+          auto_insert = true,
+        },
+      },
+      menu = { auto_show = true, },
+    },
   },
 
 
@@ -124,15 +132,15 @@ require("blink.cmp").setup({
   signature = {
     enabled = true,
     trigger = { enabled = false, },
-    window = { scrollbar = true, },
+    window  = { scrollbar = true, },
   },
 
 
   fuzzy = {
     sorts = {
-      "exact",
       "score",
       "sort_text",
+      "label",
     }
   },
 })
