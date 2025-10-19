@@ -53,7 +53,7 @@ M.lsp_keymaps = function(bufnr)
   keyn("gs", vim.lsp.buf.document_symbol, getopts("vim.lsp.buf.document_symbol"))
 
   -- C-s because lSp
-  keyn("<C-s>k", vim.lsp.buf.hover,          getopts("vim.lsp.buf.hover"))
+  keyn("<C-s>h", vim.lsp.buf.hover,          getopts("vim.lsp.buf.hover"))
   keyn("<C-s>s", vim.lsp.buf.signature_help, getopts("vim.lsp.buf.signature_help"))
 
   keyn("<C-s>rn", vim.lsp.buf.rename,      getopts("vim.lsp.buf.rename"))
@@ -75,20 +75,20 @@ M.lsp_keymaps = function(bufnr)
     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
   end, getopts("vim.lsp.inlay_hint.enable/disable buffer"))
 
-  keyn("<C-s>h", vim.lsp.buf.document_highlight, getopts("vim.lsp.buf.document_highlight"))
-  keyn("<C-s>c", vim.lsp.buf.clear_references,   getopts("vim.lsp.buf.clear_references"))
+  keyn("<C-s>dh", vim.lsp.buf.document_highlight, getopts("vim.lsp.buf.document_highlight"))
+  keyn("<C-s>cr", vim.lsp.buf.clear_references,   getopts("vim.lsp.buf.clear_references"))
 
-  -- delete remapped combinations
-  vim.keymap.set('n', 'K',      "<Nop>", { buffer = bufnr })  -- hover
-  vim.keymap.set('n', "gri",    "<Nop>", { buffer = bufnr })  -- implementation
-  vim.keymap.set('n', "grn",    "<Nop>", { buffer = bufnr })  -- rename
-  vim.keymap.set('n', "grr",    "<Nop>", { buffer = bufnr })  -- references
-  vim.keymap.set('n', "grt",    "<Nop>", { buffer = bufnr })  -- type_definition
-  vim.keymap.set('n', "gO",     "<Nop>", { buffer = bufnr })  -- document_symbol
-  vim.keymap.set('n', "<C-w>d", "<Nop>", { buffer = bufnr })  -- open_float
+  -- restore some remapped combinations
+  keyn('K',   'K',   getopts("vim.lsp.buf.hover"))
+  keyn("gri", "gri", getopts("vim.lsp.buf.implementation"))
+  keyn("grn", "grn", getopts("vim.lsp.buf.rename"))
+  keyn("grr", "grr", getopts("vim.lsp.buf.references"))
+  keyn("grt", "grt", getopts("vim.lsp.buf.type_definition"))
+  keyn("gO",  "gO",  getopts("vim.lsp.buf.document_symbol"))
+  keyn("<C-w>d", "<C-w>d", getopts("vim.lsp.buf.open_float"))
 
-  vim.keymap.set({'n', 'v'}, "gra",   "<Nop>", { buffer = bufnr })  -- code_action
-  vim.keymap.set( 'i',       "<C-s>", "<Nop>", { buffer = bufnr })  -- signature_help
+  vim.keymap.set({'n', 'v'}, "gra",   "gra", { noremap = true, silent = true, buffer = bufnr })  -- code_action
+  vim.keymap.set( 'i',       "<C-s>", "<C-s>", { noremap = true, silent = true, buffer = bufnr })  -- signature_help
 end
 
 
@@ -104,6 +104,14 @@ M.get_capabilities = function(server_name)
   capabilities.textDocument.completion.completionItem = {
     snippetSupport = false,
   }
+
+  capabilities.textDocument.formatting = {
+    dynamicRegistration = false,
+  }
+  capabilities.textDocument.rangeFormatting = {
+    rangesSupport       = false,
+    dynamicRegistration = false,
+  }
   --
 
   return require("blink.cmp").get_lsp_capabilities(capabilities)
@@ -114,7 +122,7 @@ M.on_attach = function(client, bufnr)
   M.lsp_keymaps(bufnr)
 
   -- shared override capabilities
-  vim.bo[bufnr].formatexpr = ""
+  vim.bo[bufnr].formatexpr = nil
   client.server_capabilities.documentFormattingProvider       = false
   client.server_capabilities.documentRangeFormattingProvider  = false
   client.server_capabilities.documentOnTypeFormattingProvider = false
@@ -126,6 +134,10 @@ M.on_attach = function(client, bufnr)
 
   if client.server_capabilities.semanticTokensProvider then
     vim.treesitter.stop(bufnr)
+  end
+
+  if client.server_capabilities.completionProvider then
+    vim.bo[bufnr].omnifunc = nil
   end
 
   -- i use swap files, buf swap uses update time builtin option, so cant set it to very low time
