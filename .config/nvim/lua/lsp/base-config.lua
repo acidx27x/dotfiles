@@ -96,11 +96,6 @@ M.get_capabilities = function(server_name)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
 
   -- shared override capabilities
-  if capabilities.textDocument.foldingRange then
-    vim.o.foldmethod = "expr"
-    vim.o.foldexpr   = "v:lua.vim.lsp.foldexpr()"
-  end
-
   capabilities.textDocument.completion.completionItem = {
     snippetSupport = false,
   }
@@ -127,6 +122,10 @@ M.on_attach = function(client, bufnr)
   client.server_capabilities.documentRangeFormattingProvider  = false
   client.server_capabilities.documentOnTypeFormattingProvider = false
   --
+
+  if client.server_capabilities.foldingRangeProvider then
+    vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
+  end
 
   if client.server_capabilities.documentSymbolProvider then
     require("nvim-navic").attach(client, bufnr)

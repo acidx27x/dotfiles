@@ -56,10 +56,12 @@ vim.opt.fillchars = "vert:┃,horiz:━,verthoriz:╋,horizup:┻,horizdown:┳,
 vim.fn.mkdir(vim.fn.stdpath("cache") .. "/undo",   "p")
 vim.fn.mkdir(vim.fn.stdpath("cache") .. "/backup", "p")
 vim.fn.mkdir(vim.fn.stdpath("cache") .. "/swap",   "p")
+vim.fn.mkdir(vim.fn.stdpath("cache") .. "/view",   "p")
 
 vim.opt.undodir   = vim.fn.stdpath("cache") .. "/undo//"
 vim.opt.backupdir = vim.fn.stdpath("cache") .. "/backup//"
 vim.opt.directory = vim.fn.stdpath("cache") .. "/swap//"
+vim.opt.viewdir   = vim.fn.stdpath("cache") .. "/view//"
 
 vim.opt.backup      = true
 vim.opt.writebackup = true
@@ -70,6 +72,7 @@ vim.opt.timeoutlen  = 5000  -- Key timeout duration
 vim.opt.ttimeoutlen = 5  -- Key code timeout
 vim.opt.autoread    = true  -- Auto reload files changed outside vim
 vim.opt.autowrite   = false  -- Don't auto save
+vim.opt.viewoptions = "folds,cursor"
 vim.opt.sessionoptions:remove("curdir")
 
 
@@ -90,7 +93,7 @@ vim.opt.clipboard:append("unnamedplus")  -- Use system clipboard
 
 
 -- Folding settings
-vim.opt.foldmethod = "manual"
+vim.opt.foldmethod = "expr"
 vim.opt.foldlevel  = 99  -- Start with all folds open
 vim.opt.formatexpr = ""
 
