@@ -15,7 +15,7 @@ hipatterns.setup({
   },
 
   delay = {
-    scroll      = 50,
+    scroll      = 200,
     text_change = 200,
   },
 })

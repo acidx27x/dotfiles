@@ -28,7 +28,7 @@ vim.opt.incsearch  = true
 
 
 -- Visual settings
---vim.opt.termguicolors = true
+vim.opt.termguicolors = true
 vim.opt.winborder     = "rounded"
 --vim.opt.pumborder     = "bold"
 vim.opt.signcolumn    = "yes"
@@ -36,7 +36,7 @@ vim.opt.colorcolumn   = "80"
 vim.opt.showmatch     = false
 vim.opt.matchtime     = 0
 vim.opt.cmdheight     = 1
-vim.opt.updatetime    = 4000
+vim.opt.updatetime    = 3000
 
 
 vim.opt.showmode      = false  -- Don't show mode in command line
