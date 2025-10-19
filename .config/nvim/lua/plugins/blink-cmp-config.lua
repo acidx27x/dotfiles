@@ -2,7 +2,7 @@
 require("blink.cmp").setup({
   keymap = {
     ["<C-space>"] = { "show", "show_documentation", "hide_documentation", },
-    ["<C-h>"]     = { "show_documentation", "hide_documentation", },
+    ["<C-h>"]     = {         "show_documentation", "hide_documentation", },
     ["<S-Tab>"]   = { "select_and_accept", "fallback", },
     ["<Tab>"]     = false,
 
@@ -16,7 +16,7 @@ require("blink.cmp").setup({
     ["<C-b>"] = { "scroll_documentation_up",   "fallback", },
     ["<C-f>"] = { "scroll_documentation_down", "fallback", },
 
-    ["<C-k>"] = { "show_signature",        "hide_signature", },
+    ["<C-s>"] = { "show_signature", "hide_signature", },
     ["<C-u>"] = { "scroll_signature_up",   "fallback", },
     ["<C-d>"] = { "scroll_signature_down", "fallback", },
   },
@@ -26,9 +26,8 @@ require("blink.cmp").setup({
     nerd_font_variant = "nerd",
   },
 
-
   sources = {
-    default            = { "lsp", "buffer", "path", "snippets", },
+    default            = { "lsp", "omni", "buffer", "path", "snippets", },
     min_keyword_length = 4,
 
     providers = {
@@ -38,30 +37,45 @@ require("blink.cmp").setup({
         module  = "blink.cmp.sources.lsp",
         score_offset = 10,
       },
+      omni = {
+        enabled = function() return vim.bo.omnifunc ~= "v:lua.vim.lsp.omnifunc" end,
+        name    = "omni",
+        module  = "blink.cmp.sources.complete_func",
+        opts    = { complete_func = function() return vim.bo.omnifunc end, },
+        score_offset = 9,
+      },
       buffer = {
         enabled = true,
         name    = "buffer",
         module  = "blink.cmp.sources.buffer",
-        score_offset = 9,
+        score_offset = 8,
       },
       path = {
         enabled = true,
         name    = "path",
         module  = "blink.cmp.sources.path",
-        score_offset = 8,
+        score_offset = 7,
       },
       snippets = {
-        enabled = true,
+        enabled = false,
         name    = "snippets",
         module  = "blink.cmp.sources.snippets",
-        score_offset = 0,
+        score_offset = 1,
       },
-      omni = { enabled = false, },
     },
   },
 
 
   completion = {
+    trigger = {
+      show_in_snippet = false,
+      show_on_backspace_after_accept       = false,
+      show_on_backspace_after_insert_enter = false,
+      show_on_trigger_character           = false,
+      show_on_accept_on_trigger_character = false,
+      show_on_insert_on_trigger_character = false,
+    },
+
     accept = { auto_brackets = { enabled = false } },
 
     documentation = {
@@ -69,14 +83,14 @@ require("blink.cmp").setup({
     },
 
     list = {
-      max_items = 50,
+      max_items = 100,
       selection = {
-        auto_insert = true,
         preselect = true,
+        auto_insert = true,
       },
       cycle = {
-        from_bottom = true,
         from_top    = true,
+        from_bottom = true,
       },
     },
 
@@ -131,8 +145,10 @@ require("blink.cmp").setup({
 
   signature = {
     enabled = true,
-    trigger = { enabled = false, },
-    window  = { scrollbar = true, },
+    trigger = {
+      enabled = false,
+    },
+    window = { scrollbar = true, },
   },
 
 
@@ -144,4 +160,14 @@ require("blink.cmp").setup({
     }
   },
 })
+
+
+local signature_trigger_show_old = require("blink.cmp.signature.trigger").show
+require("blink.cmp.signature.trigger").show = function(opts)
+  opts = opts or {}
+  if require("blink.cmp").is_signature_visible() then
+    opts.force = true
+  end
+  signature_trigger_show_old(opts)
+end
 
