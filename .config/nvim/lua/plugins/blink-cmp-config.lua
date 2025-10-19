@@ -153,6 +153,10 @@ require("blink.cmp").setup({
 
 
   fuzzy = {
+    frecency = {
+      enabled = true,
+      path    = vim.fn.stdpath("cache") .. '/blink/cmp/frecency.dat',
+    },
     sorts = {
       "score",
       "sort_text",
@@ -162,6 +166,14 @@ require("blink.cmp").setup({
 })
 
 
+-- HACK
+-- signature trigger is disabled by this configuration
+-- so, when i trigger it manually, it is not sync with current argument position
+-- that is why need to force to update it when it is shown manually
+-- even with: signature = { trigger = { enabled = false, }, },
+-- NOTE
+-- this may be removed in future for new releases
+-- when suitable api for dynamic trigger handling arrive
 local signature_trigger_show_old = require("blink.cmp.signature.trigger").show
 require("blink.cmp.signature.trigger").show = function(opts)
   opts = opts or {}

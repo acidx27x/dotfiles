@@ -33,6 +33,7 @@ require("kanagawa").setup({
           parameter  = dragon_palette.waveAqua2,
           identifier = dragon_palette.sakuraPink,
           statement  = dragon_palette.dragonAqua,
+          comment    = dragon_palette.fujiGray,
         },
         diag = {
           error   = dragon_palette.waveRed,
@@ -66,11 +67,11 @@ require("kanagawa").setup({
       DiagnosticOk    = { bold = true, italic = false, nocombine = true, },
       --
 
-      -- plugin hl
+      -- plugin hl plug
       NavicText = { link = "NonText", force = true, },
 
-      BlinkCmpGhostText  = { fg = theme.ui.special, bold = true, force = true, },
-      BlinkCmpMenuBorder = { link = "FloatBorder",               force = true, },
+      BlinkCmpGhostText  = { fg = theme.ui.special, force = true, },
+      BlinkCmpMenuBorder = { link = "FloatBorder",  force = true, },
 
       MiniIndentscopeSymbol = { link = "NonText", force = true, },
 

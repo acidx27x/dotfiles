@@ -1,3 +1,10 @@
+-- builtin override group
+vim.pack.add({
+  { src = "https://github.com/rcarriga/nvim-notify" },
+})
+require("nvim-notify-config")
+--
+
 
 -- ts group
 vim.pack.add({
@@ -32,7 +39,8 @@ require("conform-nvim-config")
 --
 
 
--- git group (must be upper than pluggins below, bc can be required during config)
+-- git group (must be upper than pluggins below,
+-- bc can be required during config)
 vim.pack.add({
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
 })
@@ -92,7 +100,8 @@ require("mini-surround-config")
 
 
 -- utils group
--- original code "https://github.com/johnfrankmorgan/whitespace.nvim" changed to skip highlight while editing
+-- original code "https://github.com/johnfrankmorgan/whitespace.nvim"
+-- changed to skip highlight while editing
 require("trailing-whitespace-nvim-config")
 
 vim.pack.add({
@@ -101,15 +110,15 @@ vim.pack.add({
 require("visual-whitespace-nvim-config")
 
 vim.pack.add({
-  { src = "https://github.com/rcarriga/nvim-notify" },
-})
-require("nvim-notify-config")
-
-vim.pack.add({
   { src = "https://github.com/MunifTanjim/nui.nvim" },
   { src = "https://github.com/m4xshen/hardtime.nvim" },
 })
 require("hardtime-nvim-config")
+
+vim.pack.add({
+  { src = "https://github.com/m4xshen/smartcolumn.nvim" },
+})
+require("smartcolumn-nvim-config")
 --
 
 

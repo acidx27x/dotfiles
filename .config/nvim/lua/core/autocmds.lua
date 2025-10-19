@@ -5,6 +5,7 @@ local augroup = vim.api.nvim_create_augroup("UserConfig", {})
 
 -- Change cwd on enter
 vim.api.nvim_create_autocmd("VimEnter", {
+  group = augroup,
   once = true, -- run only once per nvim start
   callback = function()
     -- Only if Neovim was launched with a file argument
@@ -17,6 +18,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 })
 
 vim.api.nvim_create_autocmd("DirChanged", {
+  group = augroup,
   callback = function()
     print("CWD changed to: " .. vim.fn.getcwd())
   end,
@@ -31,18 +33,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-
--- Return to last edit position when opening files
-vim.api.nvim_create_autocmd("BufReadPost", {
-  group = augroup,
-  callback = function()
-    local mark = vim.api.nvim_buf_get_mark(0, '"')
-    local lcount = vim.api.nvim_buf_line_count(0)
-    if mark[1] > 0 and mark[1] <= lcount then
-      pcall(vim.api.nvim_win_set_cursor, 0, mark)
-    end
-  end,
-})
 
 
 -- Auto-close terminal when process exits
@@ -88,15 +78,29 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 
--- Save foldings
+-- Save and Load view
 vim.api.nvim_create_autocmd({"BufWinLeave"}, {
-  pattern = {"*.*"},
-  desc = "save view (folds), when closing file",
-  command = "mkview",
+  group = augroup,
+  pattern = '*',
+  desc = "Save view, when closing file",
+  command = "silent! mkview",
 })
 vim.api.nvim_create_autocmd({"BufWinEnter"}, {
-  pattern = {"*.*"},
-  desc = "load view (folds), when opening file",
+  group = augroup,
+  pattern = '*',
+  desc = "Load view, when opening file",
   command = "silent! loadview"
+})
+
+-- Return to last edit position when opening files
+vim.api.nvim_create_autocmd("BufReadPost", {
+  group = augroup,
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local lcount = vim.api.nvim_buf_line_count(0)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
 })
 
