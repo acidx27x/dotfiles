@@ -69,7 +69,8 @@ require("kanagawa").setup({
       -- plugin hl
       NavicText = { link = "NonText", force = true, },
 
-      BlinkCmpMenuBorder = { link = "FloatBorder", force = true, },
+      BlinkCmpGhostText  = { fg = theme.ui.special, bold = true, force = true, },
+      BlinkCmpMenuBorder = { link = "FloatBorder",               force = true, },
 
       MiniIndentscopeSymbol = { link = "NonText", force = true, },
 
