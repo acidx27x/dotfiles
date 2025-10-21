@@ -115,8 +115,8 @@ end
 
 
 whitespace.setup({
-  ignored_filetypes = { 'TelescopePrompt', 'Trouble', 'help', 'dashboard' },
-  highlight       = 'DiffDelete',
+  ignored_filetypes = { "TelescopePrompt", "Trouble", "help", "dashboard" },
+  highlight       = "DiffDelete",
   ignore_terminal = true,
   return_cursor   = true,
   enabled         = true,
