@@ -1,6 +1,6 @@
 
 local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc})
+  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc, })
 end
 
 -- Key mappings
@@ -23,7 +23,8 @@ keymap_ns("n", "<C-u>", "<C-u>zz", "Half page up (centered)")
 
 
 -- Delete without yanking
-keymap_ns({ "n", "v" }, "<leader>d", '"_d', "Delete without yanking")
+--keymap_ns({ "n", "v" }, "<leader>d", '"_d', "Delete without yanking")
+keymap_ns({ "n", "v" }, "<leader>d", "<Nop>", "Prevent delete with just 'd'")
 
 
 -- Buffer navigation

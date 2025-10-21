@@ -1,6 +1,6 @@
 
 require("smartcolumn").setup({
-  colorcolumn  = "80",  -- use max_line_length from EditorConfig
+  colorcolumn  = "120",  -- use max_line_length from EditorConfig
   editorconfig = true,
   disabled_filetypes = {
     "help", "text", "markdown",

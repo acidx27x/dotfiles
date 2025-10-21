@@ -5,7 +5,7 @@ require("nvim-treesitter.configs").setup({
     "bash", "fish",
     "lua",
     "javascript",
-    "verilogams",
+    -- "verilogams",
   },
   auto_install = false,
   highlight = {
@@ -39,17 +39,17 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 
 
 -- Custom TS parsers
-local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-
-parser_config.verilogams = {
-  install_info = {
-    url = "~/Documents/proj/tree-sitter/tree-sitter-verilogams",
-    files = { "src/parser.c" },
-
-    branch = "main",
-    generate_requires_npm = false,
-    requires_generate_from_grammar = true,
-  },
-  filetype = { "va", "vams", },
-}
-
+-- local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+--
+-- parser_config.verilogams = {
+--   install_info = {
+--     url = "~/Documents/proj/tree-sitter/tree-sitter-verilogams",
+--     files = { "src/parser.c" },
+--
+--     branch = "main",
+--     generate_requires_npm = false,
+--     requires_generate_from_grammar = true,
+--   },
+--   filetype = { "va", "vams", },
+-- }
+--
