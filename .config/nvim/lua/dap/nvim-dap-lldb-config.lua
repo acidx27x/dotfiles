@@ -1,48 +1,56 @@
 
-require("dap").adapters.lldb = {
-  name    = "lldb",
+-- use name as 'lldb-dap' to be able to have same config for vscode
+require("dap").adapters["lldb-dap"] = {
   type    = "executable",
   command = "lldb-dap",  -- adjust full path
+  args = {},
+  options = {
+    env = {},
+  },
 }
--- require("dap").adapters.lldb = {
---   name    = "lldb",
---   type    = "server",
---   port    = "${port}",
---   executable = {
---     command = "lldb-dap",
---     args = { "--port", "${port}" },
---     detached = vim.loop.os_uname().sysname ~= "Windows",
---   },
--- }
 
 
 local launch = {
   name    = "LLDB: Launch file",
-  type    = "lldb",
+  type    = "lldb-dap",
   request = "launch",
 
   program = "${command:pickFile}",
   args    = {},  -- TODO get input from user
   cwd     = "${workspaceFolder}",
   preRunCommands = { "breakpoint set --name main", },
-
-  console = "integratedTerminal",
 }
 
 local attach = {
   name    = "LLDB: Attach process",
-  type    = "lldb",
+  type    = "lldb-dap",
   request = "attach",
 
   program = "${command:pickProcess}",
   args    = {},  -- TODO get input from user
   cwd     = "${workspaceFolder}",
   waitFor = true,
-
-  console = "integratedTerminal",
 }
 
 
 require("dap").configurations.c   = { launch, attach, }
 require("dap").configurations.cpp = { launch, attach, }
+
+
+-- base launch json
+-- {
+--     "version": "0.2.0",
+--     "configurations": [
+--         {
+--             "type": "lldb-dap",
+--             "request": "launch",
+--             "name": "test_name",
+--             "program": "path/to/file",
+--             "args": [],
+--             "preRunCommands": ["breakpoint set --name main"],
+--             "cwd": "${workspaceFolder}"
+--         }
+--     ]
+-- }
+-- looks like doenst support "console": "integratedTerminal" on windows, got strange error on it
 

@@ -67,11 +67,13 @@ require("kanagawa").setup({
       DiagnosticOk    = { bold = true, italic = false, nocombine = true, },
       --
 
-      -- plugin hl plug
+      -- plugin hl group
       NavicText = { link = "NonText", force = true, },
 
       BlinkCmpGhostText  = { fg = theme.ui.special, force = true, },
       BlinkCmpMenuBorder = { link = "FloatBorder",  force = true, },
+
+      DapUIFloatBorder = { link = "FloatBorder",  force = true, },
 
       MiniIndentscopeSymbol = { link = "NonText", force = true, },
 

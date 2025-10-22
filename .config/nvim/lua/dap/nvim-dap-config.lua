@@ -12,21 +12,21 @@ local function keymap_ns(mode, key, func, desc)
   vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc, })
 end
 
-keymap_ns("n", "<leader>dtb", dap.toggle_breakpoint, "DAP toggle_breakpoint")
-keymap_ns("n", "<leader>dcb", function()
-  dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-end, "DAP toggle_breakpoint")
-keymap_ns("n", "<leader>dcn", dap.continue,    "DAP continue")
-keymap_ns("n", "<leader>dsi", dap.step_into,   "DAP step_into")
-keymap_ns("n", "<leader>dso", dap.step_over,   "DAP step_over")
-keymap_ns("n", "<leader>dsf", dap.step_out,    "DAP step_out")
-keymap_ns("n", "<leader>drp", dap.repl.toggle, "DAP repl toggle")
+keymap_ns("n", "<leader>db", dap.toggle_breakpoint, "DAP: toggle_breakpoint")
+keymap_ns("n", "<leader>dB", function()
+  dap.set_breakpoint(vim.fn.input "Breakpoint condition: ")
+end, "DAP: set_breakpoint condition")
+keymap_ns("n", "<leader>dc", dap.continue,    "DAP: continue")
+keymap_ns("n", "<leader>ds", dap.step_into,   "DAP: step_into")
+keymap_ns("n", "<leader>dn", dap.step_over,   "DAP: step_over")
+keymap_ns("n", "<leader>do", dap.step_out,    "DAP: step_out")
+keymap_ns("n", "<leader>dt", dap.repl.toggle, "DAP: repl toggle")
 
-keymap_ns("n", "<leader>dR", dap.restart, "DAP restart")
+keymap_ns("n", "<leader>dR", dap.restart, "DAP: restart")
 --
 
 
 require("nvim-dap-codelldb-config")
--- require("nvim-dap-lldb-config")
+require("nvim-dap-lldb-config")
 -- require("nvim-dap-cppdbg-config")
 
