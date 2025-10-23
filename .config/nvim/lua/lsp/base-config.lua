@@ -2,41 +2,6 @@
 local M = {}
 
 
-M.setup = function(_)
-  vim.diagnostic.config({
-    virtual_text = {
-      prefix = '▣',
-      source = "if_many",
-    },
-    underline        = true,
-    severity_sort    = true,
-    update_in_insert = false,
-    float = {
-      focusable = true,
-      style     = "minimal",
-      source    = "if_many",
-      header    = '',
-      prefix    = '',
-    },
-    signs = {
-      numhl = {
-        [vim.diagnostic.severity.ERROR] = "DiagnosticError",
-        [vim.diagnostic.severity.WARN]  = "DiagnosticWarn",
-        [vim.diagnostic.severity.INFO]  = "DiagnosticInfo",
-        [vim.diagnostic.severity.HINT]  = "DiagnosticHint",
-      },
-      linehl = {
-        [vim.diagnostic.severity.ERROR] = "DiagnosticErrorLn",
-        [vim.diagnostic.severity.WARN]  = "DiagnosticWarnLn",
-        [vim.diagnostic.severity.INFO]  = "DiagnosticInfoLn",
-        [vim.diagnostic.severity.HINT]  = "DiagnosticHintLn",
-      },
-    },
-  })
-  vim.lsp.log.set_level(vim.log.levels.WARN)
-end
-
-
 M.lsp_keymaps = function(bufnr)
   local function getopts(desc)
     return { noremap = true, silent = true, buffer = bufnr, desc = desc }
@@ -45,50 +10,50 @@ M.lsp_keymaps = function(bufnr)
     vim.keymap.set("n", key, func, opts)
   end
 
-  keyn("gd", vim.lsp.buf.definition,      getopts("vim.lsp.buf.definition"))
-  keyn("gy", vim.lsp.buf.type_definition, getopts("vim.lsp.buf.type_definition"))
-  keyn("gc", vim.lsp.buf.declaration,     getopts("vim.lsp.buf.declaration"))
-  keyn("gr", vim.lsp.buf.references,      getopts("vim.lsp.buf.references"))
-  keyn("gi", vim.lsp.buf.implementation,  getopts("vim.lsp.buf.implementation"))
-  keyn("gs", vim.lsp.buf.document_symbol, getopts("vim.lsp.buf.document_symbol"))
+  keyn("gd", vim.lsp.buf.definition,      getopts("LSP: definition (buf)"))
+  keyn("gy", vim.lsp.buf.type_definition, getopts("LSP: type_definition (buf)"))
+  keyn("gc", vim.lsp.buf.declaration,     getopts("LSP: declaration (buf)"))
+  keyn("gr", vim.lsp.buf.references,      getopts("LSP: references (buf)"))
+  keyn("gi", vim.lsp.buf.implementation,  getopts("LSP: implementation (buf)"))
+  keyn("gs", vim.lsp.buf.document_symbol, getopts("LSP: document_symbol (buf)"))
 
   -- C-s because lSp
-  keyn("<C-s>h", vim.lsp.buf.hover,          getopts("vim.lsp.buf.hover"))
-  keyn("<C-s>s", vim.lsp.buf.signature_help, getopts("vim.lsp.buf.signature_help"))
+  keyn("<C-s>h", vim.lsp.buf.hover,          getopts("LSP: hover (buf)"))
+  keyn("<C-s>s", vim.lsp.buf.signature_help, getopts("LSP: signature_help (buf)"))
 
-  keyn("<C-s>rn", vim.lsp.buf.rename,      getopts("vim.lsp.buf.rename"))
-  keyn("<C-s>ca", vim.lsp.buf.code_action, getopts("vim.lsp.buf.code_action"))
+  keyn("<C-s>rn", vim.lsp.buf.rename,      getopts("LSP: rename (buf)"))
+  keyn("<C-s>ca", vim.lsp.buf.code_action, getopts("LSP: code_action (buf)"))
 
-  keyn("<C-w>dl", vim.diagnostic.setloclist, getopts("vim.diagnostic.setloclist"))
-  keyn("<C-w>do", vim.diagnostic.open_float, getopts("vim.diagnostic.open_float"))
+  keyn("<C-w>dl", vim.diagnostic.setloclist, getopts("diagnostic: setloclist"))
+  keyn("<C-w>do", vim.diagnostic.open_float, getopts("diagnostic: open_float"))
   keyn("]d", function()
     vim.diagnostic.jump({ count = 1 })
-  end,  getopts("vim.diagnostic.jump/next"))
+  end,  getopts("diagnostic: jump next"))
   keyn("[d", function()
     vim.diagnostic.jump({ count = -1 })
-  end, getopts("vim.diagnostic.jump/prev"))
+  end, getopts("diagnostic: jump prev"))
 
   keyn("<C-s>i", function()
     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
-  end, getopts("vim.lsp.inlay_hint.enable/disable buffer"))
+  end, getopts("LSP: toggle inlay_hint"))
   keyn("<C-s>I", function()
     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-  end, getopts("vim.lsp.inlay_hint.enable/disable buffer"))
+  end, getopts("LSP: toggle inlay_hint (buf)"))
 
-  keyn("<C-s>dh", vim.lsp.buf.document_highlight, getopts("vim.lsp.buf.document_highlight"))
-  keyn("<C-s>cr", vim.lsp.buf.clear_references,   getopts("vim.lsp.buf.clear_references"))
+  keyn("<C-s>dh", vim.lsp.buf.document_highlight, getopts("LSP: document_highlight"))
+  keyn("<C-s>cr", vim.lsp.buf.clear_references,   getopts("LSP: clear_references"))
 
   -- restore some remapped combinations
-  keyn('K',   'K',   getopts("vim.lsp.buf.hover"))
-  keyn("gri", "gri", getopts("vim.lsp.buf.implementation"))
-  keyn("grn", "grn", getopts("vim.lsp.buf.rename"))
-  keyn("grr", "grr", getopts("vim.lsp.buf.references"))
-  keyn("grt", "grt", getopts("vim.lsp.buf.type_definition"))
-  keyn("gO",  "gO",  getopts("vim.lsp.buf.document_symbol"))
-  keyn("<C-w>d", "<C-w>d", getopts("vim.lsp.buf.open_float"))
+  keyn("K",   "K",   getopts(""))  -- hover
+  keyn("gri", "gri", getopts(""))  -- implementation
+  keyn("grn", "grn", getopts(""))  -- rename
+  keyn("grr", "grr", getopts(""))  -- references
+  keyn("grt", "grt", getopts(""))  -- type_definition
+  keyn("gO",  "gO",  getopts(""))  -- document_symbol
+  keyn("<C-w>d", "<C-w>d", getopts(""))  -- open_float
 
-  vim.keymap.set({'n', 'v'}, "gra",   "gra", { noremap = true, silent = true, buffer = bufnr })  -- code_action
-  vim.keymap.set( 'i',       "<C-s>", "<C-s>", { noremap = true, silent = true, buffer = bufnr })  -- signature_help
+  vim.keymap.set({ "n", "v" }, "gra", "gra", getopts(""))  -- code_action
+  vim.keymap.set("i", "<C-s>", "<C-s>", getopts(""))  -- signature_help
 end
 
 

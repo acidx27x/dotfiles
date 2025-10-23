@@ -2,8 +2,6 @@
 local base = require("base-config")
 
 
-base.setup()
-
 vim.lsp.config.clangd = {
   on_init      = base.get_on_init("clangd"),
   on_attach    = base.get_on_attach("clangd"),
@@ -23,15 +21,8 @@ vim.lsp.config.clangd = {
     -- "--experimental-modules-support",
   },
   filetypes = {
-    "c", "c.in",
-    "cc", "cc.in",
-    "C", "C.in",
-    "cpp", "cpp.in",
-    "cxx", "cxx.in",
-    "h", "h.in",
-    "hh", "hh.in",
-    "hpp", "hpp.in",
-    "hxx", "hxx.in",
+    "c", "cc", "C", "cpp", "cxx",
+    "h", "hh", "H", "hpp", "hxx",
   },
 }
 
