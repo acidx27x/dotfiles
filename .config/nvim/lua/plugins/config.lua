@@ -24,7 +24,7 @@ require("nvim-treesitter-config")
 --
 
 
--- neo-tree group
+-- file explorer group
 vim.pack.add({
   { src = "https://github.com/MunifTanjim/nui.nvim" },
   { src = "https://github.com/nvim-lua/plenary.nvim" },
@@ -32,6 +32,11 @@ vim.pack.add({
   { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
 })
 require("neo-tree-config")
+
+vim.pack.add({
+  { src = "https://github.com/stevearc/oil.nvim" },
+})
+require("oil-nvim-config")
 --
 
 
