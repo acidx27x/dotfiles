@@ -82,6 +82,15 @@ require("mini-surround-config")
 --
 
 
+-- term group
+vim.pack.add({
+  { src = "https://github.com/nvzone/volt" },
+  { src = "https://github.com/nvzone/floaterm" },
+})
+require("floaterm-config")
+--
+
+
 
 -- utils group
 
