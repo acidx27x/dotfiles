@@ -89,3 +89,26 @@ keymap_ns("n", "<leader>tt", ":tabnew | terminal<CR>", "terminal: open in tab")
 keymap_ns("n", "<leader>tv", ":vsplit | terminal<CR>", "terminal: open in split vertically")
 keymap_ns("n", "<leader>th", ":split | terminal<CR>", "terminal: open in split horizontally")
 
+
+-- Open buffer in tab with number
+vim.api.nvim_create_user_command("BTab", function(opts)
+  local bufnum = tonumber(opts.args)
+  if not bufnum then
+    print("Usage: :BTab <buffer-number>")
+    return
+  end
+
+  local bufname = vim.fn.bufname(bufnum)
+  if bufname == "" then
+    print("Invalid buffer number: " .. bufnum)
+    return
+  end
+
+  vim.cmd("tabedit " .. vim.fn.fnameescape(bufname))
+end, {
+  nargs = 1,
+  complete = "buffer",
+  desc = "Open buffer by number in a tab",
+})
+vim.cmd("cabbrev btab BTab")
+
