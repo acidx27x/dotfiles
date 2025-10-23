@@ -121,7 +121,11 @@ require("blink.cmp").setup({
 
   cmdline = {
     enabled = true,
-    keymap = { preset = "cmdline", },
+    keymap = {
+      preset = "cmdline",
+      ["<C-n>"] = { function(cmp) cmp.select_next({ auto_insert = false }) end, },  -- not working with default fb
+      ["<C-p>"] = { function(cmp) cmp.select_prev({ auto_insert = false }) end, },  -- instantly fb to neovim c-n
+    },
     sources = function()
       local type = vim.fn.getcmdtype()
       if type == '/' or type == '?' then return { "buffer" } end
@@ -146,6 +150,8 @@ require("blink.cmp").setup({
       preset = "cmdline",
       ["<Tab>"]   = false,
       ["<S-Tab>"] = false,
+      ["<C-n>"] = { function(cmp) cmp.select_next({ auto_insert = false }) end, },  -- not working with default fb
+      ["<C-p>"] = { function(cmp) cmp.select_prev({ auto_insert = false }) end, },  -- instantly fb to neovim c-n
     },
     sources = { "buffer", },
     completion = {

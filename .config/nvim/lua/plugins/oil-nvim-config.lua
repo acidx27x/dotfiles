@@ -1,32 +1,30 @@
 
 require("oil").setup({  --TODO winbar toggle additional info size etc how to open oild split directory
-  delete_to_trash = true,
+  delete_to_trash = false,
 
   lsp_file_methods = { enabled = false, },
-
-  buf_options = {
-    buflisted = true,
-    bufhidden = "",
-  },
 
   use_default_keymaps = false,
   keymaps = {
     ["<leader>o?"] = { "actions.show_help", mode = "n", desc = "Oil: show help", },
-    ["<CR>"] = { "actions.select", desc = "Oil: select", },
-    ["<C-s>"] = { "actions.select", opts = { vertical = true } },
-    ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
-    ["<C-t>"] = { "actions.select", opts = { tab = true } },
-    ["<C-p>"] = "actions.preview",
-    ["<C-c>"] = { "actions.close", mode = "n" },
-    ["<C-l>"] = "actions.refresh",
-    ["-"] = { "actions.parent", mode = "n" },
-    ["_"] = { "actions.open_cwd", mode = "n" },
-    ["`"] = { "actions.cd", mode = "n" },
-    ["~"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
-    ["gs"] = { "actions.change_sort", mode = "n" },
-    ["gx"] = "actions.open_external",
-    ["g."] = { "actions.toggle_hidden", mode = "n" },
-    ["g\\"] = { "actions.toggle_trash", mode = "n" },
+
+    ["<CR>"]       = { "actions.select", mode = "n", desc = "Oil: select", },
+    ["<leader>ov"] = { "actions.select", mode = "n", opts = { vertical = true }, desc = "Oil: select in vertical", },
+    ["<leader>oh"] = { "actions.select", mode = "n", opts = { horizontal = true }, desc = "Oil: select in horizontal", },
+    ["<leader>ot"] = { "actions.select", mode = "n", opts = { tab = true }, desc = "Oil: select in tab", },
+
+    ["<leader>op"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview", },
+    ["<leader>oc"] = { "actions.close", mode = "n", desc = "Oil: close", },
+    ["<leader>or"] = { "actions.refresh", mode = "n", desc = "Oil: refresh", },
+
+    ["<leader>ob"] = { "actions.open_cwd", mode = "n", desc = "Oil: open cwd", },
+    ["<leader>o."] = { "actions.cd", mode = "n", desc = "Oil: cd", },
+    ["<leader>o,"] = { "actions.cd", opts = { scope = "tab" }, mode = "n", desc = "Oil: cd (tab)", },
+
+    ["<leader>os"] = { "actions.change_sort", mode = "n", desc = "Oil: change sort", },
+    ["<leader>ox"] = { "actions.open_external", mode = "n", desc = "Oil: open external", },
+    ["<leader>oi"] = { "actions.toggle_hidden", mode = "n", desc = "Oil: toggle hidden", },
+    ["<leader>o/"] = { "actions.toggle_trash", mode = "n", desc = "Oil: toggle trash", },
   },
 
   view_options = {

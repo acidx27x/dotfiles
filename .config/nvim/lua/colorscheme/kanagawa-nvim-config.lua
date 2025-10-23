@@ -55,6 +55,8 @@ require("kanagawa").setup({
       -- default hl
       CursorLineNr = { fg = theme.ui.special, },
 
+      MatchParen = { bold = false, },
+
       WinBar   = { link = "StatusLine",   force = true, },
       WinBarNC = { link = "StatusLineNC", force = true, },
 
