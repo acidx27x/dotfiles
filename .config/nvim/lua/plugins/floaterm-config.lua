@@ -8,6 +8,6 @@ require("floaterm").setup({
 })
 
 
-vim.keymap.set('n', "<leader>ft", require("floaterm").toggle,
-  { noremap = true, silent = true, desc = "floaterm: toggle", })
+vim.keymap.set('n', "<leader>tf", require("floaterm").toggle,
+  { noremap = true, silent = true, desc = "floaterm: toggle float window", })
 

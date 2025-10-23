@@ -20,7 +20,11 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.api.nvim_create_autocmd("DirChanged", {
   group = augroup,
   callback = function()
-    print("CWD changed to: " .. vim.fn.getcwd())
+    vim.notify(
+      "CWD changed to: " .. vim.fn.getcwd(),
+      vim.log.levels.INFO,
+      { title = "Autocmd", }
+    )
   end,
 })
 
@@ -72,7 +76,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   callback = function()
     local dir = vim.fn.expand("<afile>:p:h")
     if vim.fn.isdirectory(dir) == 0 then
-      vim.fn.mkdir(dir, 'p')
+      vim.fn.mkdir(dir, "p")
     end
   end,
 })
@@ -81,13 +85,13 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -- Save and Load view
 vim.api.nvim_create_autocmd({"BufWinLeave"}, {
   group = augroup,
-  pattern = '*',
+  pattern = "*",
   desc = "Save view, when closing file",
   command = "silent! mkview",
 })
 vim.api.nvim_create_autocmd({"BufWinEnter"}, {
   group = augroup,
-  pattern = '*',
+  pattern = "*",
   desc = "Load view, when opening file",
   command = "silent! loadview"
 })
