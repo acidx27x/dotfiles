@@ -55,7 +55,7 @@ end
 _G.navic_winbar = M
 
 
--- dont do vim.wo[winid] because will be ugly in vsp
+-- dont do vim.wo[winid] because will be ugly in split when buffer is not supported
 vim.opt.winbar = "%{%v:lua.navic_winbar.get()%}"
 --vim.opt.winbar = "%{%v:lua.require("nvim-navic").get_location()%}"
 

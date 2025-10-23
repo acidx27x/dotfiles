@@ -85,7 +85,7 @@ require("blink.cmp").setup({
     list = {
       max_items = 100,
       selection = {
-        preselect = true,
+        preselect   = true,
         auto_insert = true,
       },
       cycle = {
@@ -121,7 +121,7 @@ require("blink.cmp").setup({
 
   cmdline = {
     enabled = true,
-    keymap = { preset = "cmdline" },
+    keymap = { preset = "cmdline", },
     sources = function()
       local type = vim.fn.getcmdtype()
       if type == '/' or type == '?' then return { "buffer" } end
@@ -140,7 +140,24 @@ require("blink.cmp").setup({
   },
 
 
-  term = { enabled = false, },
+  term = {
+    enabled = true,
+    keymap = {
+      preset = "cmdline",
+      ["<Tab>"]   = false,
+      ["<S-Tab>"] = false,
+    },
+    sources = { "buffer", },
+    completion = {
+      list = {
+        selection = {
+          preselect   = false,
+          auto_insert = true,
+        },
+      },
+      menu = { auto_show = true, },
+    },
+  },
 
 
   signature = {
