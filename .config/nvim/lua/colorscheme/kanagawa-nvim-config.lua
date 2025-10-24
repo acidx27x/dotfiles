@@ -70,6 +70,12 @@ require("kanagawa").setup({
       --
 
       -- plugin hl group
+      NeoTreeFloatBorder = { bg = theme.ui.bg, },
+      NeoTreeFloatTitle = { link = "FloatTitle", force = true, },
+
+      OilFloatBorder = { bg = theme.ui.bg, },
+      OilNormalFloat = { bg = theme.ui.bg, },
+
       NavicText = { link = "NonText", force = true, },
 
       BlinkCmpGhostText  = { fg = theme.ui.special, force = true, },
