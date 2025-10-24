@@ -6,12 +6,23 @@ local augroup = vim.api.nvim_create_augroup("UserConfig", {})
 -- Change cwd on enter
 vim.api.nvim_create_autocmd("VimEnter", {
   group = augroup,
-  once = true, -- run only once per nvim start
+  once = true,
   callback = function()
-    -- Only if Neovim was launched with a file argument
     local argv = vim.fn.argv()
     if #argv > 0 then
-      local dir = vim.fn.fnamemodify(argv[1], ":p:h")
+      local target = argv[1]
+      local path = vim.fn.fnamemodify(target, ":p")
+      if path:match("^oil://") then
+        return
+      end
+
+      local dir
+      if vim.fn.isdirectory(path) == 1 then
+        dir = path
+      else
+        dir = vim.fn.fnamemodify(path, ":h")
+      end
+
       vim.cmd("cd " .. vim.fn.fnameescape(dir))
     end
   end,
@@ -21,9 +32,9 @@ vim.api.nvim_create_autocmd("DirChanged", {
   group = augroup,
   callback = function()
     vim.notify(
-      "CWD changed to: " .. vim.fn.getcwd(),
+      "cwd: " .. vim.fn.getcwd(),
       vim.log.levels.INFO,
-      { title = "Autocmd", }
+      { title = "User Autocmd", }
     )
   end,
 })
