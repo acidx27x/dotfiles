@@ -48,14 +48,41 @@ keymap_ns("n", "<M-l>", "<C-w>l", "window: move to right (meta)")
 keymap_ns("n", "<leader>sv", ":vsplit<CR>", "window: split vertically")
 keymap_ns("n", "<leader>sh", ":split<CR>",  "window: split horizontally")
 
-keymap_ns("n", "<A-Up>", ":resize -2<CR>", "window: increase height (alt)")
-keymap_ns("n", "<M-Up>", ":resize -2<CR>", "window: increase height (meta)")
-keymap_ns("n", "<A-Down>", ":resize +2<CR>", "window: decrease height (alt)")
-keymap_ns("n", "<M-Down>", ":resize +2<CR>", "window: decrease height (meta)")
-keymap_ns("n", "<A-Left>", ":vertical resize +2<CR>", "window: decrease width (alt)")
-keymap_ns("n", "<M-Left>", ":vertical resize +2<CR>", "window: decrease width (meta)")
-keymap_ns("n", "<A-Right>", ":vertical resize -2<CR>", "window: increase width (alt)")
-keymap_ns("n", "<M-Right>", ":vertical resize -2<CR>", "window: increase window width (meta)")
+keymap_ns("n", "<A-Up>", ":resize +2<CR>", "window: increase height (alt)")
+keymap_ns("n", "<M-Up>", ":resize +2<CR>", "window: increase height (meta)")
+keymap_ns("n", "<A-Down>", ":resize -2<CR>", "window: decrease height (alt)")
+keymap_ns("n", "<M-Down>", ":resize -2<CR>", "window: decrease height (meta)")
+keymap_ns("n", "<A-Right>", ":vertical resize +2<CR>", "window: increase width (alt)")
+keymap_ns("n", "<M-Right>", ":vertical resize +2<CR>", "window: increase width (meta)")
+keymap_ns("n", "<A-Left>", ":vertical resize -2<CR>", "window: decrease width (alt)")
+keymap_ns("n", "<M-Left>", ":vertical resize -2<CR>", "window: decrease width (meta)")
+
+
+-- Move focused floating windows
+local function float_move(drow, dcol)
+  local win = vim.api.nvim_get_current_win()
+  local cfg = vim.api.nvim_win_get_config(win)
+  if cfg.relative ~= "" then
+    cfg.row = cfg.row + drow
+    cfg.col = cfg.col + dcol
+    vim.api.nvim_win_set_config(win, cfg)
+  else
+    vim.notify(
+      "this keymap is used for moving focused floating window",
+      vim.log.levels.WARN,
+      { title = "User Keymaps", timeout = 1000, }
+    )
+  end
+end
+
+keymap_ns("n", "<A-w>", function() float_move(-1,  0) end)
+keymap_ns("n", "<M-w>", function() float_move(-1,  0) end)
+keymap_ns("n", "<A-s>", function() float_move( 1,  0) end)
+keymap_ns("n", "<M-s>", function() float_move( 1,  0) end)
+keymap_ns("n", "<A-a>", function() float_move( 0, -2) end)
+keymap_ns("n", "<M-a>", function() float_move( 0, -2) end)
+keymap_ns("n", "<A-d>", function() float_move( 0,  2) end)
+keymap_ns("n", "<M-d>", function() float_move( 0,  2) end)
 
 
 -- Better indenting in visual mode
