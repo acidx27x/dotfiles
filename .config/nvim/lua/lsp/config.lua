@@ -56,5 +56,10 @@ vim.lsp.log.set_level(vim.log.levels.WARN)
 
 -- lsp server group
 require("clangd-config")
+require("neocmake-config")
+
+-- python
+require("ruff-config")
+require("ty-config")
 --
 
