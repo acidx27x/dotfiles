@@ -1,4 +1,9 @@
 
+vim.pack.add({
+  { src = "https://github.com/mcauley-penney/visual-whitespace.nvim" },
+})
+
+
 require("visual-whitespace").setup({
   match_types = {
     space = true,
@@ -14,7 +19,8 @@ require("visual-whitespace").setup({
   },
 })
 
-vim.keymap.set({ 'n', 'v' }, "<leader>vw", require("visual-whitespace").toggle, {
+
+vim.keymap.set({ "n", "v" }, "<leader>vw", require("visual-whitespace").toggle, {
   noremap = true, silent  = true,
   desc = "Toggle Visual Whitespace Viewer"
 })

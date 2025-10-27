@@ -1,4 +1,9 @@
 
+vim.pack.add({
+  { src = "https://github.com/stevearc/conform.nvim" },
+})
+
+
 vim.g.disable_autoformat = true
 
 
@@ -8,6 +13,10 @@ require("conform").setup({
 
     c   = { "clang-format", lsp_format = "never", },
     cpp = { "clang-format", lsp_format = "never", },
+
+    cmake = { "gersemi", lsp_format = "never", },
+
+    python = { "ruff_format", lsp_format = "never", },
 
     --["*"] = { "codespell" },
     --["_"] = { "trim_whitespace" },
@@ -27,9 +36,10 @@ require("conform").setup({
 })
 
 
-vim.keymap.set({'n', 'v'}, "<leader>cf", function()
+vim.keymap.set({ "n", "v" }, "<leader>cf", function()
   require("conform").format({ async = false, lsp_format = "never", })
 end, { noremap = true, silent = true, desc = desc})
+
 -- conform.format({ formatters = { "ruff_fix" } }) to use with specific formater for injected code
 
 

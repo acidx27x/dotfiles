@@ -1,11 +1,16 @@
 
+vim.pack.add({
+  { src = "https://github.com/nvim-mini/mini.tabline" },
+})
+
+
 require("mini.tabline").setup({
   show_icons      = true,
   tabpage_section = "right",
 
 
   format = function(buf_id, label)
-    local suffix = vim.bo[buf_id].modified and '+' or ' '
+    local suffix = vim.bo[buf_id].modified and "+" or " "
 
     -- Get buffer number
     local buf_num = buf_id

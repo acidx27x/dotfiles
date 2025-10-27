@@ -1,4 +1,9 @@
 
+vim.pack.add({
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+})
+
+
 require("nvim-treesitter.configs").setup({
   ensure_installed = {
     "c", "cpp",
@@ -26,6 +31,7 @@ require("nvim-treesitter.configs").setup({
   },
   indent = { enable = true },
 })
+
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
   callback = function()

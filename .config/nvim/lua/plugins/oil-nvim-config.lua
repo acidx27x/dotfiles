@@ -1,4 +1,9 @@
 
+vim.pack.add({
+  { src = "https://github.com/stevearc/oil.nvim" },
+})
+
+
 -- toggle file column detail info
 local column_detail = false
 
@@ -8,8 +13,13 @@ local M = {}
 
 
 function M.get()
+  local winid = vim.api.nvim_get_current_win()
+  local bufnr = vim.api.nvim_win_get_buf(winid)
   local wininfo = vim.fn.getwininfo(vim.api.nvim_get_current_win())[1]
   if not wininfo then return "" end
+
+  local winconfig = vim.api.nvim_win_get_config(winid)
+  local is_floating = winconfig.relative ~= ""
 
   local signcol_setting = vim.wo.signcolumn
   local sign_width = 0
@@ -28,8 +38,8 @@ function M.get()
 
   local format = ""
 
-  local dir = vim.fn.getcwd(0, 0)
-  if dir then
+  local dir = require("oil").get_current_dir(bufnr)
+  if is_floating and dir then
     dir = "cwd: " .. vim.fn.fnamemodify(dir, ":~")
     format = "%%#SignColumn#%s%%#LineNr#%s%%#WinBar#%s%%*"
   else
@@ -51,7 +61,8 @@ require("oil").setup({
   use_default_keymaps = false,
   keymaps = {
     ["<leader>o?"] = { "actions.show_help", mode = "n", desc = "Oil: show help", },
-    ["<C-c>"]      = { "actions.close",     mode = "n", desc = "Oil: close", },
+    -- use :q to exit as close may duplicate parent buffer
+    -- ["<C-c>"]      = { "actions.close",     mode = "n", desc = "Oil: close", },
 
     ["<CR>"]        = { "actions.select", mode = "n", desc = "Oil: select", },
     ["<leader>osv"] = {
@@ -96,15 +107,6 @@ require("oil").setup({
         end
       end,
       mode = "n", desc = "Oil: toggle column detail",
-    },
-
-    ["<leader>of"] = {
-      callback = function()
-        require("mini.pick").builtin.files({
-          cwd = require("oil").get_current_dir()
-        })
-      end,
-      mode = "n", desc = "Oil: find file in cwd",
     },
   },
 
@@ -156,4 +158,14 @@ require("oil").setup({
     },
   },
 })
+
+
+local function keymap_ns(mode, key, func, desc)
+  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc})
+end
+
+keymap_ns("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")
+keymap_ns("n", "<leader>of", ":Oil --float<CR>", "Oil: open in float")
+keymap_ns("n", "<leader>ov", ":vnew | Oil<CR>", "Oil: open in split vertically")
+keymap_ns("n", "<leader>oh", ":new | Oil<CR>", "Oil: open in split horizontally")
 

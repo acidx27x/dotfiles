@@ -1,3 +1,9 @@
+
+vim.pack.add({
+  { src = "https://github.com/nvim-mini/mini.indentscope" },
+})
+
+
 require("mini.indentscope").setup({
   draw = {
     delay = 500,
@@ -14,10 +20,9 @@ require("mini.indentscope").setup({
     goto_bottom = "",
   },
 
-  symbol = '╎',
+  symbol = "╎",
 })
 
 
--- mb need to comment, depends on colorscheme
 vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { force = true, link = "NonText", })
 
