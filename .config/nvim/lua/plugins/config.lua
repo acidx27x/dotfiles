@@ -120,6 +120,8 @@ vim.pack.add({
   { src = "https://github.com/MunifTanjim/nui.nvim" },
   { src = "https://github.com/m4xshen/hardtime.nvim" },
 })
+require("visimatch-nvim-config")
+
 require("hardtime-nvim-config")
 
 vim.pack.add({
