@@ -126,5 +126,7 @@ vim.pack.add({
   { src = "https://github.com/m4xshen/smartcolumn.nvim" },
 })
 require("smartcolumn-nvim-config")
+
+require("multinput-nvim-config")
 --
 
