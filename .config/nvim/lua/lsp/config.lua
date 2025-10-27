@@ -16,6 +16,10 @@ vim.pack.add({
   { src = "https://github.com/SmiteshP/nvim-navic" },
 })
 require("nvim-navic-config")
+
+require("goto-preview-config")
+
+require("symbol-usage-nvim-config")
 --
 
 
