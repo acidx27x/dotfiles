@@ -1,20 +1,11 @@
 
--- lsp plugins group
+-- lsp plugin group
 vim.pack.add({
   { src = "https://github.com/neovim/nvim-lspconfig" },
 })
 
-vim.pack.add({
-  {
-    src     = "https://github.com/Saghen/blink.cmp",
-    version = "v1.7.0"  -- need to download binary
-  },
-})
 require("blink-cmp-config")
 
-vim.pack.add({
-  { src = "https://github.com/SmiteshP/nvim-navic" },
-})
 require("nvim-navic-config")
 
 require("goto-preview-config")
@@ -59,6 +50,8 @@ vim.lsp.log.set_level(vim.log.levels.WARN)
 
 
 -- lsp server group
+
+-- c/c++
 require("clangd-config")
 require("neocmake-config")
 

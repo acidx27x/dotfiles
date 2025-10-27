@@ -2,14 +2,15 @@
 local base = require("base-config")
 
 
-vim.lsp.config.clangd = {
-  on_init      = base.get_on_init("clangd"),
-  on_attach    = base.get_on_attach("clangd"),
-  capabilities = base.get_capabilities("clangd"),
+local name = "clangd"
+vim.lsp.config[name] = {
+  on_init      = base.get_on_init(name),
+  on_attach    = base.get_on_attach(name),
+  capabilities = base.get_capabilities(name),
 
-  name = "clangd",
+  name = name,
   cmd = {
-    "clangd",
+    name,
     "-j", "4",
     "--pretty",
     "--log=error",
@@ -26,7 +27,7 @@ vim.lsp.config.clangd = {
   },
 }
 
-vim.lsp.enable("clangd")
+vim.lsp.enable(name)
 
 
 --[=====[ base .clangd

@@ -1,4 +1,12 @@
 
+vim.pack.add({
+  {
+    src     = "https://github.com/Saghen/blink.cmp",
+    version = "v1.7.0"  -- need to download binary
+  },
+})
+
+
 require("blink.cmp").setup({
   keymap = {
     ["<C-space>"] = { "show", "show_documentation", "hide_documentation", },
@@ -16,6 +24,7 @@ require("blink.cmp").setup({
     ["<C-b>"] = { "scroll_documentation_up",   "fallback", },
     ["<C-f>"] = { "scroll_documentation_down", "fallback", },
 
+    ["<C-k>"] = false,
     ["<C-s>"] = { "show_signature", "hide_signature", },
     ["<C-u>"] = { "scroll_signature_up",   "fallback", },
     ["<C-d>"] = { "scroll_signature_down", "fallback", },
@@ -125,6 +134,8 @@ require("blink.cmp").setup({
       preset = "cmdline",
       ["<C-n>"] = { function(cmp) cmp.select_next({ auto_insert = false }) end, },  -- not working with default fb
       ["<C-p>"] = { function(cmp) cmp.select_prev({ auto_insert = false }) end, },  -- instantly fb to neovim c-n
+      ["<Left>"]  = false,
+      ["<Right>"] = false,
     },
     sources = function()
       local type = vim.fn.getcmdtype()
@@ -150,6 +161,8 @@ require("blink.cmp").setup({
       preset = "cmdline",
       ["<Tab>"]   = false,
       ["<S-Tab>"] = false,
+      ["<Left>"]  = false,
+      ["<Right>"] = false,
       ["<C-n>"] = { function(cmp) cmp.select_next({ auto_insert = false }) end, },  -- not working with default fb
       ["<C-p>"] = { function(cmp) cmp.select_prev({ auto_insert = false }) end, },  -- instantly fb to neovim c-n
     },

@@ -1,4 +1,9 @@
 
+vim.pack.add({
+  { src = "https://github.com/SmiteshP/nvim-navic" },
+})
+
+
 local navic = require("nvim-navic")
 
 
@@ -6,7 +11,7 @@ navic.setup({
   highlight = true,
   separator = "/",
 
-  depth_limit = 5,
+  depth_limit = 6,
   depth_limit_indicator = "..",
 
   click = true,
