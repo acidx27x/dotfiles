@@ -26,6 +26,7 @@ keymap_ns("n", "<C-u>", "<C-u>zz", "page move: up (centered)")
 --keymap_ns({ "n", "v" }, "<leader>d", '"_d', "edit: delete without yanking")
 keymap_ns({ "n", "v" }, "<leader>d", "<Nop>", "edit: prevent delete with just '<leader>d'")
 keymap_ns({ "n", "v" }, "<leader>o", "<Nop>", "edit: prevent enter insert with just '<leader>o'")
+keymap_ns({ "n", "v" }, "<leader>p", "<Nop>", "edit: prevent enter insert with just '<leader>p'")
 
 
 -- Buffer navigation
@@ -91,11 +92,6 @@ keymap_ns("n", "<M-d>", function() float_move( 0,  2) end)
 -- keymap_ns("v", ">", ">gv", "edit: indent right and reselect")
 
 
--- Better J behavior
-keymap_ns("n", "J", "mzJ`z", "edit: join lines and keep cursor position")
-
-
-
 -- Quick config editing
 keymap_ns("n", "<leader>rc", function()
   local path = vim.fn.stdpath("config") .. "/init.lua"
@@ -113,8 +109,8 @@ end, "utils: copy current full file path")
 
 -- Terminal window
 keymap_ns("n", "<leader>tt", ":tabnew | terminal<CR>", "terminal: open in tab")
-keymap_ns("n", "<leader>tv", ":vsplit | terminal<CR>", "terminal: open in split vertically")
-keymap_ns("n", "<leader>th", ":split | terminal<CR>", "terminal: open in split horizontally")
+keymap_ns("n", "<leader>tv", ":vnew | terminal<CR>", "terminal: open in split vertically")
+keymap_ns("n", "<leader>th", ":new | terminal<CR>", "terminal: open in split horizontally")
 
 
 -- Open buffer in tab with number
@@ -135,7 +131,7 @@ vim.api.nvim_create_user_command("BTab", function(opts)
 end, {
   nargs = 1,
   complete = "buffer",
-  desc = "Open buffer by number in a tab",
+  desc = "cmdline: open buffer by number in a tab",
 })
 vim.cmd("cabbrev btab BTab")
 

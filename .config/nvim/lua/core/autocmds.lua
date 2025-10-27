@@ -4,29 +4,29 @@ local augroup = vim.api.nvim_create_augroup("UserConfig", {})
 
 
 -- Change cwd on enter
-vim.api.nvim_create_autocmd("VimEnter", {
-  group = augroup,
-  once = true,
-  callback = function()
-    local argv = vim.fn.argv()
-    if #argv > 0 then
-      local target = argv[1]
-      local path = vim.fn.fnamemodify(target, ":p")
-      if path:match("^oil://") then
-        return
-      end
-
-      local dir
-      if vim.fn.isdirectory(path) == 1 then
-        dir = path
-      else
-        dir = vim.fn.fnamemodify(path, ":h")
-      end
-
-      vim.cmd("cd " .. vim.fn.fnameescape(dir))
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   group = augroup,
+--   once = true,
+--   callback = function()
+--     local argv = vim.fn.argv()
+--     if #argv > 0 then
+--       local target = argv[1]
+--       local path = vim.fn.fnamemodify(target, ":p")
+--       if path:match("^oil://") then
+--         return
+--       end
+--
+--       local dir
+--       if vim.fn.isdirectory(path) == 1 then
+--         dir = path
+--       else
+--         dir = vim.fn.fnamemodify(path, ":h")
+--       end
+--
+--       vim.cmd("cd " .. vim.fn.fnameescape(dir))
+--     end
+--   end,
+-- })
 
 vim.api.nvim_create_autocmd("DirChanged", {
   group = augroup,
@@ -34,9 +34,10 @@ vim.api.nvim_create_autocmd("DirChanged", {
     vim.notify(
       "cwd: " .. vim.fn.getcwd(),
       vim.log.levels.INFO,
-      { title = "User Autocmd", }
+      { title = "User Autocmd", timeout = 1000, }
     )
   end,
+  desc = "DirChanged: notify about cwd",
 })
 
 
@@ -46,6 +47,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()
   end,
+  desc = "TextYankPost: highlight on yank",
 })
 
 
@@ -58,6 +60,7 @@ vim.api.nvim_create_autocmd("TermClose", {
       vim.api.nvim_buf_delete(0, {})
     end
   end,
+  desc = "TermClose: close terminal buffer if process exits",
 })
 
 
@@ -69,6 +72,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
     vim.opt_local.relativenumber = false
     vim.opt_local.signcolumn = "no"
   end,
+  desc = "TermOpen: remove extra ui",
 })
 
 
@@ -78,21 +82,22 @@ vim.api.nvim_create_autocmd("VimResized", {
   callback = function()
     vim.cmd("tabdo wincmd =")
   end,
+  desc = "VimResized: auto-resize splits when window is resized",
 })
 
 
 -- Save and Load view
-vim.api.nvim_create_autocmd({"BufWinLeave"}, {
+vim.api.nvim_create_autocmd("BufWinLeave", {
   group = augroup,
   pattern = "*",
-  desc = "Save view, when closing file",
   command = "silent! mkview",
+  desc = "BufWinLeave: save view, when closing file",
 })
-vim.api.nvim_create_autocmd({"BufWinEnter"}, {
+vim.api.nvim_create_autocmd("BufWinEnter", {
   group = augroup,
   pattern = "*",
-  desc = "Load view, when opening file",
-  command = "silent! loadview"
+  command = "silent! loadview",
+  desc = "BufWinEnter: load view, when opening file",
 })
 
 -- Return to last edit position when opening files
@@ -105,5 +110,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
       pcall(vim.api.nvim_win_set_cursor, 0, mark)
     end
   end,
+  desc = "BufReadPost: return to last edit position",
 })
 
