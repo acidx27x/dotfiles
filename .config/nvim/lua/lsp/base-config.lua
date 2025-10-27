@@ -10,38 +10,66 @@ M.lsp_keymaps = function(bufnr)
     vim.keymap.set("n", key, func, opts)
   end
 
-  keyn("gd", vim.lsp.buf.definition,      getopts("LSP: definition (buf)"))
-  keyn("gy", vim.lsp.buf.type_definition, getopts("LSP: type_definition (buf)"))
-  keyn("gc", vim.lsp.buf.declaration,     getopts("LSP: declaration (buf)"))
-  keyn("gr", vim.lsp.buf.references,      getopts("LSP: references (buf)"))
-  keyn("gi", vim.lsp.buf.implementation,  getopts("LSP: implementation (buf)"))
-  keyn("gs", vim.lsp.buf.document_symbol, getopts("LSP: document_symbol (buf)"))
+  -- base goto smth lsp operations
+  keyn("gd", vim.lsp.buf.definition,      getopts("LSP: definition"))
+  keyn("gy", vim.lsp.buf.type_definition, getopts("LSP: type definition"))
+  keyn("gc", vim.lsp.buf.declaration,     getopts("LSP: declaration"))
+  keyn("gr", vim.lsp.buf.references,      getopts("LSP: references"))
+  keyn("gi", vim.lsp.buf.implementation,  getopts("LSP: implementation"))
 
-  -- C-s because lSp
-  keyn("<C-s>h", vim.lsp.buf.hover,          getopts("LSP: hover (buf)"))
-  keyn("<C-s>s", vim.lsp.buf.signature_help, getopts("LSP: signature_help (buf)"))
+  local has_preview, preview = pcall(require, "goto-preview")
+  if has_preview then
+    keyn("gpd", preview.goto_preview_definition,      getopts("LSP: preview definition"))
+    keyn("gpy", preview.goto_preview_type_definition, getopts("LSP: preview type definition"))
+    keyn("gpc", preview.goto_preview_declaration,     getopts("LSP: preview declaration"))
+    keyn("gpr", preview.goto_preview_references,      getopts("LSP: preview references"))
+    keyn("gpi", preview.goto_preview_implementation,  getopts("LSP: preview implementation"))
+    keyn("gpq", preview.close_all_win,                getopts("LSP: preview close all"))
+  end
+  --
 
-  keyn("<C-s>rn", vim.lsp.buf.rename,      getopts("LSP: rename (buf)"))
-  keyn("<C-s>ca", vim.lsp.buf.code_action, getopts("LSP: code_action (buf)"))
+  -- additional lsp operations (C-s because lSp)
+  keyn("<C-s>h", vim.lsp.buf.hover,          getopts("LSP: hover"))
+  keyn("<C-s>s", vim.lsp.buf.signature_help, getopts("LSP: signature help"))
 
+  keyn("<C-s>rn", vim.lsp.buf.rename,         getopts("LSP: rename"))
+  keyn("<C-s>ca", vim.lsp.buf.code_action,    getopts("LSP: code action"))
+  keyn("<C-s>ic", vim.lsp.buf.incoming_calls, getopts("LSP: incoming calls"))
+  keyn("<C-s>oc", vim.lsp.buf.outgoing_calls, getopts("LSP: outgoing calls"))
+  keyn("<C-s>th", vim.lsp.buf.typehierarchy,  getopts("LSP: typehierarchy"))
+
+  keyn("<C-s>ds", vim.lsp.buf.document_symbol,    getopts("LSP: document symbol"))
+  keyn("<C-s>dh", vim.lsp.buf.document_highlight, getopts("LSP: document highlight"))
+  keyn("<C-s>cr", vim.lsp.buf.clear_references,   getopts("LSP: clear references"))
+
+  keyn("<C-s>ws", vim.lsp.buf.workspace_symbol,      getopts("LSP: workspace symbol"))
+  keyn("<C-s>wd", vim.lsp.buf.workspace_diagnostics, getopts("LSP: workspace diagnostics"))
+  -- TODO vim.lsp.buf.selection_range
+
+  keyn("<C-s>l", function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
+  end, getopts("LSP: toggle inlay hint (global)"))
+  keyn("<C-s>L", function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+  end, getopts("LSP: toggle inlay hint"))
+
+  local has_usage, usage = pcall(require, "symbol-usage")
+  if has_usage then
+    keyn("<C-s>u", usage.toggle,          getopts("LSP: symbol usage toggle"))
+    keyn("<C-s>U", usage.toggle_globally, getopts("LSP: symbol usage toggle (global)"))
+  end
+  --
+
+  -- diagnostic operations
   keyn("<C-w>dl", vim.diagnostic.setloclist, getopts("diagnostic: setloclist"))
-  keyn("<C-w>do", vim.diagnostic.open_float, getopts("diagnostic: open_float"))
+  keyn("<C-w>do", vim.diagnostic.open_float, getopts("diagnostic: open float"))
   keyn("]d", function()
     vim.diagnostic.jump({ count = 1 })
   end,  getopts("diagnostic: jump next"))
   keyn("[d", function()
     vim.diagnostic.jump({ count = -1 })
   end, getopts("diagnostic: jump prev"))
-
-  keyn("<C-s>i", function()
-    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
-  end, getopts("LSP: toggle inlay_hint"))
-  keyn("<C-s>I", function()
-    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-  end, getopts("LSP: toggle inlay_hint (buf)"))
-
-  keyn("<C-s>dh", vim.lsp.buf.document_highlight, getopts("LSP: document_highlight"))
-  keyn("<C-s>cr", vim.lsp.buf.clear_references,   getopts("LSP: clear_references"))
+  --
 
   -- restore some remapped combinations
   keyn("K",   "K",   getopts(""))  -- hover
@@ -54,6 +82,7 @@ M.lsp_keymaps = function(bufnr)
 
   vim.keymap.set({ "n", "v" }, "gra", "gra", getopts(""))  -- code_action
   vim.keymap.set("i", "<C-s>", "<C-s>", getopts(""))  -- signature_help
+  --
 end
 
 
@@ -74,7 +103,17 @@ M.get_capabilities = function(server_name)
   }
   --
 
-  return require("blink.cmp").get_lsp_capabilities(capabilities)
+  local has_blink, blink = pcall(require, "blink.cmp")
+  if has_blink then
+    return blink.get_lsp_capabilities(capabilities)
+  else
+    vim.notify(
+      "blink.cmp is not installed, falling back to default lsp capabilities",
+      vim.log.levels.WARN,
+      { title = "LSP", }
+    )
+    return capabilities
+  end
 end
 
 
@@ -93,7 +132,16 @@ M.on_attach = function(client, bufnr)
   end
 
   if client.server_capabilities.documentSymbolProvider then
-    require("nvim-navic").attach(client, bufnr)
+    local has_navic, navic = pcall(require, "nvim-navic")
+    if has_navic then
+      navic.attach(client, bufnr)
+    else
+      vim.notify(
+        "nvim-navic is not installed, falling back to default winbar",
+        vim.log.levels.WARN,
+        { title = "LSP", }
+      )
+    end
   end
 
   if client.server_capabilities.semanticTokensProvider then
