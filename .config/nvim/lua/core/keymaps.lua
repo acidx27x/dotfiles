@@ -139,3 +139,47 @@ end, {
 })
 vim.cmd("cabbrev btab BTab")
 
+
+-- Better cd -> lcd
+keymap_ns("n", "<leader>cd", function()
+  local bufname = vim.api.nvim_buf_get_name(0)
+  local path = bufname ~= "" and vim.fn.expand("%:p:h") or vim.fn.getcwd()
+  if vim.fn.isdirectory(path) == 1 then
+    vim.cmd("lcd " .. vim.fn.fnameescape(path))
+  else
+    vim.notify(
+      "<leader>cd: no valid directory found, at '" .. path "'",
+      vim.log.levels.WARN,
+      { title = "User Keymaps", timeout = 1000, }
+    )
+  end
+end, "buffer: change local cwd to current buffer's directory")
+
+
+-- Better pwd info
+local function print_workdir(scope, path)
+  if path == "" then
+    print(scope .. ": [none]")
+  else
+    print(scope .. ": " .. path)
+  end
+end
+
+-- Global CWD
+vim.api.nvim_create_user_command("Cwd", function()
+  local path = vim.fn.getcwd(-1, -1)
+  print_workdir("Global", path)
+end, { desc = "editor: show global working directory", })
+
+-- Tab-local CWD
+vim.api.nvim_create_user_command("Twd", function()
+  local path = vim.fn.getcwd(-1, 0)
+  print_workdir("Tab", path)
+end, { desc = "editor: show tab-local working directory", })
+
+-- Window-local CWD
+vim.api.nvim_create_user_command("Lwd", function()
+  local path = vim.fn.getcwd()
+  print_workdir("Window", path)
+end, { desc = "editor: show window-local working directory", })
+
