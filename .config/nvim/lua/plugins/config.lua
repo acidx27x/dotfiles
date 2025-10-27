@@ -53,6 +53,8 @@ vim.pack.add({
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/nvim-mini/mini.statusline" },
 })
+require("mini-pick-config")
+
 require("mini-statusline-config")
 
 vim.pack.add({
@@ -86,6 +88,10 @@ vim.pack.add({
 require("mini-surround-config")
 
 require("mini-pairs-config")
+
+require("mini-splitjoin-config")
+
+require("mini-bufremove-config")
 --
 
 
