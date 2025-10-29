@@ -2,7 +2,7 @@
 -- use name as 'lldb-dap' to be able to have same config for vscode
 require("dap").adapters["lldb-dap"] = {
   type    = "executable",
-  command = "lldb-dap",  -- adjust full path
+  command = _G.Paths["lldb-dap"],  -- may need adjust full path
   args = {},
   options = {
     env = {},

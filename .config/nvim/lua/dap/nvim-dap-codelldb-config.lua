@@ -2,7 +2,7 @@
 -- use name as 'lldb' to be able to have same config for vscode
 require("dap").adapters.lldb = {
   type    = "executable",
-  command = "codelldb",  -- adjust full path
+  command = _G.Paths.codelldb,  -- may need adjust full path
   args    = {},
   options = {
     env = {},
@@ -12,7 +12,7 @@ require("dap").adapters.lldb = {
 --   type    = "server",
 --   port    = "${port}",
 --   executable = {
---     command = "codelldb",  -- adjust full path
+--     command = _G.Paths.codelldb,  -- may need adjust full path
 --     args = { "--port", "${port}" },
 --     detached = vim.loop.os_uname().sysname ~= "Windows",
 --   },

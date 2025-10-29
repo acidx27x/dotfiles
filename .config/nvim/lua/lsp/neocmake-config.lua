@@ -9,6 +9,11 @@ vim.lsp.config[name] = {
   capabilities = base.get_capabilities(name),
 
   name = name,
+
+  cmd = {
+    _G.Paths[name],
+    "--stdio",
+  },
 }
 
 vim.lsp.enable(name)

@@ -24,6 +24,14 @@ require("conform").setup({
     ["_"] = nil,
   },
 
+  formatters = {
+    ["clang-format"] = { command = _G.Paths["clang-format"], },
+
+    gersemi = { command = _G.Paths.gersemi, },
+
+    ruff_format = { command = _G.Paths.ruff, },
+  },
+
   default_format_opts = {
     timeout_ms = 1000,
     lsp_format = "never",

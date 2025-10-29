@@ -10,7 +10,7 @@ vim.lsp.config[name] = {
 
   name = name,
   cmd = {
-    name,
+    _G.Paths[name],
     "-j", "4",
     "--pretty",
     "--log=error",
