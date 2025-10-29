@@ -179,3 +179,97 @@ vim.api.nvim_create_user_command("Lwd", function()
   print_workdir("Window", path)
 end, { desc = "editor: show window-local working directory", })
 
+
+-- Better ctags support
+vim.api.nvim_create_user_command("CTags", function(opts)
+  local args = opts.fargs
+  local langs = {}
+  local exclude = { "build", "dist", "run", }
+  local tagfile = ".tags"
+
+  -- Parse arguments
+  for _, arg in ipairs(args) do
+    local key, val = arg:match("(%w+)=([%w%+]+)")
+    if key == "lang" then
+      table.insert(langs, val)
+    elseif key == "exclude" then
+      table.insert(exclude, val)
+    end
+  end
+
+  if #langs == 0 then
+    vim.notify(
+      "no languages provided. use :CTags lang=<language>",
+      vim.log.levels.ERROR,
+      { title = "User Keymaps", timeout = 1000, }
+    )
+    return
+  end
+
+  -- Construct the ctags command
+  local cmd = { _G.Paths.ctags, "-R", "-f", tagfile, }
+  table.insert(cmd, "--languages=" .. table.concat(langs, ","))
+
+  for _, ex in ipairs(exclude) do
+    table.insert(cmd, "--exclude=" .. ex)
+  end
+
+  table.insert(cmd, ".")  -- better set dir in the end
+
+  -- Run asynchronously
+  vim.fn.jobstart(cmd, {
+    stdout_buffered = true,
+    stderr_buffered = true,
+    on_stdout = function(_, data)
+      if not data then return end
+      local lines = vim.tbl_filter(function(line)
+        return line ~= nil and line ~= ""
+      end, data)
+      if #lines > 0 then
+        vim.notify(
+          table.concat(lines, "\n"),
+          vim.log.levels.INFO,
+          { title = "User Keymaps", timeout = 1000, }
+        )
+      end
+    end,
+    on_stderr = function(_, data)
+      if not data then return end
+      local lines = vim.tbl_filter(function(line)
+        return line ~= nil and line ~= ""
+      end, data)
+      if #lines > 0 then
+        vim.notify(
+          table.concat(lines, "\n"),
+          vim.log.levels.INFO,
+          { title = "User Keymaps", timeout = 1000, }
+        )
+      end
+    end,
+    on_exit = function(_, code)
+      if code == 0 then
+        vim.notify(
+          "tags generated successfully to '" .. tagfile .. "' file",
+          vim.log.levels.INFO,
+          { title = "User Keymaps", timeout = 1000, }
+        )
+      else
+        vim.notify(
+          "CTags command failed",
+          vim.log.levels.ERROR,
+          { title = "User Keymaps", timeout = 1000, }
+        )
+      end
+    end,
+  })
+end, {
+  nargs = "*",
+  complete = function(_, _, _)
+    return {
+      "lang=CMake",
+      "exclude=build",
+    }
+  end,
+  desc = "utils: create ctags with provided languages and exclude dirs",
+})
+

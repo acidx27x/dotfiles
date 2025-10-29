@@ -112,3 +112,6 @@ vim.opt.diffopt:append("linematch:60")
 vim.opt.redrawtime    = 10000
 vim.opt.maxmempattern = 20000
 
+-- CTags
+vim.opt.tags = { ".tags;", "tags;", }
+
