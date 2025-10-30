@@ -30,11 +30,15 @@ keymap_ns({ "n", "v" }, "<leader>p", "<Nop>", "edit: prevent enter insert with j
 
 
 -- Buffer navigation
+keymap_ns("n", "<leader>bd", ":bdelete<CR>", "buffer: delete")
 keymap_ns("n", "<leader>bn", ":bnext<CR>", "buffer: next")
 keymap_ns("n", "<leader>bp", ":bprevious<CR>", "buffer: previous")
 
 
 -- Better window navigation
+keymap_ns("n", "<leader>q", ":close<CR>", "window: close")
+keymap_ns("n", "<leader>Q", ":quit<CR>", "window: quit")
+
 keymap_ns("n", "<A-h>", "<C-w>h", "window: move to left (alt)")
 keymap_ns("n", "<M-h>", "<C-w>h", "window: move to left (meta)")
 keymap_ns("n", "<A-j>", "<C-w>j", "window: move to bottom (alt)")
