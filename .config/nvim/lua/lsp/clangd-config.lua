@@ -25,6 +25,8 @@ vim.lsp.config[name] = {
     "c", "cc", "C", "cpp", "cxx",
     "h", "hh", "H", "hpp", "hxx",
   },
+
+  single_file_support = true,
 }
 
 vim.lsp.enable(name)

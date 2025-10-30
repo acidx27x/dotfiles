@@ -14,7 +14,22 @@ vim.lsp.config[name] = {
     _G.Paths[name],
     "--stdio",
   },
+
+  single_file_support = true,
+  init_options = {
+    lint   = { enable = true, },
+    format = { enable = false, },
+    semantic_token        = false,
+    scan_cmake_in_package = true,
+  },
 }
 
 vim.lsp.enable(name)
+
+
+--[=====[ base .neocmakelint.toml
+line_max_words = 120
+command_upcase = "ignore"
+enable_external_cmake_lint = false
+--]=====]
 
