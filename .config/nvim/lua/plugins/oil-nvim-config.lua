@@ -65,22 +65,21 @@ require("oil").setup({
     -- ["<C-c>"]      = { "actions.close",     mode = "n", desc = "Oil: close", },
 
     ["<CR>"]        = { "actions.select", mode = "n", desc = "Oil: select", },
-    ["<leader>osv"] = {
+    ["<C-S-V>"] = {
       "actions.select",
       mode = "n", opts = { vertical = true }, desc = "Oil: select in vertical",
     },
-    ["<leader>osh"] = {
+    ["<C-S-H>"] = {
       "actions.select",
       mode = "n", opts = { horizontal = true }, desc = "Oil: select in horizontal",
     },
-    ["<leader>ost"] = {
+    ["<C-S-T>"] = {
       "actions.select",
       mode = "n", opts = { tab = true }, desc = "Oil: select in tab",
     },
-
-    ["<leader>otp"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview", },
-    ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Oil: scrolll preview up", },
-    ["<C-b>"] = { "actions.preview_scroll_up",   mode = "n", desc = "Oil: scrolll preview down", },
+    ["<C-S-P>"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview", },
+    ["<C-f>"]   = { "actions.preview_scroll_down", mode = "n", desc = "Oil: scrolll preview up", },
+    ["<C-b>"]   = { "actions.preview_scroll_up",   mode = "n", desc = "Oil: scrolll preview down", },
 
     ["<leader>or"] = { "actions.refresh", mode = "n", desc = "Oil: refresh", },
 
@@ -92,11 +91,10 @@ require("oil").setup({
       opts = { scope = "win" }, mode = "n", desc = "Oil: cd (tab)",
     },
     ["<leader>ox"] = { "actions.open_external", mode = "n", desc = "Oil: open external", },
+    ["<leader>os"] = { "actions.change_sort",   mode = "n", desc = "Oil: change sort", },
 
-    ["<leader>ots"] = { "actions.change_sort",   mode = "n", desc = "Oil: change sort", },
     ["<leader>oth"] = { "actions.toggle_hidden", mode = "n", desc = "Oil: toggle hidden", },
     ["<leader>ott"] = { "actions.toggle_trash",  mode = "n", desc = "Oil: toggle trash", },
-
     ["<leader>otc"] = {
       callback = function()
         column_detail = not column_detail
