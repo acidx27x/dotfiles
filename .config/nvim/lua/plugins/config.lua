@@ -19,6 +19,8 @@ require("nvim-treesitter-config")
 require("neo-tree-config")
 
 require("oil-nvim-config")
+
+require("harpoon-config")
 --
 
 
