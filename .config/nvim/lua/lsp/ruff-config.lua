@@ -14,8 +14,6 @@ vim.lsp.config[name] = {
     _G.Paths[name],
     "server",
   },
-
-  single_file_support = true,
 }
 
 vim.lsp.enable(name)

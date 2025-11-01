@@ -44,10 +44,13 @@ require("symbol-usage").setup({
 
     local result = table.concat(fragments, ", ") .. stacked_functions
     if vim.trim(result) ~= "" then
-      result = "codelens: " .. result
+      result = "usage: " .. result
     end
 
     return result
   end
 })
+
+-- disable by default
+require("symbol-usage").toggle_globally()
 

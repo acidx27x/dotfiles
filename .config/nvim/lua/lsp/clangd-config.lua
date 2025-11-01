@@ -26,25 +26,7 @@ vim.lsp.config[name] = {
     "c", "cc", "C", "cpp", "cxx",
     "h", "hh", "H", "hpp", "hxx",
   },
-
-  single_file_support = true,
-  flags = {
-    debounce_text_changes = 150,
-    allow_incremental_sync = true,
-  },
 }
-
--- TODO: do single_file_support and flags shared like this
---vim.lsp.config('*', {
---   capabilities = {
---     textDocument = {
---       semanticTokens = {
---         multilineTokenSupport = true,
---       }
---     }
---   },
---   root_markers = { '.git' },
--- })
 
 vim.lsp.enable(name)
 

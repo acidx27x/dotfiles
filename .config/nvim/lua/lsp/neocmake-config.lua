@@ -15,11 +15,10 @@ vim.lsp.config[name] = {
     "--stdio",
   },
 
-  single_file_support = true,
   init_options = {
     lint   = { enable = true, },
     format = { enable = false, },
-    semantic_token        = false,
+    semantic_token        = true,
     scan_cmake_in_package = true,
   },
 }
