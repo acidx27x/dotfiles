@@ -21,6 +21,8 @@ require("neo-tree-config")
 require("oil-nvim-config")
 
 require("harpoon-config")
+
+require("snipe-nvim-config")
 --
 
 
