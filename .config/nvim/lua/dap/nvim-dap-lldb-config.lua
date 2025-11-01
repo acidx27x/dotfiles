@@ -3,7 +3,7 @@
 require("dap").adapters["lldb-dap"] = {
   type    = "executable",
   command = _G.Paths["lldb-dap"],  -- may need adjust full path
-  args = {},
+  args    = {},
   options = {
     env = {},
   },

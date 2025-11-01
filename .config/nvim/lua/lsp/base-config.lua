@@ -101,6 +101,9 @@ M.get_capabilities = function(server_name)
     rangesSupport       = false,
     dynamicRegistration = false,
   }
+
+  -- HINT: for large number of files may be useful
+  -- capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
   --
 
   local has_blink, blink = pcall(require, "blink.cmp")

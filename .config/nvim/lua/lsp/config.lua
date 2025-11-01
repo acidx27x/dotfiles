@@ -14,7 +14,19 @@ require("symbol-usage-nvim-config")
 --
 
 
--- common diagnostic
+-- lsp server group
+
+-- c/c++
+require("clangd-config")
+require("neocmake-config")
+
+-- python
+require("ruff-config")
+require("ty-config")
+--
+
+
+-- diagnostic group
 vim.diagnostic.config({
   virtual_text = {
     prefix = "▣",
@@ -46,17 +58,5 @@ vim.diagnostic.config({
   },
 })
 vim.lsp.log.set_level(vim.log.levels.WARN)
---
-
-
--- lsp server group
-
--- c/c++
-require("clangd-config")
-require("neocmake-config")
-
--- python
-require("ruff-config")
-require("ty-config")
 --
 

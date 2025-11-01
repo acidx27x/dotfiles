@@ -11,11 +11,12 @@ vim.lsp.config[name] = {
   name = name,
   cmd = {
     _G.Paths[name],
-    "-j", "4",
+    "-j", "8",
     "--pretty",
     "--log=error",
+    "--clang-tidy",
     "--background-index",
-    "--pch-storage=memory",
+    "--pch-storage=disk",
     "--header-insertion=never",
     "--completion-style=detailed",
     "--function-arg-placeholders=0",
@@ -27,7 +28,23 @@ vim.lsp.config[name] = {
   },
 
   single_file_support = true,
+  flags = {
+    debounce_text_changes = 150,
+    allow_incremental_sync = true,
+  },
 }
+
+-- TODO: do single_file_support and flags shared like this
+--vim.lsp.config('*', {
+--   capabilities = {
+--     textDocument = {
+--       semanticTokens = {
+--         multilineTokenSupport = true,
+--       }
+--     }
+--   },
+--   root_markers = { '.git' },
+-- })
 
 vim.lsp.enable(name)
 
