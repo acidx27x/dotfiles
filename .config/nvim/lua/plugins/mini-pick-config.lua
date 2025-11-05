@@ -2,7 +2,8 @@
 vim.pack.add({
   { src = "https://github.com/nvim-mini/mini.icons" },  -- uses by default, fb to nvim-web-devicons
   { src = "https://github.com/nvim-mini/mini.extra" },
-  { src = "https://github.com/nvim-mini/mini.pick" },
+  -- { src = "https://github.com/nvim-mini/mini.pick" },
+  { src = "https://github.com/acidx27x/mini.pick" },  -- fork to be able to edit glob patterns
 })
 
 

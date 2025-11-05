@@ -2,7 +2,8 @@
 vim.pack.add({
   { src = "https://github.com/nvim-mini/mini.icons" },
   { src = "https://github.com/onsails/lspkind.nvim" },
-  { src = "https://github.com/Saghen/blink.cmp" },
+  -- { src = "https://github.com/Saghen/blink.cmp" },
+  { src = "https://github.com/acidx27x/blink.cmp" },
 })
 
 
@@ -250,12 +251,12 @@ require("blink.cmp").setup({
 -- NOTE
 -- this may be removed in future for new releases
 -- when suitable api for dynamic trigger handling arrive
-local signature_trigger_show_old = require("blink.cmp.signature.trigger").show
-require("blink.cmp.signature.trigger").show = function(opts)
-  opts = opts or {}
-  if require("blink.cmp").is_signature_visible() then
-    opts.force = true
-  end
-  signature_trigger_show_old(opts)
-end
+-- local signature_trigger_show_old = require("blink.cmp.signature.trigger").show
+-- require("blink.cmp.signature.trigger").show = function(opts)
+--   opts = opts or {}
+--   if require("blink.cmp").is_signature_visible() then
+--     opts.force = true
+--   end
+--   signature_trigger_show_old(opts)
+-- end
 
