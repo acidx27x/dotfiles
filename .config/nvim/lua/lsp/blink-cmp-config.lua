@@ -1,9 +1,16 @@
 
 vim.pack.add({
+  { src = "https://github.com/nvim-mini/mini.icons" },
+  { src = "https://github.com/onsails/lspkind.nvim" },
   {
     src     = "https://github.com/Saghen/blink.cmp",
     version = "v1.7.0"  -- need to download binary
   },
+})
+
+
+require("lspkind").setup({
+--
 })
 
 
@@ -14,8 +21,8 @@ require("blink.cmp").setup({
     ["<S-Tab>"]   = { "select_and_accept", "fallback", },
     ["<Tab>"]     = false,
 
-    ["<C-e>"]     = { "hide",   "fallback" },
-    ["<C-y>"]     = { "accept", "fallback" },
+    ["<C-e>"]     = { "hide",   "fallback", },
+    ["<C-y>"]     = { "accept", "fallback", },
     ["<CR>"]      = false,
 
     ["<C-n>"] = { function(cmp) cmp.select_next({ auto_insert = false }) end, },  -- not working with default fb
@@ -42,34 +49,38 @@ require("blink.cmp").setup({
     providers = {
       lsp = {
         enabled = true,
-        name    = "lsp",
+        name    = "LSP",
         module  = "blink.cmp.sources.lsp",
         score_offset = 10,
       },
       omni = {
         enabled = function() return vim.bo.omnifunc ~= "v:lua.vim.lsp.omnifunc" end,
-        name    = "omni",
+        name    = "OMNI",
         module  = "blink.cmp.sources.complete_func",
         opts    = { complete_func = function() return vim.bo.omnifunc end, },
         score_offset = 9,
       },
       buffer = {
         enabled = true,
-        name    = "buffer",
+        name    = "BUF",
         module  = "blink.cmp.sources.buffer",
         score_offset = 8,
       },
       path = {
         enabled = true,
-        name    = "path",
+        name    = "PATH",
         module  = "blink.cmp.sources.path",
         score_offset = 7,
       },
       snippets = {
         enabled = false,
-        name    = "snippets",
+        name    = "SNIP",
         module  = "blink.cmp.sources.snippets",
         score_offset = 1,
+      },
+      cmdline = {
+        name   = "CMD",
+        module = 'blink.cmp.sources.cmdline',
       },
     },
   },
@@ -108,7 +119,7 @@ require("blink.cmp").setup({
 
       draw = {
         treesitter = { "lsp" },
-        columns = { { "kind_icon" }, { "label", "label_description", gap = 1 }, { "source_name" } },
+        columns = { { "label", "label_description", gap = 1 }, { "kind_icon" }, { "source_name" }, },
         components = {
           source_name = {
             width = { max = 30 },
@@ -116,6 +127,35 @@ require("blink.cmp").setup({
               return "[" .. ctx.source_name .. "]"
             end,
             highlight = "BlinkCmpSource",
+          },
+          kind_icon = {  -- from doc/recipes.md
+            text = function(ctx)
+              if vim.tbl_contains({ "CMD" }, ctx.source_name) then
+                return ctx.icon_gap
+              end
+              if vim.tbl_contains({ "PATH" }, ctx.source_name) then
+                local mini_icon, _ = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                if mini_icon then return mini_icon .. ctx.icon_gap end
+              end
+              local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol_text", })
+              return icon .. ctx.icon_gap
+            end,
+            highlight = function(ctx)
+              if vim.tbl_contains({ "PATH" }, ctx.source_name) then
+                local mini_icon, mini_hl = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                if mini_icon then return mini_hl end
+              end
+              return ctx.kind_hl
+            end,
+          },
+          kind = {  -- from doc/recipes.md
+            highlight = function(ctx)
+              if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                local mini_icon, mini_hl = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                if mini_icon then return mini_hl end
+              end
+              return ctx.kind_hl
+            end,
           },
         },
       },
@@ -139,8 +179,8 @@ require("blink.cmp").setup({
     },
     sources = function()
       local type = vim.fn.getcmdtype()
-      if type == '/' or type == '?' then return { "buffer" } end
-      if type == ':' or type == '@' then return { "cmdline", "buffer" } end
+      if type == '/' or type == '?' then return { "buffer", } end
+      if type == ':' or type == '@' then return { "cmdline", "buffer", } end
       return {}
     end,
     completion = {
@@ -197,7 +237,7 @@ require("blink.cmp").setup({
       "score",
       "sort_text",
       "label",
-    }
+    },
   },
 })
 

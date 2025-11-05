@@ -18,7 +18,7 @@ vim.lsp.config[name] = {
   init_options = {
     lint   = { enable = true, },
     format = { enable = false, },
-    semantic_token        = true,
+    semantic_token        = false,  -- else got lagging
     scan_cmake_in_package = true,
   },
 }

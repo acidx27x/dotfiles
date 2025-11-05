@@ -6,7 +6,7 @@ vim.lsp.config('*', {
   single_file_support = true,
 
   flags = {
-    debounce_text_changes  = 200,
+    debounce_text_changes  = 150,
     allow_incremental_sync = true,
   },
 })
