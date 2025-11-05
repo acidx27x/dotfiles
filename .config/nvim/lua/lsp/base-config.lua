@@ -33,10 +33,17 @@ M.lsp_keymaps = function(bufnr)
   keyn("<C-s>s", vim.lsp.buf.signature_help, getopts("LSP: signature help"))
 
   keyn("<C-s>rn", vim.lsp.buf.rename,         getopts("LSP: rename"))
-  keyn("<C-s>ca", vim.lsp.buf.code_action,    getopts("LSP: code action"))
   keyn("<C-s>ic", vim.lsp.buf.incoming_calls, getopts("LSP: incoming calls"))
   keyn("<C-s>oc", vim.lsp.buf.outgoing_calls, getopts("LSP: outgoing calls"))
   keyn("<C-s>th", vim.lsp.buf.typehierarchy,  getopts("LSP: typehierarchy"))
+  keyn("<C-s>ca", vim.lsp.buf.code_action,    getopts("LSP: code action"))
+
+  local has_action, action = pcall(require, "actions-preview")
+  if has_action then
+    vim.keymap.set({ "v", "n" }, "<C-s>ca", action.code_actions,
+      getopts("LSP: code action (with picker preview)")
+    )
+  end
 
   keyn("<C-s>ds", vim.lsp.buf.document_symbol,    getopts("LSP: document symbol"))
   keyn("<C-s>dh", vim.lsp.buf.document_highlight, getopts("LSP: document highlight"))

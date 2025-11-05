@@ -11,6 +11,8 @@ require("nvim-navic-config")
 require("goto-preview-config")
 
 require("symbol-usage-nvim-config")
+
+require("actions-preview-nvim-config")
 --
 
 
