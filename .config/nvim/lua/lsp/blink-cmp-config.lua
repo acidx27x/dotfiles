@@ -2,10 +2,7 @@
 vim.pack.add({
   { src = "https://github.com/nvim-mini/mini.icons" },
   { src = "https://github.com/onsails/lspkind.nvim" },
-  {
-    src     = "https://github.com/Saghen/blink.cmp",
-    version = "v1.7.0"  -- need to download binary
-  },
+  { src = "https://github.com/Saghen/blink.cmp" },
 })
 
 
@@ -237,6 +234,9 @@ require("blink.cmp").setup({
       "score",
       "sort_text",
       "label",
+    },
+    prebuilt_binaries = {
+      force_version = "v1.7.0",  -- need to download binary
     },
   },
 })
