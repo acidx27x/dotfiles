@@ -10,6 +10,7 @@ require("nvim-treesitter.configs").setup({
     "bash", "fish",
     "lua",
     "javascript",
+    "diff",
     -- "verilogams",
   },
   auto_install = false,
