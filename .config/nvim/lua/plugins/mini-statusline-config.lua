@@ -1,6 +1,7 @@
 
 vim.pack.add({
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
+  { src = "https://github.com/nvim-mini/mini.icons" },  -- uses by default, fb to nvim-web-devicons
   { src = "https://github.com/nvim-mini/mini.statusline" },
 })
 

@@ -14,6 +14,6 @@ vim.notify.setup({
 })
 
 
-vim.keymap.set({ 'n', 'v' }, "<leader>nd", vim.notify.dismiss,
+vim.keymap.set({ "n", "v" }, "<leader>nd", vim.notify.dismiss,
   { noremap = true, silent = true, desc = "nvim-notify: dismiss", })
 

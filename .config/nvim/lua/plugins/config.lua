@@ -36,7 +36,7 @@ require("conform-nvim-config")
 
 
 -- mini.nvim group
-require("mini-pick-config")
+require("mini-pick-config")  -- WARN: also overrides builtin vim.ui.select
 
 require("mini-statusline-config")
 
@@ -79,8 +79,6 @@ require("visimatch-nvim-config")
 require("hardtime-nvim-config")
 
 require("smartcolumn-nvim-config")
-
-require("multinput-nvim-config")
 
 require("matchparen-nvim-config")
 
