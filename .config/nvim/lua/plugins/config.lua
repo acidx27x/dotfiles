@@ -1,6 +1,10 @@
 
--- builtin override group
-require("nvim-notify-config")
+-- builtin override and common group
+require("nvim-notify-config")  -- vim.notify
+
+require("multinput-nvim-config")  -- vim.ui.input
+
+require("icons-config")
 --
 
 
