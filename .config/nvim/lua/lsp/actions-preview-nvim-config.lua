@@ -10,6 +10,10 @@ require("actions-preview").setup({
     ignore_whitespace = true,
   },
 
+  highlight_command = {
+    -- require("actions-preview.highlight").delta(_G.Paths.delta .. " --no-gitconfig --side-by-side --dark"),
+  },
+
   backend = { "minipick", },
 })
 
