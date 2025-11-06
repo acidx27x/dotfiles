@@ -66,19 +66,19 @@ require("oil").setup({
     -- ["<C-c>"]      = { "actions.close",     mode = "n", desc = "Oil: close", },
 
     ["<CR>"]        = { "actions.select", mode = "n", desc = "Oil: select", },
-    ["<C-S-V>"] = {
+    ["<C-s>"] = {
       "actions.select",
       mode = "n", opts = { vertical = true }, desc = "Oil: select in vertical",
     },
-    ["<C-S-H>"] = {
+    ["<C-h>"] = {
       "actions.select",
       mode = "n", opts = { horizontal = true }, desc = "Oil: select in horizontal",
     },
-    ["<C-S-T>"] = {
+    ["<C-t>"] = {
       "actions.select",
       mode = "n", opts = { tab = true }, desc = "Oil: select in tab",
     },
-    ["<C-S-P>"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview", },
+    ["<C-p>"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview", },
     ["<C-f>"]   = { "actions.preview_scroll_down", mode = "n", desc = "Oil: scrolll preview up", },
     ["<C-b>"]   = { "actions.preview_scroll_up",   mode = "n", desc = "Oil: scrolll preview down", },
 

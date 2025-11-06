@@ -29,15 +29,15 @@ keymap_ns("n", "<leader>hp", function() harpoon:list():next() end, "harpoon: lis
 
 harpoon:extend({
   UI_CREATE = function(cx)
-    vim.keymap.set("n", "<C-S-V>", function()
+    vim.keymap.set("n", "<C-s>", function()
       harpoon.ui:select_menu_item({ vsplit = true, })
     end, { buffer = cx.bufnr, desc = "harpoon: open in split vertically", })
 
-    vim.keymap.set("n", "<C-S-H>", function()
+    vim.keymap.set("n", "<C-h>", function()
       harpoon.ui:select_menu_item({ split = true, })
     end, { buffer = cx.bufnr, desc = "harpoon: open in split horizontally", })
 
-    vim.keymap.set("n", "<C-S-T>", function()
+    vim.keymap.set("n", "<C-t>", function()
       harpoon.ui:select_menu_item({ tabedit = true, })
     end, { buffer = cx.bufnr, desc = "harpoon: open in tab", })
   end,

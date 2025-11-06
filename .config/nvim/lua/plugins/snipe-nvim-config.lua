@@ -41,8 +41,8 @@ require("snipe").setup({
     under_cursor = "<CR>",
     cancel_snipe = "<Esc>",
     close_buffer = "D",
-    open_vsplit  = "<C-S-V>",
-    open_split   = "<C-S-H>",
+    open_vsplit  = "<C-s>",
+    open_split   = "<C-h>",
     -- change_tag   = "C",  -- or disable persist_tags
   },
 
