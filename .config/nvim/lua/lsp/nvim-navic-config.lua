@@ -27,8 +27,10 @@ function M.get()
 
   local signcol_setting = vim.wo.signcolumn
   local sign_width = 0
-  if signcol_setting == "yes" or signcol_setting == "auto" then
+  if signcol_setting == "yes" then
     sign_width = 2
+  elseif signcol_setting:match("^yes:(%d)$") then
+    sign_width = tonumber(signcol_setting:match("^yes:(%d)$"))
   elseif signcol_setting:match("%d") then
     sign_width = tonumber(signcol_setting)
   end

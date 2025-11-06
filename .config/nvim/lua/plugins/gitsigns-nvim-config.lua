@@ -5,6 +5,8 @@ vim.pack.add({
 
 
 require("gitsigns").setup({
+  sign_priority=100,
+
   on_attach = function(bufnr)
     local git = require("gitsigns")
 

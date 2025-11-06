@@ -5,6 +5,7 @@ vim.pack.add({
 
 
 require("no-neck-pain").setup({
+  width = 120,
   buffers = {
     scratchPad = {
       enabled = true,
