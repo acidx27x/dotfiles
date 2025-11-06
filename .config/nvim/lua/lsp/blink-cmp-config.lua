@@ -132,7 +132,7 @@ require("blink.cmp").setup({
                 return ctx.icon_gap
               end
               if vim.tbl_contains({ "PATH" }, ctx.source_name) then
-                local mini_icon, _ = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                local mini_icon, _ = require("mini.icons").get(ctx.item.data.type, ctx.label)
                 if mini_icon then return mini_icon .. ctx.icon_gap end
               end
               local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol_text", })
@@ -140,7 +140,7 @@ require("blink.cmp").setup({
             end,
             highlight = function(ctx)
               if vim.tbl_contains({ "PATH" }, ctx.source_name) then
-                local mini_icon, mini_hl = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                local mini_icon, mini_hl = require("mini.icons").get(ctx.item.data.type, ctx.label)
                 if mini_icon then return mini_hl end
               end
               return ctx.kind_hl
@@ -148,8 +148,8 @@ require("blink.cmp").setup({
           },
           kind = {  -- from doc/recipes.md
             highlight = function(ctx)
-              if vim.tbl_contains({ "Path" }, ctx.source_name) then
-                local mini_icon, mini_hl = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+              if vim.tbl_contains({ "PATH" }, ctx.source_name) then
+                local mini_icon, mini_hl = require("mini.icons").get(ctx.item.data.type, ctx.label)
                 if mini_icon then return mini_hl end
               end
               return ctx.kind_hl
