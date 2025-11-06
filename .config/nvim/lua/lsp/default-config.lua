@@ -17,17 +17,20 @@ vim.diagnostic.config({
     prefix = "▣",
     source = "if_many",
   },
+
   underline        = true,
   severity_sort    = true,
   update_in_insert = false,
+
   float = {
-    focusable = true,
-    style     = "minimal",
-    source    = "if_many",
-    header    = "",
     prefix    = "",
+    source    = "if_many",
+    header    = "Diagnostic",
+    severity_sort = true,
   },
+
   signs = {
+    severity_sort = true,
     numhl = {
       [vim.diagnostic.severity.ERROR] = "DiagnosticError",
       [vim.diagnostic.severity.WARN]  = "DiagnosticWarn",
@@ -42,5 +45,6 @@ vim.diagnostic.config({
     },
   },
 })
+
 vim.lsp.log.set_level(vim.log.levels.ERROR)
 
