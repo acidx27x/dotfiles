@@ -8,14 +8,14 @@ require("icons-config")
 --
 
 
--- git group (must be upper than plugins below,
--- bc can be required during config)
-require("gitsigns-nvim-config")
+-- ts group, lots of pluggins use it
+require("nvim-treesitter-config")
 --
 
 
--- ts group
-require("nvim-treesitter-config")
+-- git group (must be upper than plugins below,
+-- bc can be required during config)
+require("gitsigns-nvim-config")
 --
 
 
@@ -40,7 +40,7 @@ require("mini-pick-config")  -- WARN: also overrides builtin vim.ui.select
 
 require("mini-statusline-config")
 
-require("mini-indentscope-config")
+-- require("mini-indentscope-config")
 
 require("mini-tabline-config")
 
@@ -67,6 +67,8 @@ require("floaterm-config")
 
 
 -- utils group
+
+require("indent-blankline-nvim-config")
 
 -- original code "https://github.com/johnfrankmorgan/whitespace.nvim"
 -- changed to skip highlight while editing
