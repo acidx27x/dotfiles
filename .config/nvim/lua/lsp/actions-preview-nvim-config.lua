@@ -12,6 +12,7 @@ require("actions-preview").setup({
 
   highlight_command = {
     -- require("actions-preview.highlight").delta(_G.Paths.delta .. " --no-gitconfig --side-by-side --dark"),
+    require("actions-preview.highlight").diff_so_fancy(_G.Paths["diff-so-fancy"]),
   },
 
   backend = { "minipick", },

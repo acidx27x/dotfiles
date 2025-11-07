@@ -26,6 +26,7 @@ M.paths = {
   -- utils
   ctags = "ctags-universal",
   delta = "delta",
+  ["diff-so-fancy"] = "diff-so-fancy",
 }
 
 -- override paths
