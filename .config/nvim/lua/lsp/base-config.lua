@@ -67,17 +67,6 @@ M.lsp_keymaps = function(bufnr)
   end
   --
 
-  -- diagnostic operations
-  keyn("<C-w>dl", vim.diagnostic.setloclist, getopts("diagnostic: setloclist"))
-  keyn("<C-w>do", vim.diagnostic.open_float, getopts("diagnostic: open float"))
-  keyn("]d", function()
-    vim.diagnostic.jump({ count = 1 })
-  end,  getopts("diagnostic: jump next"))
-  keyn("[d", function()
-    vim.diagnostic.jump({ count = -1 })
-  end, getopts("diagnostic: jump prev"))
-  --
-
   -- restore some remapped combinations
   keyn("K",   "K",   getopts(""))  -- hover
   keyn("gri", "gri", getopts(""))  -- implementation
@@ -85,7 +74,6 @@ M.lsp_keymaps = function(bufnr)
   keyn("grr", "grr", getopts(""))  -- references
   keyn("grt", "grt", getopts(""))  -- type_definition
   keyn("gO",  "gO",  getopts(""))  -- document_symbol
-  keyn("<C-w>d", "<C-w>d", getopts(""))  -- open_float
 
   vim.keymap.set({ "n", "v" }, "gra", "gra", getopts(""))  -- code_action
   vim.keymap.set("i", "<C-s>", "<C-s>", getopts(""))  -- signature_help

@@ -46,7 +46,7 @@ require("snipe").setup({
     -- change_tag   = "C",  -- or disable persist_tags
   },
 
-  sort = "last",  -- or default
+  sort = "default",  -- or last
 })
 
 vim.keymap.set("n", "<leader>sn", require("snipe").open_buffer_menu,
