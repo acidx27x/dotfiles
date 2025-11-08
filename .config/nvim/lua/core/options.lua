@@ -49,7 +49,7 @@ vim.opt.lazyredraw    = true  -- Don't redraw during macros
 vim.opt.synmaxcol     = 300  -- Syntax highlighting limit
 
 vim.opt.completeopt = "fuzzy,menuone,noselect,noinsert"
-vim.opt.fillchars = "vert:┃,horiz:━,verthoriz:╋,horizup:┻,horizdown:┳,vertleft:┫,vertright:┣,eob:~" -- more obvious separator
+vim.opt.fillchars = "vert:┃,horiz:━,verthoriz:╋,horizup:┻,horizdown:┳,vertleft:┫,vertright:┣,eob:~"
 
 
 -- File handling

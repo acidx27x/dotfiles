@@ -1,10 +1,15 @@
 
 vim.pack.add({
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+  {
+    src = "https://github.com/nvim-treesitter/nvim-treesitter",
+    version = "master",
+    -- version = "main",  -- future update config is not compatible
+  },
 })
 
 
 require("nvim-treesitter.configs").setup({
+  auto_install = false,
   ensure_installed = {
     "c", "cpp",
     "bash", "fish",
@@ -13,7 +18,7 @@ require("nvim-treesitter.configs").setup({
     "diff",
     -- "verilogams",
   },
-  auto_install = false,
+
   highlight = {
     enable = true,
     disable = {
@@ -21,6 +26,7 @@ require("nvim-treesitter.configs").setup({
     },
     additional_vim_regex_highlighting = false,
   },
+
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -30,7 +36,8 @@ require("nvim-treesitter.configs").setup({
       node_decremental  = "grm",
     },
   },
-  indent = { enable = true },
+
+  indent = { enable = true, },
 })
 
 
