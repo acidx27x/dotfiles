@@ -1,20 +1,4 @@
 
--- default config
-
--- lsp group
-vim.lsp.config('*', {
-  root_markers = { '.git' },
-
-  single_file_support = true,
-
-  flags = {
-    debounce_text_changes  = 150,
-    allow_incremental_sync = true,
-  },
-})
-
-
--- diagnostic group
 vim.diagnostic.config({
   virtual_lines = false,
 
@@ -54,11 +38,10 @@ vim.diagnostic.config({
 
 vim.lsp.log.set_level(vim.log.levels.ERROR)
 
--- diagnostic operations
-local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc })
-end
 
+local function keymap_ns(mode, key, func, desc)
+  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc, })
+end
 
 keymap_ns("n", "<C-w>dt", function()
   vim.diagnostic.enable(not vim.diagnostic.is_enabled())

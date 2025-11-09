@@ -1,5 +1,5 @@
 
-local base = require("base-config")
+local base = require("lsp-base-config")
 
 
 local name = "clangd"

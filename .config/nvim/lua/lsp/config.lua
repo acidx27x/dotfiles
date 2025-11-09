@@ -17,7 +17,8 @@ require("actions-preview-nvim-config")
 
 
 -- lsp server group
-require("default-config")
+require("lsp-default-config")
+require("diagnostic-default-config")
 
 -- c/c++
 require("clangd-config")
