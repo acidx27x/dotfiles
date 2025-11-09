@@ -7,7 +7,7 @@ vim.pack.add({
 
 require("ibl.highlights").setup()
 local whitespace_hl = require("indent-rainbowline").make_hl_groups({
-  colors = nil,
+  colors = { 0xffaacc, 0x7366bd, 0xff79ff, 0x9b81ba, },
   color_transparency = nil,
   hl = { "IblIndent", "Normal", },
   prefix = "RainbowColor",
