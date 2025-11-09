@@ -81,9 +81,7 @@ require("kanagawa").setup({
       BlinkCmpGhostText  = { fg = theme.ui.special, force = true, },
       BlinkCmpMenuBorder = { link = "FloatBorder",  force = true, },
 
-      DapUIFloatBorder = { link = "FloatBorder",  force = true, },
-
-      MiniIndentscopeSymbol = { link = "NonText", force = true, },
+      DapUIFloatBorder = { link = "FloatBorder", force = true, },
 
       MiniHipatternsFixme = { bold = true, italic = false, nocombine = true, },
       MiniHipatternsHack  = { bold = true, italic = false, nocombine = true, },

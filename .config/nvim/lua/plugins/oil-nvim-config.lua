@@ -160,7 +160,7 @@ require("oil").setup({
 
 
 local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc })
+  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc, })
 end
 
 keymap_ns("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")
