@@ -36,12 +36,12 @@ vim.api.nvim_create_user_command("FloatermClose", function()
   require("volt.utils").close({
     bufs = { fterm_state.buf, fterm_state.sidebuf, fterm_state.barbuf, },
     after_close = function()
-      require("floaterm.utils").close_timers()
+      if fterm_state.bar_redraw_timer then require("floaterm.utils").close_timers() end
       fterm_state.volt_set = false
       fterm_state.terminals = nil
-      fterm_state.buf = nil
+      fterm_state.buf     = nil
       fterm_state.sidebuf = nil
-      fterm_state.barbuf = nil
+      fterm_state.barbuf  = nil
       vim.api.nvim_del_augroup_by_name("FloatermAu")
     end,
   })
