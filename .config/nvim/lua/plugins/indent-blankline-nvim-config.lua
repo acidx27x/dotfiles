@@ -17,7 +17,7 @@ local whitespace_hl = require("indent-rainbowline").make_hl_groups({
 require("ibl").setup({
   indent = {
     -- char = "",
-    char = "⎸",
+    char = "⎜",
     -- char = "▎",
     -- char = "┃",
   },
