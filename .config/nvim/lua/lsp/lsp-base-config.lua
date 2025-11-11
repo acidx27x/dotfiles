@@ -129,6 +129,14 @@ M.on_attach = function(client, bufnr)
     vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
   end
 
+  if client.server_capabilities.semanticTokensProvider then
+    vim.treesitter.stop(bufnr)
+  end
+
+  if client.server_capabilities.completionProvider then
+    vim.bo[bufnr].omnifunc = nil
+  end
+
   if client.server_capabilities.documentSymbolProvider then
     local has_navic, navic = pcall(require, "nvim-navic")
     if has_navic then
@@ -140,14 +148,6 @@ M.on_attach = function(client, bufnr)
         { title = "LSP", }
       )
     end
-  end
-
-  if client.server_capabilities.semanticTokensProvider then
-    vim.treesitter.stop(bufnr)
-  end
-
-  if client.server_capabilities.completionProvider then
-    vim.bo[bufnr].omnifunc = nil
   end
 
   -- i use swap files, buf swap uses update time builtin option, so cant set it to very low time
@@ -172,7 +172,7 @@ M.on_attach = function(client, bufnr)
   --end
 end
 
-M.get_on_attach = function(server_name)
+M.get_on_attach = function(server_name, callback)
   local on_attach_old = vim.lsp.config[server_name] and vim.lsp.config[server_name].on_attach
 
   local on_attach_new = function(client, bufnr)
@@ -180,6 +180,7 @@ M.get_on_attach = function(server_name)
       on_attach_old(client, bufnr)
     end
     M.on_attach(client, bufnr)
+    if callback then callback(client, bufnr) end  -- option to pass custom on_attach
   end
 
   return on_attach_new

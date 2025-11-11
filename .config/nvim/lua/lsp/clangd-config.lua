@@ -22,10 +22,6 @@ vim.lsp.config[name] = {
     "--function-arg-placeholders=0",
     -- "--experimental-modules-support",
   },
-  filetypes = {
-    "c", "cc", "C", "cpp", "cxx",
-    "h", "hh", "H", "hpp", "hxx",
-  },
 }
 
 vim.lsp.enable(name)
