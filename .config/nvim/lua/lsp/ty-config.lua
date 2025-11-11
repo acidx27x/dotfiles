@@ -14,6 +14,18 @@ vim.lsp.config[name] = {
     _G.Paths[name],
     "server",
   },
+
+  init_options = {
+    logLevel = "error",
+  },
+
+  settings = {
+    ty = {
+      experimental = {
+        rename = true,
+      },
+    },
+  },
 }
 
 vim.lsp.enable(name)
