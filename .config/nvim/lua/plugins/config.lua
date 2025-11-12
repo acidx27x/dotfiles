@@ -42,8 +42,6 @@ require("mini-pick-config")  -- WARN: also overrides builtin vim.ui.select
 
 require("mini-statusline-config")
 
--- require("mini-indentscope-config")
-
 require("mini-tabline-config")
 
 require("mini-comment-config")
@@ -59,6 +57,8 @@ require("mini-pairs-config")
 require("mini-splitjoin-config")
 
 require("mini-bufremove-config")
+
+require("mini-trailspace-config")
 --
 
 
@@ -69,12 +69,11 @@ require("floaterm-config")
 
 
 -- utils group
-
 require("indent-blankline-nvim-config")
 
 -- original code "https://github.com/johnfrankmorgan/whitespace.nvim"
 -- changed to skip highlight while editing
-require("trailing-whitespace-nvim-config")
+-- require("trailing-whitespace-nvim-config")
 
 require("visual-whitespace-nvim-config")
 
