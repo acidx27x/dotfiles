@@ -50,9 +50,10 @@ require("blink.cmp").setup({
         name    = "LSP",
         module  = "blink.cmp.sources.lsp",
         score_offset = 10,
+        fallbacks    = {},  -- to enable other provider when available, w/o waiting for fb
       },
       omni = {
-        enabled = function() return vim.bo.omnifunc ~= "v:lua.vim.lsp.omnifunc" end,
+        enabled = function() return vim.bo.omnifunc and vim.bo.omnifunc ~= "v:lua.vim.lsp.omnifunc" end,
         name    = "OMNI",
         module  = "blink.cmp.sources.complete_func",
         opts    = { complete_func = function() return vim.bo.omnifunc end, },
@@ -78,7 +79,7 @@ require("blink.cmp").setup({
       },
       cmdline = {
         name   = "CMD",
-        module = 'blink.cmp.sources.cmdline',
+        module = "blink.cmp.sources.cmdline",
       },
     },
   },
