@@ -26,9 +26,11 @@ vim.lsp.config[name] = {
   init_options = {
     settings = {
       logLevel = "error",
+
+      fixAll                  = false,  -- do not use fixAll code action
+      showSyntaxErrors        = false,  -- use other lsp for it
       configurationPreference = "filesystemFirst",
-      fixAll = false,  -- do not use fixAll code action
-      showSyntaxErrors = false,  -- use other lsp for it
+
       lint = {
         preview = true,
         select = {

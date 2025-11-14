@@ -21,8 +21,9 @@ vim.lsp.config[name] = {
 
   settings = {
     ty = {
-      experimental = {
-        rename = true,
+      inlayHints = {
+        variableTypes     = true,
+        callArgumentNames = true,
       },
     },
   },

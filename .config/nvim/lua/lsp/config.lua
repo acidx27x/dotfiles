@@ -25,6 +25,7 @@ require("clangd-config")
 require("neocmake-config")
 
 -- python
+require("basedpyright-config")
 require("ruff-config")
 require("ty-config")
 --

@@ -118,13 +118,14 @@ end
 M.on_attach = function(client, bufnr)
   M.lsp_keymaps(bufnr)
 
-  -- shared override capabilities
+  -- shared manually set capabilities
   vim.bo[bufnr].formatexpr = nil
   client.server_capabilities.documentFormattingProvider       = false
   client.server_capabilities.documentRangeFormattingProvider  = false
   client.server_capabilities.documentOnTypeFormattingProvider = false
   --
 
+  --  this options are check before action and can be overrided by custom callback on_attach
   if client.server_capabilities.foldingRangeProvider then
     vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
   end
@@ -149,38 +150,18 @@ M.on_attach = function(client, bufnr)
       )
     end
   end
-
-  -- i use swap files, buf swap uses update time builtin option, so cant set it to very low time
-  -- if client.server_capabilities.documentHighlightProvider then
-  --  local group = vim.api.nvim_create_augroup("LspHighlightCursorSymbol", {clear = false})
-
-  --  vim.api.nvim_clear_autocmds({buffer = bufnr, group = group})
-
-  --  vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
-  --    group    = group,
-  --    buffer   = bufnr,
-  --    callback = vim.lsp.buf.document_highlight,
-  --    desc = "Highlight References Under Cursor"
-  --  })
-
-  --  vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
-  --    group    = group,
-  --    buffer   = bufnr,
-  --    callback = vim.lsp.buf.clear_references,
-  --    desc = "Clear Highlighted References Under Cursor"
-  --  })
-  --end
+  --
 end
 
-M.get_on_attach = function(server_name, callback)
+M.get_on_attach = function(server_name, override)
   local on_attach_old = vim.lsp.config[server_name] and vim.lsp.config[server_name].on_attach
 
   local on_attach_new = function(client, bufnr)
     if on_attach_old then
       on_attach_old(client, bufnr)
     end
+    if override then override(client, bufnr) end  -- option to pass custom on_attach to override default settings
     M.on_attach(client, bufnr)
-    if callback then callback(client, bufnr) end  -- option to pass custom on_attach
   end
 
   return on_attach_new

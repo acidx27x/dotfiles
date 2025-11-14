@@ -8,7 +8,7 @@ M.paths = {
   ty = "ty",
   clangd = "clangd",
   neocmake = "neocmakelsp",
-
+  basedpyright = "basedpyright-langserver",
   -- linter tools
   ruff = "ruff",
 
