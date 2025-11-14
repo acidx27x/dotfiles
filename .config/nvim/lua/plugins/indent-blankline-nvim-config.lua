@@ -14,12 +14,20 @@ local whitespace_hl = require("indent-rainbowline").make_hl_groups({
   auto_setup = true,
 })
 
+local is_mac     = vim.loop.os_uname().sysname == "Darwin"
+local is_linux   = vim.loop.os_uname().sysname == "Linux"
+local is_windows = vim.loop.os_uname().sysname == "Windows_NT"
+
+local indent_char = "|"
+if is_linux then indent_char = "⎜" end
+if is_mac   then indent_char = "⎸" end
+
 require("ibl").setup({
   indent = {
-    -- char = "",
-    char = "⎜",
+    -- char = "⎜",
     -- char = "▎",
     -- char = "┃",
+    char = indent_char,
   },
 
   whitespace = {
