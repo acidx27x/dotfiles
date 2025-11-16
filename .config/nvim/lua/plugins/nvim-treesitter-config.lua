@@ -11,11 +11,14 @@ vim.pack.add({
 require("nvim-treesitter.configs").setup({
   auto_install = false,
   ensure_installed = {
-    "c", "cpp",
+    "diff",
     "bash", "fish",
+
+    "c", "cpp",
+    "python",
     "lua",
     "javascript",
-    "diff",
+
     -- "verilogams",
   },
 
