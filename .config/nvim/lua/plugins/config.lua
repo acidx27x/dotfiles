@@ -86,5 +86,7 @@ require("smartcolumn-nvim-config")
 require("matchparen-nvim-config")
 
 require("no-neck-pain-nvim-config")
+
+require("auto-save-nvim-config")
 --
 
