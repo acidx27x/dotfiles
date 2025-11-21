@@ -5,6 +5,8 @@
 
 
 [core]
+  autocrlf = false
+  eol = lf
   pager = delta
 
 
