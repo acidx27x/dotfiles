@@ -37,8 +37,9 @@ require("blink.cmp").setup({
 
 
   appearance = {
-    nerd_font_variant = "nerd",
+    nerd_font_variant = "mono",
   },
+
 
   sources = {
     default            = { "lsp", "omni", "buffer", "path", "snippets", },
