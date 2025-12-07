@@ -79,7 +79,7 @@ require("visual-whitespace-nvim-config")
 
 require("visimatch-nvim-config")
 
-require("hardtime-nvim-config")
+-- require("hardtime-nvim-config")
 
 require("smartcolumn-nvim-config")
 
