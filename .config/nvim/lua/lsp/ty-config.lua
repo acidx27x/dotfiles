@@ -29,5 +29,5 @@ vim.lsp.config[name] = {
   },
 }
 
-vim.lsp.enable(name)
+vim.lsp.enable(name, true)
 
