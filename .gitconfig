@@ -1,13 +1,49 @@
 
 [user]
-	name = kirim
-	email = telegram@acidx27x
+  name  = kirim
+  email = telegram@acidx27x
 
 
 [core]
+  eol      = lf
   autocrlf = false
-  eol = lf
   pager = delta
+  whitespace = trailing-space,space-before-tab  # detect ws problems 'git diff --check'
+
+
+[init]
+  defaultBranch = master
+
+[commit]
+  verbose = true
+
+[fetch]
+  all       = true
+  prune     = true  # prune to remove old remotes
+  pruneTags = true
+
+[pull]
+  rebase = true
+
+[push]
+  default = simple  # feature/login -> origin/feature/login
+
+
+[rebase]
+  autoStash  = true
+  autosquash = true
+  updateRefs = true
+
+[rerere]
+  enabled    = true  # reuse recorded resolution to let git remember resolved conflicts
+  autoupdate = true
+
+
+[branch]
+  sort = -committerdate
+
+[tag]
+  sort = version:refname
 
 
 [interactive]
@@ -19,7 +55,6 @@
   navigate = true  # use n and N to move between diff sections
   side-by-side = true
   line-numbers = true
-  hyperlinks   = true
   features = decorations
 
 [delta "interactive"]
@@ -27,10 +62,10 @@
 
 [delta "decorations"]
   file-style = omit
-  commit-style = raw
+  commit-style            = raw
   commit-decoration-style = blue ol
-  hunk-header-style = file line-number syntax
-  hunk-header-file-style = red
+  hunk-header-style            = file line-number syntax
+  hunk-header-file-style       = red
   hunk-header-decoration-style = blue box
 
 
@@ -39,5 +74,43 @@
 
 
 [diff]
+  algorithm = histogram
   colorMoved = default
+  renames = copies
+
+
+[maintenance]
+  auto = true
+
+
+[status]
+  short = true
+  branch = true
+  showStash = true
+
+[log]
+  date = iso
+
+[help]
+  autocorrect = prompt
+
+[column]
+  ui = auto
+
+[color]
+  ui = auto
+
+
+[alias]
+  amend      = commit --amend --no-edit
+  amend-edit = commit --amend
+  fixup      = commit --fixup
+
+  pl  = push --force-with-lease
+  pli = push --force-with-lease --force-if-includes
+
+  lg   = log --oneline --graph --decorate --all
+  l    = log --oneline --decorate
+  last = log -1 HEAD --stat
+  who  = shortlog -sn
 
