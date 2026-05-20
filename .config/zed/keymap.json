@@ -1,0 +1,86 @@
+[
+  {
+    "unbind": {
+      "ctrl-alt-,": "zed::OpenSettingsFile",
+    },
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "alt-e": "editor::Cancel",
+      "tab": "editor::NextSnippetTabstop",
+      "shift-tab": "editor::PreviousSnippetTabstop",
+    },
+  },
+  {
+    "context": "Editor && showing_completions",
+    "bindings": {
+      "tab": "editor::ConfirmCompletion",
+      "enter": "editor::Newline",
+      "ctrl-e": "editor::Cancel",
+    },
+  },
+  {
+    "context": "VimControl && !menu",
+    "unbind": {
+      "shift-tab": "vim::Tab",
+    },
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "shift-tab": "editor::Backtab"
+    },
+  },
+  { // use vim binding inside all the editor docks
+    //(the terminal, project panel, assistant panel, ...)
+    "context": "Dock",
+    "bindings": {
+      "ctrl-w h": "workspace::ActivatePaneLeft",
+      "ctrl-w l": "workspace::ActivatePaneRight",
+      "ctrl-w k": "workspace::ActivatePaneUp",
+      "ctrl-w j": "workspace::ActivatePaneDown",
+    },
+  },
+  { // Subword motion to support snake_case, camelCase, etc
+    "context": "VimControl && !menu && vim_mode != operator",
+    "bindings": {
+      "w": "vim::NextSubwordStart",
+      "b": "vim::PreviousSubwordStart",
+      "e": "vim::NextSubwordEnd",
+      "g e": "vim::PreviousSubwordEnd",
+    },
+  },
+  { // vim surround
+    "context": "vim_mode == visual",
+    "bindings": {
+      "shift-s a": "vim::PushAddSurrounds",
+      "shift-s d": "vim::PushDeleteSurrounds",
+      "shift-s c": "vim::PushChangeSurrounds",
+    },
+  },
+  { // vim exchange
+    "context": "vim_mode == visual",
+    "bindings": {
+      "shift-x": "vim::Exchange",
+    },
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-k ctrl-s": "zed::OpenKeymap"
+    },
+    "bindings": {
+      "ctrl-k ctrl-k": "zed::OpenKeymap",
+    },
+  },
+  {
+    "context": "!SettingsWindow",
+    "unbind": {
+      "ctrl-,": "zed::OpenSettings"
+    },
+    "bindings": {
+      "ctrl-k ctrl-s": "zed::OpenSettings",
+    },
+  },
+]

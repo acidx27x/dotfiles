@@ -1,0 +1,401 @@
+{
+  // proxy
+  "proxy": "",
+  // general
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "restore_on_startup": "launchpad",
+  "on_last_window_closed": "quit_app",
+  "when_closing_with_no_tabs": "close_window",
+  "cli_default_open_behavior": "new_window",
+  "redact_private_values": true,
+  "private_files": [
+    "**/.env*",
+    "**/*.pem",
+    "**/*.key",
+    "**/*.cert",
+    "**/*.crt",
+    "**/secrets.yml",
+  ],
+  // appearence
+  "theme": "Kanagawa Dragon",
+  "icon_theme": "Catppuccin Latte",
+  "buffer_font_family": "Fira Code",
+  "buffer_font_size": 15.5,
+  "buffer_font_fallbacks": null,
+  "buffer_font_features": {
+    "calt": true,
+    "cv01": true,
+    "cv02": true,
+    "cv06": true,
+    "ss01": true,
+    "cv13": true,
+    "cv14": true,
+    "ss05": true,
+    "ss04": true,
+    "cv18": true,
+    "cv16": true,
+    "cv29": true,
+    "cv30": true,
+    "cv28": true,
+    "ss06": true,
+    "ss07": true,
+    "ss10": true,
+  },
+  "ui_font_family": "Fira Code",
+  "ui_font_size": 15.5,
+  "ui_font_fallbacks": null,
+  "agent_ui_font_size": 15.5,
+  "agent_buffer_font_size": 15.5,
+  "text_rendering_mode": "grayscale",
+  "cursor_blink": false,
+  // keymap
+  "vim_mode": true,
+  // editor
+  "which_key": {
+    "enabled": true,
+    "delay_ms": 1000,
+  },
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 5000,
+    },
+  },
+  "diff_view_style": "unified",
+  "vertical_scroll_margin": 5.0,
+  "sticky_scroll": {
+    "enabled": true,
+  },
+  "show_completions_on_input": false,
+  "snippet_sort_order": "bottom",
+  "relative_line_numbers": "enabled",
+  "scrollbar": {
+    "diagnostics": "error",
+    "show": "always",
+  },
+  "tab_size": 2,
+  "line_ending": "prefer_lf",
+  "toolbar": {
+    "code_actions": true,
+  },
+  "vim": {
+    "use_smartcase_find": true,
+  },
+  "indent_guides": {
+    "background_coloring": "indent_aware",
+    "coloring": "indent_aware",
+    "line_width": 1,
+    "active_line_width": 2,
+  },
+  "formatter": "language_server",
+  "use_on_type_format": false,
+  "format_on_save": "off",
+  "show_whitespaces": "selection",
+  "completion_menu_scrollbar": "always",
+  "show_completion_documentation": true,
+  "completions": {
+    "words": "enabled",
+    "words_min_length": 4,
+  },
+  "inlay_hints": {
+    "toggle_on_modifiers_press": {
+      "control": true,
+      "alt": true,
+    },
+  },
+  "lsp_document_colors": "background", // need for 'color-highlight'
+  "code_lens": "on",
+  "middle_click_paste": false,
+  "colorize_brackets": true,
+  // language and tools
+  "prettier": {
+    "allowed": true,
+  },
+  "go_to_definition_fallback": "none",
+  "go_to_definition_scroll_strategy": "center",
+  "diagnostics_max_severity": "all",
+  "diagnostics": {
+    "include_warnings": true,
+    "inline": {
+      "enabled": false,
+    },
+  },
+  // need to overwrite for specific language in the end
+  "semantic_tokens": "off",
+  "document_folding_ranges": "off",
+  "document_symbols": "off",
+  // search and files
+  "search": {
+    "whole_word": false,
+    "include_ignored": true,
+    "center_on_match": true,
+    "regex": false,
+  },
+  "use_smartcase_search": true,
+  "seed_search_query_from_cursor": "selection",
+  "file_finder": {
+    "modal_max_width": "medium",
+    "include_ignored": "all",
+  },
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/.jj",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+  ],
+  // window and layout
+  "tabs": {
+    "show_diagnostics": "errors",
+    "file_icons": true,
+    "git_status": true,
+  },
+  "title_bar": {
+    "show_menus": false,
+    "show_branch_status_icon": true,
+  },
+  "tab_bar": {
+    "show_nav_history_buttons": true,
+    "show_pinned_tabs_in_separate_row": true,
+  },
+  "preview_tabs": {
+    "enable_keep_preview_on_code_navigation": true,
+    "enable_preview_multibuffer_from_code_navigation": true,
+    "enable_preview_from_file_finder": false,
+  },
+  "active_pane_modifiers": {
+    "inactive_opacity": 0.85,
+    "border_size": 2.0,
+  },
+  // panels
+  "git_panel": {
+    "fallback_branch_name": "main",
+    "dock": "right",
+    "tree_view": true,
+  },
+  "project_panel": {
+    "show_diagnostics": "errors",
+    "diagnostic_badges": true,
+    "dock": "left",
+    "git_status_indicator": true
+  },
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  // debugger
+  "debugger": {
+    "dock": "bottom",
+  },
+  // terminal
+  "terminal": {
+    "show_count_badge": true,
+    "keep_selection_on_copy": true,
+    "copy_on_select": true,
+    "blinking": "on",
+    "dock": "bottom",
+    "option_as_meta": true,
+    "env": {
+      "GIT_EDITOR": "zed --wait"
+    }
+  },
+  // vcs
+  "git": {
+    "inline_blame": {
+      "enabled": false,
+      "show_commit_summary": true,
+    },
+    "blame": {
+      "show_avatar": true,
+    },
+  },
+  // collab
+  "calls": {
+    "mute_on_join": true,
+  },
+  // ai
+  "agent_servers": {
+    "codex-acp": {
+      "favorite_config_option_values": {
+        "model": [
+          "gpt-5.4"
+        ],
+        "mode": [
+          "auto"
+        ],
+        "reasoning_effort": [
+          "medium",
+          "high"
+        ],
+      },
+      "type": "registry",
+    },
+  },
+  "agent": {
+    "dock": "left",
+    "sidebar_side": "left",
+    "show_turn_stats": true,
+    "play_sound_when_agent_done": "always",
+    "notify_when_agent_waiting": "all_screens",
+    "tool_permissions": {
+      "default": "confirm",
+      "tools": {
+        "terminal": {
+          "default": "allow",
+        },
+        "edit_file": {
+          "default": "allow",
+        },
+        "delete_path": {
+          "default": "confirm",
+        },
+        "copy_path": {
+          "default": "allow",
+        },
+        "move_path": {
+          "default": "confirm",
+        },
+        "create_directory": {
+          "default": "allow",
+        },
+        "save_file": {
+          "default": "allow",
+        },
+        "fetch": {
+          "default": "confirm",
+        },
+        "search_web": {
+          "default": "allow",
+        },
+        "restore_file_from_disk": {
+          "default": "confirm",
+        },
+      },
+    },
+  },
+  "edit_predictions": {
+    "allow_data_collection": "no",
+    "provider": "none",
+  },
+  // common extensions
+  "auto_install_extensions": {
+    "kanagawa-themes": true,
+    "catppuccin-icons": true,
+    "xml": true,
+    "make": true,
+    "scheme": true,
+    "comment": true,
+    "powershell": true,
+    "git-firefly": true,
+    "color-highlight": true,
+    "tree-sitter-query": true,
+    "editorconfig": true,
+    "neocmake": true,
+  },
+  // overrides
+  // file types
+  "file_types": {
+    "C": [
+      "*.h.base",
+    ],
+    "C++": [
+      "*.hpp.base",
+    ],
+    "CMake": [
+      "*.cmake.in",
+    ],
+    "Python": [
+      "*.py.in",
+    ],
+    "Shell Script": [
+      "*.sh.in",
+    ],
+    "YAML": [
+      ".clangd",
+      ".clang-tidy",
+      ".clang-format",
+    ],
+  },
+  // languages
+  "languages": {
+    "C": {
+      "semantic_tokens": "combined",
+      "document_folding_ranges": "on",
+      "document_symbols": "on",
+    },
+    "C++": {
+      "semantic_tokens": "combined",
+      "document_folding_ranges": "on",
+      "document_symbols": "on",
+    },
+    "JavaScript": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+    },
+    "Python": {
+      "tab_size": 4,
+    },
+  },
+  // lsp servers
+  "lsp": {
+    "clangd": {
+      "binary": {
+        "ignore_system_version": true,
+        "arguments": [
+          "-j",
+          "8",
+          "--pretty",
+          "--log=error",
+          "--clang-tidy",
+          "--enable-config",
+          "--background-index",
+          "--pch-storage=disk",
+          "--header-insertion=never",
+          "--completion-style=detailed",
+          "--function-arg-placeholders=0",
+        ],
+      },
+    },
+  },
+  // themes
+  "theme_overrides": {
+    "Kanagawa Dragon": {
+      "editor.document_highlight.bracket_background": "#4A3A2E",
+      "vim.yank.background": "#964000",
+      "syntax": {
+        "constant.comment.todo": {
+          "color": "#4078F2FF",
+          "background_color": "#00000000",
+          "font_weight": 600,
+          "font_style": "italic",
+        },
+        "string.comment.info": {
+          "color": "#50A14FFF",
+          "background_color": "#00000000",
+          "font_weight": 600,
+          "font_style": "italic",
+        },
+        "keyword.comment.warn": {
+          "color": "#C18401FF",
+          "background_color": "#00000000",
+          "font_weight": 600,
+          "font_style": "italic",
+        },
+        "property.comment.error": {
+          "color": "#CA1243FF",
+          "background_color": "#00000000",
+          "font_weight": 600,
+          "font_style": "italic",
+        },
+      },
+    },
+  },
+}
