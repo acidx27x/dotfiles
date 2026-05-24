@@ -63,7 +63,7 @@
       "milliseconds": 5000,
     },
   },
-  "diff_view_style": "unified",
+  "diff_view_style": "split",
   "vertical_scroll_margin": 5.0,
   "sticky_scroll": {
     "enabled": true,
@@ -95,6 +95,7 @@
   "show_whitespaces": "selection",
   "completion_menu_scrollbar": "always",
   "show_completion_documentation": true,
+  "completion_menu_item_kind": "symbol",
   "completions": {
     "words": "enabled",
     "words_min_length": 4,
@@ -245,6 +246,9 @@
     "show_turn_stats": true,
     "play_sound_when_agent_done": "always",
     "notify_when_agent_waiting": "all_screens",
+    "use_modifier_to_send": true,
+    "expand_terminal_card": false,
+    "expand_edit_card": true,
     "tool_permissions": {
       "default": "confirm",
       "tools": {
@@ -290,6 +294,7 @@
     "kanagawa-themes": true,
     "catppuccin-icons": true,
     "xml": true,
+    "lua": true,
     "make": true,
     "scheme": true,
     "comment": true,
