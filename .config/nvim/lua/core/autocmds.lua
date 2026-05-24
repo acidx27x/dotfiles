@@ -112,4 +112,3 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
   desc = "BufReadPost: return to last edit position",
 })
-

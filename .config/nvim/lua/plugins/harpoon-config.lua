@@ -42,4 +42,3 @@ harpoon:extend({
     end, { buffer = cx.bufnr, desc = "harpoon: open in tab", })
   end,
 })
-

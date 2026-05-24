@@ -14,4 +14,3 @@ require("dap.config")
 
 package.path = vim.fn.stdpath("config") .. "/lua/colorscheme/?.lua;" .. package.path
 require("colorscheme.config")
-

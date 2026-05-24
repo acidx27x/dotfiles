@@ -31,4 +31,3 @@ line_max_words = 120
 command_upcase = "ignore"
 enable_external_cmake_lint = false
 --]=====]
-

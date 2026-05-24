@@ -44,4 +44,3 @@ require("ibl").setup({
     injected_languages = true,
   }
 })
-

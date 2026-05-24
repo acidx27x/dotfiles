@@ -16,4 +16,3 @@ require("mini.splitjoin").setup({
     exclude_regions = { "%b()", "%b[]", "%b{}", "%b<>", '%b""', "%b''", },
   },
 })
-

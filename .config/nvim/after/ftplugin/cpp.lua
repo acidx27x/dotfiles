@@ -7,4 +7,3 @@ if has_pairs then
   pairs.map_buf(0, "i", "<", { action = "open",  pair = "<>", neigh_pattern = "[%a:].", })
   pairs.map_buf(0, "i", ">", { action = "close", pair = "<>", neigh_pattern = "[^\\].", })
 end
-

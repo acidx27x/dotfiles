@@ -26,4 +26,3 @@ keymap_ns("n", "<leader>do", dap.step_out,    "DAP: step_out")
 keymap_ns("n", "<leader>dt", dap.repl.toggle, "DAP: repl toggle")
 
 keymap_ns("n", "<leader>dR", dap.restart, "DAP: restart")
-

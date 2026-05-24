@@ -9,4 +9,3 @@ require("dap").adapters.cppdbg = {
     env = {},
   },
 }
-

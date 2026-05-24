@@ -64,4 +64,3 @@ vim.lsp.config[name] = {
 }
 
 vim.lsp.enable(name)
-

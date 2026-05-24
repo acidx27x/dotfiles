@@ -7,4 +7,3 @@ vim.pack.add({
 require("visimatch").setup({
   buffers = "current",
 })
-

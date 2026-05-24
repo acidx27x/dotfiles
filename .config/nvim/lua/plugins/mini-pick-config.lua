@@ -59,4 +59,3 @@ keymap_ns("n", "<leader>pli", ":Pick lsp scope='implementation'<CR>",   "Pick: f
 keymap_ns("n", "<leader>plr", ":Pick lsp scope='references'<CR>",       "Pick: find lsp references")
 keymap_ns("n", "<leader>plt", ":Pick lsp scope='type_definition'<CR>",  "Pick: find lsp type definition")
 keymap_ns("n", "<leader>plS", ":Pick lsp scope='workspace_symbol'<CR>", "Pick: find lsp workspace symbol")
-

@@ -126,4 +126,3 @@ vim.keymap.set({ 'n', 'v' }, "<leader>tw", whitespace.toggle, {
   noremap = true, silent  = true,
   desc    = "Toggle Trailing Whitespace Viewer"
 })
-

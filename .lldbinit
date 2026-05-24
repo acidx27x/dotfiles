@@ -9,4 +9,3 @@ settings append target.process.thread.step-avoid-regexp ^boost::
 settings append target.process.thread.step-avoid-regexp ^[^ ]+ boost::
 settings append target.process.thread.step-avoid-regexp ^Q[A-Z][A-Za-z0-9_]*::
 settings append target.process.thread.step-avoid-regexp ^[^ ]+ Q[A-Z][A-Za-z0-9_]*::
-

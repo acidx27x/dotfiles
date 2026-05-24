@@ -167,4 +167,3 @@ keymap_ns("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")
 keymap_ns("n", "<leader>of", ":Oil --float<CR>", "Oil: open in float")
 keymap_ns("n", "<leader>ov", ":vnew | Oil<CR>", "Oil: open in split vertically")
 keymap_ns("n", "<leader>oh", ":new | Oil<CR>", "Oil: open in split horizontally")
-

@@ -21,4 +21,3 @@ require("no-neck-pain").setup({
 
 vim.keymap.set("n", "<leader>np", ":NoNeckPain<CR>",
   { noremap = true, silent = true, desc = "no-neck-pain: toggle", })
-

@@ -40,4 +40,3 @@ M.setup({
 
 
 vim.opt.laststatus = 2  -- statusline for every window
-

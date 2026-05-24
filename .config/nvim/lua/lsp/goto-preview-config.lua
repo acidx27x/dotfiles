@@ -17,4 +17,3 @@ require("goto-preview").setup {
 
   vim_ui_input = false,
 }
-

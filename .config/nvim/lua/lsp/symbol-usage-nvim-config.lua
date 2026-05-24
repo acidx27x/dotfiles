@@ -53,4 +53,3 @@ require("symbol-usage").setup({
 
 -- disable by default
 require("symbol-usage").toggle_globally()
-

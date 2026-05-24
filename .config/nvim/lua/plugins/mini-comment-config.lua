@@ -18,4 +18,3 @@ require("mini.comment").setup({
     textobject = "<leader>cc",
   },
 })
-

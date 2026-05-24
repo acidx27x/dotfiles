@@ -261,4 +261,3 @@ require("blink.cmp.signature.trigger").show = function(opts)
   end
   signature_trigger_show_old(opts)
 end
-

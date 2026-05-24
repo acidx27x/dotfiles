@@ -65,4 +65,3 @@ require("gitsigns").setup({
     keyn("<leader>gtb", git.toggle_current_line_blame, getopts("git: toggle blame inline"))
   end
 })
-

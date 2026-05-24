@@ -53,4 +53,3 @@ require("dap").configurations.cpp = { launch, attach, }
 --     ]
 -- }
 -- looks like doenst support "console": "integratedTerminal" on windows, got strange error on it
-

@@ -62,4 +62,3 @@ keymap_ns("n", "<leader>|rf", function()
   local path = vim.fn.expand("%:p") -- full path of current file
   vim.cmd("Neotree position=float reveal_file=" .. vim.fn.fnameescape(path) .. " reveal_force_cwd")
 end, "Neo-tree: reveal file in float from anywhere")
-

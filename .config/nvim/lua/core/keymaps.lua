@@ -276,4 +276,3 @@ end, {
   end,
   desc = "utils: create ctags with provided languages and exclude dirs",
 })
-

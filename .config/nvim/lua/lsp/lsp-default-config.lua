@@ -9,4 +9,3 @@ vim.lsp.config("*", {
     allow_incremental_sync = true,
   },
 })
-

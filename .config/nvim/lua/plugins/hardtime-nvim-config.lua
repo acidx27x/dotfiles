@@ -14,4 +14,3 @@ require("hardtime").setup({
     ["k"] = false,
   },
 })
-

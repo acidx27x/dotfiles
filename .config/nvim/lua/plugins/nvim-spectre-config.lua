@@ -25,4 +25,3 @@ vim.keymap.set("n", "<leader>S", require("spectre").toggle,
 
 vim.keymap.set("v", "<leader>S", require("spectre").open_visual,
   { noremap = true, silent = true, desc = "spectre: open and search current word", })
-

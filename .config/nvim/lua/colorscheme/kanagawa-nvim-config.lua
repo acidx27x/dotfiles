@@ -93,4 +93,3 @@ require("kanagawa").setup({
     }
   end,
 })
-

@@ -114,4 +114,3 @@ vim.opt.maxmempattern = 20000
 
 -- CTags
 vim.opt.tags = { ".tags;", "tags;", }
-

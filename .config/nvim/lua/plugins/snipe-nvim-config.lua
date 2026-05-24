@@ -51,4 +51,3 @@ require("snipe").setup({
 
 vim.keymap.set("n", "<leader>sn", require("snipe").open_buffer_menu,
   { noremap = true, silent = true, desc = "snipe: open menu", })
-

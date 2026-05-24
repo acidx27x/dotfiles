@@ -7,4 +7,3 @@ vim.pack.add({
 require("multinput").setup({
 --
 })
-

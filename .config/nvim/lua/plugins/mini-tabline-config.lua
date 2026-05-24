@@ -37,4 +37,3 @@ require("mini.tabline").setup({
 
 vim.opt.showtabline = 2  -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
 vim.opt.hidden      = true  -- Allow hidden buffers
-

@@ -29,4 +29,3 @@ require("basedpyright-config")
 require("ruff-config")
 require("ty-config")
 --
-

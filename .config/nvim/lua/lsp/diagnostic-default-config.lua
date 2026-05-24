@@ -71,4 +71,3 @@ keymap_ns("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, "diagno
 
 -- restore some remapped combinations
 keymap_ns("n", "<C-w>d", "<C-w>d", "")  -- open_float
-

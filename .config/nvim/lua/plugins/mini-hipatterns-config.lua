@@ -30,4 +30,3 @@ hipatterns.setup({
     text_change = 200,
   },
 })
-

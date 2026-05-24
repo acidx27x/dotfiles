@@ -21,4 +21,3 @@ vim.cmd.colorscheme("kanagawa")
 --vim.api.nvim_set_hl(0, "WinBarNC",    { bg = "none" })
 --vim.api.nvim_set_hl(0, "WinBar",      { bg = "none" })
 --vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
-

@@ -13,4 +13,3 @@ require("smartcolumn").setup({
     "lspinfo", "noice",
   },
 })
-

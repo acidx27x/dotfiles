@@ -46,4 +46,3 @@ vim.api.nvim_create_user_command("FloatermClose", function()
     end,
   })
 end, { desc = "floaterm: close float window", })
-
