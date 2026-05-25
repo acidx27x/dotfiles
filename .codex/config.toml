@@ -96,6 +96,12 @@ sandbox = "elevated"
 # pre-expand glob matches before sandbox startup.
 glob_scan_max_depth = 6
 
+
+[permissions.locked_folders_only.filesystem.":workspace_roots"]
+# For every folder listed in [permissions.locked_folders_only.workspace_roots],
+# allow read/write access to the whole folder.
+"." = "write"
+
 # Deny sensitive files even inside allowed folders.
 "**/.env" = "deny"
 "**/.env.*" = "deny"
@@ -108,12 +114,6 @@ glob_scan_max_depth = 6
 "**/*.key" = "deny"
 "**/.aws/**" = "deny"
 "**/.ssh/**" = "deny"
-
-
-[permissions.locked_folders_only.filesystem.":workspace_roots"]
-# For every folder listed in [permissions.locked_folders_only.workspace_roots],
-# allow read/write access to the whole folder.
-"." = "write"
 
 
 ###############################################################################
