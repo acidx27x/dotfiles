@@ -296,14 +296,16 @@
     "xml": true,
     "lua": true,
     "make": true,
+    "toml": true,
     "scheme": true,
     "comment": true,
+    "neocmake": true,
     "powershell": true,
+    "dockerfile": true,
     "git-firefly": true,
+    "editorconfig": true,
     "color-highlight": true,
     "tree-sitter-query": true,
-    "editorconfig": true,
-    "neocmake": true,
   },
   // overrides
   // file types
