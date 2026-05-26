@@ -1,4 +1,8 @@
 ###############################################################################
+# WARN: For now Zed`s codex-acp doesn`t support custom permissions, use ':workspace'
+###############################################################################
+
+###############################################################################
 # Default model and response behavior
 ###############################################################################
 # Recommended default model example in current Codex sample config.
@@ -50,9 +54,9 @@ approvals_reviewer = "user"
 #
 # sandbox_mode = "workspace-write"
 
-# Use the custom permission profile defined below.
+# Use the built-in workspace permission profile for Zed ACP.
 # Built-ins include ":read-only", ":workspace", ":danger-full-access".
-default_permissions = "locked_folders_only"
+default_permissions = ":workspace"
 
 # Prevent shell tools from using login-shell behavior.
 allow_login_shell = false
@@ -65,67 +69,6 @@ allow_login_shell = false
 # Recommended when running Codex natively on Windows.
 # Use "unelevated" only if elevated setup fails or you lack admin permissions.
 sandbox = "elevated"
-
-
-###############################################################################
-# Strong filesystem permissions profile
-#
-# Rules:
-# - ":minimal" allows minimal OS/runtime access needed for commands to run.
-# - Only folders listed under workspace_roots are writable.
-# - Sensitive globs inside allowed folders are denied.
-###############################################################################
-[permissions.locked_folders_only.workspace_roots]
-# Add folders you want Codex to work in.
-# Codex can read/write these through the ":workspace_roots" rule below.
-#
-# Examples:
-# "/Users/you/projects/project-1" = true
-# "C:\\Users\\you\\projects\\project-1" = true
-
-
-[permissions.locked_folders_only.filesystem]
-# Minimal OS/runtime access needed to execute normal commands.
-":minimal" = "read"
-
-# Required/recommended when using unbounded ** deny globs on platforms that
-# pre-expand glob matches before sandbox startup.
-glob_scan_max_depth = 6
-
-
-[permissions.locked_folders_only.filesystem.":workspace_roots"]
-# For every folder listed in [permissions.locked_folders_only.workspace_roots],
-# allow read/write access to the whole folder.
-"." = "write"
-
-# Keep repository and Codex metadata readable but not writable.
-".git" = "read"
-".codex" = "read"
-
-# Deny sensitive files even inside allowed folders.
-"**/.env" = "deny"
-"**/.env.*" = "deny"
-"**/*secret*" = "deny"
-"**/*token*" = "deny"
-"**/*credential*" = "deny"
-"**/id_rsa" = "deny"
-"**/id_ed25519" = "deny"
-"**/*.pem" = "deny"
-"**/*.key" = "deny"
-"**/.aws/**" = "deny"
-"**/.ssh/**" = "deny"
-
-
-###############################################################################
-# Network policy for the locked profile
-###############################################################################
-[permissions.locked_folders_only.network]
-# No network for shell commands, scripts, package managers, curl, tests, etc.
-enabled = false
-
-# Keep limited even if you later enable network in another profile.
-# Options: "limited", "full".
-mode = "limited"
 
 
 ###############################################################################
@@ -177,10 +120,6 @@ exclude = [
 
 # Do not keep variables containing KEY/SECRET/TOKEN before filters run.
 ignore_default_excludes = false
-
-
-[shell_environment_policy.set]
-CODEX_LOCKED_FOLDERS_ONLY_PERMISSIONS = "1"
 
 
 ###############################################################################
