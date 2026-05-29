@@ -165,6 +165,17 @@ log_user_prompt = false
 
 
 ###############################################################################
+# TUI
+###############################################################################
+[tui]
+pet = "disabled"
+theme = "gruvbox-dark"
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "run-state", "context-used", "five-hour-limit", "weekly-limit", "used-tokens", "thread-title", "task-progress", "fast-mode"]
+status_line_use_colors = true
+terminal_title = ["activity", "project-name", "run-state", "thread-title", "task-progress"]
+
+
+###############################################################################
 # Model migrations
 ###############################################################################
 [notice.model_migrations]
