@@ -3,13 +3,13 @@
   "proxy": "",
   // general
   "telemetry": {
-    "diagnostics": false,
     "metrics": false,
+    "diagnostics": false,
   },
   "restore_on_startup": "launchpad",
   "on_last_window_closed": "quit_app",
-  "when_closing_with_no_tabs": "close_window",
   "cli_default_open_behavior": "new_window",
+  "when_closing_with_no_tabs": "close_window",
   "redact_private_values": true,
   "private_files": [
     "**/.env*",
@@ -20,6 +20,7 @@
     "**/secrets.yml",
   ],
   // appearence
+  "cursor_blink": false,
   "theme": "Kanagawa Dragon",
   "icon_theme": "Catppuccin Latte",
   "buffer_font_family": "Fira Code",
@@ -50,96 +51,87 @@
   "agent_ui_font_size": 15.5,
   "agent_buffer_font_size": 15.5,
   "text_rendering_mode": "grayscale",
-  "cursor_blink": false,
   // keymap
   "vim_mode": true,
   // editor
+  "vim": {
+    "use_regex_search": false,
+    "use_smartcase_find": true,
+  },
+  "tab_size": 2,
+  "colorize_brackets": true,
+  "line_ending": "prefer_lf",
+  "vertical_scroll_margin": 5.0,
+  "show_whitespaces": "selection",
+  "relative_line_numbers": "enabled",
   "which_key": {
     "enabled": true,
     "delay_ms": 1000,
   },
+  "format_on_save": "off",
+  "use_on_type_format": false,
+  "formatter": "language_server",
   "autosave": {
     "after_delay": {
       "milliseconds": 5000,
     },
   },
-  "diff_view_style": "split",
-  "vertical_scroll_margin": 5.0,
+  "middle_click_paste": false,
+  "diff_view_style": "unified",
+  "toolbar": {
+    "breadcrumbs": true,
+    "code_actions": false,
+    "quick_actions": false,
+    "selections_menu": false,
+  },
+  "scrollbar": {
+    "show": "always",
+    "diagnostics": "error",
+  },
   "sticky_scroll": {
     "enabled": true,
   },
-  "show_completions_on_input": false,
-  "snippet_sort_order": "bottom",
-  "relative_line_numbers": "enabled",
-  "scrollbar": {
-    "diagnostics": "error",
-    "show": "always",
-  },
-  "tab_size": 2,
-  "line_ending": "prefer_lf",
-  "toolbar": {
-    "code_actions": true,
-  },
-  "vim": {
-    "use_smartcase_find": true,
-  },
   "indent_guides": {
-    "background_coloring": "indent_aware",
-    "coloring": "indent_aware",
     "line_width": 1,
     "active_line_width": 2,
+    "coloring": "indent_aware",
+    "background_coloring": "indent_aware",
   },
-  "formatter": "language_server",
-  "use_on_type_format": false,
-  "format_on_save": "off",
-  "show_whitespaces": "selection",
-  "completion_menu_scrollbar": "always",
-  "show_completion_documentation": true,
-  "completion_menu_item_kind": "symbol",
+  "snippet_sort_order": "bottom",
   "completions": {
-    "words": "enabled",
+    "words": "fallback",
     "words_min_length": 4,
   },
+  "show_completions_on_input": false,
+  "completion_menu_item_kind": "symbol",
+  "completion_menu_scrollbar": "always",
+  "show_completion_documentation": true,
   "inlay_hints": {
     "toggle_on_modifiers_press": {
       "control": true,
       "alt": true,
     },
   },
-  "lsp_document_colors": "background", // need for 'color-highlight'
   "code_lens": "on",
-  "middle_click_paste": false,
-  "colorize_brackets": true,
+  "lsp_document_colors": "background", // need for 'color-highlight'
   // language and tools
   "prettier": {
     "allowed": true,
   },
   "go_to_definition_fallback": "none",
   "go_to_definition_scroll_strategy": "center",
-  "diagnostics_max_severity": "all",
   "diagnostics": {
     "include_warnings": true,
     "inline": {
       "enabled": false,
     },
   },
+  "diagnostics_max_severity": "all",
   // need to overwrite for specific language in the end
   "semantic_tokens": "off",
-  "document_folding_ranges": "off",
   "document_symbols": "off",
+  "document_folding_ranges": "off",
   // search and files
-  "search": {
-    "whole_word": false,
-    "include_ignored": true,
-    "center_on_match": true,
-    "regex": false,
-  },
-  "use_smartcase_search": true,
-  "seed_search_query_from_cursor": "selection",
-  "file_finder": {
-    "modal_max_width": "medium",
-    "include_ignored": "all",
-  },
   "file_scan_exclusions": [
     "**/.git",
     "**/.svn",
@@ -151,11 +143,28 @@
     "**/.classpath",
     "**/.settings",
   ],
+  "search": {
+    "regex": false,
+    "button": false,
+    "whole_word": false,
+    "include_ignored": true,
+    "center_on_match": true,
+  },
+  "use_smartcase_search": true,
+  "seed_search_query_from_cursor": "selection",
+  "file_finder": {
+    "include_ignored": "all",
+    "modal_max_width": "medium",
+  },
   // window and layout
+  "centered_layout": {
+    "left_padding": 0.15,
+    "right_padding": 0.15,
+  },
   "tabs": {
-    "show_diagnostics": "errors",
     "file_icons": true,
     "git_status": true,
+    "show_diagnostics": "errors",
   },
   "title_bar": {
     "show_menus": false,
@@ -166,25 +175,29 @@
     "show_pinned_tabs_in_separate_row": true,
   },
   "preview_tabs": {
-    "enable_keep_preview_on_code_navigation": true,
-    "enable_preview_multibuffer_from_code_navigation": true,
+    "enabled": true,
     "enable_preview_from_file_finder": false,
+    "enable_preview_from_multibuffer": false,
+    "enable_preview_from_project_panel": true,
+    "enable_keep_preview_on_code_navigation": false,
+    "enable_preview_file_from_code_navigation": false,
+    "enable_preview_multibuffer_from_code_navigation": false,
   },
   "active_pane_modifiers": {
-    "inactive_opacity": 0.85,
     "border_size": 2.0,
+    "inactive_opacity": 0.85,
   },
   // panels
   "git_panel": {
-    "fallback_branch_name": "main",
     "dock": "right",
     "tree_view": true,
+    "fallback_branch_name": "main",
   },
   "project_panel": {
-    "show_diagnostics": "errors",
-    "diagnostic_badges": true,
     "dock": "left",
-    "git_status_indicator": true
+    "diagnostic_badges": true,
+    "show_diagnostics": "errors",
+    "git_status_indicator": true,
   },
   "outline_panel": {
     "dock": "right"
@@ -198,24 +211,24 @@
   },
   // terminal
   "terminal": {
+    "dock": "bottom",
+    "blinking": "on",
+    "option_as_meta": true,
+    "copy_on_select": true,
     "show_count_badge": true,
     "keep_selection_on_copy": true,
-    "copy_on_select": true,
-    "blinking": "on",
-    "dock": "bottom",
-    "option_as_meta": true,
     "env": {
       "GIT_EDITOR": "zed --wait"
     }
   },
   // vcs
   "git": {
+    "blame": {
+      "show_avatar": true,
+    },
     "inline_blame": {
       "enabled": false,
       "show_commit_summary": true,
-    },
-    "blame": {
-      "show_avatar": true,
     },
   },
   // collab
@@ -227,14 +240,14 @@
     "codex-acp": {
       "favorite_config_option_values": {
         "model": [
-          "gpt-5.4"
+          "gpt-5.5",
         ],
         "mode": [
-          "auto"
+          "auto",
         ],
         "reasoning_effort": [
           "medium",
-          "high"
+          "high",
         ],
       },
       "type": "registry",
@@ -247,8 +260,8 @@
     "play_sound_when_agent_done": "always",
     "notify_when_agent_waiting": "all_screens",
     "use_modifier_to_send": true,
+    "expand_edit_card": false,
     "expand_terminal_card": false,
-    "expand_edit_card": true,
     "tool_permissions": {
       "default": "confirm",
       "tools": {
@@ -288,6 +301,26 @@
   "edit_predictions": {
     "allow_data_collection": "no",
     "provider": "none",
+    "disabled_globs": [
+      "**/.git",
+      "**/.svn",
+      "**/.hg",
+      "**/CVS",
+      "**/.DS_Store",
+      "**/Thumbs.db",
+      "**/.classpath",
+      "**/.settings",
+      "**/.vscode",
+      "**/.zed",
+      "**/.idea",
+      "**/node_modules",
+      "**/build",
+      "**/dist",
+      "**/libs",
+      "**/coverage",
+      "**/.venv",
+      "**/__pycache__",
+    ],
   },
   // common extensions
   "auto_install_extensions": {
@@ -334,18 +367,18 @@
   // languages
   "languages": {
     "C": {
-      "semantic_tokens": "combined",
-      "document_folding_ranges": "on",
       "document_symbols": "on",
+      "document_folding_ranges": "on",
+      "semantic_tokens": "combined",
     },
     "C++": {
-      "semantic_tokens": "combined",
-      "document_folding_ranges": "on",
       "document_symbols": "on",
+      "document_folding_ranges": "on",
+      "semantic_tokens": "combined",
     },
     "JavaScript": {
-      "formatter": "prettier",
       "format_on_save": "on",
+      "formatter": "prettier",
     },
     "Python": {
       "tab_size": 4,
@@ -375,8 +408,8 @@
   // themes
   "theme_overrides": {
     "Kanagawa Dragon": {
-      "editor.document_highlight.bracket_background": "#4A3A2E",
       "vim.yank.background": "#964000",
+      "editor.document_highlight.bracket_background": "#4A3A2E",
       "syntax": {
         "constant.comment.todo": {
           "color": "#4078F2FF",

@@ -1,86 +1,219 @@
-[
-  {
-    "unbind": {
-      "ctrl-alt-,": "zed::OpenSettingsFile",
+  [
+    {
+      "unbind": {
+        "ctrl-alt-,": "zed::OpenSettingsFile",
+        "tab": "menu::SelectNext",
+        "shift-tab": "menu::SelectPrevious",
+      },
     },
-  },
-  {
-    "context": "Editor",
-    "bindings": {
-      "alt-e": "editor::Cancel",
-      "tab": "editor::NextSnippetTabstop",
-      "shift-tab": "editor::PreviousSnippetTabstop",
+    // {
+    //   "context": "Editor && VimControl && !VimWaiting && !menu",
+    //   "bindings": {
+    //     "ctrl-w z": "workspace::ToggleZoom",
+    //     // "shift-k": "editor::Hover",
+    //     // "space l a": "editor::ToggleCodeActions",
+    //     // "space l r": "editor::Rename",
+    //     // "space l f": "editor::Format",
+    //     // "space l l": "diagnostics::Deploy",
+    //     "space f": "file_finder::Toggle",
+    //     "space o": "tab_switcher::Toggle",
+    //     "space e": "workspace::ToggleLeftDock",
+    //     "space p": "outline::Toggle",
+    //     // "space v": "editor::GoToDefinitionSplit"
+    //   }
+    // },
+    {
+      "context": "Editor",
+      "bindings": {
+        "alt-e": "editor::Cancel",
+        "tab": "editor::NextSnippetTabstop",
+        "shift-tab": "editor::PreviousSnippetTabstop",
+      },
     },
-  },
-  {
-    "context": "Editor && showing_completions",
-    "bindings": {
-      "tab": "editor::ConfirmCompletion",
-      "enter": "editor::Newline",
-      "ctrl-e": "editor::Cancel",
+    {
+      "context": "Editor && showing_completions",
+      "bindings": {
+        "alt-e": "editor::Cancel",
+        "tab": "editor::ConfirmCompletion",
+        "enter": "editor::Newline",
+      },
     },
-  },
-  {
-    "context": "VimControl && !menu",
-    "unbind": {
-      "shift-tab": "vim::Tab",
+    {
+      // use same bindings for Format and FormatSelection
+      // can`t place in one object due to json error begin
+      "context": "Editor",
+      "unbind": {
+        "alt-shift-f": "editor::Format",
+      },
+      "bindings": {
+        "ctrl-k ctrl-f": "editor::Format",
+      },
     },
-  },
-  {
-    "context": "Editor",
-    "unbind": {
-      "shift-tab": "editor::Backtab"
+    {
+      "context": "Editor",
+      "bindings": {
+        "ctrl-k ctrl-f": "editor::FormatSelections",
+      },
+      // use same bindings for Format and FormatSelection
+      // can`t place in one object due to json error begin
     },
-  },
-  { // use vim binding inside all the editor docks
-    //(the terminal, project panel, assistant panel, ...)
-    "context": "Dock",
-    "bindings": {
-      "ctrl-w h": "workspace::ActivatePaneLeft",
-      "ctrl-w l": "workspace::ActivatePaneRight",
-      "ctrl-w k": "workspace::ActivatePaneUp",
-      "ctrl-w j": "workspace::ActivatePaneDown",
+    { // remap unused/uncomfy mapping begin
+      "context": "Workspace",
+      "unbind": {
+        "ctrl-k ctrl-s": "zed::OpenKeymap",
+        "ctrl-k ctrl-shift-s": "workspace::SaveWithoutFormat",
+      },
+      "bindings": {
+        "ctrl-k ctrl-k": "zed::OpenKeymap",
+      },
     },
-  },
-  { // Subword motion to support snake_case, camelCase, etc
-    "context": "VimControl && !menu && vim_mode != operator",
-    "bindings": {
-      "w": "vim::NextSubwordStart",
-      "b": "vim::PreviousSubwordStart",
-      "e": "vim::NextSubwordEnd",
-      "g e": "vim::PreviousSubwordEnd",
+    {
+      "context": "!SettingsWindow",
+      "unbind": {
+        "ctrl-,": "zed::OpenSettings"
+      },
+      "bindings": {
+        "ctrl-k ctrl-s": "zed::OpenSettings",
+      },
     },
-  },
-  { // vim surround
-    "context": "vim_mode == visual",
-    "bindings": {
-      "shift-s a": "vim::PushAddSurrounds",
-      "shift-s d": "vim::PushDeleteSurrounds",
-      "shift-s c": "vim::PushChangeSurrounds",
+    {
+      "context": "VimControl && !menu",
+      "unbind": {
+        "shift-tab": "vim::Tab",
+      },
     },
-  },
-  { // vim exchange
-    "context": "vim_mode == visual",
-    "bindings": {
-      "shift-x": "vim::Exchange",
+    {
+      "context": "Editor",
+      "unbind": {
+        "shift-tab": "editor::Backtab"
+      },
+    }, // remap unused/uncomfy mapping end
+    { // subword motion to support snake_case, camelCase, etc
+      "context": "VimControl && !menu && vim_mode != operator",
+      "bindings": {
+        "w": "vim::NextSubwordStart",
+        "b": "vim::PreviousSubwordStart",
+        "e": "vim::NextSubwordEnd",
+        "g e": "vim::PreviousSubwordEnd",
+      },
     },
-  },
-  {
-    "context": "Workspace",
-    "unbind": {
-      "ctrl-k ctrl-s": "zed::OpenKeymap"
+    { // vim surround
+      "context": "vim_mode == visual",
+      "bindings": {
+        "shift-s a": "vim::PushAddSurrounds",
+        "shift-s d": "vim::PushDeleteSurrounds",
+        "shift-s c": "vim::PushChangeSurrounds",
+      },
     },
-    "bindings": {
-      "ctrl-k ctrl-k": "zed::OpenKeymap",
+    { // vim exchange
+      "context": "vim_mode == visual",
+      "bindings": {
+        "shift-x": "vim::Exchange",
+      },
     },
-  },
-  {
-    "context": "!SettingsWindow",
-    "unbind": {
-      "ctrl-,": "zed::OpenSettings"
+    {  // vim sneak
+      "context": "vim_mode == normal || vim_mode == visual",
+      "bindings": {
+        "shift-z f": "vim::PushSneak",
+        "shift-z b": "vim::PushSneakBackward",
+      },
     },
-    "bindings": {
-      "ctrl-k ctrl-s": "zed::OpenSettings",
+    { // Use neovim's yank behavior: yank to end of line.
+      "context": "vim_mode == normal && !menu",
+      "bindings": {
+        "shift-y": [
+          "workspace::SendKeystrokes",
+          "y $",
+        ],
+      },
     },
-  },
-]
+    { // move lines with ctrl + alt + hjkl begin
+      "context": "Editor",
+      "unbind": {
+        "alt-up": "editor::MoveLineUp",
+        "alt-down": "editor::MoveLineDown",
+      },
+      "bindings": {
+        "ctrl-alt-k": "editor::MoveLineUp",
+        "ctrl-alt-j": "editor::MoveLineDown",
+        "ctrl-alt-h": "vim::Outdent",
+        "ctrl-alt-l": "vim::Indent",
+      },
+    },
+    {
+      "context": "vim_mode == normal || vim_mode == visual || vim_mode == operator",
+      "unbind": {
+        "[ e": "editor::MoveLineUp",
+        "] e": "editor::MoveLineDown",
+      },
+    },
+    {
+      "context": "VimControl && !menu",
+      "unbind": {
+        "ctrl-j": "vim::Down",
+      },
+    }, // move lines with ctrl + alt + hjkl end
+    { // resize panes with alt + arrows begin
+      "context": "Pane",
+      "bindings": {
+        "alt-up": "vim::ResizePaneUp",
+        "alt-down": "vim::ResizePaneDown",
+        "alt-left": "vim::ResizePaneLeft",
+        "alt-right": "vim::ResizePaneRight",
+      },
+    },
+    {
+      "context": "(VimControl && !menu) || (!Editor && !Terminal)",
+      "unbind": {
+        "ctrl-w shift-=": "vim::ResizePaneUp",
+        "ctrl-w -": "vim::ResizePaneDown",
+        "ctrl-w shift-,": "vim::ResizePaneLeft",
+        "ctrl-w shift-.": "vim::ResizePaneRight",
+      },
+    }, // resize panes with alt + arrows end
+    {
+      // use alt + hjkl to focus in all the editor docks
+      //(the terminal, project panel, assistant panel, ...) begin
+      "context": "Workspace",
+      "unbind": {
+        "ctrl-k ctrl-up": "workspace::ActivatePaneUp",
+        "ctrl-k ctrl-down": "workspace::ActivatePaneDown",
+        "ctrl-k ctrl-left": "workspace::ActivatePaneLeft",
+        "ctrl-k ctrl-right": "workspace::ActivatePaneRight",
+      },
+      "bindings": {
+        "alt-k": "workspace::ActivatePaneUp",
+        "alt-j": "workspace::ActivatePaneDown",
+        "alt-h": "workspace::ActivatePaneLeft",
+        "alt-l": "workspace::ActivatePaneRight",
+      },
+    },
+    {
+      "context": "!Editor && !Terminal",
+      "unbind": {
+        "space w k": "workspace::ActivatePaneUp",
+        "space w j": "workspace::ActivatePaneDown",
+        "space w h": "workspace::ActivatePaneLeft",
+        "space w l": "workspace::ActivatePaneRight",
+      },
+    },
+    {
+      "context": "(VimControl && !menu) || (!Editor && !Terminal)",
+      "unbind": {
+        "ctrl-w k": "workspace::ActivatePaneUp",
+        "ctrl-w up": "workspace::ActivatePaneUp",
+        "ctrl-w ctrl-k": "workspace::ActivatePaneUp",
+        "ctrl-w j": "workspace::ActivatePaneDown",
+        "ctrl-w down": "workspace::ActivatePaneDown",
+        "ctrl-w ctrl-j": "workspace::ActivatePaneDown",
+        "ctrl-w h": "workspace::ActivatePaneLeft",
+        "ctrl-w left": "workspace::ActivatePaneLeft",
+        "ctrl-w ctrl-h": "workspace::ActivatePaneLeft",
+        "ctrl-w l": "workspace::ActivatePaneRight",
+        "ctrl-w right": "workspace::ActivatePaneRight",
+        "ctrl-w ctrl-l": "workspace::ActivatePaneRight",
+      },
+      // use alt + hjkl to focus in all the editor docks
+      // the terminal, project panel, assistant panel, ...) end
+    },
+  ]
