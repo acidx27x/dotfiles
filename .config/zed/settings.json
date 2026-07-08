@@ -1,5 +1,9 @@
 {
-  // proxy
+  // connections
+  "wsl_connections": [
+  ],
+  "ssh_connections": [
+  ],
   "proxy": "",
   // general
   "telemetry": {
@@ -50,6 +54,7 @@
   "ui_font_fallbacks": null,
   "agent_ui_font_size": 15.5,
   "agent_buffer_font_size": 15.5,
+  "git_commit_buffer_font_size": 15.5,
   "text_rendering_mode": "grayscale",
   // keymap
   "vim_mode": true,
@@ -60,9 +65,10 @@
   },
   "tab_size": 2,
   "colorize_brackets": true,
+  "always_treat_brackets_as_autoclosed": true,
   "line_ending": "prefer_lf",
   "vertical_scroll_margin": 5.0,
-  "show_whitespaces": "selection",
+  "show_whitespaces": "boundary",
   "relative_line_numbers": "enabled",
   "which_key": {
     "enabled": true,
@@ -77,12 +83,15 @@
     },
   },
   "middle_click_paste": false,
-  "diff_view_style": "unified",
+  "diff_view_style": "split",
+  "gutter": {
+    "runnables": false
+  },
   "toolbar": {
     "breadcrumbs": true,
-    "code_actions": false,
-    "quick_actions": false,
     "selections_menu": false,
+    "quick_actions": false,
+    "code_actions": false,
   },
   "scrollbar": {
     "show": "always",
@@ -114,6 +123,7 @@
   },
   "code_lens": "on",
   "lsp_document_colors": "background", // need for 'color-highlight'
+  "lsp_document_links": true,
   // language and tools
   "prettier": {
     "allowed": true,
@@ -144,8 +154,8 @@
     "**/.settings",
   ],
   "search": {
-    "regex": false,
     "button": false,
+    "regex": false,
     "whole_word": false,
     "include_ignored": true,
     "center_on_match": true,
@@ -158,8 +168,8 @@
   },
   // window and layout
   "centered_layout": {
-    "left_padding": 0.15,
     "right_padding": 0.15,
+    "left_padding": 0.15,
   },
   "tabs": {
     "file_icons": true,
@@ -177,10 +187,10 @@
   "preview_tabs": {
     "enabled": true,
     "enable_preview_from_file_finder": false,
-    "enable_preview_from_multibuffer": false,
+    "enable_preview_from_multibuffer": true,
     "enable_preview_from_project_panel": true,
     "enable_keep_preview_on_code_navigation": false,
-    "enable_preview_file_from_code_navigation": false,
+    "enable_preview_file_from_code_navigation": true,
     "enable_preview_multibuffer_from_code_navigation": false,
   },
   "active_pane_modifiers": {
@@ -191,7 +201,8 @@
   "git_panel": {
     "dock": "right",
     "tree_view": true,
-    "fallback_branch_name": "main",
+    "show_count_badge": true,
+    "fallback_branch_name": "master",
   },
   "project_panel": {
     "dock": "left",
@@ -208,9 +219,13 @@
   // debugger
   "debugger": {
     "dock": "bottom",
+    "save_breakpoints": true,
   },
   // terminal
   "terminal": {
+    "toolbar": {
+      "breadcrumbs": false
+    },
     "dock": "bottom",
     "blinking": "on",
     "option_as_meta": true,
@@ -238,6 +253,9 @@
   // ai
   "agent_servers": {
     "codex-acp": {
+      "default_config_options": {
+        "reasoning_effort": "high"
+      },
       "favorite_config_option_values": {
         "model": [
           "gpt-5.5",
@@ -302,25 +320,25 @@
     "allow_data_collection": "no",
     "provider": "none",
     "disabled_globs": [
-      "**/.git",
-      "**/.svn",
-      "**/.hg",
-      "**/CVS",
-      "**/.DS_Store",
-      "**/Thumbs.db",
-      "**/.classpath",
-      "**/.settings",
-      "**/.vscode",
-      "**/.zed",
-      "**/.idea",
-      "**/node_modules",
-      "**/build",
-      "**/dist",
-      "**/libs",
-      "**/coverage",
-      "**/.venv",
-      "**/__pycache__",
-    ],
+			"**/.git",
+			"**/.svn",
+			"**/.hg",
+			"**/CVS",
+			"**/.DS_Store",
+			"**/Thumbs.db",
+			"**/.classpath",
+			"**/.settings",
+			"**/.vscode",
+			"**/.zed",
+			"**/.idea",
+			"**/node_modules",
+			"**/build",
+			"**/dist",
+			"**/libs",
+			"**/coverage",
+			"**/.venv",
+			"**/__pycache__",
+		],
   },
   // common extensions
   "auto_install_extensions": {

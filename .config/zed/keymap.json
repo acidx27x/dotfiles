@@ -1,3 +1,4 @@
+  // INFO: mainly using <ctrl-k> for worKspace, <ctrl-i> for edItor context
   [
     {
       "unbind": {
@@ -22,7 +23,7 @@
     //     // "space v": "editor::GoToDefinitionSplit"
     //   }
     // },
-    {
+    { // better complition behavior begin
       "context": "Editor",
       "bindings": {
         "alt-e": "editor::Cancel",
@@ -37,31 +38,13 @@
         "tab": "editor::ConfirmCompletion",
         "enter": "editor::Newline",
       },
-    },
-    {
-      // use same bindings for Format and FormatSelection
-      // can`t place in one object due to json error begin
-      "context": "Editor",
-      "unbind": {
-        "alt-shift-f": "editor::Format",
-      },
-      "bindings": {
-        "ctrl-k ctrl-f": "editor::Format",
-      },
-    },
-    {
-      "context": "Editor",
-      "bindings": {
-        "ctrl-k ctrl-f": "editor::FormatSelections",
-      },
-      // use same bindings for Format and FormatSelection
-      // can`t place in one object due to json error begin
-    },
+    }, // better complition behavior end
     { // remap unused/uncomfy mapping begin
       "context": "Workspace",
       "unbind": {
         "ctrl-k ctrl-s": "zed::OpenKeymap",
         "ctrl-k ctrl-shift-s": "workspace::SaveWithoutFormat",
+        "ctrl-k ctrl-t": "theme_selector::Toggle",
       },
       "bindings": {
         "ctrl-k ctrl-k": "zed::OpenKeymap",
@@ -88,6 +71,160 @@
         "shift-tab": "editor::Backtab"
       },
     }, // remap unused/uncomfy mapping end
+    { // toggle dock begin
+      "context": "AgentPanel",
+      "unbind": {
+        "ctrl-shift-e": "project_panel::ToggleFocus"
+      }
+    },
+    {
+      "unbind": {
+        "alt-shift-l": "lsp_tool::ToggleMenu",
+      },
+    },
+    {
+      "context": "Editor",
+      "unbind": {
+        "ctrl-k ctrl-d": [
+          "editor::SelectNext",
+          {
+            "replace_newest": true,
+          },
+        ],
+        "ctrl-k ctrl-l": "editor::ToggleFold",
+        "ctrl-k ctrl-c": [
+          "editor::ToggleComments",
+          {
+            "advance_downwards": false,
+          },
+        ],
+      },
+    },
+    {
+      "context": "!Terminal",
+      "unbind": {
+        "ctrl-shift-c": "collab_panel::ToggleFocus"
+      }
+    },
+    {
+      "context": "Workspace",
+      "unbind": {
+        "ctrl-shift-`": "workspace::NewTerminal",
+        "ctrl-`": "terminal_panel::Toggle",
+        "ctrl-alt-j": "multi_workspace::ToggleWorkspaceSidebar",
+        "ctrl-shift-/": "agent::ToggleFocus",
+        "ctrl-shift-e": "project_panel::ToggleFocus",
+        "ctrl-shift-m": "diagnostics::Deploy",
+        "ctrl-shift-d": "debug_panel::ToggleFocus",
+        "ctrl-shift-b": "outline_panel::ToggleFocus",
+        "ctrl-shift-g": "git_panel::ToggleFocus",
+        "ctrl-k m": "language_selector::Toggle",
+        "ctrl-j": "workspace::ToggleBottomDock",
+        "ctrl-b": "workspace::ToggleLeftDock",
+        "ctrl-alt-b": "workspace::ToggleRightDock",
+        "ctrl-k ctrl-shift-t": "theme::ToggleMode",
+      },
+      "bindings": {
+        "ctrl-k ctrl-t": "terminal_panel::Toggle",
+        "ctrl-k ctrl-h": "multi_workspace::ToggleWorkspaceSidebar",
+        "ctrl-k ctrl-a": "agent::Toggle",
+        "ctrl-k ctrl-n": "project_panel::Toggle",
+        "ctrl-k ctrl-i": "diagnostics::Deploy",
+        "ctrl-k ctrl-d": "debug_panel::Toggle",
+        "ctrl-k ctrl-u": "outline_panel::Toggle",
+        "ctrl-k ctrl-g": "git_panel::Toggle",
+        "ctrl-k ctrl-l": "language_selector::Toggle",
+        "ctrl-k ctrl--": "workspace::ToggleBottomDock",
+        "ctrl-k ctrl-,": "workspace::ToggleLeftDock",
+        "ctrl-k ctrl-.": "workspace::ToggleRightDock",
+        "ctrl-k ctrl-e": "editor::ToggleFocus",
+        "ctrl-k ctrl-shift-t": "workspace::OpenInTerminal",
+        "ctrl-k ctrl-c": "collab_panel::Toggle",
+      },
+    }, //  toggle dock end
+    { // editor begin
+      "context": "Editor",
+      "unbind": {
+        // use same bindings for Format and FormatSelection
+        // can`t place in one object due to json error begin
+        "alt-shift-f": "editor::Format",
+      },
+      "bindings": {
+        "ctrl-i ctrl-f": "editor::Format",
+      },
+    },
+    {
+      "context": "Editor",
+      "bindings": {
+        "ctrl-i ctrl-f": "editor::FormatSelections",
+      },
+    },
+    {
+      "context": "!AcpThread > Editor && mode == full",
+      "unbind": {
+        "ctrl-shift-e": "pane::RevealInProjectPanel",
+      },
+      "bindings": {
+        "ctrl-i ctrl-n": "pane::RevealInProjectPanel",
+      },
+    },
+    {
+      "context": "Editor",
+      "unbind": {
+        "ctrl-k p": "workspace::CopyPath",
+        "ctrl-k r": "editor::RevealInFileManager",
+        "ctrl-k ctrl-b": "editor::BlameHover",
+      },
+      "bindings": {
+        "ctrl-i ctrl-r": "editor::RevealInFileManager",
+        "ctrl-i ctrl-b": "editor::BlameHover",
+      }
+    }, // editor end
+    { // remap/unmap unused toggle comments begin
+      "context": "Editor",
+      "unbind": {
+        "ctrl-/": [
+          "editor::ToggleComments",
+          {
+            "advance_downwards": false,
+          },
+        ],
+        "ctrl-k ctrl-c": [
+          "editor::ToggleComments",
+          {
+            "advance_downwards": false,
+          },
+        ],
+        "alt-shift-a": "editor::ToggleBlockComments",
+        "ctrl-k ctrl-/": "editor::ToggleBlockComments"
+      },
+      "bindings": {
+        "ctrl-i ctrl-c": [
+          "editor::ToggleComments",
+          {
+            "advance_downwards": false,
+          },
+        ],
+        "ctrl-i ctrl-shift-c": "editor::ToggleBlockComments",
+      },
+    }, // remap/unmap unused toggle comments end
+    { // better cursor placement begin
+      "context": "VimControl && !menu",
+      "bindings": {
+        "ctrl-d": [
+          "workspace::SendKeystrokes",
+          "ctrl-d z z"
+        ],
+        "ctrl-u": [
+          "workspace::SendKeystrokes",
+          "ctrl-u z z"
+        ],
+        "shift-g": [
+          "workspace::SendKeystrokes",
+          "shift-g z z"
+        ],
+      },
+    }, // better cursor placement end
     { // subword motion to support snake_case, camelCase, etc
       "context": "VimControl && !menu && vim_mode != operator",
       "bindings": {
@@ -111,7 +248,7 @@
         "shift-x": "vim::Exchange",
       },
     },
-    {  // vim sneak
+    { // vim sneak
       "context": "vim_mode == normal || vim_mode == visual",
       "bindings": {
         "shift-z f": "vim::PushSneak",
@@ -134,10 +271,23 @@
         "alt-down": "editor::MoveLineDown",
       },
       "bindings": {
-        "ctrl-alt-k": "editor::MoveLineUp",
         "ctrl-alt-j": "editor::MoveLineDown",
+        "ctrl-alt-k": "editor::MoveLineUp",
         "ctrl-alt-h": "vim::Outdent",
         "ctrl-alt-l": "vim::Indent",
+      },
+    },
+    {
+      "context": "vim_mode == visual",
+      "bindings": {
+        "ctrl-alt-h": [
+          "workspace::SendKeystrokes",
+          "< g v",
+        ],
+        "ctrl-alt-l": [
+          "workspace::SendKeystrokes",
+          "> g v",
+        ],
       },
     },
     {
@@ -154,7 +304,7 @@
       },
     }, // move lines with ctrl + alt + hjkl end
     { // resize panes with alt + arrows begin
-      "context": "Pane",
+      "context": "Pane || Dock",
       "bindings": {
         "alt-up": "vim::ResizePaneUp",
         "alt-down": "vim::ResizePaneDown",
@@ -173,7 +323,7 @@
     }, // resize panes with alt + arrows end
     {
       // use alt + hjkl to focus in all the editor docks
-      //(the terminal, project panel, assistant panel, ...) begin
+      // (the terminal, project panel, assistant panel, ...) begin
       "context": "Workspace",
       "unbind": {
         "ctrl-k ctrl-up": "workspace::ActivatePaneUp",
@@ -215,5 +365,170 @@
       },
       // use alt + hjkl to focus in all the editor docks
       // the terminal, project panel, assistant panel, ...) end
+    },
+    { // terminal begin
+      "context": "Terminal",
+      "unbind": {
+        "ctrl-shift-space": "terminal::ToggleViMode",
+        "ctrl-n": "workspace::NewTerminal",
+      },
+      "bindings": {
+        "ctrl-t ctrl-m": "terminal::ToggleViMode",
+        "ctrl-k ctrl-n": "workspace::NewTerminal",
+      }
+    }, // terminal end
+    { // project panel begin
+      "context": "ProjectPanel",
+      "unbind": {
+        "alt-shift-c": "workspace::CopyPath",
+        "ctrl-k ctrl-shift-c": "workspace::CopyRelativePath",
+      },
+    },
+    {
+      "context": "ProjectPanel && not_editing",
+      "unbind": {
+        "shift-5": "project_panel::NewFile",
+        "d": "project_panel::NewDirectory",
+        "x": "project_panel::RevealInFileManager",
+        "s": "workspace::OpenWithSystem",
+        "ctrl-x": "project_panel::Cut",
+        "space": "project_panel::Open",
+        "p": "project_panel::Open",
+        "t": "project_panel::OpenPermanent",
+        "o": "project_panel::OpenSplitHorizontal",
+        "h": "project_panel::CollapseSelectedEntry",
+      },
+      "bindings": {
+        "a": "project_panel::NewFile",
+        "shift-a": "project_panel::NewDirectory",
+        "x": "project_panel::Cut",
+        "y": "project_panel::Copy",
+        "p": "project_panel::Paste",
+        "ctrl-r": "project_panel::RevealInFileManager",
+        "ctrl-s": "workspace::OpenWithSystem",
+        "ctrl-c": "workspace::CopyPath",
+        "ctrl-shift-c": "workspace::CopyRelativePath",
+        "ctrl-o": "project_panel::Open",
+        "ctrl-shift-o": "project_panel::OpenPermanent",
+        "h": "project_panel::OpenSplitHorizontal",
+        "v": "project_panel::OpenSplitVertical",
+      },
+    }, // project panel end
+    { // outline panel begin
+      "context": "OutlinePanel && not_editing",
+      "unbind": {
+        "alt-shift-c": "workspace::CopyPath",
+        "ctrl-alt-shift-c": "workspace::CopyRelativePath",
+      },
+    }, // outline panel end
+    { // pane begin
+      "context": "Pane",
+      "unbind": {
+        "ctrl-k shift-enter": "pane::TogglePinTab",
+      },
+      "bindings": {
+        "ctrl-i ctrl-p": "pane::TogglePinTab",
+      },
+    }, // pane end
+    { // debugger begin
+      "context": "Editor",
+      "bindings": {
+        "alt-d e": "editor::EnableBreakpoint",
+        "alt-d d": "editor::DisableBreakpoint",
+        "alt-d t": "editor::ToggleBreakpoint",
+      },
+    },
+    {
+      "context": "Workspace",
+      "bindings": {
+        "alt-d r": "debugger::Start",
+        "alt-d shift-r": "debugger::RerunSession",
+        "alt-d p": "debugger::Pause",
+        "alt-d shift-p": "debugger::Stop",
+        "alt-d .": "debugger::RunToCursor",
+        "alt-d s": "debugger::StepInto",
+        "alt-d b": "debugger::StepBack",
+        "alt-d n": "debugger::StepOver",
+        "alt-d o": "debugger::StepOut",
+        "alt-d v": "debugger::EvaluateSelectedText",
+      },
+    },
+    {
+      "context": "Workspace && debugger_stopped",
+      "bindings": {
+        "alt-d c": "debugger::Continue",
+      },
+    }, // debugger end
+    { // task begin
+      "context": "Workspace",
+      "unbind": {
+        "alt-shift-t": "task::Spawn",
+        "alt-t": "task::Rerun",
+        "alt-shift-r": [
+          "task::Spawn",
+          {
+            "reveal_target": "center",
+          },
+        ],
+        "ctrl-shift-r": [
+          "task::Rerun",
+          {
+            "reevaluate_context": false,
+          },
+        ],
+      },
+      "bindings": {
+        "alt-t n": "task::Spawn",
+        "alt-t r": "task::Rerun",
+        "alt-t shift-n": [
+          "task::Spawn",
+          {
+            "reveal_target": "center",
+          },
+        ],
+        "alt-t shift-r": [
+          "task::Rerun",
+          {
+            "reevaluate_context": false,
+          },
+        ],
+      },
+    }, // task end
+    { // remap spoiled copy/paste keymaps begin
+      "context": "Editor",
+      "unbind": {
+        "ctrl-c": "editor::Copy",
+        "ctrl-insert": "editor::Copy",
+        "ctrl-v": "editor::Paste",
+        "shift-insert": "editor::Paste",
+      },
+      "bindings": {
+        "ctrl-shift-c": "editor::Copy",
+        "ctrl-shift-v": "editor::Paste",
+      },
+    },
+    {
+      "context": "Editor && extension == md",
+      "unbind": {
+        "ctrl-shift-v": "markdown::OpenPreview"
+      }
+    }, // remap spoiled copy/paste keymaps end
+    { // TODO
+      "context": "Editor",
+      "unbind": {
+        "ctrl-k ctrl-i": "editor::Hover",
+      },
+      "bindings": {
+        "ctrl-i ctrl-k": "editor::Hover",
+      }
+    },
+    { // bookmarks
+      "context": "Editor",
+      "bindings": {
+        "ctrl-i ctrl-m": "editor::ToggleBookmark",
+        "ctrl-i ctrl-shift-m": "editor::ViewBookmarks",
+        // "shift-] m": "editor::GoToNextBookmark",
+        // "shift-[ m": "editor::GoToPreviousBookmark",
+      },
     },
   ]
