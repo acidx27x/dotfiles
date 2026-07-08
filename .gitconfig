@@ -121,3 +121,4 @@
   l    = log --oneline --decorate
   last = log -1 HEAD --stat
   who  = shortlog -sn
+  stat = show --numstat
