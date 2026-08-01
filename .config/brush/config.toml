@@ -1,0 +1,9 @@
+#:schema https://raw.githubusercontent.com/reubeno/brush/main/schemas/config.schema.json
+
+[ui]
+syntax-highlighting = true
+
+[experimental]
+terminal-shell-integration = true
+zsh-hooks = true
+
