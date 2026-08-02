@@ -7,15 +7,10 @@
 #
 # This file intentionally uses "auto" color modes wherever possible so that
 # redirected output and shell scripts do not receive unwanted ANSI escapes.
-#
-# Only configure interactive shells.
-if [[ $- != *i* ]]; then
-  return 0 2>/dev/null || exit 0
-fi
 
 # Respect the NO_COLOR convention and unusable terminals.
 if [[ -n ${NO_COLOR:-} || ${TERM:-} == dumb ]]; then
-  return 0 2>/dev/null || exit 0
+  return 0
 fi
 
 # Generic convention used by several BSD-style utilities. This enables color
@@ -26,18 +21,20 @@ export CLICOLOR="${CLICOLOR:-1}"
 # 1. LS_COLORS: vivid palette
 # ---------------------------------------------------------------------------
 
-VIVID_THEME="${VIVID_THEME:-lava}"
+VIVID_THEME="${VIVID_THEME:-iceberg-dark}"
 
 if has_cmd vivid; then
   if __vivid_colors="$(vivid generate "$VIVID_THEME" 2>/dev/null)"; then
     export LS_COLORS="$__vivid_colors"
   else
-    printf 'bash-colors: vivid theme not found: %s\n' "$VIVID_THEME" >&2
+    printf 'WARNING, colors.bash: vivid theme not found: %s\n' "$VIVID_THEME" >&2
   fi
   unset __vivid_colors
 elif [[ -z ${LS_COLORS:-} ]] && has_cmd dircolors; then
   # Fallback when vivid is not installed.
   eval "$(dircolors -b 2>/dev/null)"
+else
+  printf 'WARNING, colors.bash: dircolors or vivid theme not found' >&2
 fi
 
 # These tools read LS_COLORS automatically when available:
@@ -174,7 +171,7 @@ if __color_help_has diff '--color'; then
 fi
 
 # iproute2 uses its own color switch and does not read LS_COLORS.
-if command ip -help 2>&1 | grep -Fq -- '-color'; then
+if has_cmd ip && command ip -help 2>&1 | grep -Fq -- '-color'; then
   __color_alias ip 'ip -color=auto'
 fi
 

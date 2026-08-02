@@ -1,9 +1,9 @@
 # ~/.config/bash/functions.bash
 # Reusable helpers and interactive shell functions.
 
-#
+# ---------------------------------------------------------------------------
 # Command and initialization helpers
-#
+# ---------------------------------------------------------------------------
 
 # Return success when the current shell is Brush.
 is_brush() {
@@ -105,9 +105,58 @@ source_first() {
   return 1
 }
 
+# Source all readable *.bash files from one or more directories.
 #
+# Files are loaded in lexical order, so numeric prefixes can control order:
+#   10-environment.bash
+#   20-paths.bash
+#   30-aliases.bash
+source_conf_dirs() {
+  local dir file
+  local -a files
+  local had_nullglob=0
+  local had_failglob=0
+  local LC_COLLATE=C
+
+  shopt -q nullglob && had_nullglob=1
+  shopt -q failglob && had_failglob=1
+
+  # An empty directory should produce an empty array rather than an error
+  # or a literal "*.bash" filename.
+  shopt -s nullglob
+  shopt -u failglob
+
+  for dir in "$@"; do
+    [[ -d "$dir" ]] || continue
+
+    files=("$dir"/*.bash)
+
+    for file in "${files[@]}"; do
+      [[ -f "$file" && -r "$file" ]] || continue
+      source "$file" || {
+        printf 'WARNING, functions.bash: %s source failed\n' "${file##*/}" >&2
+      }
+    done
+  done
+
+  (( had_nullglob )) || shopt -u nullglob
+  (( had_failglob )) && shopt -s failglob
+}
+
+# ---------------------------------------------------------------------------
 # PATH helpers
-#
+# ---------------------------------------------------------------------------
+
+current_file_dir() {
+  local file="${BASH_SOURCE[1]:-}"
+
+  [[ -n "$file" ]] || return 1
+
+  (
+    cd -P -- "$(dirname -- "$file")" 2>/dev/null &&
+    pwd
+  )
+}
 
 # Prepend existing directories to PATH.
 #
@@ -152,9 +201,9 @@ path_prepend() {
   export PATH
 }
 
-#
+# ---------------------------------------------------------------------------
 # Prompt and history helpers
-#
+# ---------------------------------------------------------------------------
 
 # Add a command to PROMPT_COMMAND without adding it twice.
 #
@@ -198,9 +247,9 @@ __sync_bash_history() {
   builtin history -r
 }
 
-#
+# ---------------------------------------------------------------------------
 # Windows Zone.Identifier cleanup
-#
+# ---------------------------------------------------------------------------
 
 # Remove Windows download-zone metadata files recursively.
 #
@@ -222,9 +271,9 @@ rm_zone_id() {
     -delete
 }
 
-#
+# ---------------------------------------------------------------------------
 # Encoding detection
-#
+# ---------------------------------------------------------------------------
 
 # Detect the likely encoding of a text file.
 detect_encoding() {
@@ -290,9 +339,9 @@ _file_exists_and_rw() {
   }
 }
 
-#
+# ---------------------------------------------------------------------------
 # UTF-8 conversion
-#
+# ---------------------------------------------------------------------------
 
 _to_utf8_impl() {
   local add_bom="$1"
@@ -411,9 +460,9 @@ to_utf8_bom() {
   _to_utf8_impl 1 "$@"
 }
 
-#
+# ---------------------------------------------------------------------------
 # ASCII conversion
-#
+# ---------------------------------------------------------------------------
 
 to_us_ascii() {
   local file

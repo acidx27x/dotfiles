@@ -1,4 +1,4 @@
-# ~/.bashrc: interactive Bash/Brush configuration.
+# ~/.bashrc: interactive Bash configuration.
 
 # Stop here for non-interactive shells.
 case $- in
@@ -6,191 +6,200 @@ case $- in
   *) return ;;
 esac
 
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export SHELL="$(command -v bash)"
 
 # Shared helper functions.
-_functions_file="$XDG_CONFIG_HOME/bash/functions.bash"
+_bash_config_dir="$HOME/.config/bash"
+_functions_file="$_bash_config_dir/functions.bash"
 
-if [[ -r "$_functions_file" ]]; then
-  source "$_functions_file"
-else
-  printf 'Missing shell functions file: %s\n' "$_functions_file" >&2
-  unset _functions_file
-  return
-fi
+source "$_functions_file"
 
 unset _functions_file
 
-#
-# History
-#
+# Silence Apple's warning when the system Bash is used.
+if [[ ${OSTYPE:-} == darwin* ]]; then
+  export BASH_SILENCE_DEPRECATION_WARNING=1
+fi
 
-export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+# ---------------------------------------------------------------------------
+# Base environment
+# ---------------------------------------------------------------------------
+
+source "$_bash_config_dir/env.bash"
+
+# Share history between simultaneously open terminals.
+is_brush || add_prompt_command __sync_bash_history  # not working for Brush
+
+# ---------------------------------------------------------------------------
+# History
+# ---------------------------------------------------------------------------
+
+export HISTCONTROL=ignoredups:erasedups
 export HISTSIZE=100000
 export HISTFILESIZE=100000
 
 shopt -s histappend   # append instead of overwrite
-shopt -s checkwinsize # if the terminal window size changed -> update
-shopt -s cmdhist      # attempts to save a multi-line command as one history entry
-shopt -s lithist      # preserves the actual line breaks in multi-line commands when saving them to history
+shopt -s checkwinsize # update dimensions after terminal resize
+shopt -s cmdhist      # save a multi-line command as one history entry
+shopt -s lithist      # preserve line breaks in multi-line history entries
 
-# Recursive globbing: **/*.rs, src/**/*.toml
-shopt -s globstar
+# ---------------------------------------------------------------------------
+# Options
+# ---------------------------------------------------------------------------
+
+# Recursive globbing was added in Bash 4; macOS may still use Bash 3.2.
+if (( BASH_VERSINFO[0] >= 4 )); then
+  shopt -s globstar
+fi
 
 # Extended glob patterns: rm -- !(*.important)
-#shopt -s extglob
+shopt -s extglob
 
-# Pattern that matches nothing produces an error
-#shopt -s failglob
+# Pattern that matches nothing produces an error.
+# shopt -s failglob
 
-# Prevent accidental overwriting with >
+# Prevent accidental overwriting with >.
 # Use >|file to overwrite intentionally.
 set -o noclobber
 
-# Share history between simultaneously open terminals.
-is_brush || add_prompt_command __sync_bash_history  # not working for brush
+# ---------------------------------------------------------------------------
+# Homebrew / Linuxbrew
+# ---------------------------------------------------------------------------
 
-#
-# Linuxbrew
-#
+# HOMEBREW_BREW_FILE may be set in env.bash or .env.bash for a
+# custom Homebrew installation.
+_brew_bin="${HOMEBREW_BREW_FILE:-}"
 
-# Load Linuxbrew first. Custom paths below then receive higher priority.
-shell_init /home/linuxbrew/.linuxbrew/bin/brew shellenv bash || true
+# Use Homebrew already available through PATH.
+if [[ -z "$_brew_bin" ]] && has_cmd brew; then
+  _brew_bin=$(command -v brew)
+fi
 
-# Try to load brew completions first if init
-load_bash_completion || true
+# Otherwise check the standard installation locations.
+if [[ -z "$_brew_bin" ]]; then
+  case ${OSTYPE:-} in
+    darwin*)
+      # Apple Silicon, then Intel macOS.
+      for _candidate in \
+        /opt/homebrew/bin/brew \
+        /usr/local/bin/brew
+      do
+        if [[ -x "$_candidate" ]]; then
+          _brew_bin="$_candidate"
+          break
+        fi
+      done
+      ;;
 
-#
-# PATH and global environment
-#
+    linux*)
+      for _candidate in \
+        /home/linuxbrew/.linuxbrew/bin/brew \
+        "$HOME/.linuxbrew/bin/brew"
+      do
+        if [[ -x "$_candidate" ]]; then
+          _brew_bin="$_candidate"
+          break
+        fi
+      done
+      ;;
+  esac
+fi
 
-export VCPKG_ROOT="$HOME/soft/vcpkg"
-path_prepend "$VCPKG_ROOT"
+if [[ -n "$_brew_bin" && -x "$_brew_bin" ]]; then
+  # `brew shellenv` does not take a shell-name argument.
+  shell_init "$_brew_bin" shellenv || {
+    printf 'WARNING, .bashrc: brew init failed\n' >&2
+  }
+fi
 
-path_prepend \
-  "/usr/lib/gcc-astra/bin" \
-  "$HOME/.local/bin" \
-  "$HOME/soft/metashell-5.0.0/usr/bin" \
-  "$HOME/soft/swig-4.0.2/bin"
+unset _candidate _brew_bin
 
-#
+# ---------------------------------------------------------------------------
 # Debian chroot
-#
+# ---------------------------------------------------------------------------
 
-if [[ -z "${debian_chroot:-}" && -r /etc/debian_chroot ]]; then
+if [[ ${OSTYPE:-} == linux* &&
+      -z ${debian_chroot:-} &&
+      -r /etc/debian_chroot ]]; then
   debian_chroot=$(< /etc/debian_chroot)
 fi
 
-#
+# ---------------------------------------------------------------------------
 # Colors
-#
+# ---------------------------------------------------------------------------
 
-_colors_file="$XDG_CONFIG_HOME/bash/colors.bash"
-_dircolors_args=(-b)
+_colors_file="$_bash_config_dir/colors.bash"
 
-if [[ -r "$HOME/.dircolors" ]]; then
-  _dircolors_args+=("$HOME/.dircolors")
-fi
+source "$_colors_file"
 
-shell_init dircolors "${_dircolors_args[@]}" || true
-
-source_if_exists "$_colors_file" || true
-
-unset _dircolors_args
 unset _colors_file
 
-#
-# Modern command aliases
-#
+# ---------------------------------------------------------------------------
+# Personal aliases
+# ---------------------------------------------------------------------------
+
+alias bash_reload='source ~/.bashrc'
+alias bash_options='set -o; shopt'
 
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-# Replace ls with eza when available.
-if has_cmd eza; then
-  alias ls='eza --group-directories-first'
-  alias ll='eza -lah --git --group-directories-first'
-  alias la='eza -a --group-directories-first'
-  alias l='eza -l --group-directories-first'
-  alias tree='eza --tree --group-directories-first'
-fi
+alias rcp='rsync --recursive --times --progress --stats --human-readable'
+alias rmv='rsync --recursive --times --progress --stats --human-readable --remove-source-files'
 
-if has_cmd bat; then
-  alias batp='bat --paging=never'
-fi
-if has_cmd batcat; then
-  alias batcatp='batcat --paging=never'
-fi
-
-#
-# Personal aliases
-#
+alias lg='lazygit'
 
 # Loaded after default aliases, allowing ~/.bash_aliases to override them.
 source_if_exists "$HOME/.bash_aliases" || true
 
-#
+# ---------------------------------------------------------------------------
 # Bash completion
-#
+# ---------------------------------------------------------------------------
 
-if ! shopt -oq posix; then
-  source_first \
-    "/usr/share/bash-completion/bash_completion" \
-    "/etc/bash_completion" \
-    || true
-fi
+load_bash_completion || {
+  printf 'WARNING, .bashrc: load completion init failed\n' >&2
+}
 
-#
-# Modern shell integrations
-#
+# ---------------------------------------------------------------------------
+# Tool auto setup
+# ---------------------------------------------------------------------------
 
-shell_init atuin init bash --disable-up-arrow --disable-ai || true
+# Shared, tracked configuration.
+source_conf_dirs "$_bash_config_dir/conf.d" || true
 
-# Fuzzy completion and key bindings.
-# Ctrl-T → fzf file search
-# Alt-C → fzf directory search
-export FZF_DEFAULT_OPTS="
-  --height=40%
-  --layout=reverse
-  --border
-  --info=inline
-  --prompt='∼ '
-  --pointer='▶'
-  --marker='✓'
-"
+# Machine-specific configuration, loaded afterward so it can override
+# settings from conf.d.
+source_conf_dirs "$_bash_config_dir/conf.local.d" || true
 
-export FZF_CTRL_T_OPTS="
-  --walker-skip=.git,node_modules,target,dist,.next
-"
+# ---------------------------------------------------------------------------
+# Tool small setup
+# ---------------------------------------------------------------------------
 
-# Ctrl-R → Atuin history if available
-if has_cmd atuin; then
+shell_init env TF_SHELL=bash thefuck --alias || {
+  printf 'WARNING, .bashrc: thefuck init failed\n' >&2
+}
+
+shell_init atuin init bash --disable-up-arrow --disable-ai || {
+  printf 'WARNING, .bashrc: atuin init failed\n' >&2
+}
+
+# Ctrl-R -> Atuin history if available.
+# Preserve a value explicitly configured in env.bash or .env.bash.
+if has_cmd atuin && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
   export FZF_CTRL_R_COMMAND=
 fi
 
-if shell_init fzf --bash; then
-  __fzf_cd_wrapper() {
-      local command
-
-      command="$(__fzf_cd__)" || return
-      [[ -n $command ]] || return
-
-      eval "$command"
-  }
-
-  bind -m emacs-standard -x '"\ec":__fzf_cd_wrapper'
-  bind -m vi-insert      -x '"\ec":__fzf_cd_wrapper'
-  bind -m vi-command     -x '"\ec":__fzf_cd_wrapper'
-
-  bind -x '"\ec":__fzf_cd_wrapper'
-fi
-
 # Starship replaces the hand-written PS1 configuration.
-if ! shell_init starship init bash; then
+shell_init starship init bash || {
   PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
-fi
+  printf 'WARNING, .bashrc: starship init failed\n' >&2
+}
 
 # Keep direnv last among prompt-related integrations.
-# create .envrc and run 'direnv allow .' or 'direnv deny .' after
-shell_init direnv hook bash || true
+# Create .envrc and run `direnv allow .` or `direnv deny .` afterward.
+shell_init direnv hook bash || {
+  printf 'WARNING, .bashrc: direnv init failed\n' >&2
+}
+
+unset _bash_config_dir

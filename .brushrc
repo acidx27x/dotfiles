@@ -1,0 +1,10 @@
+# ~/.brushrc: interactive Brush configuration.
+
+export SHELL="$(command -v brush)"
+
+export BRUSH_ACTIVE=1
+
+precmd() {
+  history -a  # append every command
+  # history -n  # not implemented yet
+}
