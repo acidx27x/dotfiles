@@ -58,7 +58,7 @@ fman() {
 }
 
 export FZF_GIT_SH="$_bash_config_dir/conf.local.d/fzf-git.sh/fzf-git.sh"
-[ -f "$FZF_GIT_SH" ] || return
+[ -f "$FZF_GIT_SH" ] || return 0
 
 # call by hand if binds not working
 fgf() { bash "$FZF_GIT_SH" --run files     "$@"; }
