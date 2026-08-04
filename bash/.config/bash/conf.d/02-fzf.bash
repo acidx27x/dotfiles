@@ -67,3 +67,12 @@ fgt() { bash "$FZF_GIT_SH" --run tags      "$@"; }
 fgh() { bash "$FZF_GIT_SH" --run hashes    "$@"; }
 fgs() { bash "$FZF_GIT_SH" --run stashes   "$@"; }
 fgw() { bash "$FZF_GIT_SH" --run worktrees "$@"; }
+fghelp() {
+  printf 'Available fzf-git functions and its targets:\n'
+  printf 'fgf: files\n'
+  printf 'fgb: branches\n'
+  printf 'fgt: tags\n'
+  printf 'fgh: hashes\n'
+  printf 'fgs: stashes\n'
+  printf 'fgw: worktrees\n'
+}
