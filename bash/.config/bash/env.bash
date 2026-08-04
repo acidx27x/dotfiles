@@ -1,7 +1,7 @@
 # ~/.config/bash/env.bash
-# Basic xdg standart env variables
+# Basic XDG standard environment variables
 #
-# The scripts preserve valid existing values and supplies defaults when needed.
+# The script preserves valid existing values and supplies defaults when needed.
 
 if [[ -z ${HOME:-} || $HOME != /* ]]; then
   printf 'Error: HOME must be an absolute path.\n' >&2
@@ -118,7 +118,15 @@ set_xdg_user_dir XDG_PUBLICSHARE_DIR PUBLICSHARE "$HOME/Public"
 set_xdg_user_dir XDG_DOCUMENTS_DIR   DOCUMENTS   "$HOME/Documents"
 set_xdg_user_dir XDG_MUSIC_DIR       MUSIC       "$HOME/Music"
 set_xdg_user_dir XDG_PICTURES_DIR    PICTURES    "$HOME/Pictures"
-set_xdg_user_dir XDG_VIDEOS_DIR      VIDEOS      "$HOME/Movies"
+
+case ${OSTYPE:-} in
+  darwin*) _xdg_videos_fallback="$HOME/Movies" ;;
+  *)       _xdg_videos_fallback="$HOME/Videos" ;;
+esac
+
+set_xdg_user_dir XDG_VIDEOS_DIR VIDEOS "$_xdg_videos_fallback"
+
+unset _xdg_videos_fallback
 
 # ---------------------------------------------------------------------------
 # Optional: print all resolved paths when this script is executed directly
@@ -155,6 +163,7 @@ export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/pass"
 export ANSIBLE_HOME="$XDG_DATA_HOME/ansible"
 export GOPATH="$XDG_DATA_HOME/go"
+export GOBIN="$XDG_USER_BIN_HOME"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 
 # Hist

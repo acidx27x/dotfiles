@@ -23,18 +23,25 @@ export CLICOLOR="${CLICOLOR:-1}"
 
 VIVID_THEME="${VIVID_THEME:-iceberg-dark}"
 
-if has_cmd vivid; then
-  if __vivid_colors="$(vivid generate "$VIVID_THEME" 2>/dev/null)"; then
-    export LS_COLORS="$__vivid_colors"
-  else
-    printf 'WARNING, colors.bash: vivid theme not found: %s\n' "$VIVID_THEME" >&2
+if [[ -z ${LS_COLORS+x} ]]; then
+  if has_cmd vivid; then
+    if __vivid_colors="$(vivid generate "$VIVID_THEME" 2>/dev/null)"; then
+      export LS_COLORS="$__vivid_colors"
+    else
+      printf 'WARNING, colors.bash: vivid theme not found: %s\n' "$VIVID_THEME" >&2
+    fi
+    unset __vivid_colors
+  elif has_cmd dircolors; then
+    # Fallback when vivid is not installed.
+    if __dircolors_output="$(dircolors -b 2>/dev/null)" &&
+       eval "$__dircolors_output"
+    then
+      :
+    else
+      printf 'WARNING, colors.bash: dircolors init failed\n' >&2
+    fi
+    unset __dircolors_output
   fi
-  unset __vivid_colors
-elif [[ -z ${LS_COLORS:-} ]] && has_cmd dircolors; then
-  # Fallback when vivid is not installed.
-  eval "$(dircolors -b 2>/dev/null)"
-else
-  printf 'WARNING, colors.bash: dircolors or vivid theme not found' >&2
 fi
 
 # These tools read LS_COLORS automatically when available:
@@ -140,14 +147,6 @@ export BAT_PAGER="${BAT_PAGER:-less -R}"
 case " ${LESS:-} " in
   *' -R '*|*' --RAW-CONTROL-CHARS '*) ;;
   *) export LESS="${LESS:+$LESS }-R" ;;
-esac
-
-# Let fzf correctly interpret colored input such as:
-#   fd --color=always | fzf
-#   rg --color=always pattern | fzf
-case " ${FZF_DEFAULT_OPTS:-} " in
-  *' --ansi '*) ;;
-  *) export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }--ansi" ;;
 esac
 
 # Colored man-page headings and emphasis through less termcap capabilities.

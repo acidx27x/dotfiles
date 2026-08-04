@@ -1,0 +1,10 @@
+--height=50%
+--layout=default
+--border
+--info=inline
+--color=hl:#2dd4bf
+--prompt='∼ '
+--pointer='▶'
+--marker='✓'
+--with-shell='bash -c'
+--ansi

@@ -1,38 +1,52 @@
 # ~/.config/bash/conf.d/02-fzf.bash
 # fzf setup
 #
-# Clone https://github.com/junegunn/fzf-git.sh.git to conf.d.local
+# Requires fzf 0.51 or newer for `fzf --bash`, the Fish SHELL workaround,
+# and zoxide's interactive selector.
+# Clone https://github.com/junegunn/fzf-git.sh.git to conf.local.d
 # and create link inside: ln -s fzf-git.sh/fzf-git.sh 02-fzf-git.bash
 
+export FZF_DEFAULT_OPTS_FILE="$XDG_CONFIG_HOME/fzf/fzfrc"
+
 if ! has_cmd fzf; then
-  printf 'WARNING, 02-fzf.bash: fzf is not available\n' >&2
-  return 1
+  return 0
 fi
 
-for name in "fd" "eza" "bat"; do
-  if ! has_cmd "$name"; then
-    printf 'WARNING, 02-fzf.bash: fzf is not available, bacause %s is missing\n' "$name" >&2
-    return 1
-  fi
-done
+_fzf_fd_command=""
+_fzf_bat_command=""
 
-export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+if has_cmd fd; then
+  _fzf_fd_command=fd
+elif has_cmd fdfind; then
+  _fzf_fd_command=fdfind
+fi
 
-export FZF_DEFAULT_OPTS="
-  --height=50%
-  --layout=default
-  --border
-  --info=inline
-  --color=hl:#2dd4bf
-  --prompt='∼ '
-  --pointer='▶'
-  --marker='✓'
-"
+if has_cmd bat; then
+  _fzf_bat_command=bat
+elif has_cmd batcat; then
+  _fzf_bat_command=batcat
+fi
 
-export FZF_CTRL_T_OPTS="--preview 'bat --color=always -n --line-range :500 {}'"
-export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
+if [[ -n "$_fzf_fd_command" ]]; then
+  export FZF_DEFAULT_COMMAND="$_fzf_fd_command --hidden --strip-cwd-prefix --exclude .git"
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND="$_fzf_fd_command --type=d --hidden --strip-cwd-prefix --exclude .git"
+else
+  # fzf uses its built-in walker when these commands are unset.
+  unset FZF_DEFAULT_COMMAND FZF_CTRL_T_COMMAND FZF_ALT_C_COMMAND
+fi
+
+if [[ -n "$_fzf_bat_command" ]]; then
+  export FZF_CTRL_T_OPTS="--preview '$_fzf_bat_command --color=always -n --line-range :500 {}'"
+else
+  unset FZF_CTRL_T_OPTS
+fi
+
+if has_cmd eza; then
+  export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
+else
+  unset FZF_ALT_C_OPTS
+fi
 
 # fzf preview for tmux
 export FZF_TMUX_OPTS=" -p90%,70% "
@@ -41,24 +55,63 @@ export FZF_TMUX_OPTS=" -p90%,70% "
 # Alt-C  -> fzf directory search
 if ! shell_init fzf --bash; then
   printf 'WARNING, 02-fzf.bash: fzf init failed\n' >&2
+  unset _fzf_fd_command _fzf_bat_command
   return 1
 fi
 
-bind -m emacs-standard -x '"\ec":__fzf_cd__'
-bind -m vi-insert      -x '"\ec":__fzf_cd__'
-bind -m vi-command     -x '"\ec":__fzf_cd__'
+_fzf_comprun() {
+  local command_name=$1
+  shift
 
-bind -x '"\ec":__fzf_cd__'
+  case "$command_name" in
+    cd)
+      if has_cmd eza; then
+        fzf --preview 'eza --icons=always --tree --color=always {} | head -200' "$@"
+      else
+        fzf "$@"
+      fi
+      ;;
 
-# opens documentation through fzf (eg: git,zsh etc.)
+    export|unset)
+      if has_cmd printenv; then
+        fzf --preview 'printenv {}' "$@"
+      else
+        fzf "$@"
+      fi
+      ;;
+
+    ssh)
+      if has_cmd dig; then
+        fzf --preview 'dig {}' "$@"
+      else
+        fzf "$@"
+      fi
+      ;;
+
+    *)
+      if has_cmd bat; then
+        fzf --preview 'bat --color=always -n --line-range :500 {}' "$@"
+      elif has_cmd batcat; then
+        fzf --preview 'batcat --color=always -n --line-range :500 {}' "$@"
+      else
+        fzf "$@"
+      fi
+      ;;
+  esac
+}
+
+unset _fzf_fd_command _fzf_bat_command
+
+# Open documentation through fzf (for example: git or zsh).
 fman() {
   local cmd
   cmd=$(compgen -c | fzf) || return
   man "$cmd"
 }
 
-export FZF_GIT_SH="$_bash_config_dir/conf.local.d/fzf-git.sh/fzf-git.sh"
-[ -f "$FZF_GIT_SH" ] || return 0
+FZF_GIT_SH="$_bash_config_dir/conf.local.d/fzf-git.sh/fzf-git.sh"
+export -n FZF_GIT_SH
+[[ -f "$FZF_GIT_SH" ]] || return 0
 
 # call by hand if binds not working
 fgf() { bash "$FZF_GIT_SH" --run files     "$@"; }

@@ -6,8 +6,6 @@ case $- in
   *) return ;;
 esac
 
-export SHELL="$(command -v bash)"
-
 # Shared helper functions.
 _bash_config_dir="$HOME/.config/bash"
 _functions_file="$_bash_config_dir/functions.bash"
@@ -28,7 +26,8 @@ fi
 source "$_bash_config_dir/env.bash"
 
 # Share history between simultaneously open terminals.
-is_brush || add_prompt_command __sync_bash_history  # not working for Brush
+# Brush uses a precmd hook because history -n is unsupported.
+is_brush || add_prompt_command __sync_bash_history
 
 # ---------------------------------------------------------------------------
 # History
@@ -138,8 +137,8 @@ unset _colors_file
 # Personal aliases
 # ---------------------------------------------------------------------------
 
-alias bash_reload='source ~/.bashrc'
-alias bash_options='set -o; shopt'
+alias bash-reload='source ~/.bashrc'
+alias bash-options='set -o; shopt'
 
 alias ll='ls -alF'
 alias la='ls -A'
@@ -157,9 +156,39 @@ source_if_exists "$HOME/.bash_aliases" || true
 # Bash completion
 # ---------------------------------------------------------------------------
 
-load_bash_completion || {
+if load_bash_completion; then
+  _completion_status=0
+else
+  _completion_status=$?
+fi
+
+if (( _completion_status != 0 && _completion_status != 127 )); then
   printf 'WARNING, .bashrc: load completion init failed\n' >&2
-}
+fi
+
+unset _completion_status
+
+# ---------------------------------------------------------------------------
+# Atuin history
+# ---------------------------------------------------------------------------
+
+_atuin_initialized=0
+
+if has_cmd atuin; then
+  if shell_init atuin init bash --disable-up-arrow --disable-ai; then
+    _atuin_initialized=1
+  else
+    printf 'WARNING, .bashrc: atuin init failed\n' >&2
+  fi
+fi
+
+# Disable fzf's Ctrl-R binding only after Atuin has initialized successfully.
+# Preserve a value explicitly configured in env.bash or .env.bash.
+if (( _atuin_initialized )) && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
+  export FZF_CTRL_R_COMMAND=
+fi
+
+unset _atuin_initialized
 
 # ---------------------------------------------------------------------------
 # Tool auto setup
@@ -176,30 +205,38 @@ source_conf_dirs "$_bash_config_dir/conf.local.d" || true
 # Tool small setup
 # ---------------------------------------------------------------------------
 
-shell_init env TF_SHELL=bash thefuck --alias || {
-  printf 'WARNING, .bashrc: thefuck init failed\n' >&2
-}
-
-shell_init atuin init bash --disable-up-arrow --disable-ai || {
-  printf 'WARNING, .bashrc: atuin init failed\n' >&2
-}
-
-# Ctrl-R -> Atuin history if available.
-# Preserve a value explicitly configured in env.bash or .env.bash.
-if has_cmd atuin && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
-  export FZF_CTRL_R_COMMAND=
+if has_cmd thefuck; then
+  shell_init env TF_SHELL=bash thefuck --alias || {
+    printf 'WARNING, .bashrc: thefuck init failed\n' >&2
+  }
 fi
 
-# Starship replaces the hand-written PS1 configuration.
-shell_init starship init bash || {
-  PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
-  printf 'WARNING, .bashrc: starship init failed\n' >&2
-}
+# Starship replaces the fallback PS1 when available.
+PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
+
+if has_cmd starship; then
+  shell_init starship init bash || {
+    printf 'WARNING, .bashrc: starship init failed\n' >&2
+  }
+fi
+
+# Keep zoxide's database under XDG_DATA_HOME unless explicitly configured.
+if [[ -z ${_ZO_DATA_DIR+x} ]]; then
+  export _ZO_DATA_DIR="$XDG_DATA_HOME/zoxide"
+fi
+
+if has_cmd zoxide; then
+  shell_init zoxide init bash --cmd z --hook pwd || {
+    printf 'WARNING, .bashrc: zoxide init failed\n' >&2
+  }
+fi
 
 # Keep direnv last among prompt-related integrations.
 # Create .envrc and run `direnv allow .` or `direnv deny .` afterward.
-shell_init direnv hook bash || {
-  printf 'WARNING, .bashrc: direnv init failed\n' >&2
-}
+if has_cmd direnv; then
+  shell_init direnv hook bash || {
+    printf 'WARNING, .bashrc: direnv init failed\n' >&2
+  }
+fi
 
 unset _bash_config_dir

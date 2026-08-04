@@ -11,7 +11,7 @@ is_brush() {
 }
 
 # Print the currently running interactive shell.
-current_shell() {
+current-shell() {
   if is_brush; then
     printf 'brush %s\n' "$BRUSH_VERSION"
   else
@@ -20,23 +20,36 @@ current_shell() {
 }
 
 load_bash_completion() {
+  local completion_file
+
   # Already loaded.
   [[ -n "${BASH_COMPLETION_VERSINFO:-}" ]] && return 0
 
   # Programmable completion is disabled in POSIX mode.
-  shopt -oq posix && return 1
+  shopt -oq posix && return 0
 
   # Prefer Homebrew completion when installed.
   if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
-    source_if_exists \
-      "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" &&
-      return 0
+    completion_file="$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
+
+    if [[ -r "$completion_file" ]]; then
+      source "$completion_file"
+      return
+    fi
   fi
 
   # Fall back to Debian/Ubuntu completion.
-  source_first \
+  for completion_file in \
     "/usr/share/bash-completion/bash_completion" \
     "/etc/bash_completion"
+  do
+    if [[ -r "$completion_file" ]]; then
+      source "$completion_file"
+      return
+    fi
+  done
+
+  return 127
 }
 
 # Return success when every supplied command exists.
@@ -116,6 +129,7 @@ source_conf_dirs() {
   local -a files
   local had_nullglob=0
   local had_failglob=0
+  local source_status=0
   local LC_COLLATE=C
 
   shopt -q nullglob && had_nullglob=1
@@ -134,13 +148,25 @@ source_conf_dirs() {
     for file in "${files[@]}"; do
       [[ -f "$file" && -r "$file" ]] || continue
       source "$file" || {
+        source_status=1
         printf 'WARNING, functions.bash: %s source failed\n' "${file##*/}" >&2
       }
     done
   done
 
-  (( had_nullglob )) || shopt -u nullglob
-  (( had_failglob )) && shopt -s failglob
+  if (( had_nullglob )); then
+    shopt -s nullglob
+  else
+    shopt -u nullglob
+  fi
+
+  if (( had_failglob )); then
+    shopt -s failglob
+  else
+    shopt -u failglob
+  fi
+
+  return "$source_status"
 }
 
 # ---------------------------------------------------------------------------
@@ -162,7 +188,7 @@ current_file_dir() {
 #
 # Features:
 # - skips nonexistent directories
-# - removes duplicate occurrences
+# - removes duplicate occurrences of directories being prepended
 # - moves existing occurrences to the front
 # - preserves argument priority
 #
@@ -468,14 +494,48 @@ to_us_ascii() {
   local file
   local encoding
   local temp
+  local uconv_command=""
+  local brew_command=""
+  local brew_candidate
+  local icu_prefix=""
 
   (( $# > 0 )) || {
     printf 'Usage: to_us_ascii FILE...\n' >&2
     return 2
   }
 
-  has_cmd iconv || {
-    printf 'iconv is required.\n' >&2
+  if has_cmd uconv; then
+    uconv_command=$(command -v uconv)
+  else
+    if [[ -n ${HOMEBREW_BREW_FILE:-} && -x $HOMEBREW_BREW_FILE ]]; then
+      brew_command=$HOMEBREW_BREW_FILE
+    elif has_cmd brew; then
+      brew_command=$(command -v brew)
+    else
+      for brew_candidate in \
+        /opt/homebrew/bin/brew \
+        /usr/local/bin/brew \
+        /home/linuxbrew/.linuxbrew/bin/brew \
+        "$HOME/.linuxbrew/bin/brew"
+      do
+        if [[ -x "$brew_candidate" ]]; then
+          brew_command=$brew_candidate
+          break
+        fi
+      done
+    fi
+
+    if [[ -n "$brew_command" ]]; then
+      icu_prefix=$("$brew_command" --prefix icu4c 2>/dev/null) || icu_prefix=""
+
+      if [[ -n "$icu_prefix" && -x "$icu_prefix/bin/uconv" ]]; then
+        uconv_command="$icu_prefix/bin/uconv"
+      fi
+    fi
+  fi
+
+  [[ -n "$uconv_command" ]] || {
+    printf 'uconv is required (Homebrew: icu4c; Debian/Ubuntu: icu-devtools).\n' >&2
     return 127
   }
 
@@ -495,12 +555,14 @@ to_us_ascii() {
 
     temp=$(mktemp) || return 1
 
-    if ! iconv \
+    if ! "$uconv_command" \
       -f "$encoding" \
-      -t 'US-ASCII//TRANSLIT' \
+      -t US-ASCII \
+      -x 'Any-Latin; Latin-ASCII' \
+      --to-callback stop \
       "$file" > "$temp"
     then
-      printf 'iconv failed for %s using encoding %s\n' \
+      printf 'uconv failed for %s using encoding %s\n' \
         "$file" "$encoding" >&2
 
       rm -f -- "$temp"

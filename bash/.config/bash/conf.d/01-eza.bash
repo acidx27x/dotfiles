@@ -2,8 +2,7 @@
 # eza setup
 
 if ! has_cmd eza; then
-  printf 'WARNING, 01-eza.bash: eza is not available\n' >&2
-  return 1
+  return 0
 fi
 
 EZA_DEFAULT_OPTS=(
