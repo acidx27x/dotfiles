@@ -30,4 +30,3 @@ if has_cmd batpipe; then
     printf 'WARNING, 03-bat.bash: batpipe init failed\n' >&2
   }
 fi
-
