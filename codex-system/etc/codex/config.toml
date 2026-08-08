@@ -1,11 +1,14 @@
+# Managed by acidx27x/dotfiles setup/codex.sh
+
 ###############################################################################
 # Default model and response behavior
 ###############################################################################
 # Recommended default model example in current Codex sample config.
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 
 # Options: "minimal", "low", "medium", "high", "xhigh".
-model_reasoning_effort = "medium"
+model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "xhigh"
 
 # Options: "low", "medium", "high".
 model_verbosity = "medium"
@@ -17,7 +20,7 @@ model_reasoning_summary = "auto"
 personality = "pragmatic"
 
 # Options include "fast" and "flex".
-service_tier = "fast"
+service_tier = "default"
 
 # Let Codex/model defaults handle auto-compaction unless you have a specific need.
 # model_auto_compact_token_limit = 128000
@@ -72,18 +75,9 @@ sandbox = "elevated"
 #
 # Rules:
 # - ":minimal" allows minimal OS/runtime access needed for commands to run.
-# - Only folders listed under workspace_roots are writable.
+# - Codex's runtime workspace roots are writable.
 # - Sensitive globs inside allowed folders are denied.
 ###############################################################################
-[permissions.locked_folders_only.workspace_roots]
-# Add folders you want Codex to work in.
-# Codex can read/write these through the ":workspace_roots" rule below.
-#
-# Examples:
-# "/Users/you/projects/project-1" = true
-# "C:\\Users\\you\\projects\\project-1" = true
-
-
 [permissions.locked_folders_only.filesystem]
 # Minimal OS/runtime access needed to execute normal commands.
 ":minimal" = "read"
@@ -94,8 +88,8 @@ glob_scan_max_depth = 6
 
 
 [permissions.locked_folders_only.filesystem.":workspace_roots"]
-# For every folder listed in [permissions.locked_folders_only.workspace_roots],
-# allow read/write access to the whole folder.
+# Allow read/write access inside each workspace root supplied by the current
+# Codex session. A user config may add extra workspace_roots when needed.
 "." = "write"
 
 # Keep repository and Codex metadata readable but not writable.
@@ -133,7 +127,7 @@ mode = "limited"
 ###############################################################################
 [shell_environment_policy]
 # Options: "all", "core", "none".
-inherit = "core"
+inherit = "all"
 
 # Whitelist only safe/common environment variables.
 # Add language/tool variables only when something breaks.
@@ -234,17 +228,3 @@ theme = "gruvbox-dark"
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "run-state", "context-used", "five-hour-limit", "weekly-limit", "used-tokens", "thread-title", "task-progress", "fast-mode"]
 status_line_use_colors = true
 terminal_title = ["activity", "project-name", "run-state", "thread-title", "task-progress"]
-
-
-###############################################################################
-# Model migrations
-###############################################################################
-[notice.model_migrations]
-"gpt-5.2" = "gpt-5.5"
-"gpt-5.3" = "gpt-5.5"
-"gpt-5.4" = "gpt-5.5"
-
-
-###############################################################################
-# Other settings being added by tool
-###############################################################################

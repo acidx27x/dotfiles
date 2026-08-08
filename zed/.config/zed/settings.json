@@ -254,6 +254,7 @@
   "agent_servers": {
     "codex-acp": {
       "default_config_options": {
+        "mode": "auto",
         "reasoning_effort": "high"
       },
       "favorite_config_option_values": {
