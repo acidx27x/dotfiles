@@ -54,10 +54,31 @@ functions-help() {
     lt 'Show entries as an eza tree.' \
     print-xdg-paths 'Print the resolved XDG paths.' \
     rm-zone-id 'Delete Windows Zone.Identifier metadata files.' \
+    stellar-help 'Show Stellar installation and theme instructions.' \
     to-us-ascii 'Transliterate text files to US-ASCII.' \
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
     utils-help 'List available Bash configuration utilities.'
+}
+
+# Show Stellar installation and theme instructions.
+stellar-help() {
+  printf 'Stellar manages remote Starship themes.\n\n'
+
+  if has-cmd stellar; then
+    printf 'Status: installed (%s)\n' "$(command -v stellar)"
+  else
+    printf 'Status: not installed\n\n'
+    printf 'Install:\n'
+    printf '  %s\n' \
+      'curl -fsSL https://raw.githubusercontent.com/a3chron/stellar/main/install.sh | bash'
+  fi
+
+  printf '\nApply theme:\n'
+  printf '  stellar apply a3chron/ctp-green\n'
+  printf '\nConfiguration:\n'
+  printf '  Stellar caches the remote theme and manages\n'
+  printf '  ~/.config/starship.toml as a symlink.\n'
 }
 
 # Remove Windows download-zone metadata files recursively.
