@@ -24,14 +24,14 @@ export CLICOLOR="${CLICOLOR:-1}"
 VIVID_THEME="${VIVID_THEME:-iceberg-dark}"
 
 if [[ -z ${LS_COLORS+x} ]]; then
-  if has_cmd vivid; then
+  if has-cmd vivid; then
     if __vivid_colors="$(vivid generate "$VIVID_THEME" 2>/dev/null)"; then
       export LS_COLORS="$__vivid_colors"
     else
       printf 'WARNING, colors.bash: vivid theme not found: %s\n' "$VIVID_THEME" >&2
     fi
     unset __vivid_colors
-  elif has_cmd dircolors; then
+  elif has-cmd dircolors; then
     # Fallback when vivid is not installed.
     if __dircolors_output="$(dircolors -b 2>/dev/null)" &&
        eval "$__dircolors_output"
@@ -65,7 +65,7 @@ __color_alias() {
 
 __color_help_has() {
   local command_name=$1 option=$2
-  has_cmd "$command_name" || return 1
+  has-cmd "$command_name" || return 1
   command "$command_name" --help 2>&1 | grep -Fq -- "$option"
 }
 
@@ -78,9 +78,9 @@ __color_help_has() {
 # configure gls and optionally replace ls by setting BASH_COLOR_USE_GLS=1.
 if command ls --color=auto -d . >/dev/null 2>&1; then
                   __color_alias ls   'ls --color=auto'
-  has_cmd dir  && __color_alias dir  'dir --color=auto'
-  has_cmd vdir && __color_alias vdir 'vdir --color=auto'
-elif has_cmd gls&& command gls --color=auto -d . >/dev/null 2>&1; then
+  has-cmd dir  && __color_alias dir  'dir --color=auto'
+  has-cmd vdir && __color_alias vdir 'vdir --color=auto'
+elif has-cmd gls&& command gls --color=auto -d . >/dev/null 2>&1; then
   __color_alias gls 'gls --color=auto'
   if [[ ${BASH_COLOR_USE_GLS:-0} == 1 ]]; then
     __color_alias ls 'gls --color=auto'
@@ -94,7 +94,7 @@ fi
 
 # tree behavior differs across releases. Add -C only for terminal output, so
 # piping "tree" to a file remains clean. A user-supplied later -n can disable it.
-if has_cmd tree; then
+if has-cmd tree; then
   tree() {
     if [[ -t 1 ]]; then
       command tree -C "$@"
@@ -116,7 +116,7 @@ fi
 
 # rg does NOT read LS_COLORS. This wrapper applies safe defaults; options typed
 # by the user come last and can override these settings.
-if has_cmd rg; then
+if has-cmd rg; then
   rg() {
     command rg \
       --color=auto \
@@ -150,7 +150,7 @@ case " ${LESS:-} " in
 esac
 
 # Colored man-page headings and emphasis through less termcap capabilities.
-if has_cmd tput && tput colors >/dev/null 2>&1; then
+if has-cmd tput && tput colors >/dev/null 2>&1; then
   export LESS_TERMCAP_md="$(tput bold; tput setaf 6)"
   export LESS_TERMCAP_me="$(tput sgr0)"
   export LESS_TERMCAP_so="$(tput bold; tput setaf 3)"
@@ -170,7 +170,7 @@ if __color_help_has diff '--color'; then
 fi
 
 # iproute2 uses its own color switch and does not read LS_COLORS.
-if has_cmd ip && command ip -help 2>&1 | grep -Fq -- '-color'; then
+if has-cmd ip && command ip -help 2>&1 | grep -Fq -- '-color'; then
   __color_alias ip 'ip -color=auto'
 fi
 
@@ -184,7 +184,7 @@ fi
 
 # Git has a separate color system. "auto" preserves clean redirected output.
 # Use a per-invocation setting rather than modifying ~/.gitconfig.
-if has_cmd git; then
+if has-cmd git; then
   __color_alias git 'git -c color.ui=auto'
 fi
 
@@ -212,7 +212,7 @@ color-status() {
 
   printf '\nLS_COLORS readers:\n'
   for command_name in ls gls eza fd bfs tree; do
-    if has_cmd "$command_name"; then
+    if has-cmd "$command_name"; then
       printf '  %-8s installed\n' "$command_name"
     else
       printf '  %-8s missing\n' "$command_name"
@@ -221,7 +221,7 @@ color-status() {
 
   printf '\nIndependent color systems:\n'
   for command_name in grep rg bat batcat fzf less man diff ip watch git; do
-    if has_cmd "$command_name"; then
+    if has-cmd "$command_name"; then
       printf '  %-8s installed\n' "$command_name"
     else
       printf '  %-8s missing\n' "$command_name"

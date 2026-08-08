@@ -1,288 +1,71 @@
 # ~/.config/bash/functions.bash
-# Reusable helpers and interactive shell functions.
-
-# ---------------------------------------------------------------------------
-# Command and initialization helpers
-# ---------------------------------------------------------------------------
-
-# Return success when the current shell is Brush.
-is_brush() {
-  [[ -n "${BRUSH_VERSION:-}" ]]
-}
+# User-facing interactive Bash functions.
 
 # Print the currently running interactive shell.
 current-shell() {
-  if is_brush; then
+  if is-brush; then
     printf 'brush %s\n' "$BRUSH_VERSION"
   else
     printf 'bash %s\n' "${BASH_VERSION:-unknown}"
   fi
 }
 
-load_bash_completion() {
-  local completion_file
-
-  # Already loaded.
-  [[ -n "${BASH_COMPLETION_VERSINFO:-}" ]] && return 0
-
-  # Programmable completion is disabled in POSIX mode.
-  shopt -oq posix && return 0
-
-  # Prefer Homebrew completion when installed.
-  if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
-    completion_file="$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
-
-    if [[ -r "$completion_file" ]]; then
-      source "$completion_file"
-      return
-    fi
-  fi
-
-  # Fall back to Debian/Ubuntu completion.
-  for completion_file in \
-    "/usr/share/bash-completion/bash_completion" \
-    "/etc/bash_completion"
-  do
-    if [[ -r "$completion_file" ]]; then
-      source "$completion_file"
-      return
-    fi
-  done
-
-  return 127
+# Print the resolved XDG paths.
+print-xdg-paths() {
+  printf '%-24s %s\n' \
+    "XDG_DATA_HOME"        "$XDG_DATA_HOME" \
+    "XDG_CONFIG_HOME"      "$XDG_CONFIG_HOME" \
+    "XDG_STATE_HOME"       "$XDG_STATE_HOME" \
+    "XDG_CACHE_HOME"       "$XDG_CACHE_HOME" \
+    "XDG_RUNTIME_DIR"      "${XDG_RUNTIME_DIR:-<not set>}" \
+    "XDG_DATA_DIRS"        "$XDG_DATA_DIRS" \
+    "XDG_CONFIG_DIRS"      "$XDG_CONFIG_DIRS" \
+    "XDG_USER_BIN_HOME"    "$XDG_USER_BIN_HOME" \
+    "XDG_DESKTOP_DIR"      "$XDG_DESKTOP_DIR" \
+    "XDG_DOWNLOAD_DIR"     "$XDG_DOWNLOAD_DIR" \
+    "XDG_TEMPLATES_DIR"    "$XDG_TEMPLATES_DIR" \
+    "XDG_PUBLICSHARE_DIR"  "$XDG_PUBLICSHARE_DIR" \
+    "XDG_DOCUMENTS_DIR"    "$XDG_DOCUMENTS_DIR" \
+    "XDG_MUSIC_DIR"        "$XDG_MUSIC_DIR" \
+    "XDG_PICTURES_DIR"     "$XDG_PICTURES_DIR" \
+    "XDG_VIDEOS_DIR"       "$XDG_VIDEOS_DIR"
 }
 
-# Return success when every supplied command exists.
-#
-# Examples:
-#   has_cmd git
-#   has_cmd git fzf starship
-#   has_cmd /home/linuxbrew/.linuxbrew/bin/brew
-has_cmd() {
-  local name
-
-  (( $# > 0 )) || return 1
-
-  for name in "$@"; do
-    if [[ "$name" == */* ]]; then
-      [[ -x "$name" ]] || return 1
-    else
-      command -v "$name" >/dev/null 2>&1 || return 1
-    fi
-  done
+# List user-facing functions available in the current shell.
+functions-help() {
+  _print-function-catalog 'Bash user functions:' \
+    color-status 'Show the active terminal color configuration.' \
+    current-shell 'Print the current interactive shell and version.' \
+    detect-encoding 'Detect the likely encoding of a text file.' \
+    fgb 'Select Git branches with fzf.' \
+    fgf 'Select Git files with fzf.' \
+    fgh 'Select Git commit hashes with fzf.' \
+    fghelp 'List the short fzf-git functions.' \
+    fgs 'Select Git stashes with fzf.' \
+    fgt 'Select Git tags with fzf.' \
+    fgw 'Select Git worktrees with fzf.' \
+    fman 'Find and open a man page with fzf.' \
+    functions-help 'List available user-facing Bash functions.' \
+    l 'List entries with eza in long form.' \
+    ldr 'List directories with eza in long form.' \
+    ll 'List all entries with eza in long form.' \
+    llt 'Show all entries as a detailed eza tree.' \
+    ls 'List one entry per line with eza.' \
+    lt 'Show entries as an eza tree.' \
+    print-xdg-paths 'Print the resolved XDG paths.' \
+    rm-zone-id 'Delete Windows Zone.Identifier metadata files.' \
+    to-us-ascii 'Transliterate text files to US-ASCII.' \
+    to-utf8 'Convert text files to UTF-8 without a BOM.' \
+    to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
+    utils-help 'List available Bash configuration utilities.'
 }
-
-# Evaluate initialization code printed by a command.
-#
-# Examples:
-#   shell_init starship init bash
-#   shell_init fzf --bash
-#   shell_init direnv hook bash
-shell_init() {
-  local command_name
-  local init_code
-
-  (( $# >= 2 )) || {
-    printf 'Usage: shell_init COMMAND ARGUMENT...\n' >&2
-    return 2
-  }
-
-  command_name="$1"
-  shift
-
-  has_cmd "$command_name" || return 127
-
-  init_code=$("$command_name" "$@") || return
-  eval "$init_code"
-}
-
-# Source a file only when it exists and is readable.
-source_if_exists() {
-  local file="${1:-}"
-
-  [[ -n "$file" && -r "$file" ]] || return 1
-  source "$file"
-}
-
-# Source the first readable file from a list.
-source_first() {
-  local file
-
-  for file in "$@"; do
-    if [[ -r "$file" ]]; then
-      source "$file"
-      return 0
-    fi
-  done
-
-  return 1
-}
-
-# Source all readable *.bash files from one or more directories.
-#
-# Files are loaded in lexical order, so numeric prefixes can control order:
-#   10-environment.bash
-#   20-paths.bash
-#   30-aliases.bash
-source_conf_dirs() {
-  local dir file
-  local -a files
-  local had_nullglob=0
-  local had_failglob=0
-  local source_status=0
-  local LC_COLLATE=C
-
-  shopt -q nullglob && had_nullglob=1
-  shopt -q failglob && had_failglob=1
-
-  # An empty directory should produce an empty array rather than an error
-  # or a literal "*.bash" filename.
-  shopt -s nullglob
-  shopt -u failglob
-
-  for dir in "$@"; do
-    [[ -d "$dir" ]] || continue
-
-    files=("$dir"/*.bash)
-
-    for file in "${files[@]}"; do
-      [[ -f "$file" && -r "$file" ]] || continue
-      source "$file" || {
-        source_status=1
-        printf 'WARNING, functions.bash: %s source failed\n' "${file##*/}" >&2
-      }
-    done
-  done
-
-  if (( had_nullglob )); then
-    shopt -s nullglob
-  else
-    shopt -u nullglob
-  fi
-
-  if (( had_failglob )); then
-    shopt -s failglob
-  else
-    shopt -u failglob
-  fi
-
-  return "$source_status"
-}
-
-# ---------------------------------------------------------------------------
-# PATH helpers
-# ---------------------------------------------------------------------------
-
-current_file_dir() {
-  local file="${BASH_SOURCE[1]:-}"
-
-  [[ -n "$file" ]] || return 1
-
-  (
-    cd -P -- "$(dirname -- "$file")" 2>/dev/null &&
-    pwd
-  )
-}
-
-# Prepend existing directories to PATH.
-#
-# Features:
-# - skips nonexistent directories
-# - removes duplicate occurrences of directories being prepended
-# - moves existing occurrences to the front
-# - preserves argument priority
-#
-# The first argument receives the highest priority.
-path_prepend() {
-  local -a directories=("$@")
-  local -a path_entries=()
-  local -a updated_entries=()
-
-  local directory
-  local entry
-  local joined_path
-  local i
-
-  IFS=: read -r -a path_entries <<< "${PATH-}"
-
-  for ((i = ${#directories[@]} - 1; i >= 0; i--)); do
-    directory="${directories[i]}"
-
-    [[ -n "$directory" && -d "$directory" ]] || continue
-
-    updated_entries=("$directory")
-
-    for entry in "${path_entries[@]}"; do
-      if [[ "$entry" != "$directory" ]]; then
-        updated_entries+=("$entry")
-      fi
-    done
-
-    path_entries=("${updated_entries[@]}")
-  done
-
-  joined_path=$(IFS=:; printf '%s' "${path_entries[*]}")
-
-  PATH="$joined_path"
-  export PATH
-}
-
-# ---------------------------------------------------------------------------
-# Prompt and history helpers
-# ---------------------------------------------------------------------------
-
-# Add a command to PROMPT_COMMAND without adding it twice.
-#
-# Supports both the traditional string form and the array form.
-add_prompt_command() {
-  local new_command="${1:-}"
-  local existing
-  local declaration
-
-  [[ -n "$new_command" ]] || return 1
-
-  declaration=$(declare -p PROMPT_COMMAND 2>/dev/null || true)
-
-  if [[ "$declaration" == 'declare -a'* ]]; then
-    for existing in "${PROMPT_COMMAND[@]}"; do
-      [[ "$existing" == "$new_command" ]] && return 0
-    done
-
-    PROMPT_COMMAND+=("$new_command")
-    return 0
-  fi
-
-  case ";${PROMPT_COMMAND-};" in
-    *";$new_command;"*)
-      ;;
-
-    ';;')
-      PROMPT_COMMAND="$new_command"
-      ;;
-
-    *)
-      PROMPT_COMMAND="${PROMPT_COMMAND};$new_command"
-      ;;
-  esac
-}
-
-# Append this shell's commands and import commands written by other shells.
-__sync_bash_history() {
-  builtin history -a
-  builtin history -c
-  builtin history -r
-}
-
-# ---------------------------------------------------------------------------
-# Windows Zone.Identifier cleanup
-# ---------------------------------------------------------------------------
 
 # Remove Windows download-zone metadata files recursively.
 #
 # Usage:
-#   rm_zone_id
-#   rm_zone_id ~/Downloads
-rm_zone_id() {
+#   rm-zone-id
+#   rm-zone-id ~/Downloads
+rm-zone-id() {
   local root="${1:-.}"
 
   [[ -d "$root" ]] || {
@@ -297,17 +80,13 @@ rm_zone_id() {
     -delete
 }
 
-# ---------------------------------------------------------------------------
-# Encoding detection
-# ---------------------------------------------------------------------------
-
 # Detect the likely encoding of a text file.
-detect_encoding() {
+detect-encoding() {
   local file="${1:-}"
   local encoding=""
 
   [[ -n "$file" ]] || {
-    printf 'Usage: detect_encoding FILE\n' >&2
+    printf 'Usage: detect-encoding FILE\n' >&2
     return 2
   }
 
@@ -316,13 +95,13 @@ detect_encoding() {
     return 1
   }
 
-  if has_cmd uchardet; then
+  if has-cmd uchardet; then
     encoding=$(uchardet "$file" 2>/dev/null || true)
   fi
 
   case "$encoding" in
     "" | unknown | UNKNOWN)
-      has_cmd file || {
+      has-cmd file || {
         printf 'Neither uchardet nor file is available.\n' >&2
         return 127
       }
@@ -365,13 +144,10 @@ _file_exists_and_rw() {
   }
 }
 
-# ---------------------------------------------------------------------------
-# UTF-8 conversion
-# ---------------------------------------------------------------------------
-
 _to_utf8_impl() {
   local add_bom="$1"
-  shift
+  local command_name="$2"
+  shift 2
 
   local file
   local encoding
@@ -380,11 +156,11 @@ _to_utf8_impl() {
   local signature
 
   (( $# > 0 )) || {
-    printf 'Usage: to_utf8[_bom] FILE...\n' >&2
+    printf 'Usage: %s FILE...\n' "$command_name" >&2
     return 2
   }
 
-  has_cmd iconv || {
+  has-cmd iconv || {
     printf 'iconv is required.\n' >&2
     return 127
   }
@@ -392,7 +168,7 @@ _to_utf8_impl() {
   for file in "$@"; do
     _file_exists_and_rw "$file" || continue
 
-    if ! encoding=$(detect_encoding "$file"); then
+    if ! encoding=$(detect-encoding "$file"); then
       printf 'Skipping file with unknown encoding: %s\n' \
         "$file" >&2
       continue
@@ -418,7 +194,6 @@ _to_utf8_impl() {
       continue
     fi
 
-    # Remove an existing UTF-8 BOM first.
     signature=$(
       LC_ALL=C od -An -tx1 -N3 "$temp" |
         tr -d ' \n'
@@ -477,20 +252,17 @@ _to_utf8_impl() {
 }
 
 # Convert files to plain UTF-8, removing an existing BOM.
-to_utf8() {
-  _to_utf8_impl 0 "$@"
+to-utf8() {
+  _to_utf8_impl 0 to-utf8 "$@"
 }
 
 # Convert files to UTF-8 and ensure exactly one BOM is present.
-to_utf8_bom() {
-  _to_utf8_impl 1 "$@"
+to-utf8-bom() {
+  _to_utf8_impl 1 to-utf8-bom "$@"
 }
 
-# ---------------------------------------------------------------------------
-# ASCII conversion
-# ---------------------------------------------------------------------------
-
-to_us_ascii() {
+# Transliterate text files to US-ASCII.
+to-us-ascii() {
   local file
   local encoding
   local temp
@@ -500,16 +272,16 @@ to_us_ascii() {
   local icu_prefix=""
 
   (( $# > 0 )) || {
-    printf 'Usage: to_us_ascii FILE...\n' >&2
+    printf 'Usage: to-us-ascii FILE...\n' >&2
     return 2
   }
 
-  if has_cmd uconv; then
+  if has-cmd uconv; then
     uconv_command=$(command -v uconv)
   else
     if [[ -n ${HOMEBREW_BREW_FILE:-} && -x $HOMEBREW_BREW_FILE ]]; then
       brew_command=$HOMEBREW_BREW_FILE
-    elif has_cmd brew; then
+    elif has-cmd brew; then
       brew_command=$(command -v brew)
     else
       for brew_candidate in \
@@ -542,7 +314,7 @@ to_us_ascii() {
   for file in "$@"; do
     _file_exists_and_rw "$file" || continue
 
-    if ! encoding=$(detect_encoding "$file"); then
+    if ! encoding=$(detect-encoding "$file"); then
       printf 'Skipping file with unknown encoding: %s\n' \
         "$file" >&2
       continue

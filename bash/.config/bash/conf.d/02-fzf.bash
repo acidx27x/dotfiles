@@ -8,22 +8,22 @@
 
 export FZF_DEFAULT_OPTS_FILE="$XDG_CONFIG_HOME/fzf/fzfrc"
 
-if ! has_cmd fzf; then
+if ! has-cmd fzf; then
   return 0
 fi
 
 _fzf_fd_command=""
 _fzf_bat_command=""
 
-if has_cmd fd; then
+if has-cmd fd; then
   _fzf_fd_command=fd
-elif has_cmd fdfind; then
+elif has-cmd fdfind; then
   _fzf_fd_command=fdfind
 fi
 
-if has_cmd bat; then
+if has-cmd bat; then
   _fzf_bat_command=bat
-elif has_cmd batcat; then
+elif has-cmd batcat; then
   _fzf_bat_command=batcat
 fi
 
@@ -42,7 +42,7 @@ else
   unset FZF_CTRL_T_OPTS
 fi
 
-if has_cmd eza; then
+if has-cmd eza; then
   export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
 else
   unset FZF_ALT_C_OPTS
@@ -53,7 +53,7 @@ export FZF_TMUX_OPTS=" -p90%,70% "
 
 # Ctrl-T -> fzf file search
 # Alt-C  -> fzf directory search
-if ! shell_init fzf --bash; then
+if ! shell-init fzf --bash; then
   printf 'WARNING, 02-fzf.bash: fzf init failed\n' >&2
   unset _fzf_fd_command _fzf_bat_command
   return 1
@@ -65,7 +65,7 @@ _fzf_comprun() {
 
   case "$command_name" in
     cd)
-      if has_cmd eza; then
+      if has-cmd eza; then
         fzf --preview 'eza --icons=always --tree --color=always {} | head -200' "$@"
       else
         fzf "$@"
@@ -73,7 +73,7 @@ _fzf_comprun() {
       ;;
 
     export|unset)
-      if has_cmd printenv; then
+      if has-cmd printenv; then
         fzf --preview 'printenv {}' "$@"
       else
         fzf "$@"
@@ -81,7 +81,7 @@ _fzf_comprun() {
       ;;
 
     ssh)
-      if has_cmd dig; then
+      if has-cmd dig; then
         fzf --preview 'dig {}' "$@"
       else
         fzf "$@"
@@ -89,9 +89,9 @@ _fzf_comprun() {
       ;;
 
     *)
-      if has_cmd bat; then
+      if has-cmd bat; then
         fzf --preview 'bat --color=always -n --line-range :500 {}' "$@"
-      elif has_cmd batcat; then
+      elif has-cmd batcat; then
         fzf --preview 'batcat --color=always -n --line-range :500 {}' "$@"
       else
         fzf "$@"

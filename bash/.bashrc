@@ -6,28 +6,33 @@ case $- in
   *) return ;;
 esac
 
-# Shared helper functions.
-_bash_config_dir="$HOME/.config/bash"
-_functions_file="$_bash_config_dir/functions.bash"
+# ---------------------------------------------------------------------------
+# Shell environment
+# ---------------------------------------------------------------------------
 
-source "$_functions_file"
-
-unset _functions_file
-
-# Silence Apple's warning when the system Bash is used.
-if [[ ${OSTYPE:-} == darwin* ]]; then
-  export BASH_SILENCE_DEPRECATION_WARNING=1
+if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
+  source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
 fi
 
 # ---------------------------------------------------------------------------
 # Base environment
 # ---------------------------------------------------------------------------
 
+_bash_config_dir="$HOME/.config/bash"
+
+source "$_bash_config_dir/utils.bash"
+source "$_bash_config_dir/functions.bash"
+
+# Silence Apple's warning when the system Bash is used.
+if [[ ${OSTYPE:-} == darwin* ]]; then
+  export BASH_SILENCE_DEPRECATION_WARNING=1
+fi
+
 source "$_bash_config_dir/env.bash"
 
 # Share history between simultaneously open terminals.
 # Brush uses a precmd hook because history -n is unsupported.
-is_brush || add_prompt_command __sync_bash_history
+is-brush || add-prompt-command __sync_bash_history
 
 # ---------------------------------------------------------------------------
 # History
@@ -65,53 +70,7 @@ set -o noclobber
 # Homebrew / Linuxbrew
 # ---------------------------------------------------------------------------
 
-# HOMEBREW_BREW_FILE may be set in env.bash or .env.bash for a
-# custom Homebrew installation.
-_brew_bin="${HOMEBREW_BREW_FILE:-}"
-
-# Use Homebrew already available through PATH.
-if [[ -z "$_brew_bin" ]] && has_cmd brew; then
-  _brew_bin=$(command -v brew)
-fi
-
-# Otherwise check the standard installation locations.
-if [[ -z "$_brew_bin" ]]; then
-  case ${OSTYPE:-} in
-    darwin*)
-      # Apple Silicon, then Intel macOS.
-      for _candidate in \
-        /opt/homebrew/bin/brew \
-        /usr/local/bin/brew
-      do
-        if [[ -x "$_candidate" ]]; then
-          _brew_bin="$_candidate"
-          break
-        fi
-      done
-      ;;
-
-    linux*)
-      for _candidate in \
-        /home/linuxbrew/.linuxbrew/bin/brew \
-        "$HOME/.linuxbrew/bin/brew"
-      do
-        if [[ -x "$_candidate" ]]; then
-          _brew_bin="$_candidate"
-          break
-        fi
-      done
-      ;;
-  esac
-fi
-
-if [[ -n "$_brew_bin" && -x "$_brew_bin" ]]; then
-  # `brew shellenv` does not take a shell-name argument.
-  shell_init "$_brew_bin" shellenv || {
-    printf 'WARNING, .bashrc: brew init failed\n' >&2
-  }
-fi
-
-unset _candidate _brew_bin
+source "$_bash_config_dir/homebrew.bash"
 
 # ---------------------------------------------------------------------------
 # Debian chroot
@@ -150,13 +109,13 @@ alias rmv='rsync --recursive --times --progress --stats --human-readable --remov
 alias lg='lazygit'
 
 # Loaded after default aliases, allowing ~/.bash_aliases to override them.
-source_if_exists "$HOME/.bash_aliases" || true
+source-if-exists "$HOME/.bash_aliases" || true
 
 # ---------------------------------------------------------------------------
 # Bash completion
 # ---------------------------------------------------------------------------
 
-if load_bash_completion; then
+if load-bash-completion; then
   _completion_status=0
 else
   _completion_status=$?
@@ -174,8 +133,8 @@ unset _completion_status
 
 _atuin_initialized=0
 
-if has_cmd atuin; then
-  if shell_init atuin init bash --disable-up-arrow --disable-ai; then
+if has-cmd atuin; then
+  if shell-init atuin init bash --disable-up-arrow --disable-ai; then
     _atuin_initialized=1
   else
     printf 'WARNING, .bashrc: atuin init failed\n' >&2
@@ -195,18 +154,18 @@ unset _atuin_initialized
 # ---------------------------------------------------------------------------
 
 # Shared, tracked configuration.
-source_conf_dirs "$_bash_config_dir/conf.d" || true
+source-conf-dirs "$_bash_config_dir/conf.d" || true
 
 # Machine-specific configuration, loaded afterward so it can override
 # settings from conf.d.
-source_conf_dirs "$_bash_config_dir/conf.local.d" || true
+source-conf-dirs "$_bash_config_dir/conf.local.d" || true
 
 # ---------------------------------------------------------------------------
 # Tool small setup
 # ---------------------------------------------------------------------------
 
-if has_cmd thefuck; then
-  shell_init env TF_SHELL=bash thefuck --alias || {
+if has-cmd thefuck; then
+  shell-init env TF_SHELL=bash thefuck --alias || {
     printf 'WARNING, .bashrc: thefuck init failed\n' >&2
   }
 fi
@@ -214,8 +173,8 @@ fi
 # Starship replaces the fallback PS1 when available.
 PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 
-if has_cmd starship; then
-  shell_init starship init bash || {
+if has-cmd starship; then
+  shell-init starship init bash || {
     printf 'WARNING, .bashrc: starship init failed\n' >&2
   }
 fi
@@ -225,16 +184,16 @@ if [[ -z ${_ZO_DATA_DIR+x} ]]; then
   export _ZO_DATA_DIR="$XDG_DATA_HOME/zoxide"
 fi
 
-if has_cmd zoxide; then
-  shell_init zoxide init bash --cmd z --hook pwd || {
+if has-cmd zoxide; then
+  shell-init zoxide init bash --cmd z --hook pwd || {
     printf 'WARNING, .bashrc: zoxide init failed\n' >&2
   }
 fi
 
 # Keep direnv last among prompt-related integrations.
 # Create .envrc and run `direnv allow .` or `direnv deny .` afterward.
-if has_cmd direnv; then
-  shell_init direnv hook bash || {
+if has-cmd direnv; then
+  shell-init direnv hook bash || {
     printf 'WARNING, .bashrc: direnv init failed\n' >&2
   }
 fi
