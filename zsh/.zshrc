@@ -135,9 +135,13 @@ source-if-exists "$HOME/.zsh_aliases" || true
 # Native completion and ZLE
 # ---------------------------------------------------------------------------
 
-if [[ -n ${HOMEBREW_PREFIX:-} &&
-      -d "$HOMEBREW_PREFIX/share/zsh/site-functions" ]]; then
-  fpath=("$HOMEBREW_PREFIX/share/zsh/site-functions" "${fpath[@]}")
+if [[ -n ${HOMEBREW_PREFIX:-} ]]; then
+  if [[ -d "$HOMEBREW_PREFIX/share/zsh/site-functions" ]]; then
+    fpath=("$HOMEBREW_PREFIX/share/zsh/site-functions" "${fpath[@]}")
+  fi
+  if [[ -d "$HOMEBREW_PREFIX/share/zsh-completions" ]]; then
+    fpath=("$HOMEBREW_PREFIX/share/zsh-completions" "${fpath[@]}")
+  fi
 fi
 # Make fpath global and remove duplicate entries.
 typeset -gU fpath
@@ -148,12 +152,13 @@ zmodload zsh/complist
 # Keep completion cache files under XDG cache.
 _zsh_completion_cache="$XDG_CACHE_HOME/zsh/completion"
 if [[ -d "$_zsh_completion_cache" ]] || mkdir -p -- "$_zsh_completion_cache"; then
-  compinit -d "$_zsh_completion_cache/zcompdump-$ZSH_VERSION" || {
+  # Trust configured completion paths, including Homebrew's group-writable prefix.
+  compinit -u -d "$_zsh_completion_cache/zcompdump-$ZSH_VERSION" || {
     print -u2 -- 'WARNING, .zshrc: completion initialization failed.'
   }
 else
   print -u2 -- "WARNING, .zshrc: could not create completion cache: $_zsh_completion_cache"
-  compinit || print -u2 -- 'WARNING, .zshrc: completion initialization failed.'
+  compinit -u || print -u2 -- 'WARNING, .zshrc: completion initialization failed.'
 fi
 
 zstyle ':completion:*' use-cache yes
@@ -178,55 +183,6 @@ if [[ -n ${LS_COLORS:-} ]]; then
 else
   zstyle ':completion:*:default' list-colors ''
 fi
-
-# Use vi-style command-line editing.
-bindkey -v
-KEYTIMEOUT=20  # Wait 0.2s for multi-key vi/escape sequences.
-
-autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-
-# Tab completes while in vi insert mode.
-bindkey -M viins '^I' expand-or-complete
-bindkey -M viins '^[[Z' reverse-menu-complete
-# Up arrow searches history using the current prefix.
-bindkey -M viins '^[[A' up-line-or-beginning-search
-# Down arrow searches forward using the current prefix.
-bindkey -M viins '^[[B' down-line-or-beginning-search
-
-# Read terminal-specific key sequences safely.
-zmodload zsh/terminfo
-
-# Up arrow:
-# - In vi insert mode, search backward through history for commands
-#   starting with what is already typed.
-# - In the completion menu, move upward.
-if [[ -n ${terminfo[kcuu1]:-} ]]; then
-  bindkey -M viins "${terminfo[kcuu1]}" up-line-or-beginning-search
-  bindkey -M menuselect "${terminfo[kcuu1]}" up-line-or-history
-fi
-
-# Down arrow:
-# - In vi insert mode, search forward through matching history.
-# - In the completion menu, move downward.
-if [[ -n ${terminfo[kcud1]:-} ]]; then
-  bindkey -M viins "${terminfo[kcud1]}" down-line-or-beginning-search
-  bindkey -M menuselect "${terminfo[kcud1]}" down-line-or-history
-fi
-
-# Left arrow: move left inside the completion menu.
-if [[ -n ${terminfo[kcub1]:-} ]]; then
-  bindkey -M menuselect "${terminfo[kcub1]}" backward-char
-fi
-
-# Right arrow: move right inside the completion menu.
-if [[ -n ${terminfo[kcuf1]:-} ]]; then
-  bindkey -M menuselect "${terminfo[kcuf1]}" forward-char
-fi
-
-# Shift+Tab: move backward through completion choices.
-bindkey -M menuselect '^[[Z' reverse-menu-complete
 
 unset _zsh_completion_cache
 
@@ -313,3 +269,31 @@ if has-cmd direnv; then
 fi
 
 unset _zsh_state_dir _zsh_config_dir
+
+# ---------------------------------------------------------------------------
+# Optional plugins
+# ---------------------------------------------------------------------------
+
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZVM_SYSTEM_CLIPBOARD_ENABLED=true
+for name in \
+  autosuggestions \
+  syntax-highlighting \
+  vi-mode; do
+  source-first \
+    "${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/share/zsh-$name/zsh-$name.zsh}" \
+    "/usr/share/zsh-$name/zsh-$name.zsh" \
+    "/usr/share/zsh/plugins/zsh-$name/zsh-$name.zsh" \
+    || true
+done
+
+# Avoid zsh-vi-mode's reset-prompt redraw corrupting multiline prompts.
+if (( $+functions[zvm_postpone_reset_prompt] )); then
+  zvm_postpone_reset_prompt() {
+    if [[ $1 == true ]]; then
+      ZVM_POSTPONE_RESET_PROMPT=0
+    else
+      ZVM_POSTPONE_RESET_PROMPT=-1
+    fi
+  }
+fi

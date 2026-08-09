@@ -148,10 +148,6 @@ if __color_help_has watch '--color'; then
   }
 fi
 
-if has-cmd git; then
-  __color_alias git 'git -c color.ui=auto'
-fi
-
 export CARGO_TERM_COLOR="${CARGO_TERM_COLOR:-auto}"
 
 # ---------------------------------------------------------------------------
