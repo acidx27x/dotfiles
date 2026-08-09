@@ -1,4 +1,4 @@
-# ~/.config/bash/conf.d/01-eza.bash
+# ~/.config/bash/conf.d/02-eza.bash
 # eza setup
 
 if ! has-cmd eza; then

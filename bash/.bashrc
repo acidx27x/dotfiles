@@ -127,27 +127,8 @@ fi
 
 unset _completion_status
 
-# ---------------------------------------------------------------------------
-# Atuin history
-# ---------------------------------------------------------------------------
-
-_atuin_initialized=0
-
-if has-cmd atuin; then
-  if shell-init atuin init bash --disable-up-arrow --disable-ai; then
-    _atuin_initialized=1
-  else
-    printf 'WARNING, .bashrc: atuin init failed\n' >&2
-  fi
-fi
-
-# Disable fzf's Ctrl-R binding only after Atuin has initialized successfully.
-# Preserve a value explicitly configured in env.bash or .env.bash.
-if (( _atuin_initialized )) && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
-  export FZF_CTRL_R_COMMAND=
-fi
-
-unset _atuin_initialized
+# Starship replaces the fallback PS1 when available.
+PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 
 # ---------------------------------------------------------------------------
 # Tool auto setup
@@ -159,43 +140,5 @@ source-conf-dirs "$_bash_config_dir/conf.d" || true
 # Machine-specific configuration, loaded afterward so it can override
 # settings from conf.d.
 source-conf-dirs "$_bash_config_dir/conf.local.d" || true
-
-# ---------------------------------------------------------------------------
-# Tool small setup
-# ---------------------------------------------------------------------------
-
-if has-cmd thefuck; then
-  shell-init env TF_SHELL=bash thefuck --alias || {
-    printf 'WARNING, .bashrc: thefuck init failed\n' >&2
-  }
-fi
-
-# Starship replaces the fallback PS1 when available.
-PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
-
-if has-cmd starship; then
-  shell-init starship init bash || {
-    printf 'WARNING, .bashrc: starship init failed\n' >&2
-  }
-fi
-
-# Keep zoxide's database under XDG_DATA_HOME unless explicitly configured.
-if [[ -z ${_ZO_DATA_DIR+x} ]]; then
-  export _ZO_DATA_DIR="$XDG_DATA_HOME/zoxide"
-fi
-
-if has-cmd zoxide; then
-  shell-init zoxide init bash --cmd z --hook pwd || {
-    printf 'WARNING, .bashrc: zoxide init failed\n' >&2
-  }
-fi
-
-# Keep direnv last among prompt-related integrations.
-# Create .envrc and run `direnv allow .` or `direnv deny .` afterward.
-if has-cmd direnv; then
-  shell-init direnv hook bash || {
-    printf 'WARNING, .bashrc: direnv init failed\n' >&2
-  }
-fi
 
 unset _bash_config_dir

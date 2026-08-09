@@ -1,4 +1,4 @@
-# ~/.config/bash/conf.d/03-bat.bash
+# ~/.config/bash/conf.d/02-bat.bash
 # bat setup
 
 if has-cmd bat; then
