@@ -23,7 +23,7 @@ source "$_zsh_config_dir/functions.zsh"
 
 # A non-login interactive shell normally inherits Homebrew's environment.
 # Initialize it here only when that did not happen.
-if [[ -z ${HOMEBREW_PREFIX:-} ]] && ! has-cmd brew; then
+if [[ -z ${HOMEBREW_PREFIX:-} ]]; then
   source "$_zsh_config_dir/homebrew.zsh" || {
     print -u2 -- 'WARNING, .zshrc: Homebrew initialization failed.'
   }
@@ -135,34 +135,10 @@ source-if-exists "$HOME/.zsh_aliases" || true
 # Native completion and ZLE
 # ---------------------------------------------------------------------------
 
-if [[ -n ${HOMEBREW_PREFIX:-} ]]; then
-  if [[ -d "$HOMEBREW_PREFIX/share/zsh/site-functions" ]]; then
-    fpath=("$HOMEBREW_PREFIX/share/zsh/site-functions" "${fpath[@]}")
-  fi
-  if [[ -d "$HOMEBREW_PREFIX/share/zsh-completions" ]]; then
-    fpath=("$HOMEBREW_PREFIX/share/zsh-completions" "${fpath[@]}")
-  fi
-fi
-# Make fpath global and remove duplicate entries.
-typeset -gU fpath
+load-zsh-completion || {
+  print -u2 -- 'WARNING, .zshrc: completion initialization failed.'
+}
 
-autoload -Uz compinit
-zmodload zsh/complist
-
-# Keep completion cache files under XDG cache.
-_zsh_completion_cache="$XDG_CACHE_HOME/zsh/completion"
-if [[ -d "$_zsh_completion_cache" ]] || mkdir -p -- "$_zsh_completion_cache"; then
-  # Trust configured completion paths, including Homebrew's group-writable prefix.
-  compinit -u -d "$_zsh_completion_cache/zcompdump-$ZSH_VERSION" || {
-    print -u2 -- 'WARNING, .zshrc: completion initialization failed.'
-  }
-else
-  print -u2 -- "WARNING, .zshrc: could not create completion cache: $_zsh_completion_cache"
-  compinit -u || print -u2 -- 'WARNING, .zshrc: completion initialization failed.'
-fi
-
-zstyle ':completion:*' use-cache yes
-zstyle ':completion:*' cache-path "$_zsh_completion_cache"
 # Try normal completion first, then corrected completion.
 zstyle ':completion:*' completer _complete _correct
 zstyle ':completion:*:correct:*' max-errors 1 numeric
@@ -184,116 +160,23 @@ else
   zstyle ':completion:*:default' list-colors ''
 fi
 
-unset _zsh_completion_cache
-
-# ---------------------------------------------------------------------------
-# Atuin history
-# ---------------------------------------------------------------------------
-
-_atuin_initialized=0
-
-if has-cmd atuin; then
-  if shell-init atuin init zsh --disable-up-arrow --disable-ai; then
-    _atuin_initialized=1
-  else
-    print -u2 -- 'WARNING, .zshrc: atuin init failed.'
-  fi
-fi
-
-# Disable fzf's Ctrl-R binding only after Atuin initialized successfully.
-if (( _atuin_initialized )) && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
-  export FZF_CTRL_R_COMMAND=
-fi
-
-unset _atuin_initialized
-
 # ---------------------------------------------------------------------------
 # Tool setup
 # ---------------------------------------------------------------------------
 
+# Shared, tracked configuration.
 source-conf-dirs "$_zsh_config_dir/conf.d" || true
+
+# Machine-specific configuration, loaded afterward so it can override
+# settings from conf.d.
 source-conf-dirs "$_zsh_config_dir/conf.local.d" || true
-
-if has-cmd thefuck; then
-  shell-init env TF_SHELL=zsh thefuck --alias || {
-    print -u2 -- 'WARNING, .zshrc: thefuck init failed.'
-  }
-fi
-
-# Starship owns both prompt sides when available. Use native Zsh otherwise.
-_starship_initialized=0
-
-if has-cmd starship; then
-  if shell-init starship init zsh; then
-    _starship_initialized=1
-    setopt PROMPT_SUBST
-  else
-    print -u2 -- 'WARNING, .zshrc: starship init failed; using native prompt.'
-  fi
-fi
-
-# Fall back to a native Zsh prompt if Starship failed/missing.
-if (( ! _starship_initialized )); then
-  autoload -Uz add-zsh-hook vcs_info
-  setopt PROMPT_SUBST
-
-  zstyle ':vcs_info:git:*' enable git
-  zstyle ':vcs_info:git:*' formats ' %F{yellow}[%b]%f'
-  zstyle ':vcs_info:git:*' actionformats ' %F{yellow}[%b|%a]%f'
-
-  add-zsh-hook precmd vcs_info
-
-  PROMPT='${debian_chroot:+($debian_chroot)}%F{green}%n@%m%f:%F{blue}%~%f${vcs_info_msg_0_} %# '
-  RPROMPT='%(?..%F{red}%?%f )%D{%H:%M}'
-fi
-
-unset _starship_initialized
-
-# Keep zoxide state in the XDG data directory unless explicitly configured.
-if [[ -z ${_ZO_DATA_DIR+x} ]]; then
-  export _ZO_DATA_DIR="$XDG_DATA_HOME/zoxide"
-fi
-
-# zoxide completion requires compinit to have run first.
-if has-cmd zoxide; then
-  shell-init zoxide init zsh --cmd z --hook pwd || {
-    print -u2 -- 'WARNING, .zshrc: zoxide init failed.'
-  }
-fi
-
-# Keep direnv last among prompt-related integrations.
-if has-cmd direnv; then
-  shell-init direnv hook zsh || {
-    print -u2 -- 'WARNING, .zshrc: direnv init failed.'
-  }
-fi
-
-unset _zsh_state_dir _zsh_config_dir
 
 # ---------------------------------------------------------------------------
 # Optional plugins
 # ---------------------------------------------------------------------------
 
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-ZVM_SYSTEM_CLIPBOARD_ENABLED=true
-for name in \
-  autosuggestions \
-  syntax-highlighting \
-  vi-mode; do
-  source-first \
-    "${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/share/zsh-$name/zsh-$name.zsh}" \
-    "/usr/share/zsh-$name/zsh-$name.zsh" \
-    "/usr/share/zsh/plugins/zsh-$name/zsh-$name.zsh" \
-    || true
-done
+source "$_zsh_config_dir/plugins.zsh" || {
+  print -u2 -- 'WARNING, .zshrc: optional plugin initialization failed.'
+}
 
-# Avoid zsh-vi-mode's reset-prompt redraw corrupting multiline prompts.
-if (( $+functions[zvm_postpone_reset_prompt] )); then
-  zvm_postpone_reset_prompt() {
-    if [[ $1 == true ]]; then
-      ZVM_POSTPONE_RESET_PROMPT=0
-    else
-      ZVM_POSTPONE_RESET_PROMPT=-1
-    fi
-  }
-fi
+unset _zsh_state_dir _zsh_config_dir

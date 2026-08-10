@@ -1,4 +1,4 @@
-# ~/.config/bash/conf.d/03-direnv.bash
+# ~/.config/bash/conf.d/04-direnv.bash
 # direnv setup
 
 # Keep direnv last among prompt-related integrations.

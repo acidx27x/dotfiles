@@ -85,6 +85,48 @@ source-conf-dirs() {
   return $source_status
 }
 
+# Initialize native Zsh completion once for this dotfiles configuration.
+load-zsh-completion() {
+  emulate -L zsh
+
+  local completion_cache="$XDG_CACHE_HOME/zsh/completion"
+  local -a completion_paths
+
+  (( $# == 0 )) || {
+    print -u2 -- 'Usage: load-zsh-completion'
+    return 2
+  }
+
+  (( ${_DOTFILES_ZSH_COMPLETION_INITIALIZED:-0} )) && return 0
+
+  if [[ -n ${HOMEBREW_PREFIX:-} ]]; then
+    [[ -d "$HOMEBREW_PREFIX/share/zsh-completions" ]] &&
+      completion_paths+=("$HOMEBREW_PREFIX/share/zsh-completions")
+    [[ -d "$HOMEBREW_PREFIX/share/zsh/site-functions" ]] &&
+      completion_paths+=("$HOMEBREW_PREFIX/share/zsh/site-functions")
+  fi
+
+  typeset -gU fpath
+  fpath=("${completion_paths[@]}" "${fpath[@]}")
+
+  zmodload zsh/complist || return
+  autoload -Uz compinit
+
+  if { [[ -d $completion_cache && -w $completion_cache ]] ||
+       { mkdir -p -- "$completion_cache" 2>/dev/null && [[ -w $completion_cache ]]; } }
+  then
+    # Trust every configured completion path, including Homebrew paths.
+    compinit -u -d "$completion_cache/zcompdump-$ZSH_VERSION" || return
+    zstyle ':completion:*' use-cache yes
+    zstyle ':completion:*' cache-path "$completion_cache"
+  else
+    print -u2 -- "WARNING, load-zsh-completion: could not create completion cache: $completion_cache"
+    compinit -u -D || return
+  fi
+
+  typeset -g _DOTFILES_ZSH_COMPLETION_INITIALIZED=1
+}
+
 # Prepend existing directories to PATH without duplicates.
 path-prepend() {
   emulate -L zsh
@@ -129,6 +171,7 @@ _print-function-catalog() {
 utils-help() {
   _print-function-catalog 'Zsh configuration utilities:' \
     has-cmd 'Check that every supplied command exists.' \
+    load-zsh-completion 'Initialize native Zsh completion once.' \
     path-prepend 'Prepend existing directories to PATH.' \
     set-xdg-path 'Set one absolute XDG path.' \
     set-xdg-path-list 'Set an XDG search path list.' \

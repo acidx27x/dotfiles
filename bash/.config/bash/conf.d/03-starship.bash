@@ -1,4 +1,4 @@
-# ~/.config/bash/conf.d/04-starship.bash
+# ~/.config/bash/conf.d/03-starship.bash
 # starship setup
 
 # Show Stellar installation and theme instructions.
