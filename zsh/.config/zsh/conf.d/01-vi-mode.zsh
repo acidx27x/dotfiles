@@ -3,6 +3,28 @@
 
 ZVM_INIT_MODE=sourcing
 ZVM_SYSTEM_CLIPBOARD_ENABLED=true
+ZVM_CURSOR_STYLE_ENABLED=true
+
+zvm_config() {
+  ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
+  ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+  ZVM_VISUAL_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
+  ZVM_VISUAL_LINE_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
+  ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
+}
+
+edit-and-execute-command() {
+  zle edit-command-line || return
+  zle accept-line
+}
+
+zvm_after_init() {
+  autoload -Uz edit-command-line
+  zle -N edit-command-line
+  zle -N edit-and-execute-command
+  zvm_bindkey viins '^X^E' edit-and-execute-command
+  zvm_bindkey vicmd '^X^E' edit-and-execute-command
+}
 
 source-first \
   "${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh}" \
