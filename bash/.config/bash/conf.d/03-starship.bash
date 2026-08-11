@@ -28,5 +28,5 @@ if has-cmd starship; then
 fi
 
 if ! has-cmd stellar; then
-  printf 'INFO, 04-stellar.bash: stellar is not installed; run `stellar-help` for setup.\n' >&2
+  printf 'INFO, 03-stellar.bash: stellar is not installed; run `stellar-help` for setup.\n' >&2
 fi

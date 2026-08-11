@@ -26,7 +26,6 @@ _starship_initialized=0
 if has-cmd starship; then
   if shell-init starship init zsh; then
     _starship_initialized=1
-    setopt PROMPT_SUBST
   else
     print -u2 -- 'WARNING, 03-starship.zsh: starship init failed; using native prompt.'
   fi
@@ -34,7 +33,6 @@ fi
 
 if (( ! _starship_initialized )); then
   autoload -Uz add-zsh-hook vcs_info
-  setopt PROMPT_SUBST
 
   zstyle ':vcs_info:git:*' enable git
   zstyle ':vcs_info:git:*' formats ' %F{yellow}[%b]%f'
@@ -47,7 +45,7 @@ if (( ! _starship_initialized )); then
 fi
 
 if ! has-cmd stellar; then
-  print -u2 -- 'INFO, 04-stellar.zsh: stellar is not installed; run `stellar-help` for setup.'
+  print -u2 -- 'INFO, 03-starship.zsh: stellar is not installed; run `stellar-help` for setup.'
 fi
 
 unset _starship_initialized
