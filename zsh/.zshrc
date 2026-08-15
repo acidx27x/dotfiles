@@ -164,11 +164,11 @@ fi
 # Tool setup
 # ---------------------------------------------------------------------------
 
-# Shared, tracked configuration.
-source-conf-dirs "$_zsh_config_dir/conf.d" || true
-
 # use promt subst anyway, but blocked by emulate -L zsh inside function
 setopt PROMPT_SUBST
+
+# Shared, tracked configuration.
+source-conf-dirs "$_zsh_config_dir/conf.d" || true
 
 # Machine-specific configuration, loaded afterward so it can override
 # settings from conf.d.

@@ -6,7 +6,7 @@
 # Clone https://github.com/junegunn/fzf-git.sh.git to conf.local.d
 # and create link inside: ln -s fzf-git.sh/fzf-git.sh 02-fzf-git.bash
 
-export FZF_DEFAULT_OPTS_FILE="$XDG_CONFIG_HOME/fzf/fzfrc"
+export FZF_DEFAULT_OPTS_FILE="$XDG_CONFIG_HOME/bash/fzfrc"
 
 if ! has-cmd fzf; then
   return 0
