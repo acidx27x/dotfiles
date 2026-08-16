@@ -5,36 +5,24 @@
 
 if [[ -z ${HOME:-} || $HOME != /* ]]; then
   printf 'Error: HOME must be an absolute path.\n' >&2
-
-  if [[ ${BASH_SOURCE[0]} != "$0" ]]; then
-    return 1
-  else
-    exit 1
-  fi
+  return 1 2>/dev/null || exit 1
 fi
 
-_env_file_dir="$(
-  cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" 2>/dev/null &&
-  pwd
-)" || {
-  printf 'Error: could not resolve the env.bash directory.\n' >&2
-
-  if [[ ${BASH_SOURCE[0]} != "$0" ]]; then
-    return 1
+if [[ ! -v _bash_config_dir ]]; then
+  if [[ ${XDG_CONFIG_HOME:-} == /* ]]; then
+    _bash_config_dir="$XDG_CONFIG_HOME/bash"
   else
-    exit 1
+    _bash_config_dir="$HOME/.config/bash"
   fi
-}
+fi
 
 # Keep direct execution useful while .bashrc supplies these modules normally.
 if ! declare -F set-xdg-path >/dev/null; then
-  source "$_env_file_dir/utils.bash" || exit 1
+  source "$_bash_config_dir/utils.bash" || exit 1
 fi
 
-if [[ ${BASH_SOURCE[0]} == "$0" ]] &&
-   ! declare -F print-xdg-paths >/dev/null
-then
-  source "$_env_file_dir/functions.bash" || exit 1
+if ! declare -F print-xdg-paths >/dev/null; then
+  source "$_bash_config_dir/functions.bash" || exit 1
 fi
 
 # ---------------------------------------------------------------------------
@@ -112,7 +100,13 @@ export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 export EDITOR="${EDITOR:-nvim}"
 export PAGER="${PAGER:-less}"
 
-# User defined env
-source-if-exists "$_env_file_dir/.env.bash" || true
+# Rust
+# install with '--no-modify-path'
+# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path
+export RUST_HOME="/opt/rust"
+export RUSTUP_HOME="$RUST_HOME/rustup"
+export CARGO_HOME="$RUST_HOME/cargo"
+export CARGO_INSTALL_ROOT="$RUST_HOME"
 
-unset _env_file_dir
+# User defined env
+source-if-exists "$(current-file-dir)/.env.bash" || true

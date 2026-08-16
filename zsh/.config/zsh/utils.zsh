@@ -85,6 +85,18 @@ source-conf-dirs() {
   return $source_status
 }
 
+# Print the directory containing the file that called this helper.
+current-file-dir() {
+  local file="${funcsourcetrace[1]%:*}"
+
+  [[ -n "$file" ]] || return 1
+
+  (
+    cd -P -- "$(dirname -- "$file")" 2>/dev/null &&
+    pwd
+  )
+}
+
 # Initialize native Zsh completion once for this dotfiles configuration.
 load-zsh-completion() {
   emulate -L zsh
@@ -144,6 +156,69 @@ path-prepend() {
   done
 
   export PATH
+}
+
+# Set one XDG path, replacing invalid relative values with a default.
+set-xdg-path() {
+  emulate -L zsh
+
+  local variable=$1
+  local default_value=$2
+  local current_value=${(P)variable}
+
+  if [[ -z $current_value || $current_value != /* ]]; then
+    current_value=$default_value
+  fi
+
+  typeset -gx "$variable=$current_value"
+}
+
+# Set an XDG colon-separated path after removing relative entries.
+set-xdg-path-list() {
+  emulate -L zsh
+
+  local variable=$1
+  local default_value=$2
+  local current_value=${(P)variable}
+  local entry
+  local -a entries valid_entries
+
+  [[ -n $current_value ]] || current_value=$default_value
+  entries=("${(@s.:.)current_value}")
+
+  for entry in "${entries[@]}"; do
+    [[ $entry == /* ]] && valid_entries+=("$entry")
+  done
+
+  if (( ${#valid_entries} == 0 )); then
+    valid_entries=("${(@s.:.)default_value}")
+  fi
+
+  current_value="${(j.:.)valid_entries}"
+  typeset -gx "$variable=$current_value"
+}
+
+# Resolve one XDG user directory, using xdg-user-dir when available.
+set-xdg-user-dir() {
+  emulate -L zsh
+
+  local variable=$1
+  local directory_name=$2
+  local fallback=$3
+  local current_value=${(P)variable}
+  local detected_value=''
+
+  if [[ $current_value == /* ]]; then
+    typeset -gx "$variable=$current_value"
+    return
+  fi
+
+  if command -v xdg-user-dir >/dev/null 2>&1; then
+    detected_value=$(xdg-user-dir "$directory_name" 2>/dev/null || true)
+  fi
+
+  [[ $detected_value == /* ]] || detected_value=$fallback
+  typeset -gx "$variable=$detected_value"
 }
 
 # Print documented functions that are available in the current shell.

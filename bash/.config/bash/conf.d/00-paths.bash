@@ -2,10 +2,7 @@
 # Basic paths variables
 
 path-prepend "$HOME/.local/bin"
-
-_ec=$?
+path-prepend "$RUST_HOME/bin" "$CARGO_HOME/bin"
 
 # User defined paths
-source-if-exists "$(current-file-dir)/.paths.bash"
-
-return "$_ec"
+source-if-exists "$(current-file-dir)/.paths.bash" || true

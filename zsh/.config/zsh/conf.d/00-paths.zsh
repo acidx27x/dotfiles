@@ -1,7 +1,8 @@
 # ~/.config/zsh/conf.d/00-paths.zsh
-# User executable paths.
+# Basic paths variables
 
 path-prepend "$HOME/.local/bin"
+path-prepend "$RUST_HOME/bin" "$CARGO_HOME/bin"
 
-# Machine-local path overrides.
-source-if-exists "$XDG_CONFIG_HOME/zsh/conf.d/.paths.zsh" || true
+# User defined paths
+source-if-exists "$(current-file-dir)/.paths.zsh" || true

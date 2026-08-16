@@ -3,71 +3,25 @@
 
 if [[ -z ${HOME:-} || $HOME != /* ]]; then
   print -u2 -- 'Error: HOME must be an absolute path.'
-  return 1
+  return 1 2>/dev/null || exit 1
 fi
 
-# Set one XDG path, replacing invalid relative values with a default.
-set-xdg-path() {
-  emulate -L zsh
+if [[ ${XDG_CONFIG_HOME:-} == /* ]]; then
+  _zsh_config_dir="$XDG_CONFIG_HOME/zsh"
+else
+  _zsh_config_dir="$HOME/.config/zsh"
+fi
 
-  local variable=$1
-  local default_value=$2
-  local current_value=${(P)variable}
+# Keep direct execution useful while .zshrc supplies these modules normally.
+if (( ! $+functions[set-xdg-path] )); then
+  source "$_zsh_config_dir/utils.zsh" || exit 1
+fi
 
-  if [[ -z $current_value || $current_value != /* ]]; then
-    current_value=$default_value
-  fi
+if (( ! $+functions[print-xdg-paths] )); then
+  source "$_zsh_config_dir/functions.zsh" || exit 1
+fi
 
-  typeset -gx "$variable=$current_value"
-}
-
-# Set an XDG colon-separated path after removing relative entries.
-set-xdg-path-list() {
-  emulate -L zsh
-
-  local variable=$1
-  local default_value=$2
-  local current_value=${(P)variable}
-  local entry
-  local -a entries valid_entries
-
-  [[ -n $current_value ]] || current_value=$default_value
-  entries=("${(@s.:.)current_value}")
-
-  for entry in "${entries[@]}"; do
-    [[ $entry == /* ]] && valid_entries+=("$entry")
-  done
-
-  if (( ${#valid_entries} == 0 )); then
-    valid_entries=("${(@s.:.)default_value}")
-  fi
-
-  current_value="${(j.:.)valid_entries}"
-  typeset -gx "$variable=$current_value"
-}
-
-# Resolve one XDG user directory, using xdg-user-dir when available.
-set-xdg-user-dir() {
-  emulate -L zsh
-
-  local variable=$1
-  local directory_name=$2
-  local fallback=$3
-  local current_value=${(P)variable}
-  local detected_value=''
-
-  if [[ $current_value == /* ]]; then
-    typeset -gx "$variable=$current_value"
-    return
-  fi
-
-  if command -v xdg-user-dir >/dev/null 2>&1; then
-    detected_value=$(xdg-user-dir "$directory_name" 2>/dev/null || true)
-  fi
-
-  [[ $detected_value == /* ]] || detected_value=$fallback
-  typeset -gx "$variable=$detected_value"
-}
+unset _zsh_config_dir
 
 # ---------------------------------------------------------------------------
 # XDG Base Directory Specification
@@ -134,12 +88,17 @@ export SQLITE_HISTORY="$XDG_STATE_HOME/sqlite_history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql_history"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 
+# Misc
 export EDITOR="${EDITOR:-nvim}"
 export PAGER="${PAGER:-less}"
 
-# Machine-local environment overrides.
-_env_file_dir="${${(%):-%x}:A:h}"
-if [[ -r "$_env_file_dir/.env.zsh" ]]; then
-  source "$_env_file_dir/.env.zsh"
-fi
-unset _env_file_dir
+# Rust
+# install with '--no-modify-path'
+# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path
+export RUST_HOME="/opt/rust"
+export RUSTUP_HOME="$RUST_HOME/rustup"
+export CARGO_HOME="$RUST_HOME/cargo"
+export CARGO_INSTALL_ROOT="$RUST_HOME"
+
+# User defined env
+source-if-exists "$(current-file-dir)/.env.bash" || true

@@ -6,35 +6,6 @@ is-brush() {
   [[ -n "${BRUSH_VERSION:-}" ]]
 }
 
-# Load Bash completion from Homebrew or a system location.
-load-bash-completion() {
-  local completion_file
-
-  [[ -n "${BASH_COMPLETION_VERSINFO:-}" ]] && return 0
-  shopt -oq posix && return 0
-
-  if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
-    completion_file="$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
-
-    if [[ -r "$completion_file" ]]; then
-      source "$completion_file"
-      return
-    fi
-  fi
-
-  for completion_file in \
-    "/usr/share/bash-completion/bash_completion" \
-    "/etc/bash_completion"
-  do
-    if [[ -r "$completion_file" ]]; then
-      source "$completion_file"
-      return
-    fi
-  done
-
-  return 127
-}
-
 # Return success when every supplied command exists.
 has-cmd() {
   local name
@@ -145,6 +116,35 @@ current-file-dir() {
     cd -P -- "$(dirname -- "$file")" 2>/dev/null &&
     pwd
   )
+}
+
+# Load Bash completion from Homebrew or a system location.
+load-bash-completion() {
+  local completion_file
+
+  [[ -n "${BASH_COMPLETION_VERSINFO:-}" ]] && return 0
+  shopt -oq posix && return 0
+
+  if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
+    completion_file="$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
+
+    if [[ -r "$completion_file" ]]; then
+      source "$completion_file"
+      return
+    fi
+  fi
+
+  for completion_file in \
+    "/usr/share/bash-completion/bash_completion" \
+    "/etc/bash_completion"
+  do
+    if [[ -r "$completion_file" ]]; then
+      source "$completion_file"
+      return
+    fi
+  done
+
+  return 127
 }
 
 # Prepend existing directories to PATH without duplicates.
