@@ -110,8 +110,9 @@
   "completions": {
     "words": "fallback",
     "words_min_length": 4,
+    "lsp_insert_mode": "replace_subsequence",
   },
-  "show_completions_on_input": false,
+  "show_completions_on_input": true,
   "completion_menu_item_kind": "symbol",
   "completion_menu_scrollbar": "always",
   "show_completion_documentation": true,
@@ -124,19 +125,21 @@
   "code_lens": "on",
   "lsp_document_colors": "background", // need for 'color-highlight'
   "lsp_document_links": true,
+  "lsp_results_location": "picker",
   // language and tools
   "prettier": {
     "allowed": true,
   },
   "go_to_definition_fallback": "none",
   "go_to_definition_scroll_strategy": "center",
+  "diagnostics_max_severity": "all",
   "diagnostics": {
     "include_warnings": true,
     "inline": {
       "enabled": false,
+      "max_severity": "all",
     },
   },
-  "diagnostics_max_severity": "all",
   // need to overwrite for specific language in the end
   "semantic_tokens": "off",
   "document_symbols": "off",
@@ -203,6 +206,7 @@
     "tree_view": true,
     "show_count_badge": true,
     "fallback_branch_name": "master",
+    "entry_primary_click_action": "file_diff",
   },
   "project_panel": {
     "dock": "left",
@@ -254,12 +258,11 @@
   "agent_servers": {
     "codex-acp": {
       "default_config_options": {
-        "mode": "auto",
         "reasoning_effort": "high"
       },
       "favorite_config_option_values": {
         "model": [
-          "gpt-5.5",
+          "gpt-5.6",
         ],
         "mode": [
           "auto",

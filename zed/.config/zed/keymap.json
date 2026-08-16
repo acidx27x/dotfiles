@@ -1,11 +1,25 @@
-  // INFO: mainly using <ctrl-k> for worKspace, <ctrl-i> for edItor context
+  // INFO: mainly using <ctrl-k> for wor<k>space, <ctrl-l> for editor <l>ocal context
+  // TODO toggle inline diagnostics
   [
     {
       "unbind": {
         "ctrl-alt-,": "zed::OpenSettingsFile",
+        "alt-cmd-,": "zed::OpenSettingsFile",
         "tab": "menu::SelectNext",
         "shift-tab": "menu::SelectPrevious",
       },
+    },
+    {
+      "context": "Welcome",
+      "unbind": {
+        "ctrl-n": "workspace::NewFile",
+      }
+    },
+    { // move to top bc use ctrl-l as prefix a lot
+      "context": "Editor",
+      "unbind": {
+        "ctrl-l": "editor::SelectLine",
+      }
     },
     // {
     //   "context": "Editor && VimControl && !VimWaiting && !menu",
@@ -44,7 +58,9 @@
       "unbind": {
         "ctrl-k ctrl-s": "zed::OpenKeymap",
         "ctrl-k ctrl-shift-s": "workspace::SaveWithoutFormat",
+        "cmd-k s": "workspace::SaveWithoutFormat",
         "ctrl-k ctrl-t": "theme_selector::Toggle",
+        "ctrl-n": "workspace::NewFile",
       },
       "bindings": {
         "ctrl-k ctrl-k": "zed::OpenKeymap",
@@ -53,7 +69,8 @@
     {
       "context": "!SettingsWindow",
       "unbind": {
-        "ctrl-,": "zed::OpenSettings"
+        "ctrl-,": "zed::OpenSettings",
+        "cmd-,": "zed::OpenSettings",
       },
       "bindings": {
         "ctrl-k ctrl-s": "zed::OpenSettings",
@@ -150,13 +167,13 @@
         "alt-shift-f": "editor::Format",
       },
       "bindings": {
-        "ctrl-i ctrl-f": "editor::Format",
+        "ctrl-l ctrl-f": "editor::Format",
       },
     },
     {
-      "context": "Editor",
+      "context": "Editor && selection",
       "bindings": {
-        "ctrl-i ctrl-f": "editor::FormatSelections",
+        "ctrl-l ctrl-f": "editor::FormatSelections",
       },
     },
     {
@@ -165,7 +182,7 @@
         "ctrl-shift-e": "pane::RevealInProjectPanel",
       },
       "bindings": {
-        "ctrl-i ctrl-n": "pane::RevealInProjectPanel",
+        "ctrl-l ctrl-n": "pane::RevealInProjectPanel",
       },
     },
     {
@@ -176,8 +193,8 @@
         "ctrl-k ctrl-b": "editor::BlameHover",
       },
       "bindings": {
-        "ctrl-i ctrl-r": "editor::RevealInFileManager",
-        "ctrl-i ctrl-b": "editor::BlameHover",
+        "ctrl-l ctrl-r": "editor::RevealInFileManager",
+        "ctrl-l ctrl-b": "editor::BlameHover",
       }
     }, // editor end
     { // remap/unmap unused toggle comments begin
@@ -199,13 +216,13 @@
         "ctrl-k ctrl-/": "editor::ToggleBlockComments"
       },
       "bindings": {
-        "ctrl-i ctrl-c": [
+        "ctrl-l ctrl-c": [
           "editor::ToggleComments",
           {
             "advance_downwards": false,
           },
         ],
-        "ctrl-i ctrl-shift-c": "editor::ToggleBlockComments",
+        "ctrl-l ctrl-shift-c": "editor::ToggleBlockComments",
       },
     }, // remap/unmap unused toggle comments end
     { // better cursor placement begin
@@ -425,9 +442,10 @@
       "context": "Pane",
       "unbind": {
         "ctrl-k shift-enter": "pane::TogglePinTab",
+        "alt-l": "search::ToggleSelection",
       },
       "bindings": {
-        "ctrl-i ctrl-p": "pane::TogglePinTab",
+        "ctrl-l ctrl-p": "pane::TogglePinTab",
       },
     }, // pane end
     { // debugger begin
@@ -519,16 +537,16 @@
         "ctrl-k ctrl-i": "editor::Hover",
       },
       "bindings": {
-        "ctrl-i ctrl-k": "editor::Hover",
+        "ctrl-l ctrl-k": "editor::Hover",
       }
     },
     { // bookmarks
       "context": "Editor",
       "bindings": {
-        "ctrl-i ctrl-m": "editor::ToggleBookmark",
-        "ctrl-i ctrl-shift-m": "editor::ViewBookmarks",
-        // "shift-] m": "editor::GoToNextBookmark",
-        // "shift-[ m": "editor::GoToPreviousBookmark",
+        "ctrl-l ctrl-m": "editor::ToggleBookmark",
+        "ctrl-l ctrl-shift-m": "editor::ViewBookmarks",
+        "ctrl-.": "editor::GoToNextBookmark",
+        "ctrl-,": "editor::GoToPreviousBookmark",
       },
     },
   ]
