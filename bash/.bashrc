@@ -108,6 +108,8 @@ alias rmv='rsync --recursive --times --progress --stats --human-readable --remov
 
 alias lg='lazygit'
 
+alias pclear='pyroclear -r --no-save'
+
 # Loaded after default aliases, allowing ~/.bash_aliases to override them.
 source-if-exists "$HOME/.bash_aliases" || true
 

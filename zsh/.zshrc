@@ -128,6 +128,8 @@ alias rmv='rsync --recursive --times --progress --stats --human-readable --remov
 
 alias lg='lazygit'
 
+alias pclear='pyroclear -r --no-save'
+
 # Loaded after defaults so machine-local aliases can override them.
 source-if-exists "$HOME/.zsh_aliases" || true
 
