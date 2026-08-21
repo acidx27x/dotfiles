@@ -110,6 +110,8 @@ alias lg='lazygit'
 
 alias pclear='pyroclear -r --no-save'
 
+alias hl='rg --passthru'
+
 # Loaded after default aliases, allowing ~/.bash_aliases to override them.
 source-if-exists "$HOME/.bash_aliases" || true
 

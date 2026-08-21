@@ -130,6 +130,8 @@ alias lg='lazygit'
 
 alias pclear='pyroclear -r --no-save'
 
+alias hl='rg --passthru'
+
 # Loaded after defaults so machine-local aliases can override them.
 source-if-exists "$HOME/.zsh_aliases" || true
 
