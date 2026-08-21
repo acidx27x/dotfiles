@@ -122,7 +122,7 @@ current-file-dir() {
 load-bash-completion() {
   local completion_file
 
-  [[ -n "${BASH_COMPLETION_VERSINFO:-}" ]] && return 0
+  declare -p BASH_COMPLETION_VERSINFO &>/dev/null && return 0
   shopt -oq posix && return 0
 
   if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
@@ -130,21 +130,30 @@ load-bash-completion() {
 
     if [[ -r "$completion_file" ]]; then
       source "$completion_file"
-      return
     fi
   fi
 
-  for completion_file in \
-    "/usr/share/bash-completion/bash_completion" \
-    "/etc/bash_completion"
-  do
-    if [[ -r "$completion_file" ]]; then
-      source "$completion_file"
-      return
-    fi
-  done
+  if ! declare -p BASH_COMPLETION_VERSINFO &>/dev/null; then
+    for completion_file in \
+      "/usr/share/bash-completion/bash_completion" \
+      "/etc/bash_completion"
+    do
+      if [[ -r "$completion_file" ]]; then
+        source "$completion_file"
+        break
+      fi
+    done
+  fi
 
-  return 127
+  # Compatibility for old completion scripts.
+  if ! declare -F _split_longopt &>/dev/null &&
+     declare -F _comp__split_longopt &>/dev/null; then
+    _split_longopt() {
+      _comp__split_longopt "$@"
+    }
+  fi
+
+  declare -p BASH_COMPLETION_VERSINFO &>/dev/null
 }
 
 # Prepend existing directories to PATH without duplicates.
