@@ -59,6 +59,7 @@ functions-help() {
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
     NO, NE, NA 'Redirect command output to /dev/null.' \
+    karing-proxy-enable 'Overwrite HTTP variables for karing network.' \
     utils-help 'List available Bash configuration utilities.'
 }
 
@@ -367,4 +368,39 @@ NE() {
 
 NA() {
   "$@" >/dev/null 2>&1
+}
+
+# karing windows share network to wsl
+karing-proxy-enable() {
+  local host_ip
+
+  host_ip=$(
+    powershell.exe -NoProfile -Command '
+      Get-NetIPConfiguration |
+      Where-Object {
+        $_.IPv4DefaultGateway -ne $null -and
+        $_.NetAdapter.Status -eq "Up" -and
+        $_.InterfaceAlias -notmatch "vEthernet|WSL|TUN|TAP"
+      } |
+      Select-Object -First 1 |
+      ForEach-Object { $_.IPv4Address.IPAddress }
+    ' | tr -d '\r'
+  )
+
+  if [ -z "$host_ip" ]; then
+    echo "Could not detect Windows IP"
+    return 1
+  fi
+
+  export http_proxy="http://${host_ip}:4067"
+  export https_proxy="$http_proxy"
+  export HTTP_PROXY="$http_proxy"
+  export HTTPS_PROXY="$http_proxy"
+
+  echo "Proxy enabled from karing: $http_proxy"
+}
+
+proxy-disable() {
+  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
+  echo "Proxy disabled"
 }
