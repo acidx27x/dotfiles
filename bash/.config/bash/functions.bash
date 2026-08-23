@@ -58,6 +58,7 @@ functions-help() {
     to-us-ascii 'Transliterate text files to US-ASCII.' \
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
+    NO, NE, NA 'Redirect command output to /dev/null.' \
     utils-help 'List available Bash configuration utilities.'
 }
 
