@@ -4,7 +4,7 @@
 _atuin_initialized=0  # can be checked later
 
 if has-cmd atuin; then
-  if shell-init atuin init bash --disable-up-arrow --disable-ai; then
+  if shell-init atuin init bash --disable-ai; then
     _atuin_initialized=1
   else
     printf 'WARNING, .bashrc: atuin init failed\n' >&2

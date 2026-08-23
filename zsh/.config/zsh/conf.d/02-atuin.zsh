@@ -4,7 +4,7 @@
 _atuin_initialized=0
 
 if has-cmd atuin; then
-  if shell-init atuin init zsh --disable-up-arrow --disable-ai; then
+  if shell-init atuin init zsh --disable-ai; then
     _atuin_initialized=1
   else
     print -u2 -- 'WARNING, 02-atuin.zsh: atuin init failed.'

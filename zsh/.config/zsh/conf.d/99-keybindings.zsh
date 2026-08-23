@@ -11,10 +11,9 @@ edit-and-execute-command() {
 
 zvm_define_widget edit-and-execute-command
 
-# Insert mode можно ставить сразу.
 zvm_bindkey viins '^X^E' edit-and-execute-command
 
-# Normal mode — после lazy bindings zsh-vi-mode.
+# Normal mode — after lazy bindings zsh-vi-mode
 _zvm_my_lazy_bindings() {
   zvm_bindkey vicmd '^X^E' edit-and-execute-command
 }
