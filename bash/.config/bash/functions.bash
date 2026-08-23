@@ -354,3 +354,16 @@ to-us-ascii() {
       "$encoding" "$file"
   done
 }
+
+# Redirect wrappers
+NO() {
+  "$@" >/dev/null
+}
+
+NE() {
+  "$@" 2>/dev/null
+}
+
+NA() {
+  "$@" >/dev/null 2>&1
+}

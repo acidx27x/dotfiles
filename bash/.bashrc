@@ -112,6 +112,14 @@ alias pclear='pyroclear -r --no-save'
 
 alias hl='rg --passthru'
 
+if [[ "$OSTYPE" == darwin* ]]; then
+  alias C='pbcopy'
+elif [[ -n "$WAYLAND_DISPLAY" ]]; then
+  alias C='wl-copy'
+else
+  alias C='xclip -selection clipboard'
+fi
+
 # Loaded after default aliases, allowing ~/.bash_aliases to override them.
 source-if-exists "$HOME/.bash_aliases" || true
 

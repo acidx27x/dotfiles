@@ -132,6 +132,18 @@ alias pclear='pyroclear -r --no-save'
 
 alias hl='rg --passthru'
 
+alias -g NO='>/dev/null'
+alias -g NE='2>/dev/null'
+alias -g NA='>/dev/null 2>&1'
+
+if [[ "$OSTYPE" == darwin* ]]; then
+  alias -g C='| pbcopy'
+elif [[ -n "$WAYLAND_DISPLAY" ]]; then
+  alias -g C='| wl-copy'
+else
+  alias -g C='| xclip -selection clipboard'
+fi
+
 # Loaded after defaults so machine-local aliases can override them.
 source-if-exists "$HOME/.zsh_aliases" || true
 
@@ -177,6 +189,23 @@ source-conf-dirs "$_zsh_config_dir/conf.d" || true
 # Machine-specific configuration, loaded afterward so it can override
 # settings from conf.d.
 source-conf-dirs "$_zsh_config_dir/conf.local.d" || true
+
+# ---------------------------------------------------------------------------
+# Optional zsh builtins
+# ---------------------------------------------------------------------------
+
+# zmv - Advanced Batch Rename/Move
+autoload -Uz zmv
+
+# Usage examples:
+# zmv '(*).log' '$1.txt'           # Rename .log to .txt
+# zmv -w '*.log' '*.txt'           # Same thing, simpler syntax
+# zmv -n '(*).log' '$1.txt'        # Dry run (preview changes)
+# zmv -i '(*).log' '$1.txt'        # Interactive mode (confirm each)
+
+# Helpful aliases for zmv
+alias zcp='zmv -C'  # Copy with patterns
+alias zln='zmv -L'  # Link with patterns
 
 # ---------------------------------------------------------------------------
 # Optional plugins

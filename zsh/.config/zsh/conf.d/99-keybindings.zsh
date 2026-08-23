@@ -1,6 +1,9 @@
 # ~/.config/zsh/conf.d/99-keybindings.zsh
 # other key-binding integrations
 
+bindkey ' ' magic-space
+
+# zvm edit buffer workaround
 autoload -Uz edit-command-line
 zle -N edit-command-line
 
