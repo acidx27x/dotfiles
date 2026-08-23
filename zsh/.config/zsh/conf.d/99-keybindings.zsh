@@ -4,18 +4,17 @@
 autoload -Uz edit-command-line
 zle -N edit-command-line
 
-edit-and-execute-command() {
+_my_edit_command_line() {
   zle edit-command-line || return
-  zle accept-line
 }
 
-zvm_define_widget edit-and-execute-command
+zvm_define_widget _my_edit_command_line
 
-zvm_bindkey viins '^X^E' edit-and-execute-command
+zvm_bindkey viins '^X^E' _my_edit_command_line
 
 # Normal mode — after lazy bindings zsh-vi-mode
 _zvm_my_lazy_bindings() {
-  zvm_bindkey vicmd '^X^E' edit-and-execute-command
+  zvm_bindkey vicmd '^X^E' _my_edit_command_line
 }
 
 zvm_after_lazy_keybindings_commands+=(_zvm_my_lazy_bindings)
