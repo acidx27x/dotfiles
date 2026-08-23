@@ -1,0 +1,32 @@
+brew "hello"
+
+brew "neovim"
+
+brew "git"
+brew "git-delta"
+brew "lazygit"
+brew "stow"
+
+brew "bash-completion@2"
+
+brew "atuin"
+brew "bat"
+brew "bat-extras"
+brew "bfs"
+brew "direnv"
+brew "eza"
+brew "fd"
+brew "fzf"
+brew "fzf-make"
+brew "ripgrep"
+brew "sd"
+brew "zoxide"
+brew "starship"
+brew "vivid"
+
+brew "brush"
+brew "zellij"
+
+brew "thefuck"
+brew "uchardet"
+brew "shellcheck"
