@@ -156,6 +156,37 @@ load-bash-completion() {
   declare -p BASH_COMPLETION_VERSINFO &>/dev/null
 }
 
+# Load Bash Preexec implementation from Homebrew or a system location.
+load-bash-preexec() {
+  local preexec_file
+
+  [[ -n "${bash_preexec_imported:-}" ]] && return 0
+  shopt -oq posix && return 0
+
+  if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
+    preexec_file="$HOMEBREW_PREFIX/etc/profile.d/bash-preexec.sh"
+
+    if [[ -r "$preexec_file" ]]; then
+      source "$preexec_file"
+    fi
+  fi
+
+  if [[ -z "${bash_preexec_imported:-}" ]]; then
+    for preexec_file in \
+      "$HOME/.bash-preexec.sh" \
+      "/usr/share/bash-preexec/bash-preexec.sh" \
+      "/etc/profile.d/bash-preexec.sh"
+    do
+      if [[ -r "$preexec_file" ]]; then
+        source "$preexec_file"
+        break
+      fi
+    done
+  fi
+
+  [[ -n "${bash_preexec_imported:-}" ]]
+}
+
 # Prepend existing directories to PATH without duplicates.
 path-prepend() {
   local -a directories=("$@")

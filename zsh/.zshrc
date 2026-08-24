@@ -151,9 +151,17 @@ source-if-exists "$HOME/.zsh_aliases" || true
 # Native completion and ZLE
 # ---------------------------------------------------------------------------
 
-load-zsh-completion || {
+if load-zsh-completion; then
+  _completion_status=0
+else
+  _completion_status=$?
+fi
+
+if (( _completion_status != 0 && _completion_status != 127 )); then
   print -u2 -- 'WARNING, .zshrc: completion initialization failed.'
-}
+fi
+
+unset _completion_status
 
 # Try normal completion first, then corrected completion.
 zstyle ':completion:*' completer _complete _correct

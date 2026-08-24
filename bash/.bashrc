@@ -124,7 +124,7 @@ fi
 source-if-exists "$HOME/.bash_aliases" || true
 
 # ---------------------------------------------------------------------------
-# Bash completion
+# Bash completion and preexec
 # ---------------------------------------------------------------------------
 
 if load-bash-completion; then
@@ -138,6 +138,12 @@ if (( _completion_status != 0 && _completion_status != 127 )); then
 fi
 
 unset _completion_status
+
+if ! is-brush; then  # Brush uses own preexec
+  load-bash-preexec || {
+    printf 'WARNING, .bashrc: load preexec init failed, some complicated tools like atuin may work incorrectly\n' >&2
+  }
+fi
 
 # Starship replaces the fallback PS1 when available.
 PS1='${debian_chroot:+($debian_chroot)}\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '

@@ -7,6 +7,7 @@ brew "git-delta"
 brew "lazygit"
 brew "stow"
 
+brew "bash-preexec"
 brew "bash-completion@2"
 
 brew "atuin"
@@ -20,9 +21,9 @@ brew "fzf"
 brew "fzf-make"
 brew "ripgrep"
 brew "sd"
-brew "zoxide"
 brew "starship"
 brew "vivid"
+brew "zoxide"
 
 brew "brush"
 brew "zellij"
