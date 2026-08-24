@@ -1,0 +1,22 @@
+[wsl2]
+processors=36
+
+memory=64GB
+swap=32GB
+swapFile=E:\\IMAGES\\WSL\\SWAP\\swap.vhdx
+defaultVhdSize=549755813888
+
+vmIdleTimeout=-1
+
+autoProxy=false
+
+# better host<->WSL networking than default NAT for most dev setups
+# networkingMode=mirrored
+# dnsTunneling=true
+# firewall=true
+
+[experimental]
+autoMemoryReclaim=gradual
+
+# useful with mirrored mode host IPs as well as localhost
+# hostAddressLoopback=true
