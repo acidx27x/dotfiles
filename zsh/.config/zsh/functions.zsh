@@ -338,10 +338,71 @@ to-us-ascii() {
 
 # karing windows share network to wsl
 karing-proxy-enable() {
+  local mountpoint="/mnt/c"
+  local powershell="${mountpoint}/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+  local mounted_by_us=0
   local host_ip
+  local karing_running
 
+  # 1. Make sure we're actually running under WSL.
+  if ! grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null; then
+    printf 'WARNING, karing-proxy-enable unavailable: not running under WSL.\n' >&2
+    return 1
+  fi
+
+  printf "WARNING, karing-proxy-enable: this function may require sudo to mount 'C:' to run powershell.\n" >&2
+
+  # 2. Temporarily mount Windows C: if it isn't already mounted.
+  if ! mountpoint -q "$mountpoint"; then
+    if ! sudo mkdir -p "$mountpoint"; then
+      printf 'WARNING, karing-proxy-enable unavailable: could not create %s.\n' "$mountpoint" >&2
+      return 1
+    fi
+
+    if ! sudo mount -t drvfs C: "$mountpoint"; then
+      printf "WARNING, karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'.\n" >&2
+      return 1
+    fi
+
+    mounted_by_us=1
+  fi
+
+  # Helper: only unmount if this function mounted it.
+  _karing_cleanup_mount() {
+    if [ "$mounted_by_us" -eq 1 ]; then
+      sudo umount "$mountpoint"
+    fi
+  }
+
+  # 3. Check that PowerShell is accessible.
+  if [ ! -x "$powershell" ]; then
+    printf 'WARNING, karing-proxy-enable unavailable: powershell.exe not found.\n' >&2
+    _karing_cleanup_mount
+    unset -f _karing_cleanup_mount
+    return 1
+  fi
+
+  # 4. Check whether Karing is running on Windows.
+  karing_running=$(
+    "$powershell" -NoProfile -Command '
+      if (Get-Process -Name "karing" -ErrorAction SilentlyContinue) {
+        "yes"
+      } else {
+        "no"
+      }
+    ' | tr -d '\r'
+  )
+
+  if [ "$karing_running" != "yes" ]; then
+    printf 'WARNING, karing-proxy-enable unavailable: Karing is not running on Windows.\n' >&2
+    _karing_cleanup_mount
+    unset -f _karing_cleanup_mount
+    return 1
+  fi
+
+  # 5. Detect the Windows host IP.
   host_ip=$(
-    powershell.exe -NoProfile -Command '
+    "$powershell" -NoProfile -Command '
       Get-NetIPConfiguration |
       Where-Object {
         $_.IPv4DefaultGateway -ne $null -and
@@ -353,20 +414,25 @@ karing-proxy-enable() {
     ' | tr -d '\r'
   )
 
+  # We no longer need access to C:.
+  _karing_cleanup_mount
+  unset -f _karing_cleanup_mount
+
   if [ -z "$host_ip" ]; then
-    echo "Could not detect Windows IP"
+    printf 'WARNING, karing-proxy-enable unavailable: could not detect Windows host IP.\n' >&2
     return 1
   fi
 
+  # 6. Enable proxy in the current shell.
   export http_proxy="http://${host_ip}:4067"
   export https_proxy="$http_proxy"
   export HTTP_PROXY="$http_proxy"
   export HTTPS_PROXY="$http_proxy"
 
-  echo "Proxy enabled from karing: $http_proxy"
+  printf 'Proxy enabled from karing: %s\n' "$http_proxy"
 }
 
 proxy-disable() {
   unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
-  echo "Proxy disabled"
+  printf 'Proxy disabled\n'
 }
