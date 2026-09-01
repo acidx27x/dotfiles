@@ -45,6 +45,7 @@ functions-help() {
     fgt 'Select Git tags with fzf.' \
     fgw 'Select Git worktrees with fzf.' \
     fman 'Find and open a man page with fzf.' \
+    frg 'Search file contents with ripgrep and open a match in Neovim.' \
     functions-help 'List available user-facing Bash functions.' \
     l 'List entries with eza in long form.' \
     ldr 'List directories with eza in long form.' \
