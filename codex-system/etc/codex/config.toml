@@ -84,7 +84,7 @@ sandbox = "elevated"
 
 # Required/recommended when using unbounded ** deny globs on platforms that
 # pre-expand glob matches before sandbox startup.
-glob_scan_max_depth = 6
+glob_scan_max_depth = 3
 
 
 [permissions.locked_folders_only.filesystem.":workspace_roots"]
