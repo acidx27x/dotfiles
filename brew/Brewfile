@@ -27,6 +27,7 @@ brew "zoxide"
 
 brew "brush"
 brew "zellij"
+brew "herdr"
 
 brew "thefuck"
 brew "uchardet"
