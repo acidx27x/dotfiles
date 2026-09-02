@@ -10,3 +10,5 @@
 --preview-window=right,60%,border-left
 --bind='alt-w:toggle-preview-wrap'
 --with-shell='bash -c'
+--walker=file,dir,hidden
+--walker-skip=.git,node_modules

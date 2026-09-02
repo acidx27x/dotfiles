@@ -52,37 +52,44 @@ if has-cmd dig; then
   _fzf_dig_command=dig
 fi
 
-# TODO: use default walker always?
-if [[ -n "$_fzf_fd_command" ]]; then
-  export FZF_DEFAULT_COMMAND="$_fzf_fd_command --hidden --strip-cwd-prefix --exclude .git"
-  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  export FZF_ALT_C_COMMAND="$_fzf_fd_command --type=d --hidden --strip-cwd-prefix --exclude .git"
-else
-  # fzf uses its built-in walker when these commands are unset.
-  unset FZF_DEFAULT_COMMAND FZF_CTRL_T_COMMAND FZF_ALT_C_COMMAND
-fi
+# fzf uses its built-in walker when these commands are unset.
+unset FZF_DEFAULT_COMMAND FZF_CTRL_T_COMMAND FZF_ALT_C_COMMAND
 
 if [[ -n "$_fzf_bat_command" && -n "$_fzf_eza_command" ]]; then
-  export FZF_CTRL_T_OPTS="--preview 'if [[ -d {} ]]; then $_fzf_eza_command --icons=always --tree --color=always -- {} | head -200; elif [[ -f {} ]]; then $_fzf_bat_command --color=always -n --line-range :500 -- {}; fi'"
+  export FZF_CTRL_T_OPTS="--walker=file,dir,hidden \
+--walker-skip=.git,node_modules \
+--preview 'if [[ -d {} ]]; then \
+$_fzf_eza_command --icons=always --tree --color=always -- {} | head -200; \
+elif [[ -f {} ]]; then \
+$_fzf_bat_command --color=always -n --line-range :500 -- {}; \
+fi'"
 elif [[ -n "$_fzf_bat_command" ]]; then
-  export FZF_CTRL_T_OPTS="--preview '[[ -f {} ]] && $_fzf_bat_command --color=always -n --line-range :500 -- {}'"
+  export FZF_CTRL_T_OPTS="--walker=file,dir,hidden \
+--walker-skip=.git,node_modules \
+--preview '[[ -f {} ]] && \
+$_fzf_bat_command --color=always -n --line-range :500 -- {}'"
 elif [[ -n "$_fzf_eza_command" ]]; then
-  export FZF_CTRL_T_OPTS="--preview '[[ -d {} ]] && $_fzf_eza_command --icons=always --tree --color=always -- {} | head -200'"
+  export FZF_CTRL_T_OPTS="--walker=file,dir,hidden \
+--walker-skip=.git,node_modules \
+--preview '[[ -d {} ]] && \
+$_fzf_eza_command --icons=always --tree --color=always -- {} | head -200'"
 else
-  unset FZF_CTRL_T_OPTS
+  export FZF_CTRL_T_OPTS='--walker=file,dir,hidden --walker-skip=.git,node_modules'
 fi
 
 if [[ -n "$_fzf_eza_command" ]]; then
-  export FZF_ALT_C_OPTS="--preview '$_fzf_eza_command --icons=always --tree --color=always -- {} | head -200'"
+  export FZF_ALT_C_OPTS="--walker=dir,hidden \
+--walker-skip=.git,node_modules \
+--preview '$_fzf_eza_command --icons=always --tree --color=always -- {} | head -200'"
 else
-  unset FZF_ALT_C_OPTS
+  export FZF_ALT_C_OPTS='--walker=dir,hidden --walker-skip=.git,node_modules'
 fi
 
 # Use native --popup instead of the legacy fzf-tmux wrapper.
 unset FZF_TMUX FZF_TMUX_OPTS
 
-# Ctrl-T -> fzf file search
-# Alt-C  -> fzf directory search
+# Ctrl-T -> fzf file and directory search.
+# Alt-C  -> fzf directory search.
 if ! shell-init fzf --bash; then
   printf 'WARNING, 02-fzf.bash: fzf init failed\n' >&2
   unset _fzf_fd_command _fzf_bat_command _fzf_eza_command
@@ -98,7 +105,9 @@ _fzf_comprun() {
   case "$command_name" in
     cd)
       if [[ -n "$_fzf_eza_command" ]]; then
-        fzf --preview "$_fzf_eza_command --icons=always --tree --color=always -- {} | head -200" "$@"
+        fzf \
+          --preview "$_fzf_eza_command --icons=always --tree --color=always -- {} | head -200" \
+          "$@"
       else
         fzf "$@"
       fi
@@ -122,7 +131,9 @@ _fzf_comprun() {
 
     *)
       if [[ -n "$_fzf_bat_command" ]]; then
-        fzf --preview "[[ -f {} ]] && $_fzf_bat_command --color=always -n --line-range :500 -- {}" "$@"
+        fzf \
+          --preview "[[ -f {} ]] && $_fzf_bat_command --color=always -n --line-range :500 -- {}" \
+          "$@"
       else
         fzf "$@"
       fi
@@ -182,9 +193,9 @@ _fzf_open_path() {
 
     cd)
       if [[ -f "$input_path" ]]; then
-        builtin cd -- "$(dirname -- "$input_path")"
+        builtin cd -- "$(dirname -- "$input_path")" || return
       elif [[ -d "$input_path" ]]; then
-        builtin cd -- "$input_path"
+        builtin cd -- "$input_path" || return
       fi
       ;;
 
@@ -219,6 +230,7 @@ _fzf_open_path() {
 #
 # CTRL-S switches between file and directory mode.
 _fzf_get_path_using_fd() {
+  local fd_reload_options="--follow --hidden --exclude .git --exclude node_modules"
   local preview_command=""
   local toggle_bind=""
   local selected
@@ -264,9 +276,13 @@ _fzf_get_path_using_fd() {
 
   toggle_bind="ctrl-s:transform:
     if [[ \$FZF_PROMPT == 'Files> ' ]]; then
-      printf '%s\n' 'change-prompt(Directories> )+reload($_fzf_fd_command --type directory --follow --hidden --exclude .git)'
+      printf '%s%s\n' \
+        'change-prompt(Directories> )+' \
+        'reload($_fzf_fd_command --type directory $fd_reload_options)'
     else
-      printf '%s\n' 'change-prompt(Files> )+reload($_fzf_fd_command --type file --follow --hidden --exclude .git)'
+      printf '%s%s\n' \
+        'change-prompt(Files> )+' \
+        'reload($_fzf_fd_command --type file $fd_reload_options)'
     fi
   "
 
@@ -275,7 +291,8 @@ _fzf_get_path_using_fd() {
       --type file \
       --follow \
       --hidden \
-      --exclude .git |
+      --exclude .git \
+      --exclude node_modules |
       fzf \
         --prompt 'Files> ' \
         --header-first \
@@ -325,7 +342,8 @@ _fzf_get_path_using_rg() {
     --smart-case \
     --hidden \
     --no-messages \
-    --glob '!.git/**' \
+    --glob '!**/.git/**' \
+    --glob '!**/node_modules/**' \
     --field-match-separator='\\t' \
     -- \
   "

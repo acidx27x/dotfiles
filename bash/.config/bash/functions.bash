@@ -37,6 +37,7 @@ functions-help() {
     color-status 'Show the active terminal color configuration.' \
     current-shell 'Print the current interactive shell and version.' \
     detect-encoding 'Detect the likely encoding of a text file.' \
+    ffd 'Select a file or directory with fzf, then choose an action.' \
     fgb 'Select Git branches with fzf.' \
     fgf 'Select Git files with fzf.' \
     fgh 'Select Git commit hashes with fzf.' \
@@ -45,7 +46,7 @@ functions-help() {
     fgt 'Select Git tags with fzf.' \
     fgw 'Select Git worktrees with fzf.' \
     fman 'Find and open a man page with fzf.' \
-    frg 'Search file contents with ripgrep and open a match in Neovim.' \
+    frg 'Search file contents with ripgrep, then choose an action.' \
     functions-help 'List available user-facing Bash functions.' \
     l 'List entries with eza in long form.' \
     ldr 'List directories with eza in long form.' \
@@ -385,7 +386,9 @@ karing-proxy-enable() {
     return 1
   fi
 
-  printf "WARNING, karing-proxy-enable: this function may require sudo to mount 'C:' to run powershell.\n" >&2
+  printf '%s%s\n' \
+    'WARNING, karing-proxy-enable: this function may require sudo to ' \
+    "mount 'C:' to run powershell." >&2
 
   # 2. Temporarily mount Windows C: if it isn't already mounted.
   if ! mountpoint -q "$mountpoint"; then
@@ -395,7 +398,8 @@ karing-proxy-enable() {
     fi
 
     if ! sudo mount -t drvfs C: "$mountpoint"; then
-      printf "WARNING, karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'.\n" >&2
+      printf '%s\n' \
+        "WARNING, karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'." >&2
       return 1
     fi
 

@@ -132,7 +132,9 @@ load-zsh-completion() {
     zstyle ':completion:*' use-cache yes
     zstyle ':completion:*' cache-path "$completion_cache"
   else
-    print -u2 -- "WARNING, load-zsh-completion: could not create completion cache: $completion_cache"
+    print -u2 -- \
+      "WARNING, load-zsh-completion: could not create completion cache:" \
+      "$completion_cache"
     compinit -u -D || return
   fi
 

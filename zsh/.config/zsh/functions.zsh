@@ -33,6 +33,7 @@ functions-help() {
     color-status 'Show the active terminal color configuration.' \
     current-shell 'Print the current interactive shell and version.' \
     detect-encoding 'Detect the likely encoding of a text file.' \
+    ffd 'Select a file or directory with fzf, then choose an action.' \
     fgb 'Select Git branches with fzf.' \
     fgf 'Select Git files with fzf.' \
     fgh 'Select Git commit hashes with fzf.' \
@@ -41,7 +42,7 @@ functions-help() {
     fgt 'Select Git tags with fzf.' \
     fgw 'Select Git worktrees with fzf.' \
     fman 'Find and open a man page with fzf.' \
-    frg 'Search file contents with ripgrep and open a match in Neovim.' \
+    frg 'Search file contents with ripgrep, then choose an action.' \
     functions-help 'List available user-facing Zsh functions.' \
     l 'List entries with eza in long form.' \
     ldr 'List directories with eza in long form.' \
@@ -339,29 +340,35 @@ to-us-ascii() {
 
 # karing windows share network to wsl
 karing-proxy-enable() {
-  local mountpoint="/mnt/c"
-  local powershell="${mountpoint}/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+  emulate -L zsh
+
+  local mountpoint=/mnt/c
+  local powershell="$mountpoint/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
   local mounted_by_us=0
   local host_ip
   local karing_running
 
   # 1. Make sure we're actually running under WSL.
   if ! grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null; then
-    printf 'WARNING, karing-proxy-enable unavailable: not running under WSL.\n' >&2
+    print -u2 -- 'WARNING, karing-proxy-enable unavailable: not running under WSL.'
     return 1
   fi
 
-  printf "WARNING, karing-proxy-enable: this function may require sudo to mount 'C:' to run powershell.\n" >&2
+  print -u2 -- \
+    'WARNING, karing-proxy-enable: this function may require sudo to mount' \
+    "'C:' to run powershell."
 
   # 2. Temporarily mount Windows C: if it isn't already mounted.
   if ! mountpoint -q "$mountpoint"; then
     if ! sudo mkdir -p "$mountpoint"; then
-      printf 'WARNING, karing-proxy-enable unavailable: could not create %s.\n' "$mountpoint" >&2
+      print -u2 -- \
+        "WARNING, karing-proxy-enable unavailable: could not create $mountpoint."
       return 1
     fi
 
     if ! sudo mount -t drvfs C: "$mountpoint"; then
-      printf "WARNING, karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'.\n" >&2
+      print -u2 -- \
+        "WARNING, karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'."
       return 1
     fi
 
@@ -370,16 +377,16 @@ karing-proxy-enable() {
 
   # Helper: only unmount if this function mounted it.
   _karing_cleanup_mount() {
-    if [ "$mounted_by_us" -eq 1 ]; then
+    if (( mounted_by_us )); then
       sudo umount "$mountpoint"
     fi
   }
 
   # 3. Check that PowerShell is accessible.
-  if [ ! -x "$powershell" ]; then
-    printf 'WARNING, karing-proxy-enable unavailable: powershell.exe not found.\n' >&2
+  if [[ ! -x $powershell ]]; then
+    print -u2 -- 'WARNING, karing-proxy-enable unavailable: powershell.exe not found.'
     _karing_cleanup_mount
-    unset -f _karing_cleanup_mount
+    unfunction _karing_cleanup_mount
     return 1
   fi
 
@@ -394,10 +401,10 @@ karing-proxy-enable() {
     ' | tr -d '\r'
   )
 
-  if [ "$karing_running" != "yes" ]; then
-    printf 'WARNING, karing-proxy-enable unavailable: Karing is not running on Windows.\n' >&2
+  if [[ $karing_running != yes ]]; then
+    print -u2 -- 'WARNING, karing-proxy-enable unavailable: Karing is not running on Windows.'
     _karing_cleanup_mount
-    unset -f _karing_cleanup_mount
+    unfunction _karing_cleanup_mount
     return 1
   fi
 
@@ -417,10 +424,10 @@ karing-proxy-enable() {
 
   # We no longer need access to C:.
   _karing_cleanup_mount
-  unset -f _karing_cleanup_mount
+  unfunction _karing_cleanup_mount
 
-  if [ -z "$host_ip" ]; then
-    printf 'WARNING, karing-proxy-enable unavailable: could not detect Windows host IP.\n' >&2
+  if [[ -z $host_ip ]]; then
+    print -u2 -- 'WARNING, karing-proxy-enable unavailable: could not detect Windows host IP.'
     return 1
   fi
 
@@ -430,10 +437,12 @@ karing-proxy-enable() {
   export HTTP_PROXY="$http_proxy"
   export HTTPS_PROXY="$http_proxy"
 
-  printf 'Proxy enabled from karing: %s\n' "$http_proxy"
+  print -r -- "Proxy enabled from karing: $http_proxy"
 }
 
 proxy-disable() {
+  emulate -L zsh
+
   unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
-  printf 'Proxy disabled\n'
+  print -r -- 'Proxy disabled'
 }
