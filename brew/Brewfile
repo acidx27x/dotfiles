@@ -3,6 +3,7 @@ brew "hello"
 brew "neovim"
 
 brew "git"
+brew "git-lfs"
 brew "git-delta"
 brew "lazygit"
 brew "stow"
