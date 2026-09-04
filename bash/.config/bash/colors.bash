@@ -130,16 +130,6 @@ if has-cmd rg; then
 fi
 
 # ---------------------------------------------------------------------------
-# 4. Syntax-highlighted file output: bat has an independent theme engine
-# ---------------------------------------------------------------------------
-
-# "ansi" uses the terminal's basic palette and therefore pairs well with
-# vivid's ansi theme. Override before sourcing if desired.
-export BAT_THEME="${BAT_THEME:-gruvbox-dark}"
-export BAT_STYLE="${BAT_STYLE:-auto}"
-export BAT_PAGER="${BAT_PAGER:-less -R}"
-
-# ---------------------------------------------------------------------------
 # 5. ANSI-aware pipelines and pagers
 # ---------------------------------------------------------------------------
 
@@ -153,8 +143,11 @@ esac
 if has-cmd tput && tput colors >/dev/null 2>&1; then
   export LESS_TERMCAP_md="$(tput bold; tput setaf 6)"
   export LESS_TERMCAP_me="$(tput sgr0)"
-  export LESS_TERMCAP_so="$(tput bold; tput setaf 3)"
+
+  # Search / standout: bold + reverse
+  export LESS_TERMCAP_so="$(tput bold; tput rev)"
   export LESS_TERMCAP_se="$(tput sgr0)"
+
   export LESS_TERMCAP_us="$(tput smul; tput setaf 2)"
   export LESS_TERMCAP_ue="$(tput sgr0)"
   export MANPAGER="${MANPAGER:-less -R}"
@@ -180,12 +173,6 @@ if __color_help_has watch '--color'; then
   watch() {
     command watch --color "$@"
   }
-fi
-
-# Git has a separate color system. "auto" preserves clean redirected output.
-# Use a per-invocation setting rather than modifying ~/.gitconfig.
-if has-cmd git; then
-  __color_alias git 'git -c color.ui=auto'
 fi
 
 # Compiler diagnostics use separate controls; these values request automatic
@@ -220,7 +207,7 @@ color-status() {
   done
 
   printf '\nIndependent color systems:\n'
-  for command_name in grep rg bat batcat fzf less man diff ip watch git; do
+  for command_name in grep rg bat batcat fzf less man diff ip watch; do
     if has-cmd "$command_name"; then
       printf '  %-8s installed\n' "$command_name"
     else

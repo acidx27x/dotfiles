@@ -108,12 +108,8 @@ if has-cmd rg; then
 fi
 
 # ---------------------------------------------------------------------------
-# bat and pagers
+# ANSI-aware pipelines and pagers
 # ---------------------------------------------------------------------------
-
-export BAT_THEME="${BAT_THEME:-gruvbox-dark}"
-export BAT_STYLE="${BAT_STYLE:-auto}"
-export BAT_PAGER="${BAT_PAGER:-less -R}"
 
 case " ${LESS:-} " in
   *' -R '* | *' --RAW-CONTROL-CHARS '*) ;;
@@ -123,8 +119,11 @@ esac
 if has-cmd tput && tput colors >/dev/null 2>&1; then
   export LESS_TERMCAP_md="$(tput bold; tput setaf 6)"
   export LESS_TERMCAP_me="$(tput sgr0)"
-  export LESS_TERMCAP_so="$(tput bold; tput setaf 3)"
+
+  # Search / standout: bold + reverse
+  export LESS_TERMCAP_so="$(tput bold; tput rev)"
   export LESS_TERMCAP_se="$(tput sgr0)"
+
   export LESS_TERMCAP_us="$(tput smul; tput setaf 2)"
   export LESS_TERMCAP_ue="$(tput sgr0)"
   export MANPAGER="${MANPAGER:-less -R}"
@@ -176,7 +175,7 @@ color-status() {
   done
 
   printf '\nIndependent color systems:\n'
-  for command_name in grep rg bat batcat fzf less man diff ip watch git; do
+  for command_name in grep rg bat batcat fzf less man diff ip watch; do
     if has-cmd "$command_name"; then
       printf '  %-8s installed\n' "$command_name"
     else
