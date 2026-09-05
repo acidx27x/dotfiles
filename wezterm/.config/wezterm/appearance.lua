@@ -6,7 +6,7 @@ function module.apply_to_config(config, platform)
   config.color_scheme = 'duskfox'
 
   config.font = wezterm.font {
-    family = 'Fira Code',
+    family = 'FiraCode Nerd Font',
     weight = 'Medium',
 
     harfbuzz_features = {
