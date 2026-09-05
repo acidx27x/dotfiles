@@ -2,15 +2,30 @@ brew "hello"
 
 brew "neovim"
 
+# VCS
 brew "git"
 brew "git-lfs"
 brew "git-delta"
 brew "lazygit"
 brew "stow"
+#
 
+# Shell
+brew "bash"
 brew "bash-preexec"
 brew "bash-completion@2"
+brew "brush"
+brew "shellcheck"
+brew "zsh"
+brew "zsh-autocomplete"
+brew "zsh-autosuggestions"
+brew "zsh-completions"
+brew "zsh-syntax-highlighting"
+brew "zsh-vi-mode"
+brew "nushell"
+#
 
+# Must-have tools
 brew "atuin"
 brew "bat"
 brew "bat-extras"
@@ -25,11 +40,42 @@ brew "sd"
 brew "starship"
 brew "vivid"
 brew "zoxide"
+brew "yazi"
+#
 
-brew "brush"
-brew "zellij"
+# Terminal mux
+brew "tmux"
 brew "herdr"
+brew "zellij"
+#
 
+# C/C++ tools
+brew "automake"
+brew "autoconf-archive"
+brew "ccache"
+brew "clang-format"
+brew "cmake"
+brew "gcc"
+brew "libtool"
+brew "lld"
+brew "lldb"
+brew "llvm"
+brew "metashell"
+brew "mold"
+brew "ninja"
+brew "pkgconf"
+#
+
+# Python
+brew "python3"
+brew "ptpython"
+#
+
+# Utils
+brew "curl"
+brew "htop"
+brew "btop"
 brew "thefuck"
 brew "uchardet"
-brew "shellcheck"
+brew "wget"
+#
