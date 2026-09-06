@@ -1,3 +1,8 @@
+# Taps
+tap "J-x-Z/tap", trusted: true
+tap "jurplel/tap", trusted: true
+#
+
 brew "hello"
 
 brew "neovim"
@@ -81,6 +86,10 @@ brew "thefuck"
 brew "uchardet"
 brew "wget"
 # Mac
-brew "stats"
-cask "forklift"
+brew "cocoa-way"              if OS.mac?
+cask "instant-space-switcher" if OS.mac?
+cask "forklift"               if OS.mac?
+cask "karing"                 if OS.mac?
+cask "stats"                  if OS.mac?
+brew "waypipe-darwin"         if OS.mac?
 #
