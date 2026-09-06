@@ -11,18 +11,20 @@ brew "stow"
 #
 
 # Shell
-brew "bash"
-brew "bash-preexec"
-brew "bash-completion@2"
 brew "brush"
-brew "shellcheck"
-brew "zsh"
-brew "zsh-autocomplete"
-brew "zsh-autosuggestions"
-brew "zsh-completions"
-brew "zsh-syntax-highlighting"
-brew "zsh-vi-mode"
 brew "nushell"
+brew "shellcheck"
+# Linux
+brew "bash"              if OS.linux?
+brew "bash-preexec"      if OS.linux?
+brew "bash-completion@2" if OS.linux?
+# Mac
+brew "zsh"                     if OS.mac?
+brew "zsh-autocomplete"        if OS.mac?
+brew "zsh-autosuggestions"     if OS.mac?
+brew "zsh-completions"         if OS.mac?
+brew "zsh-syntax-highlighting" if OS.mac?
+brew "zsh-vi-mode"             if OS.mac?
 #
 
 # Must-have tools
@@ -73,9 +75,12 @@ brew "ptpython"
 
 # Utils
 brew "curl"
-brew "htop"
 brew "btop"
+brew "htop"
 brew "thefuck"
 brew "uchardet"
 brew "wget"
+# Mac
+brew "stats"
+cask "forklift"
 #
