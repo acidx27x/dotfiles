@@ -1,5 +1,4 @@
 # Taps
-tap "J-x-Z/tap", trusted: true
 tap "jurplel/tap", trusted: true
 #
 
@@ -78,6 +77,15 @@ brew "python3"
 brew "ptpython"
 #
 
+# AI
+cask "codex"
+#
+
+# Fonts
+cask "font-fira-code"
+cask "font-fira-code-nerd-font"
+#
+
 # Utils
 brew "curl"
 brew "btop"
@@ -86,10 +94,8 @@ brew "thefuck"
 brew "uchardet"
 brew "wget"
 # Mac
-brew "cocoa-way"              if OS.mac?
-cask "instant-space-switcher" if OS.mac?
+cask "instant-space-switcher" if OS.mac?  # from jurplel/tap
 cask "forklift"               if OS.mac?
 cask "karing"                 if OS.mac?
 cask "stats"                  if OS.mac?
-brew "waypipe-darwin"         if OS.mac?
 #
