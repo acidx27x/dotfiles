@@ -144,6 +144,8 @@ else
   alias -g C='| xclip -selection clipboard'
 fi
 
+alias cn='container'
+
 # Loaded after defaults so machine-local aliases can override them.
 source-if-exists "$HOME/.zsh_aliases" || true
 
