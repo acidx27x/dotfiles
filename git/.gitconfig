@@ -9,7 +9,6 @@
   autocrlf = false
   pager = delta
   whitespace = trailing-space,space-before-tab  # detect ws problems 'git diff --check'
-  sshCommand = ssh -o PubkeyAcceptedAlgorithms=+ssh-rsa
 
 
 [init]
