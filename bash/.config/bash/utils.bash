@@ -228,6 +228,7 @@ path-prepend() {
   PATH="$joined_path"
   export PATH
 }
+export -f path-prepend
 
 # Add a command to PROMPT_COMMAND without adding it twice.
 add-prompt-command() {

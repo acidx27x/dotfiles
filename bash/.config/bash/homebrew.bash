@@ -22,6 +22,7 @@ homebrew-path-prepend() {
   path-prepend "$brew_prefix/bin" "$brew_prefix/sbin"
   hash -r
 }
+export -f homebrew-path-prepend
 
 # Remove Homebrew-managed directories from PATH.
 homebrew-path-remove() {
@@ -59,6 +60,7 @@ homebrew-path-remove() {
   export PATH
   hash -r
 }
+export -f homebrew-path-remove
 
 # Prepend one installed Homebrew formula's bin directory to PATH.
 homebrew-tool-path-prepend() {
@@ -91,6 +93,7 @@ homebrew-tool-path-prepend() {
   path-prepend "$formula_bin"
   hash -r
 }
+export -f homebrew-tool-path-prepend
 
 # HOMEBREW_BREW_FILE may be set in env.bash or .env.bash for a
 # custom Homebrew installation.
