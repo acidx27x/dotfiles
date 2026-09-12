@@ -62,7 +62,7 @@ homebrew-path-remove() {
 }
 
 # Prepend one installed Homebrew formula's bin directory to PATH.
-homebrew-tool-add() {
+homebrew-tool-path-prepend() {
   emulate -L zsh
 
   local formula=${1:-}
@@ -71,7 +71,7 @@ homebrew-tool-add() {
 
   if (( $# != 1 )) ||
      [[ -z $formula || $formula == */* || $formula == . || $formula == .. ]]; then
-    print -u2 -- 'Usage: homebrew-tool-add FORMULA'
+    print -u2 -- 'Usage: homebrew-tool-path-prepend FORMULA'
     return 2
   fi
 
@@ -80,14 +80,14 @@ homebrew-tool-add() {
   fi
 
   if [[ -z $brew_prefix ]]; then
-    print -u2 -- 'homebrew-tool-add: Homebrew prefix not found.'
+    print -u2 -- 'homebrew-tool-path-prepend: Homebrew prefix not found.'
     return 127
   fi
 
   formula_bin="$brew_prefix/opt/$formula/bin"
 
   if [[ ! -d $formula_bin ]]; then
-    print -u2 -- "homebrew-tool-add: formula bin directory not found: $formula_bin"
+    print -u2 -- "homebrew-tool-path-prepend: formula bin directory not found: $formula_bin"
     return 1
   fi
 
