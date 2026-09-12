@@ -79,6 +79,7 @@ brew "ptpython"
 
 # AI
 cask "codex"
+brew "bubblewrap"
 #
 
 # Fonts
