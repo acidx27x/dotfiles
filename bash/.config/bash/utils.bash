@@ -205,6 +205,13 @@ path-prepend() {
 
     [[ -n "$directory" && -d "$directory" ]] || continue
 
+    if [[ "$directory" != /* ]]; then
+      directory=$(
+        CDPATH='' builtin cd -L -- "$directory" 2>/dev/null &&
+        builtin pwd -L
+      ) || continue
+    fi
+
     updated_entries=("$directory")
 
     for entry in "${path_entries[@]}"; do

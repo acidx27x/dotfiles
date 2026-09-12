@@ -154,6 +154,7 @@ path-prepend() {
   for (( i = ${#directories}; i >= 1; i-- )); do
     directory=${directories[i]}
     [[ -n $directory && -d $directory ]] || continue
+    [[ $directory == /* ]] || directory=${directory:a}
     path=("$directory" "${path[@]}")
   done
 
