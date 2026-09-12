@@ -50,7 +50,7 @@ functions-help() {
     functions-help 'List available user-facing Bash functions.' \
     homebrew-path-prepend 'Prepend Homebrew bin directories to PATH.' \
     homebrew-path-remove 'Remove Homebrew directories from PATH.' \
-    homebrew-tool-path-prepend 'Prepend one Homebrew formula bin directory to PATH.' \
+    homebrew-tool-path-prepend 'Prepend Homebrew formula bin directories to PATH.' \
     l 'List entries with eza in long form.' \
     ldr 'List directories with eza in long form.' \
     ll 'List all entries with eza in long form.' \

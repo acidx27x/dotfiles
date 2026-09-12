@@ -62,17 +62,24 @@ homebrew-path-remove() {
 }
 export -f homebrew-path-remove
 
-# Prepend one installed Homebrew formula's bin directory to PATH.
+# Prepend installed Homebrew formula bin directories to PATH.
 homebrew-tool-path-prepend() {
-  local formula="${1:-}"
+  local formula
   local brew_prefix="${HOMEBREW_PREFIX:-}"
   local formula_bin
+  local -a formula_bins=()
 
-  if (( $# != 1 )) ||
-     [[ -z "$formula" || "$formula" == */* || "$formula" == . || "$formula" == .. ]]; then
-    printf 'Usage: homebrew-tool-path-prepend FORMULA\n' >&2
+  if (( $# == 0 )); then
+    printf 'Usage: homebrew-tool-path-prepend FORMULA...\n' >&2
     return 2
   fi
+
+  for formula in "$@"; do
+    if [[ -z "$formula" || "$formula" == */* || "$formula" == . || "$formula" == .. ]]; then
+      printf 'Usage: homebrew-tool-path-prepend FORMULA...\n' >&2
+      return 2
+    fi
+  done
 
   if [[ -z "$brew_prefix" && ${HOMEBREW_BREW_FILE:-} == */bin/brew ]]; then
     brew_prefix=${HOMEBREW_BREW_FILE%/bin/brew}
@@ -83,14 +90,18 @@ homebrew-tool-path-prepend() {
     return 127
   fi
 
-  formula_bin="$brew_prefix/opt/$formula/bin"
+  for formula in "$@"; do
+    formula_bin="$brew_prefix/opt/$formula/bin"
 
-  if [[ ! -d "$formula_bin" ]]; then
-    printf 'homebrew-tool-path-prepend: formula bin directory not found: %s\n' "$formula_bin" >&2
-    return 1
-  fi
+    if [[ ! -d "$formula_bin" ]]; then
+      printf 'homebrew-tool-path-prepend: formula bin directory not found: %s\n' "$formula_bin" >&2
+      return 1
+    fi
 
-  path-prepend "$formula_bin"
+    formula_bins+=("$formula_bin")
+  done
+
+  path-prepend "${formula_bins[@]}"
   hash -r
 }
 export -f homebrew-tool-path-prepend
