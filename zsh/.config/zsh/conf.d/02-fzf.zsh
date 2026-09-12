@@ -311,12 +311,12 @@ _fzf_get_path_using_fd() {
 ffd() {
   emulate -L zsh
 
-  local path
+  local selected_path
 
-  path=$(_fzf_get_path_using_fd) || return
-  [[ -n $path ]] || return
+  selected_path=$(_fzf_get_path_using_fd) || return
+  [[ -n $selected_path ]] || return
 
-  _fzf_open_path "$path"
+  _fzf_open_path "$selected_path"
 }
 
 # Select a ripgrep match using rg + fzf.

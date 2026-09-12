@@ -21,13 +21,9 @@ _zsh_config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 source "$_zsh_config_dir/utils.zsh"
 source "$_zsh_config_dir/functions.zsh"
 
-# A non-login interactive shell normally inherits Homebrew's environment.
-# Initialize it here only when that did not happen.
-if [[ -z ${HOMEBREW_PREFIX:-} ]]; then
-  source "$_zsh_config_dir/homebrew.zsh" || {
-    print -u2 -- 'WARNING, .zshrc: Homebrew initialization failed.'
-  }
-fi
+source "$_zsh_config_dir/homebrew.zsh" || {
+  print -u2 -- 'WARNING, .zshrc: Homebrew initialization failed.'
+}
 
 # ---------------------------------------------------------------------------
 # History

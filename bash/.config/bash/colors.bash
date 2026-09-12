@@ -1,3 +1,6 @@
+# ~/.config/bash/colors.bash
+# Terminal color configuration and diagnostics.
+
 # Choose a vivid theme before sourcing, for example:
 #   export VIVID_THEME=ansi       # terminal-palette friendly
 #   export VIVID_THEME=molokai
@@ -38,7 +41,7 @@ if [[ -z ${LS_COLORS+x} ]]; then
     then
       :
     else
-      printf 'WARNING, colors.bash: dircolors init failed\n' >&2
+      printf 'WARNING, colors.bash: dircolors init failed.\n' >&2
     fi
     unset __dircolors_output
   fi
@@ -80,7 +83,7 @@ if command ls --color=auto -d . >/dev/null 2>&1; then
                   __color_alias ls   'ls --color=auto'
   has-cmd dir  && __color_alias dir  'dir --color=auto'
   has-cmd vdir && __color_alias vdir 'vdir --color=auto'
-elif has-cmd gls&& command gls --color=auto -d . >/dev/null 2>&1; then
+elif has-cmd gls && command gls --color=auto -d . >/dev/null 2>&1; then
   __color_alias gls 'gls --color=auto'
   if [[ ${BASH_COLOR_USE_GLS:-0} == 1 ]]; then
     __color_alias ls 'gls --color=auto'
@@ -130,7 +133,7 @@ if has-cmd rg; then
 fi
 
 # ---------------------------------------------------------------------------
-# 5. ANSI-aware pipelines and pagers
+# 4. ANSI-aware pipelines and pagers
 # ---------------------------------------------------------------------------
 
 # less does not create colors, but -R preserves safe ANSI color sequences.
@@ -154,7 +157,7 @@ if has-cmd tput && tput colors >/dev/null 2>&1; then
 fi
 
 # ---------------------------------------------------------------------------
-# 6. Other common commands with independent color switches
+# 5. Other common commands with independent color switches
 # ---------------------------------------------------------------------------
 
 # GNU diff has its own palette and requires --color=auto.
@@ -163,7 +166,7 @@ if __color_help_has diff '--color'; then
 fi
 
 # iproute2 uses its own color switch and does not read LS_COLORS.
-if has-cmd ip && command ip -help 2>&1 | grep -Fq -- '-color'; then
+if has-cmd ip && command ip -color=auto -Version >/dev/null 2>&1; then
   __color_alias ip 'ip -color=auto'
 fi
 
@@ -184,10 +187,11 @@ export CARGO_TERM_COLOR="${CARGO_TERM_COLOR:-auto}"
 # into redirected files, logs, CI output, parsers, and command substitutions.
 
 # ---------------------------------------------------------------------------
-# 7. Diagnostics
+# 6. Diagnostics
 # ---------------------------------------------------------------------------
 
 color-status() {
+  local alias_definition
   local command_name
 
   printf 'VIVID_THEME=%s\n' "$VIVID_THEME"
@@ -197,18 +201,21 @@ color-status() {
     printf 'LS_COLORS=not set\n'
   fi
 
-  printf '\nLS_COLORS readers:\n'
-  for command_name in ls gls eza fd bfs tree; do
-    if has-cmd "$command_name"; then
-      printf '  %-8s installed\n' "$command_name"
-    else
-      printf '  %-8s missing\n' "$command_name"
-    fi
-  done
+  printf 'CLICOLOR=%s\n' "${CLICOLOR:-<not set>}"
+  printf 'GREP_COLORS=%s\n' "${GREP_COLORS:-<not set>}"
+  printf 'LESS=%s\n' "${LESS:-<not set>}"
+  printf 'MANPAGER=%s\n' "${MANPAGER:-<not set>}"
+  printf 'CARGO_TERM_COLOR=%s\n' "${CARGO_TERM_COLOR:-<not set>}"
 
-  printf '\nIndependent color systems:\n'
-  for command_name in grep rg bat batcat fzf less man diff ip watch; do
-    if has-cmd "$command_name"; then
+  printf '\nCommand integration:\n'
+  for command_name in \
+    ls gls dir vdir eza fd bfs tree grep rg bat batcat fzf less man diff ip watch
+  do
+    if alias_definition=$(alias "$command_name" 2>/dev/null); then
+      printf '  %-8s %s\n' "$command_name" "$alias_definition"
+    elif declare -F "$command_name" >/dev/null; then
+      printf '  %-8s function wrapper\n' "$command_name"
+    elif has-cmd "$command_name"; then
       printf '  %-8s installed\n' "$command_name"
     else
       printf '  %-8s missing\n' "$command_name"
@@ -223,5 +230,4 @@ color-status() {
 }
 
 unset -f __color_help_has
-# Keep __color_alias available only while this file is sourced.
 unset -f __color_alias

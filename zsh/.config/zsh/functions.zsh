@@ -44,6 +44,9 @@ functions-help() {
     fman 'Find and open a man page with fzf.' \
     frg 'Search file contents with ripgrep, then choose an action.' \
     functions-help 'List available user-facing Zsh functions.' \
+    homebrew-path-prepend 'Prepend Homebrew bin directories to PATH.' \
+    homebrew-path-remove 'Remove Homebrew directories from PATH.' \
+    homebrew-tool-add 'Prepend one Homebrew formula bin directory to PATH.' \
     l 'List entries with eza in long form.' \
     ldr 'List directories with eza in long form.' \
     ll 'List all entries with eza in long form.' \

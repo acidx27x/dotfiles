@@ -1,17 +1,27 @@
+# ~/.config/zsh/colors.zsh
+# Terminal color configuration and diagnostics.
+
 # Choose a vivid theme before sourcing, for example:
-#   export VIVID_THEME=ansi
+#   export VIVID_THEME=ansi       # terminal-palette friendly
 #   export VIVID_THEME=molokai
 #
-# Disable all configuration from this file with NO_COLOR=1.
+# Disable all configuration from this file:
+#   export NO_COLOR=1
+#
+# This file intentionally uses "auto" color modes wherever possible so that
+# redirected output and shell scripts do not receive unwanted ANSI escapes.
 
+# Respect the NO_COLOR convention and unusable terminals.
 if [[ -n ${NO_COLOR:-} || ${TERM:-} == dumb ]]; then
   return 0
 fi
 
+# Generic convention used by several BSD-style utilities. This enables color
+# support without forcing escape sequences into pipes.
 export CLICOLOR="${CLICOLOR:-1}"
 
 # ---------------------------------------------------------------------------
-# LS_COLORS
+# 1. LS_COLORS: vivid palette
 # ---------------------------------------------------------------------------
 
 VIVID_THEME="${VIVID_THEME:-iceberg-dark}"
@@ -25,6 +35,7 @@ if [[ -z ${LS_COLORS+x} ]]; then
     fi
     unset __vivid_colors
   elif has-cmd dircolors; then
+    # Fallback when vivid is not installed.
     if __dircolors_output=$(dircolors -b 2>/dev/null) &&
        eval "$__dircolors_output"; then
       :
@@ -35,6 +46,16 @@ if [[ -z ${LS_COLORS+x} ]]; then
   fi
 fi
 
+# These tools read LS_COLORS automatically when available:
+#   eza  - reads LS_COLORS/EZA_COLORS; color mode defaults to auto
+#   fd   - uses LS_COLORS for file-extension and file-type colors
+#   bfs  - automatically colors terminal output according to LS_COLORS
+#   tree - reads LS_COLORS/TREE_COLORS; some releases still need -C enabled
+#
+# ripgrep (rg), grep, bat, fzf, less, man, diff, and ip do NOT derive their
+# complete palettes from LS_COLORS. Their setup appears below.
+
+# Do not overwrite an alias already defined by the user unless requested.
 ZSH_COLOR_OVERRIDE_ALIASES="${ZSH_COLOR_OVERRIDE_ALIASES:-0}"
 
 __color_alias() {
@@ -59,11 +80,14 @@ __color_help_has() {
 }
 
 # ---------------------------------------------------------------------------
-# Commands that understand LS_COLORS but need color enabled
+# 2. Commands that understand LS_COLORS but need color output enabled
 # ---------------------------------------------------------------------------
 
+# GNU ls/dir/vdir need --color=auto. BSD/macOS ls uses LSCOLORS instead and
+# cannot consume vivid's LS_COLORS. If GNU coreutils is installed as gls,
+# configure gls and optionally replace ls by setting ZSH_COLOR_USE_GLS=1.
 if command ls --color=auto -d . >/dev/null 2>&1; then
-  __color_alias ls 'ls --color=auto'
+                  __color_alias ls   'ls --color=auto'
   has-cmd dir  && __color_alias dir  'dir --color=auto'
   has-cmd vdir && __color_alias vdir 'vdir --color=auto'
 elif has-cmd gls && command gls --color=auto -d . >/dev/null 2>&1; then
@@ -72,11 +96,18 @@ elif has-cmd gls && command gls --color=auto -d . >/dev/null 2>&1; then
     __color_alias ls 'gls --color=auto'
   fi
 elif [[ $(uname -s 2>/dev/null) == Darwin ]]; then
+  # Native macOS/BSD ls has its own limited palette format.
   __color_alias ls 'ls -G'
 fi
 
+# eza, fd, and bfs already use auto color and LS_COLORS; no aliases required.
+
+# tree behavior differs across releases. Add -C only for terminal output, so
+# piping "tree" to a file remains clean. A user-supplied later -n can disable it.
 if has-cmd tree; then
   tree() {
+    emulate -L zsh
+
     if [[ -t 1 ]]; then
       command tree -C "$@"
     else
@@ -86,16 +117,21 @@ if has-cmd tree; then
 fi
 
 # ---------------------------------------------------------------------------
-# Search tools
+# 3. Search tools: grep and ripgrep use their own palettes
 # ---------------------------------------------------------------------------
 
 if __color_help_has grep '--color'; then
   __color_alias grep 'grep --color=auto'
+  # GNU grep palette. vivid cannot generate GREP_COLORS directly.
   export GREP_COLORS="${GREP_COLORS:-ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36}"
 fi
 
+# rg does NOT read LS_COLORS. This wrapper applies safe defaults; options typed
+# by the user come last and can override these settings.
 if has-cmd rg; then
   rg() {
+    emulate -L zsh
+
     command rg \
       --color=auto \
       --colors='path:fg:cyan' \
@@ -108,14 +144,16 @@ if has-cmd rg; then
 fi
 
 # ---------------------------------------------------------------------------
-# ANSI-aware pipelines and pagers
+# 4. ANSI-aware pipelines and pagers
 # ---------------------------------------------------------------------------
 
+# less does not create colors, but -R preserves safe ANSI color sequences.
 case " ${LESS:-} " in
   *' -R '* | *' --RAW-CONTROL-CHARS '*) ;;
   *) export LESS="${LESS:+$LESS }-R" ;;
 esac
 
+# Colored man-page headings and emphasis through less termcap capabilities.
 if has-cmd tput && tput colors >/dev/null 2>&1; then
   export LESS_TERMCAP_md="$(tput bold; tput setaf 6)"
   export LESS_TERMCAP_me="$(tput sgr0)"
@@ -130,32 +168,45 @@ if has-cmd tput && tput colors >/dev/null 2>&1; then
 fi
 
 # ---------------------------------------------------------------------------
-# Other command-specific color switches
+# 5. Other common commands with independent color switches
 # ---------------------------------------------------------------------------
 
+# GNU diff has its own palette and requires --color=auto.
 if __color_help_has diff '--color'; then
   __color_alias diff 'diff --color=auto'
 fi
 
-if has-cmd ip && command ip -help 2>&1 | grep -Fq -- '-color'; then
+# iproute2 uses its own color switch and does not read LS_COLORS.
+if has-cmd ip && command ip -color=auto -Version >/dev/null 2>&1; then
   __color_alias ip 'ip -color=auto'
 fi
 
+# procps-ng watch strips colors unless --color is enabled. This wrapper only
+# enables the feature on versions that provide it.
 if __color_help_has watch '--color'; then
   watch() {
+    emulate -L zsh
+
     command watch --color "$@"
   }
 fi
 
+# Compiler diagnostics use separate controls; these values request automatic
+# terminal detection rather than forcing ANSI output into build logs.
 export CARGO_TERM_COLOR="${CARGO_TERM_COLOR:-auto}"
 
+# Do NOT globally set FORCE_COLOR, CLICOLOR_FORCE, PY_COLORS=1,
+# ANSIBLE_FORCE_COLOR, or SYSTEMD_COLORS=1 here. They can force escape codes
+# into redirected files, logs, CI output, parsers, and command substitutions.
+
 # ---------------------------------------------------------------------------
-# Diagnostics
+# 6. Diagnostics
 # ---------------------------------------------------------------------------
 
 color-status() {
   emulate -L zsh
 
+  local alias_definition
   local command_name
 
   printf 'VIVID_THEME=%s\n' "$VIVID_THEME"
@@ -165,18 +216,21 @@ color-status() {
     printf 'LS_COLORS=not set\n'
   fi
 
-  printf '\nLS_COLORS readers:\n'
-  for command_name in ls gls eza fd bfs tree; do
-    if has-cmd "$command_name"; then
-      printf '  %-8s installed\n' "$command_name"
-    else
-      printf '  %-8s missing\n' "$command_name"
-    fi
-  done
+  printf 'CLICOLOR=%s\n' "${CLICOLOR:-<not set>}"
+  printf 'GREP_COLORS=%s\n' "${GREP_COLORS:-<not set>}"
+  printf 'LESS=%s\n' "${LESS:-<not set>}"
+  printf 'MANPAGER=%s\n' "${MANPAGER:-<not set>}"
+  printf 'CARGO_TERM_COLOR=%s\n' "${CARGO_TERM_COLOR:-<not set>}"
 
-  printf '\nIndependent color systems:\n'
-  for command_name in grep rg bat batcat fzf less man diff ip watch; do
-    if has-cmd "$command_name"; then
+  printf '\nCommand integration:\n'
+  for command_name in \
+    ls gls dir vdir eza fd bfs tree grep rg bat batcat fzf less man diff ip watch
+  do
+    if alias_definition=$(alias "$command_name" 2>/dev/null); then
+      printf '  %-8s %s\n' "$command_name" "$alias_definition"
+    elif (( $+functions[$command_name] )); then
+      printf '  %-8s function wrapper\n' "$command_name"
+    elif has-cmd "$command_name"; then
       printf '  %-8s installed\n' "$command_name"
     else
       printf '  %-8s missing\n' "$command_name"
