@@ -70,6 +70,7 @@ brew "metashell"
 brew "mold"
 brew "ninja"
 brew "pkgconf"
+brew "gersemi"
 #
 
 # Python
@@ -90,6 +91,7 @@ cask "font-fira-code-nerd-font"
 # Utils
 brew "curl"
 brew "btop"
+brew "jless"
 brew "htop"
 brew "thefuck"
 brew "uchardet"
