@@ -1,16 +1,17 @@
 {
   // connections
-  "wsl_connections": [
-  ],
-  "ssh_connections": [
-  ],
+  "wsl_connections": [],
+  "ssh_connections": [],
   "proxy": "",
   // general
   "telemetry": {
     "metrics": false,
     "diagnostics": false,
   },
-  "restore_on_startup": "launchpad",
+  "confirm_quit": true,
+  "reveal_if_open": true,
+  "on_new_window": "empty_tab",
+  "restore_on_startup": "empty_tab",
   "on_last_window_closed": "quit_app",
   "cli_default_open_behavior": "new_window",
   "when_closing_with_no_tabs": "close_window",
@@ -21,7 +22,7 @@
     "**/*.key",
     "**/*.cert",
     "**/*.crt",
-    "**/secrets.yml",
+    "**/secrets.yml"
   ],
   // appearence
   "cursor_blink": false,
@@ -50,12 +51,19 @@
     "ss10": true,
   },
   "ui_font_family": "Fira Code",
-  "ui_font_size": 15.5,
+  "ui_font_size": 14.5,
   "ui_font_fallbacks": null,
-  "agent_ui_font_size": 15.5,
-  "agent_buffer_font_size": 15.5,
-  "git_commit_buffer_font_size": 15.5,
+  "agent_ui_font_size": 13.5,
+  "agent_buffer_font_size": 13.5,
+  "markdown_preview": {
+    "font_size": 14.5,
+  },
+  "git_commit_buffer_font_size": 13.5,
   "text_rendering_mode": "grayscale",
+  "cursor_animation": {
+    "enabled": false,
+  },
+  "rounded_selection": false,
   // keymap
   "vim_mode": true,
   // editor
@@ -67,6 +75,7 @@
   "colorize_brackets": true,
   "always_treat_brackets_as_autoclosed": true,
   "line_ending": "prefer_lf",
+  "preferred_line_length": 100,
   "vertical_scroll_margin": 5.0,
   "show_whitespaces": "boundary",
   "relative_line_numbers": "enabled",
@@ -76,16 +85,16 @@
   },
   "format_on_save": "off",
   "use_on_type_format": false,
-  "formatter": "language_server",
+  "formatter": "auto",
   "autosave": {
     "after_delay": {
       "milliseconds": 5000,
     },
   },
   "middle_click_paste": false,
-  "diff_view_style": "split",
+  "diff_view_style": "unified",
   "gutter": {
-    "runnables": false
+    "runnables": false,
   },
   "toolbar": {
     "breadcrumbs": true,
@@ -94,6 +103,9 @@
     "code_actions": false,
   },
   "scrollbar": {
+    "selected_symbol": false,
+    "selected_text": false,
+    "cursors": false,
     "show": "always",
     "diagnostics": "error",
   },
@@ -108,7 +120,7 @@
   },
   "snippet_sort_order": "bottom",
   "completions": {
-    "words": "fallback",
+    "words": "enabled",
     "words_min_length": 4,
     "lsp_insert_mode": "replace_subsequence",
   },
@@ -117,9 +129,11 @@
   "completion_menu_scrollbar": "always",
   "show_completion_documentation": true,
   "inlay_hints": {
+    "show_background": true,
+    "show_value_hints": false,
     "toggle_on_modifiers_press": {
       "control": true,
-      "alt": true,
+      "platform": true,
     },
   },
   "code_lens": "on",
@@ -157,6 +171,7 @@
     "**/.settings",
   ],
   "search": {
+    "search_on_type": false,
     "button": false,
     "regex": false,
     "whole_word": false,
@@ -187,38 +202,46 @@
     "show_nav_history_buttons": true,
     "show_pinned_tabs_in_separate_row": true,
   },
+  "status_bar": {
+    "active_encoding_button": "enabled",
+  },
   "preview_tabs": {
     "enabled": true,
     "enable_preview_from_file_finder": false,
     "enable_preview_from_multibuffer": true,
     "enable_preview_from_project_panel": true,
-    "enable_keep_preview_on_code_navigation": false,
+    "enable_keep_preview_on_code_navigation": true,
     "enable_preview_file_from_code_navigation": true,
-    "enable_preview_multibuffer_from_code_navigation": false,
+    "enable_preview_multibuffer_from_code_navigation": true,
   },
+  "window_title_format": "${projectName}${separator}${remoteHost}${separator}${fileName}",
   "active_pane_modifiers": {
     "border_size": 2.0,
     "inactive_opacity": 0.85,
   },
   // panels
   "git_panel": {
+    "folder_indicator": "chevron",
     "dock": "right",
     "tree_view": true,
     "show_count_badge": true,
+    "commit_title_max_length": 90,
     "fallback_branch_name": "master",
     "entry_primary_click_action": "file_diff",
   },
   "project_panel": {
+    "folder_indicator": "chevron",
     "dock": "left",
     "diagnostic_badges": true,
     "show_diagnostics": "errors",
     "git_status_indicator": true,
   },
   "outline_panel": {
-    "dock": "right"
+    "folder_indicator": "chevron",
+    "dock": "right",
   },
   "collaboration_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   // debugger
   "debugger": {
@@ -227,8 +250,9 @@
   },
   // terminal
   "terminal": {
+    "font_size": 13.5,
     "toolbar": {
-      "breadcrumbs": false
+      "breadcrumbs": false,
     },
     "dock": "bottom",
     "blinking": "on",
@@ -237,11 +261,12 @@
     "show_count_badge": true,
     "keep_selection_on_copy": true,
     "env": {
-      "GIT_EDITOR": "zed --wait"
-    }
+      "GIT_EDITOR": "zed --wait",
+    },
   },
   // vcs
   "git": {
+    "worktree_directory": "..",
     "blame": {
       "show_avatar": true,
     },
@@ -258,18 +283,20 @@
   "agent_servers": {
     "codex-acp": {
       "default_config_options": {
-        "reasoning_effort": "high"
+        "collaboration_mode": "default",
+        "fast-mode": false,
+        "reasoning_effort": "xhigh",
       },
       "favorite_config_option_values": {
         "model": [
-          "gpt-5.6",
+          "gpt-5.6"
         ],
         "mode": [
-          "auto",
+          "auto"
         ],
         "reasoning_effort": [
           "medium",
-          "high",
+          "high"
         ],
       },
       "type": "registry",
@@ -324,25 +351,25 @@
     "allow_data_collection": "no",
     "provider": "none",
     "disabled_globs": [
-			"**/.git",
-			"**/.svn",
-			"**/.hg",
-			"**/CVS",
-			"**/.DS_Store",
-			"**/Thumbs.db",
-			"**/.classpath",
-			"**/.settings",
-			"**/.vscode",
-			"**/.zed",
-			"**/.idea",
-			"**/node_modules",
-			"**/build",
-			"**/dist",
-			"**/libs",
-			"**/coverage",
-			"**/.venv",
-			"**/__pycache__",
-		],
+      "**/.git",
+      "**/.svn",
+      "**/.hg",
+      "**/CVS",
+      "**/.DS_Store",
+      "**/Thumbs.db",
+      "**/.classpath",
+      "**/.settings",
+      "**/.vscode",
+      "**/.zed",
+      "**/.idea",
+      "**/node_modules",
+      "**/build",
+      "**/dist",
+      "**/libs",
+      "**/coverage",
+      "**/.venv",
+      "**/__pycache__",
+    ],
   },
   // common extensions
   "auto_install_extensions": {
@@ -366,24 +393,31 @@
   // file types
   "file_types": {
     "C": [
-      "*.h.base",
+      "*.h.in",
+      "*.h.base"
     ],
     "C++": [
-      "*.hpp.base",
+      "*.hpp.in",
+      "*.hpp.base"
     ],
     "CMake": [
       "*.cmake.in",
+      "*.cmake.base"
     ],
     "Python": [
       "*.py.in",
+      "*.py.base"
     ],
     "Shell Script": [
       "*.sh.in",
+      "*.sh.base",
+      "*.bash.in",
+      "*.bash.base"
     ],
     "YAML": [
       ".clangd",
       ".clang-tidy",
-      ".clang-format",
+      ".clang-format"
     ],
   },
   // languages
@@ -401,6 +435,15 @@
     "JavaScript": {
       "format_on_save": "on",
       "formatter": "prettier",
+    },
+    "JSON": {
+      "format_on_save": "on",
+      "formatter": "prettier",
+      // "formatter": {
+      //   "language_server": {
+      //     "name": "biome",
+      //   },
+      // },
     },
     "Python": {
       "tab_size": 4,
