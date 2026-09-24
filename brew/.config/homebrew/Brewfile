@@ -80,7 +80,7 @@ brew "ptpython"
 
 # AI
 cask "codex"
-brew "bubblewrap"
+brew "bubblewrap" if OS.linux?
 #
 
 # Fonts
