@@ -59,7 +59,7 @@ functions-help() {
     to-us-ascii 'Transliterate text files to US-ASCII.' \
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
-    karing-proxy-enable 'Overwrite HTTP variables for karing network.' \
+    wsl-karing-proxy-enable 'Overwrite HTTP variables for karing network.' \
     utils-help 'List available Zsh configuration utilities.'
 }
 
@@ -342,7 +342,7 @@ to-us-ascii() {
 }
 
 # karing windows share network to wsl
-karing-proxy-enable() {
+wsl-karing-proxy-enable() {
   emulate -L zsh
 
   local mountpoint=/mnt/c
@@ -353,25 +353,25 @@ karing-proxy-enable() {
 
   # 1. Make sure we're actually running under WSL.
   if ! grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null; then
-    print -u2 -- 'WARNING, karing-proxy-enable unavailable: not running under WSL.'
+    print -u2 -- 'WARNING, wsl-karing-proxy-enable unavailable: not running under WSL.'
     return 1
   fi
 
   print -u2 -- \
-    'WARNING, karing-proxy-enable: this function may require sudo to mount' \
+    'WARNING, wsl-karing-proxy-enable: this function may require sudo to mount' \
     "'C:' to run powershell."
 
   # 2. Temporarily mount Windows C: if it isn't already mounted.
   if ! mountpoint -q "$mountpoint"; then
     if ! sudo mkdir -p "$mountpoint"; then
       print -u2 -- \
-        "WARNING, karing-proxy-enable unavailable: could not create $mountpoint."
+        "WARNING, wsl-karing-proxy-enable unavailable: could not create $mountpoint."
       return 1
     fi
 
     if ! sudo mount -t drvfs C: "$mountpoint"; then
       print -u2 -- \
-        "WARNING, karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'."
+        "WARNING, wsl-karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'."
       return 1
     fi
 
@@ -387,7 +387,7 @@ karing-proxy-enable() {
 
   # 3. Check that PowerShell is accessible.
   if [[ ! -x $powershell ]]; then
-    print -u2 -- 'WARNING, karing-proxy-enable unavailable: powershell.exe not found.'
+    print -u2 -- 'WARNING, wsl-karing-proxy-enable unavailable: powershell.exe not found.'
     _karing_cleanup_mount
     unfunction _karing_cleanup_mount
     return 1
@@ -405,7 +405,7 @@ karing-proxy-enable() {
   )
 
   if [[ $karing_running != yes ]]; then
-    print -u2 -- 'WARNING, karing-proxy-enable unavailable: Karing is not running on Windows.'
+    print -u2 -- 'WARNING, wsl-karing-proxy-enable unavailable: Karing is not running on Windows.'
     _karing_cleanup_mount
     unfunction _karing_cleanup_mount
     return 1
@@ -430,7 +430,7 @@ karing-proxy-enable() {
   unfunction _karing_cleanup_mount
 
   if [[ -z $host_ip ]]; then
-    print -u2 -- 'WARNING, karing-proxy-enable unavailable: could not detect Windows host IP.'
+    print -u2 -- 'WARNING, wsl-karing-proxy-enable unavailable: could not detect Windows host IP.'
     return 1
   fi
 

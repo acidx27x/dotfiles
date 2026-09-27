@@ -64,7 +64,7 @@ functions-help() {
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
     NO, NE, NA 'Redirect command output to /dev/null.' \
-    karing-proxy-enable 'Overwrite HTTP variables for karing network.' \
+    wsl-karing-proxy-enable 'Overwrite HTTP variables for karing network.' \
     utils-help 'List available Bash configuration utilities.'
 }
 
@@ -362,7 +362,7 @@ to-us-ascii() {
   done
 }
 
-# Redirect wrappers
+# Redirect wrappers.
 NO() {
   "$@" >/dev/null
 }
@@ -375,8 +375,172 @@ NA() {
   "$@" >/dev/null 2>&1
 }
 
-# karing windows share network to wsl
-karing-proxy-enable() {
+# Check whether we're running under WSL.
+wsl-is-wsl() {
+  grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null
+}
+
+# Normalize a Windows drive name.
+#   C   -> c
+#   C:  -> c
+#   d   -> d
+_wsl-windows-drive-letter() {
+  local drive=${1%:}
+  local letter
+
+  letter=$(printf '%s' "$drive" | tr '[:upper:]' '[:lower:]')
+
+  case "$letter" in
+    [a-z])
+      printf '%s\n' "$letter"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+# Check whether a Windows drive is mounted.
+# Returns:
+#   0 - mounted
+#   1 - not mounted
+#   2 - invalid drive
+wsl-windows-drive-is-mounted() {
+  local letter
+  local mountpoint
+
+  if ! letter=$(_wsl-windows-drive-letter "$1"); then
+    printf 'WARNING, wsl-windows-drive-is-mounted: invalid Windows drive: %s\n' "$1" >&2
+    return 2
+  fi
+
+  mountpoint="/mnt/$letter"
+  mountpoint -q "$mountpoint"
+}
+
+# Check whether a Windows drive is unmounted.
+# Returns:
+#   0 - unmounted
+#   1 - mounted
+#   2 - invalid drive
+wsl-windows-drive-is-unmounted() {
+  local letter
+  local mountpoint
+
+  if ! letter=$(_wsl-windows-drive-letter "$1"); then
+    printf 'WARNING, wsl-windows-drive-is-unmounted: invalid Windows drive: %s\n' "$1" >&2
+    return 2
+  fi
+
+  mountpoint="/mnt/$letter"
+  if mountpoint -q "$mountpoint"; then
+    return 1
+  fi
+
+  return 0
+}
+
+# Mount one or more Windows drives.
+wsl-windows-drive-mount() {
+  local drive
+  local letter
+  local mountpoint
+  local drive_name
+  local result=0
+
+  # 1. Make sure we're actually running under WSL.
+  if ! wsl-is-wsl; then
+    printf 'WARNING, wsl-windows-drive-mount unavailable: not running under WSL.\n' >&2
+    return 1
+  fi
+
+  if [ "$#" -eq 0 ]; then
+    printf 'Usage: wsl-windows-drive-mount DRIVE [DRIVE ...]\n' >&2
+    return 1
+  fi
+
+  # 2. Mount requested Windows drives.
+  for drive in "$@"; do
+    if ! letter=$(_wsl-windows-drive-letter "$drive"); then
+      printf 'WARNING, wsl-windows-drive-mount: invalid Windows drive: %s\n' "$drive" >&2
+      result=1
+      continue
+    fi
+
+    mountpoint="/mnt/$letter"
+    drive_name=$(printf '%s' "$letter" | tr '[:lower:]' '[:upper:]')
+
+    if wsl-windows-drive-is-mounted "$drive_name"; then
+      printf "Windows '%s:' is already mounted at '%s'.\n" "$drive_name" "$mountpoint"
+      continue
+    fi
+
+    if ! sudo mkdir -p "$mountpoint"; then
+      printf "WARNING, wsl-windows-drive-mount: could not create '%s'.\n" "$mountpoint" >&2
+      result=1
+      continue
+    fi
+
+    if ! sudo mount -t drvfs "${drive_name}:" "$mountpoint"; then
+      printf "WARNING, wsl-windows-drive-mount: could not mount Windows '%s:'.\n" "$drive_name" >&2
+      result=1
+      continue
+    fi
+
+    printf "Mounted Windows '%s:' at '%s'.\n" "$drive_name" "$mountpoint"
+  done
+
+  return "$result"
+}
+
+# Unmount one or more Windows drives.
+wsl-windows-drive-unmount() {
+  local drive
+  local letter
+  local mountpoint
+  local drive_name
+  local result=0
+
+  # 1. Make sure we're actually running under WSL.
+  if ! wsl-is-wsl; then
+    printf 'WARNING, wsl-windows-drive-unmount unavailable: not running under WSL.\n' >&2
+    return 1
+  fi
+
+  if [ "$#" -eq 0 ]; then
+    printf 'Usage: wsl-windows-drive-unmount DRIVE [DRIVE ...]\n' >&2
+    return 1
+  fi
+
+  # 2. Unmount requested Windows drives.
+  for drive in "$@"; do
+    if ! letter=$(_wsl-windows-drive-letter "$drive"); then
+      printf 'WARNING, wsl-windows-drive-unmount: invalid Windows drive: %s\n' "$drive" >&2
+      result=1
+      continue
+    fi
+
+    mountpoint="/mnt/$letter"
+    drive_name=$(printf '%s' "$letter" | tr '[:lower:]' '[:upper:]')
+
+    if wsl-windows-drive-is-unmounted "$drive_name"; then
+      printf "Windows '%s:' is not mounted at '%s'.\n" "$drive_name" "$mountpoint"
+      continue
+    fi
+
+    if ! sudo umount "$mountpoint"; then
+      printf "WARNING, wsl-windows-drive-unmount: could not unmount Windows '%s:'.\n" "$drive_name" >&2
+      result=1
+      continue
+    fi
+
+    printf "Unmounted Windows '%s:' from '%s'.\n" "$drive_name" "$mountpoint"
+  done
+
+  return "$result"
+}
+
+wsl-karing-proxy-enable() {
   local mountpoint="/mnt/c"
   local powershell="${mountpoint}/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
   local mounted_by_us=0
@@ -384,25 +548,20 @@ karing-proxy-enable() {
   local karing_running
 
   # 1. Make sure we're actually running under WSL.
-  if ! grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null; then
-    printf 'WARNING, karing-proxy-enable unavailable: not running under WSL.\n' >&2
+  if ! wsl-is-wsl; then
+    printf 'WARNING, wsl-karing-proxy-enable unavailable: not running under WSL.\n' >&2
     return 1
   fi
 
   printf '%s%s\n' \
-    'WARNING, karing-proxy-enable: this function may require sudo to ' \
+    'WARNING, wsl-karing-proxy-enable: this function may require sudo to ' \
     "mount 'C:' to run powershell." >&2
 
   # 2. Temporarily mount Windows C: if it isn't already mounted.
-  if ! mountpoint -q "$mountpoint"; then
-    if ! sudo mkdir -p "$mountpoint"; then
-      printf 'WARNING, karing-proxy-enable unavailable: could not create %s.\n' "$mountpoint" >&2
-      return 1
-    fi
-
-    if ! sudo mount -t drvfs C: "$mountpoint"; then
+  if wsl-windows-drive-is-unmounted C; then
+    if ! wsl-windows-drive-mount C; then
       printf '%s\n' \
-        "WARNING, karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'." >&2
+        "WARNING, wsl-karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'." >&2
       return 1
     fi
 
@@ -412,13 +571,13 @@ karing-proxy-enable() {
   # Helper: only unmount if this function mounted it.
   _karing_cleanup_mount() {
     if [ "$mounted_by_us" -eq 1 ]; then
-      sudo umount "$mountpoint"
+      wsl-windows-drive-unmount C
     fi
   }
 
   # 3. Check that PowerShell is accessible.
   if [ ! -x "$powershell" ]; then
-    printf 'WARNING, karing-proxy-enable unavailable: powershell.exe not found.\n' >&2
+    printf 'WARNING, wsl-karing-proxy-enable unavailable: powershell.exe not found.\n' >&2
     _karing_cleanup_mount
     unset -f _karing_cleanup_mount
     return 1
@@ -436,7 +595,7 @@ karing-proxy-enable() {
   )
 
   if [ "$karing_running" != "yes" ]; then
-    printf 'WARNING, karing-proxy-enable unavailable: Karing is not running on Windows.\n' >&2
+    printf 'WARNING, wsl-karing-proxy-enable unavailable: Karing is not running on Windows.\n' >&2
     _karing_cleanup_mount
     unset -f _karing_cleanup_mount
     return 1
@@ -461,7 +620,7 @@ karing-proxy-enable() {
   unset -f _karing_cleanup_mount
 
   if [ -z "$host_ip" ]; then
-    printf 'WARNING, karing-proxy-enable unavailable: could not detect Windows host IP.\n' >&2
+    printf 'WARNING, wsl-karing-proxy-enable unavailable: could not detect Windows host IP.\n' >&2
     return 1
   fi
 
