@@ -3,6 +3,6 @@
 
 if has-cmd thefuck; then
   shell-init env TF_SHELL=zsh thefuck --alias || {
-    print -u2 -- 'WARNING, 03-thefuck.zsh: thefuck init failed.'
+    print -u2 -- "WARNING, ${${(%):-%x}:t}: thefuck init failed."
   }
 fi

@@ -22,7 +22,7 @@ source "$_zsh_config_dir/utils.zsh"
 source "$_zsh_config_dir/functions.zsh"
 
 source "$_zsh_config_dir/homebrew.zsh" || {
-  print -u2 -- 'WARNING, .zshrc: Homebrew initialization failed.'
+  print -u2 -- "WARNING, ${${(%):-%x}:t}: Homebrew initialization failed."
 }
 
 # ---------------------------------------------------------------------------
@@ -34,7 +34,8 @@ _zsh_state_dir="$XDG_STATE_HOME/zsh"
 if [[ -d "$_zsh_state_dir" ]] || mkdir -p -- "$_zsh_state_dir"; then
   HISTFILE="$_zsh_state_dir/history"
 else
-  print -u2 -- "WARNING, .zshrc: could not create history directory: $_zsh_state_dir"
+  print -u2 -- \
+    "WARNING, ${${(%):-%x}:t}: could not create history directory: $_zsh_state_dir"
   HISTFILE=/dev/null
 fi
 
@@ -156,7 +157,8 @@ else
 fi
 
 if (( _completion_status != 0 && _completion_status != 127 )); then
-  print -u2 -- 'WARNING, .zshrc: completion initialization failed.'
+  print -u2 -- \
+    "WARNING, ${${(%):-%x}:t}: completion initialization failed."
 fi
 
 unset _completion_status
@@ -218,7 +220,8 @@ alias zln='zmv -L'  # Link with patterns
 # ---------------------------------------------------------------------------
 
 source "$_zsh_config_dir/plugins.zsh" || {
-  print -u2 -- 'WARNING, .zshrc: optional plugin initialization failed.'
+  print -u2 -- \
+    "WARNING, ${${(%):-%x}:t}: optional plugin initialization failed."
 }
 
 unset _zsh_state_dir _zsh_config_dir

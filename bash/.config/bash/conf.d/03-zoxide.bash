@@ -8,6 +8,6 @@ if has-cmd zoxide; then
   fi
 
   shell-init zoxide init bash --cmd z --hook pwd || {
-    printf 'WARNING, .bashrc: zoxide init failed\n' >&2
+    printf 'WARNING, %s: zoxide init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   }
 fi

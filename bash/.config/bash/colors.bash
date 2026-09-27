@@ -31,7 +31,8 @@ if [[ -z ${LS_COLORS+x} ]]; then
     if __vivid_colors="$(vivid generate "$VIVID_THEME" 2>/dev/null)"; then
       export LS_COLORS="$__vivid_colors"
     else
-      printf 'WARNING, colors.bash: vivid theme not found: %s\n' "$VIVID_THEME" >&2
+      printf 'WARNING, %s: vivid theme not found: %s\n' \
+        "${BASH_SOURCE[0]##*/}" "$VIVID_THEME" >&2
     fi
     unset __vivid_colors
   elif has-cmd dircolors; then
@@ -41,7 +42,8 @@ if [[ -z ${LS_COLORS+x} ]]; then
     then
       :
     else
-      printf 'WARNING, colors.bash: dircolors init failed.\n' >&2
+      printf 'WARNING, %s: dircolors init failed.\n' \
+        "${BASH_SOURCE[0]##*/}" >&2
     fi
     unset __dircolors_output
   fi

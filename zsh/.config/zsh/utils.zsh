@@ -25,7 +25,7 @@ shell-init() {
   local init_code
 
   (( $# >= 2 )) || {
-    print -u2 -- 'Usage: shell-init COMMAND ARGUMENT...'
+    print -u2 -- "Usage: $funcstack[1] COMMAND ARGUMENT..."
     return 2
   }
 
@@ -77,7 +77,7 @@ source-conf-dirs() {
       [[ -f $file && -r $file ]] || continue
       source "$file" || {
         source_status=1
-        print -u2 -- "WARNING, utils.zsh: ${file:t} source failed"
+        print -u2 -- "WARNING, ${${(%):-%x}:t}: ${file:t} source failed"
       }
     done
   done
@@ -105,7 +105,7 @@ load-zsh-completion() {
   local -a completion_paths
 
   (( $# == 0 )) || {
-    print -u2 -- 'Usage: load-zsh-completion'
+    print -u2 -- "Usage: $funcstack[1]"
     return 2
   }
 
@@ -133,7 +133,7 @@ load-zsh-completion() {
     zstyle ':completion:*' cache-path "$completion_cache"
   else
     print -u2 -- \
-      "WARNING, load-zsh-completion: could not create completion cache:" \
+      "WARNING, $funcstack[1]: could not create completion cache:" \
       "$completion_cache"
     compinit -u -D || return
   fi

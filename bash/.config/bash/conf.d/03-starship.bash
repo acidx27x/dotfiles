@@ -23,10 +23,11 @@ stellar-help() {
 
 if has-cmd starship; then
   shell-init starship init bash || {
-    printf 'WARNING, .bashrc: starship init failed\n' >&2
+    printf 'WARNING, %s: starship init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   }
 fi
 
 if ! has-cmd stellar; then
-  printf 'INFO, 03-stellar.bash: stellar is not installed; run `stellar-help` for setup.\n' >&2
+  printf 'INFO, %s: stellar is not installed; run `stellar-help` for setup.\n' \
+    "${BASH_SOURCE[0]##*/}" >&2
 fi

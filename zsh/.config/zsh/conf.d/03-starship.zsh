@@ -27,7 +27,8 @@ if has-cmd starship; then
   if shell-init starship init zsh; then
     _starship_initialized=1
   else
-    print -u2 -- 'WARNING, 03-starship.zsh: starship init failed; using native prompt.'
+    print -u2 -- \
+      "WARNING, ${${(%):-%x}:t}: starship init failed; using native prompt."
   fi
 fi
 
@@ -45,7 +46,8 @@ if (( ! _starship_initialized )); then
 fi
 
 if ! has-cmd stellar; then
-  print -u2 -- 'INFO, 03-starship.zsh: stellar is not installed; run `stellar-help` for setup.'
+  print -u2 -- \
+    "INFO, ${${(%):-%x}:t}: stellar is not installed; run \`stellar-help\` for setup."
 fi
 
 unset _starship_initialized

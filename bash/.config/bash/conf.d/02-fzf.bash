@@ -91,7 +91,7 @@ unset FZF_TMUX FZF_TMUX_OPTS
 # Ctrl-T -> fzf file and directory search.
 # Alt-C  -> fzf directory search.
 if ! shell-init fzf --bash; then
-  printf 'WARNING, 02-fzf.bash: fzf init failed\n' >&2
+  printf 'WARNING, %s: fzf init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   unset _fzf_fd_command _fzf_bat_command _fzf_eza_command
   unset _fzf_rg_command _fzf_nvim_command
   unset _fzf_printenv_command _fzf_dig_command
@@ -236,7 +236,7 @@ _fzf_get_path_using_fd() {
   local selected
 
   if [[ -z "$_fzf_fd_command" ]]; then
-    printf 'WARNING, 02-fzf.bash: fd/fdfind is required\n' >&2
+    printf 'WARNING, %s: fd/fdfind is required\n' "${BASH_SOURCE[0]##*/}" >&2
     return 127
   fi
 
@@ -328,7 +328,7 @@ _fzf_get_path_using_rg() {
   local -a fzf_options
 
   if [[ -z "$_fzf_rg_command" ]]; then
-    printf 'WARNING, 02-fzf.bash: rg is required\n' >&2
+    printf 'WARNING, %s: rg is required\n' "${BASH_SOURCE[0]##*/}" >&2
     return 127
   fi
 
@@ -385,7 +385,8 @@ _fzf_get_path_using_rg() {
   line=${selected%%$'\t'*}
 
   if [[ -z "$file" || ! "$line" =~ ^[0-9]+$ ]]; then
-    printf 'WARNING, 02-fzf.bash: invalid ripgrep selection\n' >&2
+    printf 'WARNING, %s: invalid ripgrep selection\n' \
+      "${BASH_SOURCE[0]##*/}" >&2
     return 1
   fi
 

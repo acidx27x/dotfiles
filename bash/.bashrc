@@ -134,7 +134,8 @@ else
 fi
 
 if (( _completion_status != 0 && _completion_status != 127 )); then
-  printf 'WARNING, .bashrc: load completion init failed\n' >&2
+  printf 'WARNING, %s: load completion init failed\n' \
+    "${BASH_SOURCE[0]##*/}" >&2
 fi
 
 unset _completion_status
@@ -142,7 +143,7 @@ unset _completion_status
 if ! is-brush; then  # Brush uses own preexec
   load-bash-preexec || {
     printf '%s%s\n' \
-      'WARNING, .bashrc: load preexec init failed, ' \
+      "WARNING, ${BASH_SOURCE[0]##*/}: load preexec init failed, " \
       'some complicated tools like atuin may work incorrectly' >&2
   }
 fi

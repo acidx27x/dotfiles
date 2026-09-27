@@ -21,12 +21,12 @@ alias bathelp="$_bat_command --plain --language=help"
 
 if has-cmd batman; then
   shell-init batman --export-env || {
-    printf 'WARNING, 03-bat.bash: batman init failed\n' >&2
+    printf 'WARNING, %s: batman init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   }
 fi
 
 if has-cmd batpipe; then
   eval "$(batpipe)" || {
-    printf 'WARNING, 03-bat.bash: batpipe init failed\n' >&2
+    printf 'WARNING, %s: batpipe init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   }
 fi

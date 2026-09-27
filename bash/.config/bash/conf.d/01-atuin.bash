@@ -14,7 +14,7 @@ if has-cmd atuin; then
   if shell-init atuin "${_atuin_init_args[@]}"; then
     _atuin_initialized=1
   else
-    printf 'WARNING, .bashrc: atuin init failed\n' >&2
+    printf 'WARNING, %s: atuin init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   fi
 fi
 

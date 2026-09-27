@@ -12,12 +12,12 @@ homebrew-path-prepend() {
   fi
 
   if [[ -z $brew_prefix ]]; then
-    print -u2 -- 'homebrew-path-prepend: Homebrew prefix not found.'
+    print -u2 -- "$funcstack[1]: Homebrew prefix not found."
     return 127
   fi
 
   if [[ ! -d $brew_prefix/bin ]]; then
-    print -u2 -- "homebrew-path-prepend: bin directory not found: $brew_prefix/bin"
+    print -u2 -- "$funcstack[1]: bin directory not found: $brew_prefix/bin"
     return 1
   fi
 
@@ -71,13 +71,13 @@ homebrew-tool-path-prepend() {
   local -a formula_bins=()
 
   if (( $# == 0 )); then
-    print -u2 -- 'Usage: homebrew-tool-path-prepend FORMULA...'
+    print -u2 -- "Usage: $funcstack[1] FORMULA..."
     return 2
   fi
 
   for formula in "$@"; do
     if [[ -z $formula || $formula == */* || $formula == . || $formula == .. ]]; then
-      print -u2 -- 'Usage: homebrew-tool-path-prepend FORMULA...'
+      print -u2 -- "Usage: $funcstack[1] FORMULA..."
       return 2
     fi
   done
@@ -87,7 +87,7 @@ homebrew-tool-path-prepend() {
   fi
 
   if [[ -z $brew_prefix ]]; then
-    print -u2 -- 'homebrew-tool-path-prepend: Homebrew prefix not found.'
+    print -u2 -- "$funcstack[1]: Homebrew prefix not found."
     return 127
   fi
 
@@ -95,7 +95,8 @@ homebrew-tool-path-prepend() {
     formula_bin="$brew_prefix/opt/$formula/bin"
 
     if [[ ! -d $formula_bin ]]; then
-      print -u2 -- "homebrew-tool-path-prepend: formula bin directory not found: $formula_bin"
+      print -u2 -- \
+        "$funcstack[1]: formula bin directory not found: $formula_bin"
       return 1
     fi
 
@@ -146,12 +147,12 @@ fi
 if [[ -n $_brew_bin && -x $_brew_bin ]]; then
   if _brew_init_code=$("$_brew_bin" shellenv); then
     eval "$_brew_init_code" || {
-      print -u2 -- 'WARNING, homebrew.zsh: brew init failed.'
+      print -u2 -- "WARNING, ${${(%):-%x}:t}: brew init failed."
       unset _brew_init_code _candidate _brew_bin
       return 1
     }
   else
-    print -u2 -- 'WARNING, homebrew.zsh: brew init failed.'
+    print -u2 -- "WARNING, ${${(%):-%x}:t}: brew init failed."
     unset _brew_init_code _candidate _brew_bin
     return 1
   fi

@@ -3,6 +3,6 @@
 
 if has-cmd thefuck; then
   shell-init env TF_SHELL=bash thefuck --alias || {
-    printf 'WARNING, .bashrc: thefuck init failed\n' >&2
+    printf 'WARNING, %s: thefuck init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   }
 fi

@@ -10,12 +10,13 @@ homebrew-path-prepend() {
   fi
 
   if [[ -z "$brew_prefix" ]]; then
-    printf 'homebrew-path-prepend: Homebrew prefix not found.\n' >&2
+    printf '%s: Homebrew prefix not found.\n' "${FUNCNAME[0]}" >&2
     return 127
   fi
 
   if [[ ! -d "$brew_prefix/bin" ]]; then
-    printf 'homebrew-path-prepend: bin directory not found: %s\n' "$brew_prefix/bin" >&2
+    printf '%s: bin directory not found: %s\n' \
+      "${FUNCNAME[0]}" "$brew_prefix/bin" >&2
     return 1
   fi
 
@@ -68,13 +69,13 @@ homebrew-tool-path-prepend() {
   local -a formula_bins=()
 
   if (( $# == 0 )); then
-    printf 'Usage: homebrew-tool-path-prepend FORMULA...\n' >&2
+    printf 'Usage: %s FORMULA...\n' "${FUNCNAME[0]}" >&2
     return 2
   fi
 
   for formula in "$@"; do
     if [[ -z "$formula" || "$formula" == */* || "$formula" == . || "$formula" == .. ]]; then
-      printf 'Usage: homebrew-tool-path-prepend FORMULA...\n' >&2
+      printf 'Usage: %s FORMULA...\n' "${FUNCNAME[0]}" >&2
       return 2
     fi
   done
@@ -84,7 +85,7 @@ homebrew-tool-path-prepend() {
   fi
 
   if [[ -z "$brew_prefix" ]]; then
-    printf 'homebrew-tool-path-prepend: Homebrew prefix not found.\n' >&2
+    printf '%s: Homebrew prefix not found.\n' "${FUNCNAME[0]}" >&2
     return 127
   fi
 
@@ -92,7 +93,8 @@ homebrew-tool-path-prepend() {
     formula_bin="$brew_prefix/opt/$formula/bin"
 
     if [[ ! -d "$formula_bin" ]]; then
-      printf 'homebrew-tool-path-prepend: formula bin directory not found: %s\n' "$formula_bin" >&2
+      printf '%s: formula bin directory not found: %s\n' \
+        "${FUNCNAME[0]}" "$formula_bin" >&2
       return 1
     fi
 
@@ -145,7 +147,7 @@ fi
 if [[ -n "$_brew_bin" && -x "$_brew_bin" ]]; then
   # `brew shellenv` does not take a shell-name argument.
   shell-init "$_brew_bin" shellenv || {
-    printf 'WARNING, homebrew.bash: brew init failed\n' >&2
+    printf 'WARNING, %s: brew init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   }
 fi
 

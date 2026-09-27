@@ -5,6 +5,6 @@
 # Create .envrc and run `direnv allow .` or `direnv deny .` afterward.
 if has-cmd direnv; then
   shell-init direnv hook bash || {
-    printf 'WARNING, .bashrc: direnv init failed\n' >&2
+    printf 'WARNING, %s: direnv init failed\n' "${BASH_SOURCE[0]##*/}" >&2
   }
 fi

@@ -3,6 +3,6 @@
 
 if has-cmd direnv; then
   shell-init direnv hook zsh || {
-    print -u2 -- 'WARNING, 04-direnv.zsh: direnv init failed.'
+    print -u2 -- "WARNING, ${${(%):-%x}:t}: direnv init failed."
   }
 fi

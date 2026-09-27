@@ -54,12 +54,19 @@ functions-help() {
     ls 'List one entry per line with eza.' \
     lt 'Show entries as an eza tree.' \
     print-xdg-paths 'Print the resolved XDG paths.' \
+    proxy-disable 'Disable the managed HTTP proxy variables.' \
+    proxy-status 'Print common proxy variables.' \
     rm-zone-id 'Delete Windows Zone.Identifier metadata files.' \
     stellar-help 'Show Stellar installation and theme instructions.' \
     to-us-ascii 'Transliterate text files to US-ASCII.' \
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
+    wsl-is-wsl 'Check whether the current system is WSL. (wsl functions are loaded only under wsl)' \
     wsl-karing-proxy-enable 'Overwrite HTTP variables for karing network.' \
+    wsl-windows-drive-is-mounted 'Check whether a Windows drive is mounted.' \
+    wsl-windows-drive-is-unmounted 'Check whether a Windows drive is unmounted.' \
+    wsl-windows-drive-mount 'Mount one or more Windows drives.' \
+    wsl-windows-drive-unmount 'Unmount one or more Windows drives.' \
     utils-help 'List available Zsh configuration utilities.'
 }
 
@@ -93,7 +100,7 @@ detect-encoding() {
   local encoding=''
 
   [[ -n $file ]] || {
-    print -u2 -- 'Usage: detect-encoding FILE'
+    print -u2 -- "Usage: $funcstack[1] FILE"
     return 2
   }
 
@@ -152,13 +159,12 @@ _to_utf8_impl() {
   emulate -L zsh
 
   local add_bom=$1
-  local command_name=$2
-  shift 2
+  shift
 
   local file encoding temp body signature
 
   (( $# > 0 )) || {
-    print -u2 -- "Usage: $command_name FILE..."
+    print -u2 -- "Usage: $funcstack[2] FILE..."
     return 2
   }
 
@@ -245,12 +251,12 @@ _to_utf8_impl() {
 
 # Convert files to plain UTF-8, removing an existing BOM.
 to-utf8() {
-  _to_utf8_impl 0 to-utf8 "$@"
+  _to_utf8_impl 0 "$@"
 }
 
 # Convert files to UTF-8 and ensure exactly one BOM is present.
 to-utf8-bom() {
-  _to_utf8_impl 1 to-utf8-bom "$@"
+  _to_utf8_impl 1 "$@"
 }
 
 # Transliterate text files to US-ASCII.
@@ -264,7 +270,7 @@ to-us-ascii() {
   local icu_prefix=''
 
   (( $# > 0 )) || {
-    print -u2 -- 'Usage: to-us-ascii FILE...'
+    print -u2 -- "Usage: $funcstack[1] FILE..."
     return 2
   }
 
@@ -341,111 +347,59 @@ to-us-ascii() {
   done
 }
 
-# karing windows share network to wsl
-wsl-karing-proxy-enable() {
+# Print common proxy variables, redacting URL credentials.
+proxy-status() {
   emulate -L zsh
 
-  local mountpoint=/mnt/c
-  local powershell="$mountpoint/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
-  local mounted_by_us=0
-  local host_ip
-  local karing_running
-
-  # 1. Make sure we're actually running under WSL.
-  if ! grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null; then
-    print -u2 -- 'WARNING, wsl-karing-proxy-enable unavailable: not running under WSL.'
-    return 1
-  fi
-
-  print -u2 -- \
-    'WARNING, wsl-karing-proxy-enable: this function may require sudo to mount' \
-    "'C:' to run powershell."
-
-  # 2. Temporarily mount Windows C: if it isn't already mounted.
-  if ! mountpoint -q "$mountpoint"; then
-    if ! sudo mkdir -p "$mountpoint"; then
-      print -u2 -- \
-        "WARNING, wsl-karing-proxy-enable unavailable: could not create $mountpoint."
-      return 1
-    fi
-
-    if ! sudo mount -t drvfs C: "$mountpoint"; then
-      print -u2 -- \
-        "WARNING, wsl-karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'."
-      return 1
-    fi
-
-    mounted_by_us=1
-  fi
-
-  # Helper: only unmount if this function mounted it.
-  _karing_cleanup_mount() {
-    if (( mounted_by_us )); then
-      sudo umount "$mountpoint"
-    fi
-  }
-
-  # 3. Check that PowerShell is accessible.
-  if [[ ! -x $powershell ]]; then
-    print -u2 -- 'WARNING, wsl-karing-proxy-enable unavailable: powershell.exe not found.'
-    _karing_cleanup_mount
-    unfunction _karing_cleanup_mount
-    return 1
-  fi
-
-  # 4. Check whether Karing is running on Windows.
-  karing_running=$(
-    "$powershell" -NoProfile -Command '
-      if (Get-Process -Name "karing" -ErrorAction SilentlyContinue) {
-        "yes"
-      } else {
-        "no"
-      }
-    ' | tr -d '\r'
+  local name value scheme remainder
+  local -a names=(
+    http_proxy
+    https_proxy
+    HTTP_PROXY
+    HTTPS_PROXY
+    all_proxy
+    ALL_PROXY
+    no_proxy
+    NO_PROXY
   )
 
-  if [[ $karing_running != yes ]]; then
-    print -u2 -- 'WARNING, wsl-karing-proxy-enable unavailable: Karing is not running on Windows.'
-    _karing_cleanup_mount
-    unfunction _karing_cleanup_mount
-    return 1
-  fi
+  for name in "${names[@]}"; do
+    if (( $+parameters[$name] )); then
+      value=${(P)name}
 
-  # 5. Detect the Windows host IP.
-  host_ip=$(
-    "$powershell" -NoProfile -Command '
-      Get-NetIPConfiguration |
-      Where-Object {
-        $_.IPv4DefaultGateway -ne $null -and
-        $_.NetAdapter.Status -eq "Up" -and
-        $_.InterfaceAlias -notmatch "vEthernet|WSL|TUN|TAP"
-      } |
-      Select-Object -First 1 |
-      ForEach-Object { $_.IPv4Address.IPAddress }
-    ' | tr -d '\r'
-  )
+      case $value in
+        *://*@*)
+          scheme=${value%%://*}
+          remainder=${value#*://}
+          remainder=${remainder#*@}
+          value="${scheme}://<redacted>@${remainder}"
+          ;;
+      esac
+    else
+      value='<unset>'
+    fi
 
-  # We no longer need access to C:.
-  _karing_cleanup_mount
-  unfunction _karing_cleanup_mount
-
-  if [[ -z $host_ip ]]; then
-    print -u2 -- 'WARNING, wsl-karing-proxy-enable unavailable: could not detect Windows host IP.'
-    return 1
-  fi
-
-  # 6. Enable proxy in the current shell.
-  export http_proxy="http://${host_ip}:4067"
-  export https_proxy="$http_proxy"
-  export HTTP_PROXY="$http_proxy"
-  export HTTPS_PROXY="$http_proxy"
-
-  print -r -- "Proxy enabled from karing: $http_proxy"
+    print -r -- "$name=$value"
+  done
 }
 
+# Disable the HTTP proxy variables managed by this configuration.
 proxy-disable() {
   emulate -L zsh
 
+  local previous
+
+  previous=$(proxy-status) || return
   unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
-  print -r -- 'Proxy disabled'
+
+  print -r -- 'Proxy disabled.'
+  print -r -- 'Previous proxy settings:'
+  print -r -- "$previous"
+  print -r -- 'Current proxy settings:'
+  proxy-status
 }
+
+# Load WSL-only helpers without defining them on other systems.
+if grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null; then
+  source "${${(%):-%x}:h}/wsl.zsh"
+fi

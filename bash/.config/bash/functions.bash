@@ -58,13 +58,20 @@ functions-help() {
     ls 'List one entry per line with eza.' \
     lt 'Show entries as an eza tree.' \
     print-xdg-paths 'Print the resolved XDG paths.' \
+    proxy-disable 'Disable the managed HTTP proxy variables.' \
+    proxy-status 'Print common proxy variables.' \
     rm-zone-id 'Delete Windows Zone.Identifier metadata files.' \
     stellar-help 'Show Stellar installation and theme instructions.' \
     to-us-ascii 'Transliterate text files to US-ASCII.' \
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
     NO, NE, NA 'Redirect command output to /dev/null.' \
+    wsl-is-wsl 'Check whether the current system is WSL. (wsl functions are loaded only under wsl)' \
     wsl-karing-proxy-enable 'Overwrite HTTP variables for karing network.' \
+    wsl-windows-drive-is-mounted 'Check whether a Windows drive is mounted.' \
+    wsl-windows-drive-is-unmounted 'Check whether a Windows drive is unmounted.' \
+    wsl-windows-drive-mount 'Mount one or more Windows drives.' \
+    wsl-windows-drive-unmount 'Unmount one or more Windows drives.' \
     utils-help 'List available Bash configuration utilities.'
 }
 
@@ -94,7 +101,7 @@ detect-encoding() {
   local encoding=""
 
   [[ -n "$file" ]] || {
-    printf 'Usage: detect-encoding FILE\n' >&2
+    printf 'Usage: %s FILE\n' "${FUNCNAME[0]}" >&2
     return 2
   }
 
@@ -154,8 +161,7 @@ _file_exists_and_rw() {
 
 _to_utf8_impl() {
   local add_bom="$1"
-  local command_name="$2"
-  shift 2
+  shift
 
   local file
   local encoding
@@ -164,7 +170,7 @@ _to_utf8_impl() {
   local signature
 
   (( $# > 0 )) || {
-    printf 'Usage: %s FILE...\n' "$command_name" >&2
+    printf 'Usage: %s FILE...\n' "${FUNCNAME[1]}" >&2
     return 2
   }
 
@@ -261,12 +267,12 @@ _to_utf8_impl() {
 
 # Convert files to plain UTF-8, removing an existing BOM.
 to-utf8() {
-  _to_utf8_impl 0 to-utf8 "$@"
+  _to_utf8_impl 0 "$@"
 }
 
 # Convert files to UTF-8 and ensure exactly one BOM is present.
 to-utf8-bom() {
-  _to_utf8_impl 1 to-utf8-bom "$@"
+  _to_utf8_impl 1 "$@"
 }
 
 # Transliterate text files to US-ASCII.
@@ -280,7 +286,7 @@ to-us-ascii() {
   local icu_prefix=""
 
   (( $# > 0 )) || {
-    printf 'Usage: to-us-ascii FILE...\n' >&2
+    printf 'Usage: %s FILE...\n' "${FUNCNAME[0]}" >&2
     return 2
   }
 
@@ -375,265 +381,57 @@ NA() {
   "$@" >/dev/null 2>&1
 }
 
-# Check whether we're running under WSL.
-wsl-is-wsl() {
-  grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null
-}
-
-# Normalize a Windows drive name.
-#   C   -> c
-#   C:  -> c
-#   d   -> d
-_wsl-windows-drive-letter() {
-  local drive=${1%:}
-  local letter
-
-  letter=$(printf '%s' "$drive" | tr '[:upper:]' '[:lower:]')
-
-  case "$letter" in
-    [a-z])
-      printf '%s\n' "$letter"
-      ;;
-    *)
-      return 1
-      ;;
-  esac
-}
-
-# Check whether a Windows drive is mounted.
-# Returns:
-#   0 - mounted
-#   1 - not mounted
-#   2 - invalid drive
-wsl-windows-drive-is-mounted() {
-  local letter
-  local mountpoint
-
-  if ! letter=$(_wsl-windows-drive-letter "$1"); then
-    printf 'WARNING, wsl-windows-drive-is-mounted: invalid Windows drive: %s\n' "$1" >&2
-    return 2
-  fi
-
-  mountpoint="/mnt/$letter"
-  mountpoint -q "$mountpoint"
-}
-
-# Check whether a Windows drive is unmounted.
-# Returns:
-#   0 - unmounted
-#   1 - mounted
-#   2 - invalid drive
-wsl-windows-drive-is-unmounted() {
-  local letter
-  local mountpoint
-
-  if ! letter=$(_wsl-windows-drive-letter "$1"); then
-    printf 'WARNING, wsl-windows-drive-is-unmounted: invalid Windows drive: %s\n' "$1" >&2
-    return 2
-  fi
-
-  mountpoint="/mnt/$letter"
-  if mountpoint -q "$mountpoint"; then
-    return 1
-  fi
-
-  return 0
-}
-
-# Mount one or more Windows drives.
-wsl-windows-drive-mount() {
-  local drive
-  local letter
-  local mountpoint
-  local drive_name
-  local result=0
-
-  # 1. Make sure we're actually running under WSL.
-  if ! wsl-is-wsl; then
-    printf 'WARNING, wsl-windows-drive-mount unavailable: not running under WSL.\n' >&2
-    return 1
-  fi
-
-  if [ "$#" -eq 0 ]; then
-    printf 'Usage: wsl-windows-drive-mount DRIVE [DRIVE ...]\n' >&2
-    return 1
-  fi
-
-  # 2. Mount requested Windows drives.
-  for drive in "$@"; do
-    if ! letter=$(_wsl-windows-drive-letter "$drive"); then
-      printf 'WARNING, wsl-windows-drive-mount: invalid Windows drive: %s\n' "$drive" >&2
-      result=1
-      continue
-    fi
-
-    mountpoint="/mnt/$letter"
-    drive_name=$(printf '%s' "$letter" | tr '[:lower:]' '[:upper:]')
-
-    if wsl-windows-drive-is-mounted "$drive_name"; then
-      printf "Windows '%s:' is already mounted at '%s'.\n" "$drive_name" "$mountpoint"
-      continue
-    fi
-
-    if ! sudo mkdir -p "$mountpoint"; then
-      printf "WARNING, wsl-windows-drive-mount: could not create '%s'.\n" "$mountpoint" >&2
-      result=1
-      continue
-    fi
-
-    if ! sudo mount -t drvfs "${drive_name}:" "$mountpoint"; then
-      printf "WARNING, wsl-windows-drive-mount: could not mount Windows '%s:'.\n" "$drive_name" >&2
-      result=1
-      continue
-    fi
-
-    printf "Mounted Windows '%s:' at '%s'.\n" "$drive_name" "$mountpoint"
-  done
-
-  return "$result"
-}
-
-# Unmount one or more Windows drives.
-wsl-windows-drive-unmount() {
-  local drive
-  local letter
-  local mountpoint
-  local drive_name
-  local result=0
-
-  # 1. Make sure we're actually running under WSL.
-  if ! wsl-is-wsl; then
-    printf 'WARNING, wsl-windows-drive-unmount unavailable: not running under WSL.\n' >&2
-    return 1
-  fi
-
-  if [ "$#" -eq 0 ]; then
-    printf 'Usage: wsl-windows-drive-unmount DRIVE [DRIVE ...]\n' >&2
-    return 1
-  fi
-
-  # 2. Unmount requested Windows drives.
-  for drive in "$@"; do
-    if ! letter=$(_wsl-windows-drive-letter "$drive"); then
-      printf 'WARNING, wsl-windows-drive-unmount: invalid Windows drive: %s\n' "$drive" >&2
-      result=1
-      continue
-    fi
-
-    mountpoint="/mnt/$letter"
-    drive_name=$(printf '%s' "$letter" | tr '[:lower:]' '[:upper:]')
-
-    if wsl-windows-drive-is-unmounted "$drive_name"; then
-      printf "Windows '%s:' is not mounted at '%s'.\n" "$drive_name" "$mountpoint"
-      continue
-    fi
-
-    if ! sudo umount "$mountpoint"; then
-      printf "WARNING, wsl-windows-drive-unmount: could not unmount Windows '%s:'.\n" "$drive_name" >&2
-      result=1
-      continue
-    fi
-
-    printf "Unmounted Windows '%s:' from '%s'.\n" "$drive_name" "$mountpoint"
-  done
-
-  return "$result"
-}
-
-wsl-karing-proxy-enable() {
-  local mountpoint="/mnt/c"
-  local powershell="${mountpoint}/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
-  local mounted_by_us=0
-  local host_ip
-  local karing_running
-
-  # 1. Make sure we're actually running under WSL.
-  if ! wsl-is-wsl; then
-    printf 'WARNING, wsl-karing-proxy-enable unavailable: not running under WSL.\n' >&2
-    return 1
-  fi
-
-  printf '%s%s\n' \
-    'WARNING, wsl-karing-proxy-enable: this function may require sudo to ' \
-    "mount 'C:' to run powershell." >&2
-
-  # 2. Temporarily mount Windows C: if it isn't already mounted.
-  if wsl-windows-drive-is-unmounted C; then
-    if ! wsl-windows-drive-mount C; then
-      printf '%s\n' \
-        "WARNING, wsl-karing-proxy-enable unavailable: could not temporarily mount Windows 'C:'." >&2
-      return 1
-    fi
-
-    mounted_by_us=1
-  fi
-
-  # Helper: only unmount if this function mounted it.
-  _karing_cleanup_mount() {
-    if [ "$mounted_by_us" -eq 1 ]; then
-      wsl-windows-drive-unmount C
-    fi
-  }
-
-  # 3. Check that PowerShell is accessible.
-  if [ ! -x "$powershell" ]; then
-    printf 'WARNING, wsl-karing-proxy-enable unavailable: powershell.exe not found.\n' >&2
-    _karing_cleanup_mount
-    unset -f _karing_cleanup_mount
-    return 1
-  fi
-
-  # 4. Check whether Karing is running on Windows.
-  karing_running=$(
-    "$powershell" -NoProfile -Command '
-      if (Get-Process -Name "karing" -ErrorAction SilentlyContinue) {
-        "yes"
-      } else {
-        "no"
-      }
-    ' | tr -d '\r'
+# Print common proxy variables, redacting URL credentials.
+proxy-status() {
+  local name
+  local value
+  local scheme
+  local remainder
+  local -a names=(
+    http_proxy
+    https_proxy
+    HTTP_PROXY
+    HTTPS_PROXY
+    all_proxy
+    ALL_PROXY
+    no_proxy
+    NO_PROXY
   )
 
-  if [ "$karing_running" != "yes" ]; then
-    printf 'WARNING, wsl-karing-proxy-enable unavailable: Karing is not running on Windows.\n' >&2
-    _karing_cleanup_mount
-    unset -f _karing_cleanup_mount
-    return 1
-  fi
+  for name in "${names[@]}"; do
+    if declare -p "$name" >/dev/null 2>&1; then
+      value=${!name}
 
-  # 5. Detect the Windows host IP.
-  host_ip=$(
-    "$powershell" -NoProfile -Command '
-      Get-NetIPConfiguration |
-      Where-Object {
-        $_.IPv4DefaultGateway -ne $null -and
-        $_.NetAdapter.Status -eq "Up" -and
-        $_.InterfaceAlias -notmatch "vEthernet|WSL|TUN|TAP"
-      } |
-      Select-Object -First 1 |
-      ForEach-Object { $_.IPv4Address.IPAddress }
-    ' | tr -d '\r'
-  )
+      case "$value" in
+        *://*@*)
+          scheme=${value%%://*}
+          remainder=${value#*://}
+          remainder=${remainder#*@}
+          value="${scheme}://<redacted>@${remainder}"
+          ;;
+      esac
+    else
+      value='<unset>'
+    fi
 
-  # We no longer need access to C:.
-  _karing_cleanup_mount
-  unset -f _karing_cleanup_mount
-
-  if [ -z "$host_ip" ]; then
-    printf 'WARNING, wsl-karing-proxy-enable unavailable: could not detect Windows host IP.\n' >&2
-    return 1
-  fi
-
-  # 6. Enable proxy in the current shell.
-  export http_proxy="http://${host_ip}:4067"
-  export https_proxy="$http_proxy"
-  export HTTP_PROXY="$http_proxy"
-  export HTTPS_PROXY="$http_proxy"
-
-  printf 'Proxy enabled from karing: %s\n' "$http_proxy"
+    printf '%s=%s\n' "$name" "$value"
+  done
 }
 
+# Disable the HTTP proxy variables managed by this configuration.
 proxy-disable() {
+  local previous
+
+  previous=$(proxy-status) || return
   unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
-  printf 'Proxy disabled\n'
+
+  printf 'Proxy disabled.\n'
+  printf 'Previous proxy settings:\n%s\n' "$previous"
+  printf 'Current proxy settings:\n'
+  proxy-status
 }
+
+# Load WSL-only helpers without defining them on other systems.
+if grep -qiE '(microsoft|wsl)' /proc/sys/kernel/osrelease 2>/dev/null; then
+  source "${BASH_SOURCE[0]%/*}/wsl.bash"
+fi

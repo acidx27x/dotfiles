@@ -4,7 +4,7 @@ _zsh_config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
 if [[ -r "$_zsh_config_dir/homebrew.zsh" ]]; then
   source "$_zsh_config_dir/homebrew.zsh" || {
-    print -u2 -- 'WARNING, .zprofile: Homebrew initialization failed.'
+    print -u2 -- "WARNING, ${${(%):-%x}:t}: Homebrew initialization failed."
   }
 fi
 

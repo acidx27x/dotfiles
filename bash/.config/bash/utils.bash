@@ -27,7 +27,7 @@ shell-init() {
   local init_code
 
   (( $# >= 2 )) || {
-    printf 'Usage: shell-init COMMAND ARGUMENT...\n' >&2
+    printf 'Usage: %s COMMAND ARGUMENT...\n' "${FUNCNAME[0]}" >&2
     return 2
   }
 
@@ -86,7 +86,8 @@ source-conf-dirs() {
       [[ -f "$file" && -r "$file" ]] || continue
       source "$file" || {
         source_status=1
-        printf 'WARNING, utils.bash: %s source failed\n' "${file##*/}" >&2
+        printf 'WARNING, %s: %s source failed\n' \
+          "${BASH_SOURCE[0]##*/}" "${file##*/}" >&2
       }
     done
   done

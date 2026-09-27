@@ -14,7 +14,7 @@ if has-cmd atuin; then
   if shell-init atuin "${_atuin_init_args[@]}"; then
     _atuin_initialized=1
   else
-    print -u2 -- 'WARNING, 02-atuin.zsh: atuin init failed.'
+    print -u2 -- "WARNING, ${${(%):-%x}:t}: atuin init failed."
   fi
 fi
 

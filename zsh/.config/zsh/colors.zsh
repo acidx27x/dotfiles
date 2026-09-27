@@ -31,7 +31,8 @@ if [[ -z ${LS_COLORS+x} ]]; then
     if __vivid_colors=$(vivid generate "$VIVID_THEME" 2>/dev/null); then
       export LS_COLORS=$__vivid_colors
     else
-      print -u2 -- "WARNING, colors.zsh: vivid theme not found: $VIVID_THEME"
+      print -u2 -- \
+        "WARNING, ${${(%):-%x}:t}: vivid theme not found: $VIVID_THEME"
     fi
     unset __vivid_colors
   elif has-cmd dircolors; then
@@ -40,7 +41,7 @@ if [[ -z ${LS_COLORS+x} ]]; then
        eval "$__dircolors_output"; then
       :
     else
-      print -u2 -- 'WARNING, colors.zsh: dircolors init failed.'
+      print -u2 -- "WARNING, ${${(%):-%x}:t}: dircolors init failed."
     fi
     unset __dircolors_output
   fi
