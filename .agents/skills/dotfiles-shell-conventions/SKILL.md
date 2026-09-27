@@ -38,6 +38,10 @@ implementation verbatim between Bash and Zsh when either shell has a clearer nat
 - Require explicit confirmation before destructive operations.
 - Update `functions-help` or `utils-help` when adding or removing user-facing helpers.
 - Preserve XDG paths and existing local environment-loading behavior.
+- Keep platform-specific function modules separate and source them only when the platform is
+  detected, so unsupported helpers do not enter other shell environments.
+- Derive names in diagnostics from shell metadata instead of repeating function or source-file
+  names as string literals.
 
 ## Bash conventions
 
@@ -46,6 +50,7 @@ implementation verbatim between Bash and Zsh when either shell has a clearer nat
 - Prefer `[[ ... ]]` for tests. Quote parameter expansions used as command arguments.
 - Declare function variables with `local`; use `local -a` and `"${array[@]}"` for arrays.
 - Use `printf` for output. Send diagnostics to stderr with `printf '...' >&2`.
+- Use `FUNCNAME` for current/calling function names and `BASH_SOURCE` for source-file names.
 - Use `builtin` or `command` only when intentionally bypassing an alias, function, or
   wrapper.
 - Preserve intentional dynamic `source` and `export` patterns. Do not rewrite them solely
@@ -63,6 +68,8 @@ implementation verbatim between Bash and Zsh when either shell has a clearer nat
 - Use `print -r --` for plain output, `print -u2 --` for diagnostics, and `print -n --` for
   prompts. Use `print -f` or `printf` only when formatting or byte-level behavior requires
   it.
+- Use `funcstack` for current/calling function names and `%x` prompt expansion for the source
+  file that defines the executing code.
 - Respect `NO_CLOBBER`. Use `>|` only when an overwrite is intentional.
 - Prefix a command with `command` when intentionally bypassing an alias or wrapper, such as
   `command rm`, `command mv`, or `command cat`.
@@ -91,4 +98,5 @@ implementation verbatim between Bash and Zsh when either shell has a clearer nat
 - Run `git diff --check` and scan modified text for lines longer than 100 columns.
 - Exercise optional-command branches and compare generated strings when changing shell
   initialization, fzf previews, bindings, or reload actions.
+- Exercise both matching and non-matching platform branches when changing conditional modules.
 - Review the final diff and confirm every changed line belongs to the requested task.

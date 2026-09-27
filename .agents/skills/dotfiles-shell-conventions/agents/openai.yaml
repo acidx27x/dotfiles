@@ -1,0 +1,3 @@
+interface:
+  display_name: "Dotfiles Shell Conventions"
+  short_description: "Apply Bash and Zsh conventions in this dotfiles repo"
