@@ -1,5 +1,6 @@
 # Taps
-tap "jurplel/tap", trusted: true
+tap "jurplel/tap", trusted: true if OS.mac?  # macos instant-space-switcher
+tap "pwndbg/tap",  trusted: true if OS.mac?  # pwndbg-gdb/-lldb
 #
 
 brew "hello"
@@ -8,8 +9,8 @@ brew "neovim"
 
 # VCS
 brew "git"
-brew "git-lfs"
 brew "git-delta"
+brew "git-lfs"
 brew "lazygit"
 brew "stow"
 #
@@ -21,8 +22,8 @@ brew "shellcheck"
 brew "shfmt"
 # Linux
 brew "bash"              if OS.linux?
-brew "bash-preexec"      if OS.linux?
 brew "bash-completion@2" if OS.linux?
+brew "bash-preexec"      if OS.linux?
 # Mac
 brew "zsh"                     if OS.mac?
 brew "zsh-autocomplete"        if OS.mac?
@@ -46,23 +47,24 @@ brew "ripgrep"
 brew "sd"
 brew "starship"
 brew "vivid"
-brew "zoxide"
 brew "yazi"
+brew "zoxide"
 #
 
 # Terminal mux
-brew "tmux"
 brew "herdr"
+brew "tmux"
 brew "zellij"
 #
 
 # C/C++ tools
-brew "automake"
 brew "autoconf-archive"
+brew "automake"
 brew "ccache"
 brew "clang-format"
 brew "cmake"
 brew "gcc"
+brew "gersemi"
 brew "libtool"
 brew "lld"
 brew "lldb"
@@ -71,17 +73,18 @@ brew "metashell"
 brew "mold"
 brew "ninja"
 brew "pkgconf"
-brew "gersemi"
+brew "pwndbg-gdb"  if OS.mac?
+brew "pwndbg-lldb" if OS.mac?
 #
 
 # Python
-brew "python3"
 brew "ptpython"
+brew "python3"
 #
 
 # AI
-cask "codex"
 brew "bubblewrap" if OS.linux?
+cask "codex"
 #
 
 # Fonts
@@ -90,16 +93,16 @@ cask "font-fira-code-nerd-font"
 #
 
 # Utils
-brew "curl"
 brew "btop"
-brew "jless"
+brew "curl"
 brew "htop"
+brew "jless"
 brew "thefuck"
 brew "uchardet"
 brew "wget"
 # Mac
-cask "instant-space-switcher" if OS.mac?  # from jurplel/tap
 cask "forklift"               if OS.mac?
+cask "instant-space-switcher" if OS.mac?  # from jurplel/tap
 cask "karing"                 if OS.mac?
 cask "stats"                  if OS.mac?
 #
