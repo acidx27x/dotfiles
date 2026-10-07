@@ -1,11 +1,25 @@
-
-settings set target.load-cwd-lldbinit true
-
 settings set target.x86-disassembly-flavor intel
+# When stopped, don't show source lines before/after the current line
+settings set stop-line-count-before 0
+settings set stop-line-count-after 0
 
-settings append target.process.thread.step-avoid-regexp ^std::
-settings append target.process.thread.step-avoid-regexp ^[^ ]+ std::
-settings append target.process.thread.step-avoid-regexp ^boost::
-settings append target.process.thread.step-avoid-regexp ^[^ ]+ boost::
-settings append target.process.thread.step-avoid-regexp ^Q[A-Z][A-Za-z0-9_]*::
-settings append target.process.thread.step-avoid-regexp ^[^ ]+ Q[A-Z][A-Za-z0-9_]*::
+# Avoid stepping into functions that don't have debug information
+settings set target.process.thread.step-in-avoid-nodebug true
+# Avoid stopping in code without debug information when stepping out
+settings set target.process.thread.step-out-avoid-nodebug true
+# Avoid stepping into C++ standard library functions such as std::vector, std::string, etc.
+settings set target.process.thread.step-avoid-regexp '^(std::|[^ ]+ std::)'
+
+
+# Avoid stepping into internals
+settings append target.process.thread.step-avoid-libraries libstdc++.so
+settings append target.process.thread.step-avoid-libraries libgcc_s.so
+settings append target.process.thread.step-avoid-libraries libc++.so
+settings append target.process.thread.step-avoid-libraries libc++abi.so
+
+# Prefer expanded multi-line output for structs/classes
+settings set auto-one-line-summaries false
+# Show the dynamic/derived C++ type when LLDB can determine it safely
+settings set target.prefer-dynamic-value no-run-target
+# Enable synthetic children / pretty-printers for containers and complex types
+settings set target.enable-synthetic-value true
