@@ -18,6 +18,7 @@ brew "stow"
 brew "brush"
 brew "nushell"
 brew "shellcheck"
+brew "shfmt"
 # Linux
 brew "bash"              if OS.linux?
 brew "bash-preexec"      if OS.linux?
