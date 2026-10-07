@@ -98,8 +98,8 @@ setopt TRANSIENT_RPROMPT
 # ---------------------------------------------------------------------------
 
 if [[ ${OSTYPE:-} == linux* &&
-      -z ${debian_chroot:-} &&
-      -r /etc/debian_chroot ]]; then
+  -z ${debian_chroot:-} &&
+  -r /etc/debian_chroot ]]; then
   debian_chroot=$(</etc/debian_chroot)
 fi
 
@@ -156,7 +156,7 @@ else
   _completion_status=$?
 fi
 
-if (( _completion_status != 0 && _completion_status != 127 )); then
+if ((_completion_status != 0 && _completion_status != 127)); then
   print -u2 -- \
     "WARNING, ${${(%):-%x}:t}: completion initialization failed."
 fi
@@ -212,8 +212,8 @@ autoload -Uz zmv
 # zmv -i '(*).log' '$1.txt'        # Interactive mode (confirm each)
 
 # Helpful aliases for zmv
-alias zcp='zmv -C'  # Copy with patterns
-alias zln='zmv -L'  # Link with patterns
+alias zcp='zmv -C' # Copy with patterns
+alias zln='zmv -L' # Link with patterns
 
 # ---------------------------------------------------------------------------
 # Optional plugins

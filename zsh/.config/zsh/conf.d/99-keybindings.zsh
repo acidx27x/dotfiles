@@ -15,7 +15,7 @@ zvm_define_widget _my_edit_command_line
 
 zvm_bindkey viins '^X^E' _my_edit_command_line
 
-if (( $+functions[ffd] )); then
+if (($+functions[ffd])); then
   _my_ffd() {
     emulate -L zsh
 
@@ -29,7 +29,7 @@ if (( $+functions[ffd] )); then
   zvm_bindkey viins '^X^F' _my_ffd
 fi
 
-if (( $+functions[frg] )); then
+if (($+functions[frg])); then
   _my_frg() {
     emulate -L zsh
 
@@ -46,8 +46,8 @@ fi
 # Normal mode — after lazy bindings zsh-vi-mode
 _zvm_my_lazy_bindings() {
   zvm_bindkey vicmd '^X^E' _my_edit_command_line
-  (( $+functions[ffd] )) && zvm_bindkey vicmd '^X^F' _my_ffd
-  (( $+functions[frg] )) && zvm_bindkey vicmd '^X^G' _my_frg
+  (($+functions[ffd])) && zvm_bindkey vicmd '^X^F' _my_ffd
+  (($+functions[frg])) && zvm_bindkey vicmd '^X^G' _my_frg
 }
 
 zvm_after_lazy_keybindings_commands+=(_zvm_my_lazy_bindings)

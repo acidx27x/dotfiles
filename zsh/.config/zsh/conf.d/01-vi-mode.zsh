@@ -7,12 +7,12 @@ ZVM_SYSTEM_CLIPBOARD_ENABLED=true
 ZVM_CURSOR_STYLE_ENABLED=true
 
 zvm_config() {
-    ZVM_RESET_PROMPT_DISABLED=true
-    ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
-    ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
-    ZVM_VISUAL_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
-    ZVM_VISUAL_LINE_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
-    ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
+  ZVM_RESET_PROMPT_DISABLED=true
+  ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
+  ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+  ZVM_VISUAL_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
+  ZVM_VISUAL_LINE_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
+  ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
 }
 
 source-first \
@@ -20,5 +20,5 @@ source-first \
   '/usr/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh' \
   '/usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh' \
   '/usr/share/zsh-vi-mode/zsh-vi-mode.zsh' \
-  '/usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.zsh' \
-  || true
+  '/usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.zsh' ||
+  true

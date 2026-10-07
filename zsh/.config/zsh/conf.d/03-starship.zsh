@@ -32,7 +32,7 @@ if has-cmd starship; then
   fi
 fi
 
-if (( ! _starship_initialized )); then
+if ((! _starship_initialized)); then
   autoload -Uz add-zsh-hook vcs_info
 
   zstyle ':vcs_info:git:*' enable git

@@ -43,7 +43,7 @@ homebrew-path-remove() {
     brew_prefixes+=("${HOMEBREW_BREW_FILE%/bin/brew}")
   fi
 
-  IFS=: read -r -a path_entries <<< "${PATH-}"
+  IFS=: read -r -a path_entries <<<"${PATH-}"
 
   for entry in "${path_entries[@]}"; do
     for brew_prefix in "${brew_prefixes[@]}"; do
@@ -55,7 +55,10 @@ homebrew-path-remove() {
     kept_entries+=("$entry")
   done
 
-  joined_path=$(IFS=:; printf '%s' "${kept_entries[*]}")
+  joined_path=$(
+    IFS=:
+    printf '%s' "${kept_entries[*]}"
+  )
   PATH="$joined_path"
   export PATH
   hash -r
@@ -68,7 +71,7 @@ homebrew-tool-path-prepend() {
   local formula_bin
   local -a formula_bins=()
 
-  if (( $# == 0 )); then
+  if (($# == 0)); then
     printf 'Usage: %s FORMULA...\n' "${FUNCNAME[0]}" >&2
     return 2
   fi
@@ -117,30 +120,28 @@ fi
 # Otherwise check the standard installation locations.
 if [[ -z "$_brew_bin" ]]; then
   case ${OSTYPE:-} in
-    darwin*)
-      # Apple Silicon, then Intel macOS.
-      for _candidate in \
-        /opt/homebrew/bin/brew \
-        /usr/local/bin/brew
-      do
-        if [[ -x "$_candidate" ]]; then
-          _brew_bin="$_candidate"
-          break
-        fi
-      done
-      ;;
+  darwin*)
+    # Apple Silicon, then Intel macOS.
+    for _candidate in \
+      /opt/homebrew/bin/brew \
+      /usr/local/bin/brew; do
+      if [[ -x "$_candidate" ]]; then
+        _brew_bin="$_candidate"
+        break
+      fi
+    done
+    ;;
 
-    linux*)
-      for _candidate in \
-        /home/linuxbrew/.linuxbrew/bin/brew \
-        "$HOME/.linuxbrew/bin/brew"
-      do
-        if [[ -x "$_candidate" ]]; then
-          _brew_bin="$_candidate"
-          break
-        fi
-      done
-      ;;
+  linux*)
+    for _candidate in \
+      /home/linuxbrew/.linuxbrew/bin/brew \
+      "$HOME/.linuxbrew/bin/brew"; do
+      if [[ -x "$_candidate" ]]; then
+        _brew_bin="$_candidate"
+        break
+      fi
+    done
+    ;;
   esac
 fi
 

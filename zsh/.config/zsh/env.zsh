@@ -13,11 +13,11 @@ else
 fi
 
 # Keep direct execution useful while .zshrc supplies these modules normally.
-if (( ! $+functions[set-xdg-path] )); then
+if ((! $+functions[set - xdg - path])); then
   source "$_zsh_config_dir/utils.zsh" || exit 1
 fi
 
-if (( ! $+functions[print-xdg-paths] )); then
+if ((! $+functions[print - xdg - paths])); then
   source "$_zsh_config_dir/functions.zsh" || exit 1
 fi
 
@@ -27,12 +27,12 @@ unset _zsh_config_dir
 # XDG Base Directory Specification
 # ---------------------------------------------------------------------------
 
-set-xdg-path XDG_DATA_HOME   "$HOME/.local/share"
+set-xdg-path XDG_DATA_HOME "$HOME/.local/share"
 set-xdg-path XDG_CONFIG_HOME "$HOME/.config"
-set-xdg-path XDG_STATE_HOME  "$HOME/.local/state"
-set-xdg-path XDG_CACHE_HOME  "$HOME/.cache"
+set-xdg-path XDG_STATE_HOME "$HOME/.local/state"
+set-xdg-path XDG_CACHE_HOME "$HOME/.cache"
 
-set-xdg-path-list XDG_DATA_DIRS   '/usr/local/share:/usr/share'
+set-xdg-path-list XDG_DATA_DIRS '/usr/local/share:/usr/share'
 set-xdg-path-list XDG_CONFIG_DIRS '/etc/xdg'
 
 export XDG_USER_BIN_HOME="$HOME/.local/bin"
@@ -58,17 +58,17 @@ export PATH
 # XDG user directories
 # ---------------------------------------------------------------------------
 
-set-xdg-user-dir XDG_DESKTOP_DIR     DESKTOP     "$HOME/Desktop"
-set-xdg-user-dir XDG_DOWNLOAD_DIR    DOWNLOAD    "$HOME/Downloads"
-set-xdg-user-dir XDG_TEMPLATES_DIR   TEMPLATES   "$HOME/Templates"
+set-xdg-user-dir XDG_DESKTOP_DIR DESKTOP "$HOME/Desktop"
+set-xdg-user-dir XDG_DOWNLOAD_DIR DOWNLOAD "$HOME/Downloads"
+set-xdg-user-dir XDG_TEMPLATES_DIR TEMPLATES "$HOME/Templates"
 set-xdg-user-dir XDG_PUBLICSHARE_DIR PUBLICSHARE "$HOME/Public"
-set-xdg-user-dir XDG_DOCUMENTS_DIR   DOCUMENTS   "$HOME/Documents"
-set-xdg-user-dir XDG_MUSIC_DIR       MUSIC       "$HOME/Music"
-set-xdg-user-dir XDG_PICTURES_DIR    PICTURES    "$HOME/Pictures"
+set-xdg-user-dir XDG_DOCUMENTS_DIR DOCUMENTS "$HOME/Documents"
+set-xdg-user-dir XDG_MUSIC_DIR MUSIC "$HOME/Music"
+set-xdg-user-dir XDG_PICTURES_DIR PICTURES "$HOME/Pictures"
 
 case ${OSTYPE:-} in
-  darwin*) _xdg_videos_fallback="$HOME/Movies" ;;
-  *)       _xdg_videos_fallback="$HOME/Videos" ;;
+darwin*) _xdg_videos_fallback="$HOME/Movies" ;;
+*) _xdg_videos_fallback="$HOME/Videos" ;;
 esac
 
 set-xdg-user-dir XDG_VIDEOS_DIR VIDEOS "$_xdg_videos_fallback"
@@ -87,6 +87,7 @@ export LESSHISTFILE="$XDG_STATE_HOME/lesshst"
 export SQLITE_HISTORY="$XDG_STATE_HOME/sqlite_history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql_history"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
+export GDBHISTFILE="$XDG_STATE_HOME/gdb_history"
 
 # Misc
 export EDITOR="${EDITOR:-nvim}"

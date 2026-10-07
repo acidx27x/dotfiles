@@ -9,22 +9,22 @@ current-shell() {
 # Print the resolved XDG paths.
 print-xdg-paths() {
   printf '%-24s %s\n' \
-    XDG_DATA_HOME        "$XDG_DATA_HOME" \
-    XDG_CONFIG_HOME      "$XDG_CONFIG_HOME" \
-    XDG_STATE_HOME       "$XDG_STATE_HOME" \
-    XDG_CACHE_HOME       "$XDG_CACHE_HOME" \
-    XDG_RUNTIME_DIR      "${XDG_RUNTIME_DIR:-<not set>}" \
-    XDG_DATA_DIRS        "$XDG_DATA_DIRS" \
-    XDG_CONFIG_DIRS      "$XDG_CONFIG_DIRS" \
-    XDG_USER_BIN_HOME    "$XDG_USER_BIN_HOME" \
-    XDG_DESKTOP_DIR      "$XDG_DESKTOP_DIR" \
-    XDG_DOWNLOAD_DIR     "$XDG_DOWNLOAD_DIR" \
-    XDG_TEMPLATES_DIR    "$XDG_TEMPLATES_DIR" \
-    XDG_PUBLICSHARE_DIR  "$XDG_PUBLICSHARE_DIR" \
-    XDG_DOCUMENTS_DIR    "$XDG_DOCUMENTS_DIR" \
-    XDG_MUSIC_DIR        "$XDG_MUSIC_DIR" \
-    XDG_PICTURES_DIR     "$XDG_PICTURES_DIR" \
-    XDG_VIDEOS_DIR       "$XDG_VIDEOS_DIR"
+    XDG_DATA_HOME "$XDG_DATA_HOME" \
+    XDG_CONFIG_HOME "$XDG_CONFIG_HOME" \
+    XDG_STATE_HOME "$XDG_STATE_HOME" \
+    XDG_CACHE_HOME "$XDG_CACHE_HOME" \
+    XDG_RUNTIME_DIR "${XDG_RUNTIME_DIR:-<not set>}" \
+    XDG_DATA_DIRS "$XDG_DATA_DIRS" \
+    XDG_CONFIG_DIRS "$XDG_CONFIG_DIRS" \
+    XDG_USER_BIN_HOME "$XDG_USER_BIN_HOME" \
+    XDG_DESKTOP_DIR "$XDG_DESKTOP_DIR" \
+    XDG_DOWNLOAD_DIR "$XDG_DOWNLOAD_DIR" \
+    XDG_TEMPLATES_DIR "$XDG_TEMPLATES_DIR" \
+    XDG_PUBLICSHARE_DIR "$XDG_PUBLICSHARE_DIR" \
+    XDG_DOCUMENTS_DIR "$XDG_DOCUMENTS_DIR" \
+    XDG_MUSIC_DIR "$XDG_MUSIC_DIR" \
+    XDG_PICTURES_DIR "$XDG_PICTURES_DIR" \
+    XDG_VIDEOS_DIR "$XDG_VIDEOS_DIR"
 }
 
 # List user-facing functions available in the current shell.
@@ -114,33 +114,33 @@ detect-encoding() {
   fi
 
   case $encoding in
-    '' | unknown | UNKNOWN)
-      has-cmd file || {
-        print -u2 -- 'Neither uchardet nor file is available.'
-        return 127
-      }
+  '' | unknown | UNKNOWN)
+    has-cmd file || {
+      print -u2 -- 'Neither uchardet nor file is available.'
+      return 127
+    }
 
-      encoding=$(file -b --mime-encoding -- "$file") || return
-      ;;
+    encoding=$(file -b --mime-encoding -- "$file") || return
+    ;;
   esac
 
   case $encoding in
-    binary | BINARY)
-      print -r -- binary
-      ;;
+  binary | BINARY)
+    print -r -- binary
+    ;;
 
-    us-ascii | US-ASCII | ascii | ASCII | utf-8 | UTF-8)
-      print -r -- UTF-8
-      ;;
+  us-ascii | US-ASCII | ascii | ASCII | utf-8 | UTF-8)
+    print -r -- UTF-8
+    ;;
 
-    unknown-8bit | UNKNOWN-8BIT | unknown | UNKNOWN | '')
-      print -u2 -- "Could not determine encoding: $file"
-      return 2
-      ;;
+  unknown-8bit | UNKNOWN-8BIT | unknown | UNKNOWN | '')
+    print -u2 -- "Could not determine encoding: $file"
+    return 2
+    ;;
 
-    *)
-      print -r -- "$encoding"
-      ;;
+  *)
+    print -r -- "$encoding"
+    ;;
   esac
 }
 
@@ -163,7 +163,7 @@ _to_utf8_impl() {
 
   local file encoding temp body signature
 
-  (( $# > 0 )) || {
+  (($# > 0)) || {
     print -u2 -- "Usage: $funcstack[2] FILE..."
     return 2
   }
@@ -189,7 +189,7 @@ _to_utf8_impl() {
     temp=$(mktemp) || return 1
     body=''
 
-    if ! iconv -f "$encoding" -t UTF-8 "$file" >| "$temp"; then
+    if ! iconv -f "$encoding" -t UTF-8 "$file" >|"$temp"; then
       print -u2 -- "iconv failed for $file using encoding $encoding"
       command rm -f -- "$temp"
       continue
@@ -206,7 +206,7 @@ _to_utf8_impl() {
         return 1
       }
 
-      if ! tail -c +4 -- "$temp" >| "$body"; then
+      if ! tail -c +4 -- "$temp" >|"$body"; then
         command rm -f -- "$temp" "$body"
         continue
       fi
@@ -215,7 +215,7 @@ _to_utf8_impl() {
       body=''
     fi
 
-    if (( add_bom )); then
+    if ((add_bom)); then
       body=$(mktemp) || {
         command rm -f -- "$temp"
         return 1
@@ -224,7 +224,7 @@ _to_utf8_impl() {
       if ! {
         printf '\xEF\xBB\xBF'
         command cat -- "$temp"
-      } >| "$body"; then
+      } >|"$body"; then
         command rm -f -- "$temp" "$body"
         continue
       fi
@@ -233,7 +233,7 @@ _to_utf8_impl() {
       body=''
     fi
 
-    if ! command cat -- "$temp" >| "$file"; then
+    if ! command cat -- "$temp" >|"$file"; then
       print -u2 -- "Failed to overwrite: $file"
       command rm -f -- "$temp"
       continue
@@ -241,7 +241,7 @@ _to_utf8_impl() {
 
     command rm -f -- "$temp"
 
-    if (( add_bom )); then
+    if ((add_bom)); then
       printf 'Converted to UTF-8 with BOM from %s: %s\n' "$encoding" "$file"
     else
       printf 'Converted to UTF-8 from %s: %s\n' "$encoding" "$file"
@@ -269,7 +269,7 @@ to-us-ascii() {
   local brew_candidate
   local icu_prefix=''
 
-  (( $# > 0 )) || {
+  (($# > 0)) || {
     print -u2 -- "Usage: $funcstack[1] FILE..."
     return 2
   }
@@ -286,8 +286,7 @@ to-us-ascii() {
         /opt/homebrew/bin/brew \
         /usr/local/bin/brew \
         /home/linuxbrew/.linuxbrew/bin/brew \
-        "$HOME/.linuxbrew/bin/brew"
-      do
+        "$HOME/.linuxbrew/bin/brew"; do
         if [[ -x $brew_candidate ]]; then
           brew_command=$brew_candidate
           break
@@ -329,14 +328,13 @@ to-us-ascii() {
       -t US-ASCII \
       -x 'Any-Latin; Latin-ASCII' \
       --to-callback stop \
-      "$file" >| "$temp"
-    then
+      "$file" >|"$temp"; then
       print -u2 -- "uconv failed for $file using encoding $encoding"
       command rm -f -- "$temp"
       continue
     fi
 
-    if ! command cat -- "$temp" >| "$file"; then
+    if ! command cat -- "$temp" >|"$file"; then
       print -u2 -- "Failed to overwrite: $file"
       command rm -f -- "$temp"
       continue
@@ -364,16 +362,16 @@ proxy-status() {
   )
 
   for name in "${names[@]}"; do
-    if (( $+parameters[$name] )); then
+    if (($+parameters[$name])); then
       value=${(P)name}
 
       case $value in
-        *://*@*)
-          scheme=${value%%://*}
-          remainder=${value#*://}
-          remainder=${remainder#*@}
-          value="${scheme}://<redacted>@${remainder}"
-          ;;
+      *://*@*)
+        scheme=${value%%://*}
+        remainder=${value#*://}
+        remainder=${remainder#*@}
+        value="${scheme}://<redacted>@${remainder}"
+        ;;
       esac
     else
       value='<unset>'

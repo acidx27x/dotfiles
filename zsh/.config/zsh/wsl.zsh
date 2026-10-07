@@ -26,7 +26,7 @@ wsl-windows-drive-is-mounted() {
   local letter
   local mount_path
 
-  (( $# == 1 )) || {
+  (($# == 1)) || {
     print -u2 -- "Usage: $funcstack[1] DRIVE"
     return 2
   }
@@ -47,7 +47,7 @@ wsl-windows-drive-is-unmounted() {
   local letter
   local mount_path
 
-  (( $# == 1 )) || {
+  (($# == 1)) || {
     print -u2 -- "Usage: $funcstack[1] DRIVE"
     return 2
   }
@@ -77,7 +77,7 @@ wsl-windows-drive-mount() {
     return 1
   fi
 
-  (( $# > 0 )) || {
+  (($# > 0)) || {
     print -u2 -- "Usage: $funcstack[1] DRIVE [DRIVE ...]"
     return 2
   }
@@ -99,14 +99,14 @@ wsl-windows-drive-mount() {
 
     if ! sudo mkdir -p "$mount_path"; then
       print -u2 -- "WARNING, $funcstack[1]: could not create '$mount_path'."
-      (( result == 2 )) || result=1
+      ((result == 2)) || result=1
       continue
     fi
 
     if ! sudo mount -t drvfs "${drive_name}:" "$mount_path"; then
       print -u2 -- \
         "WARNING, $funcstack[1]: could not mount Windows '$drive_name:'."
-      (( result == 2 )) || result=1
+      ((result == 2)) || result=1
       continue
     fi
 
@@ -128,7 +128,7 @@ wsl-windows-drive-unmount() {
     return 1
   fi
 
-  (( $# > 0 )) || {
+  (($# > 0)) || {
     print -u2 -- "Usage: $funcstack[1] DRIVE [DRIVE ...]"
     return 2
   }
@@ -151,7 +151,7 @@ wsl-windows-drive-unmount() {
     if ! sudo umount "$mount_path"; then
       print -u2 -- \
         "WARNING, $funcstack[1]: could not unmount Windows '$drive_name:'."
-      (( result == 2 )) || result=1
+      ((result == 2)) || result=1
       continue
     fi
 
@@ -239,11 +239,11 @@ wsl-karing-proxy-enable() {
     fi
   fi
 
-  if (( mounted_by_us )) && ! wsl-windows-drive-unmount C; then
+  if ((mounted_by_us)) && ! wsl-windows-drive-unmount C; then
     result=1
   fi
 
-  (( result == 0 )) || return $result
+  ((result == 0)) || return $result
 
   previous=$(proxy-status) || return
 

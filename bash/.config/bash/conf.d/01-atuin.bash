@@ -1,7 +1,9 @@
 # ~/.config/bash/conf.d/01-atuin.bash
 # atuin setup must be done before fzf setup
 
-_atuin_initialized=0  # can be checked later
+export ATUIN_LOGS_DIR="$XDG_STATE_HOME/atuin/logs"
+
+_atuin_initialized=0 # can be checked later
 _atuin_init_args=(init bash --disable-ai)
 
 # Herdr already manages the pane PTY. Keep Atuin's history hooks, but let fzf
@@ -22,7 +24,7 @@ fi
 if [[ ${HERDR_ENV:-} == 1 ]]; then
   unset FZF_CTRL_R_COMMAND
 # Otherwise, disable fzf's Ctrl-R binding only after Atuin initialized.
-elif (( _atuin_initialized )) && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
+elif ((_atuin_initialized)) && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
   export FZF_CTRL_R_COMMAND=
 fi
 

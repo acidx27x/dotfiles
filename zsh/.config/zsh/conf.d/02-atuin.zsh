@@ -1,6 +1,8 @@
 # ~/.config/zsh/conf.d/02-atuin.zsh
 # Atuin must initialize before fzf key bindings.
 
+export ATUIN_LOGS_DIR="$XDG_STATE_HOME/atuin/logs"
+
 _atuin_initialized=0
 _atuin_init_args=(init zsh --disable-ai)
 
@@ -22,7 +24,7 @@ fi
 if [[ ${HERDR_ENV:-} == 1 ]]; then
   unset FZF_CTRL_R_COMMAND
 # Otherwise, disable fzf's Ctrl-R binding only after Atuin initialized.
-elif (( _atuin_initialized )) && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
+elif ((_atuin_initialized)) && [[ -z ${FZF_CTRL_R_COMMAND+x} ]]; then
   export FZF_CTRL_R_COMMAND=
 fi
 

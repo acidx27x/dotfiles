@@ -94,41 +94,41 @@ _fzf_comprun() {
   shift
 
   case $command_name in
-    cd)
-      if [[ -n $_fzf_eza_command ]]; then
-        fzf \
-          --preview "$_fzf_eza_command --icons=always --tree --color=always -- {} | head -200" \
-          "$@"
-      else
-        fzf "$@"
-      fi
-      ;;
+  cd)
+    if [[ -n $_fzf_eza_command ]]; then
+      fzf \
+        --preview "$_fzf_eza_command --icons=always --tree --color=always -- {} | head -200" \
+        "$@"
+    else
+      fzf "$@"
+    fi
+    ;;
 
-    export | unset)
-      if [[ -n $_fzf_printenv_command ]]; then
-        fzf --preview "$_fzf_printenv_command {}" "$@"
-      else
-        fzf "$@"
-      fi
-      ;;
+  export | unset)
+    if [[ -n $_fzf_printenv_command ]]; then
+      fzf --preview "$_fzf_printenv_command {}" "$@"
+    else
+      fzf "$@"
+    fi
+    ;;
 
-    ssh)
-      if [[ -n $_fzf_dig_command ]]; then
-        fzf --preview "$_fzf_dig_command {}" "$@"
-      else
-        fzf "$@"
-      fi
-      ;;
+  ssh)
+    if [[ -n $_fzf_dig_command ]]; then
+      fzf --preview "$_fzf_dig_command {}" "$@"
+    else
+      fzf "$@"
+    fi
+    ;;
 
-    *)
-      if [[ -n $_fzf_bat_command ]]; then
-        fzf \
-          --preview "[[ -f {} ]] && $_fzf_bat_command --color=always -n --line-range :500 -- {}" \
-          "$@"
-      else
-        fzf "$@"
-      fi
-      ;;
+  *)
+    if [[ -n $_fzf_bat_command ]]; then
+      fzf \
+        --preview "[[ -f {} ]] && $_fzf_bat_command --color=always -n --line-range :500 -- {}" \
+        "$@"
+    else
+      fzf "$@"
+    fi
+    ;;
   esac
 }
 
@@ -184,46 +184,46 @@ _fzf_open_path() {
   ) || return
 
   case $cmd in
-    bat)
-      "$_fzf_bat_command" -- "$input_path"
-      ;;
+  bat)
+    "$_fzf_bat_command" -- "$input_path"
+    ;;
 
-    cat)
-      command cat -- "$input_path"
-      ;;
+  cat)
+    command cat -- "$input_path"
+    ;;
 
-    cd)
-      if [[ -f $input_path ]]; then
-        builtin cd -- "${input_path:h}" || return
-      elif [[ -d $input_path ]]; then
-        builtin cd -- "$input_path" || return
-      fi
-      ;;
+  cd)
+    if [[ -f $input_path ]]; then
+      builtin cd -- "${input_path:h}" || return
+    elif [[ -d $input_path ]]; then
+      builtin cd -- "$input_path" || return
+    fi
+    ;;
 
-    nvim)
-      if [[ -n $line && $line == <-> && -f $input_path ]]; then
-        "$_fzf_nvim_command" "+$line" -- "$input_path"
-      else
-        "$_fzf_nvim_command" -- "$input_path"
-      fi
-      ;;
+  nvim)
+    if [[ -n $line && $line == <-> && -f $input_path ]]; then
+      "$_fzf_nvim_command" "+$line" -- "$input_path"
+    else
+      "$_fzf_nvim_command" -- "$input_path"
+    fi
+    ;;
 
-    remove)
-      print -n -- "Remove ${(q)input_path}? [y/N] "
-      read -r reply
+  remove)
+    print -n -- "Remove ${(q)input_path}? [y/N] "
+    read -r reply
 
-      [[ $reply == [yY] || $reply == [yY][eE][sS] ]] || return
+    [[ $reply == [yY] || $reply == [yY][eE][sS] ]] || return
 
-      command rm -rf -- "$input_path"
-      ;;
+    command rm -rf -- "$input_path"
+    ;;
 
-    echo)
-      print -r -- "$input_path"
-      ;;
+  echo)
+    print -r -- "$input_path"
+    ;;
 
-    *)
-      return 1
-      ;;
+  *)
+    return 1
+    ;;
   esac
 }
 
@@ -419,11 +419,11 @@ frg() {
 typeset -g FZF_GIT_SH="$_zsh_config_dir/conf.local.d/fzf-git.sh/fzf-git.sh"
 [[ -f $FZF_GIT_SH ]] || return 0
 
-fgf() { bash "$FZF_GIT_SH" --run files     "$@"; }
-fgb() { bash "$FZF_GIT_SH" --run branches  "$@"; }
-fgt() { bash "$FZF_GIT_SH" --run tags      "$@"; }
-fgh() { bash "$FZF_GIT_SH" --run hashes    "$@"; }
-fgs() { bash "$FZF_GIT_SH" --run stashes   "$@"; }
+fgf() { bash "$FZF_GIT_SH" --run files "$@"; }
+fgb() { bash "$FZF_GIT_SH" --run branches "$@"; }
+fgt() { bash "$FZF_GIT_SH" --run tags "$@"; }
+fgh() { bash "$FZF_GIT_SH" --run hashes "$@"; }
+fgs() { bash "$FZF_GIT_SH" --run stashes "$@"; }
 fgw() { bash "$FZF_GIT_SH" --run worktrees "$@"; }
 
 fghelp() {

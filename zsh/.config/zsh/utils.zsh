@@ -6,7 +6,7 @@ has-cmd() {
   emulate -L zsh
 
   local name
-  (( $# > 0 )) || return 1
+  (($# > 0)) || return 1
 
   for name in "$@"; do
     if [[ $name == */* ]]; then
@@ -24,7 +24,7 @@ shell-init() {
   local command_name
   local init_code
 
-  (( $# >= 2 )) || {
+  (($# >= 2)) || {
     print -u2 -- "Usage: $funcstack[1] COMMAND ARGUMENT..."
     return 2
   }
@@ -93,7 +93,7 @@ current-file-dir() {
 
   (
     cd -P -- "$(dirname -- "$file")" 2>/dev/null &&
-    pwd
+      pwd
   )
 }
 
@@ -104,12 +104,12 @@ load-zsh-completion() {
   local completion_cache="$XDG_CACHE_HOME/zsh/completion"
   local -a completion_paths
 
-  (( $# == 0 )) || {
+  (($# == 0)) || {
     print -u2 -- "Usage: $funcstack[1]"
     return 2
   }
 
-  (( ${_DOTFILES_ZSH_COMPLETION_INITIALIZED:-0} )) && return 0
+  ((${_DOTFILES_ZSH_COMPLETION_INITIALIZED:-0})) && return 0
 
   if [[ -n ${HOMEBREW_PREFIX:-} ]]; then
     [[ -d "$HOMEBREW_PREFIX/share/zsh-completions" ]] &&
@@ -125,8 +125,7 @@ load-zsh-completion() {
   autoload -Uz compinit
 
   if { [[ -d $completion_cache && -w $completion_cache ]] ||
-       { mkdir -p -- "$completion_cache" 2>/dev/null && [[ -w $completion_cache ]]; } }
-  then
+    { mkdir -p -- "$completion_cache" 2>/dev/null && [[ -w $completion_cache ]]; }; }; then
     # Trust every configured completion path, including Homebrew paths.
     compinit -u -d "$completion_cache/zcompdump-$ZSH_VERSION" || return
     zstyle ':completion:*' use-cache yes
@@ -151,7 +150,7 @@ path-prepend() {
 
   typeset -gU path PATH
 
-  for (( i = ${#directories}; i >= 1; i-- )); do
+  for ((i = ${#directories}; i >= 1; i--)); do
     directory=${directories[i]}
     [[ -n $directory && -d $directory ]] || continue
     [[ $directory == /* ]] || directory=${directory:a}
@@ -193,7 +192,7 @@ set-xdg-path-list() {
     [[ $entry == /* ]] && valid_entries+=("$entry")
   done
 
-  if (( ${#valid_entries} == 0 )); then
+  if ((${#valid_entries} == 0)); then
     valid_entries=("${(@s.:.)default_value}")
   fi
 
@@ -234,12 +233,12 @@ _print-function-catalog() {
   shift
   print -r -- "$title"
 
-  while (( $# >= 2 )); do
+  while (($# >= 2)); do
     name=$1
     description=$2
     shift 2
 
-    if (( $+functions[$name] )); then
+    if (($+functions[$name])); then
       printf '  %-24s %s\n' "$name" "$description"
     fi
   done

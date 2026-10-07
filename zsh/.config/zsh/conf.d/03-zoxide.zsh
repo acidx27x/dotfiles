@@ -1,10 +1,7 @@
 # ~/.config/zsh/conf.d/03-zoxide.zsh
 # zoxide setup after prompt initialization.
 
-# Keep zoxide state in the XDG data directory unless explicitly configured.
-if [[ -z ${_ZO_DATA_DIR+x} ]]; then
-  export _ZO_DATA_DIR="$XDG_DATA_HOME/zoxide"
-fi
+export _ZO_DATA_DIR="$XDG_STATE_HOME/zoxide"
 
 # zoxide completion requires compinit to have run first.
 if has-cmd zoxide; then

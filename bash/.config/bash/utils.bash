@@ -10,7 +10,7 @@ is-brush() {
 has-cmd() {
   local name
 
-  (( $# > 0 )) || return 1
+  (($# > 0)) || return 1
 
   for name in "$@"; do
     if [[ "$name" == */* ]]; then
@@ -26,7 +26,7 @@ shell-init() {
   local command_name
   local init_code
 
-  (( $# >= 2 )) || {
+  (($# >= 2)) || {
     printf 'Usage: %s COMMAND ARGUMENT...\n' "${FUNCNAME[0]}" >&2
     return 2
   }
@@ -92,13 +92,13 @@ source-conf-dirs() {
     done
   done
 
-  if (( had_nullglob )); then
+  if ((had_nullglob)); then
     shopt -s nullglob
   else
     shopt -u nullglob
   fi
 
-  if (( had_failglob )); then
+  if ((had_failglob)); then
     shopt -s failglob
   else
     shopt -u failglob
@@ -115,7 +115,7 @@ current-file-dir() {
 
   (
     cd -P -- "$(dirname -- "$file")" 2>/dev/null &&
-    pwd
+      pwd
   )
 }
 
@@ -137,8 +137,7 @@ load-bash-completion() {
   if ! declare -p BASH_COMPLETION_VERSINFO &>/dev/null; then
     for completion_file in \
       "/usr/share/bash-completion/bash_completion" \
-      "/etc/bash_completion"
-    do
+      "/etc/bash_completion"; do
       if [[ -r "$completion_file" ]]; then
         source "$completion_file"
         break
@@ -148,7 +147,7 @@ load-bash-completion() {
 
   # Compatibility for old completion scripts.
   if ! declare -F _split_longopt &>/dev/null &&
-     declare -F _comp__split_longopt &>/dev/null; then
+    declare -F _comp__split_longopt &>/dev/null; then
     _split_longopt() {
       _comp__split_longopt "$@"
     }
@@ -176,8 +175,7 @@ load-bash-preexec() {
     for preexec_file in \
       "$HOME/.bash-preexec.sh" \
       "/usr/share/bash-preexec/bash-preexec.sh" \
-      "/etc/profile.d/bash-preexec.sh"
-    do
+      "/etc/profile.d/bash-preexec.sh"; do
       if [[ -r "$preexec_file" ]]; then
         source "$preexec_file"
         break
@@ -199,7 +197,7 @@ path-prepend() {
   local joined_path
   local i
 
-  IFS=: read -r -a path_entries <<< "${PATH-}"
+  IFS=: read -r -a path_entries <<<"${PATH-}"
 
   for ((i = ${#directories[@]} - 1; i >= 0; i--)); do
     directory="${directories[i]}"
@@ -209,7 +207,7 @@ path-prepend() {
     if [[ "$directory" != /* ]]; then
       directory=$(
         CDPATH='' builtin cd -L -- "$directory" 2>/dev/null &&
-        builtin pwd -L
+          builtin pwd -L
       ) || continue
     fi
 
@@ -224,7 +222,10 @@ path-prepend() {
     path_entries=("${updated_entries[@]}")
   done
 
-  joined_path=$(IFS=:; printf '%s' "${path_entries[*]}")
+  joined_path=$(
+    IFS=:
+    printf '%s' "${path_entries[*]}"
+  )
 
   PATH="$joined_path"
   export PATH
@@ -250,9 +251,9 @@ add-prompt-command() {
   fi
 
   case ";${PROMPT_COMMAND-};" in
-    *";$new_command;"*) ;;
-    ';;') PROMPT_COMMAND="$new_command" ;;
-    *) PROMPT_COMMAND="${PROMPT_COMMAND};$new_command" ;;
+  *";$new_command;"*) ;;
+  ';;') PROMPT_COMMAND="$new_command" ;;
+  *) PROMPT_COMMAND="${PROMPT_COMMAND};$new_command" ;;
   esac
 }
 
@@ -286,17 +287,20 @@ set-xdg-path-list() {
   local -a valid_entries=()
 
   [[ -n $current_value ]] || current_value=$default_value
-  IFS=: read -r -a entries <<< "$current_value"
+  IFS=: read -r -a entries <<<"$current_value"
 
   for entry in "${entries[@]}"; do
     [[ $entry == /* ]] && valid_entries+=("$entry")
   done
 
   if ((${#valid_entries[@]} == 0)); then
-    IFS=: read -r -a valid_entries <<< "$default_value"
+    IFS=: read -r -a valid_entries <<<"$default_value"
   fi
 
-  current_value=$(IFS=:; printf '%s' "${valid_entries[*]}")
+  current_value=$(
+    IFS=:
+    printf '%s' "${valid_entries[*]}"
+  )
   printf -v "$variable" '%s' "$current_value"
   export "$variable"
 }
@@ -332,7 +336,7 @@ _print-function-catalog() {
   shift
   printf '%s\n' "$title"
 
-  while (( $# >= 2 )); do
+  while (($# >= 2)); do
     name="$1"
     description="$2"
     shift 2

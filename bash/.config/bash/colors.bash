@@ -38,8 +38,7 @@ if [[ -z ${LS_COLORS+x} ]]; then
   elif has-cmd dircolors; then
     # Fallback when vivid is not installed.
     if __dircolors_output="$(dircolors -b 2>/dev/null)" &&
-       eval "$__dircolors_output"
-    then
+      eval "$__dircolors_output"; then
       :
     else
       printf 'WARNING, %s: dircolors init failed.\n' \
@@ -82,8 +81,8 @@ __color_help_has() {
 # cannot consume vivid's LS_COLORS. If GNU coreutils is installed as gls,
 # configure gls and optionally replace ls by setting BASH_COLOR_USE_GLS=1.
 if command ls --color=auto -d . >/dev/null 2>&1; then
-                  __color_alias ls   'ls --color=auto'
-  has-cmd dir  && __color_alias dir  'dir --color=auto'
+  __color_alias ls 'ls --color=auto'
+  has-cmd dir && __color_alias dir 'dir --color=auto'
   has-cmd vdir && __color_alias vdir 'vdir --color=auto'
 elif has-cmd gls && command gls --color=auto -d . >/dev/null 2>&1; then
   __color_alias gls 'gls --color=auto'
@@ -140,20 +139,29 @@ fi
 
 # less does not create colors, but -R preserves safe ANSI color sequences.
 case " ${LESS:-} " in
-  *' -R '*|*' --RAW-CONTROL-CHARS '*) ;;
-  *) export LESS="${LESS:+$LESS }-R" ;;
+*' -R '* | *' --RAW-CONTROL-CHARS '*) ;;
+*) export LESS="${LESS:+$LESS }-R" ;;
 esac
 
 # Colored man-page headings and emphasis through less termcap capabilities.
 if has-cmd tput && tput colors >/dev/null 2>&1; then
-  export LESS_TERMCAP_md="$(tput bold; tput setaf 6)"
+  export LESS_TERMCAP_md="$(
+    tput bold
+    tput setaf 6
+  )"
   export LESS_TERMCAP_me="$(tput sgr0)"
 
   # Search / standout: bold + reverse
-  export LESS_TERMCAP_so="$(tput bold; tput rev)"
+  export LESS_TERMCAP_so="$(
+    tput bold
+    tput rev
+  )"
   export LESS_TERMCAP_se="$(tput sgr0)"
 
-  export LESS_TERMCAP_us="$(tput smul; tput setaf 2)"
+  export LESS_TERMCAP_us="$(
+    tput smul
+    tput setaf 2
+  )"
   export LESS_TERMCAP_ue="$(tput sgr0)"
   export MANPAGER="${MANPAGER:-less -R}"
 fi
@@ -211,8 +219,7 @@ color-status() {
 
   printf '\nCommand integration:\n'
   for command_name in \
-    ls gls dir vdir eza fd bfs tree grep rg bat batcat fzf less man diff ip watch
-  do
+    ls gls dir vdir eza fd bfs tree grep rg bat batcat fzf less man diff ip watch; do
     if alias_definition=$(alias "$command_name" 2>/dev/null); then
       printf '  %-8s %s\n' "$command_name" "$alias_definition"
     elif declare -F "$command_name" >/dev/null; then

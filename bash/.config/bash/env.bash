@@ -95,6 +95,7 @@ export LESSHISTFILE="$XDG_STATE_HOME/lesshst"
 export SQLITE_HISTORY="$XDG_STATE_HOME/sqlite_history"
 export PSQL_HISTORY="$XDG_STATE_HOME/psql_history"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
+export GDBHISTFILE="$XDG_STATE_HOME/gdb_history"
 
 # Misc
 export EDITOR="${EDITOR:-nvim}"

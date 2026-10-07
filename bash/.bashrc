@@ -2,8 +2,8 @@
 
 # Stop here for non-interactive shells.
 case $- in
-  *i*) ;;
-  *) return ;;
+*i*) ;;
+*) return ;;
 esac
 
 # ---------------------------------------------------------------------------
@@ -52,7 +52,7 @@ shopt -s lithist      # preserve line breaks in multi-line history entries
 # ---------------------------------------------------------------------------
 
 # Recursive globbing was added in Bash 4; macOS may still use Bash 3.2.
-if (( BASH_VERSINFO[0] >= 4 )); then
+if ((BASH_VERSINFO[0] >= 4)); then
   shopt -s globstar
 fi
 
@@ -77,9 +77,9 @@ source "$_bash_config_dir/homebrew.bash"
 # ---------------------------------------------------------------------------
 
 if [[ ${OSTYPE:-} == linux* &&
-      -z ${debian_chroot:-} &&
-      -r /etc/debian_chroot ]]; then
-  debian_chroot=$(< /etc/debian_chroot)
+  -z ${debian_chroot:-} &&
+  -r /etc/debian_chroot ]]; then
+  debian_chroot=$(</etc/debian_chroot)
 fi
 
 # ---------------------------------------------------------------------------
@@ -133,14 +133,14 @@ else
   _completion_status=$?
 fi
 
-if (( _completion_status != 0 && _completion_status != 127 )); then
+if ((_completion_status != 0 && _completion_status != 127)); then
   printf 'WARNING, %s: load completion init failed\n' \
     "${BASH_SOURCE[0]##*/}" >&2
 fi
 
 unset _completion_status
 
-if ! is-brush; then  # Brush uses own preexec
+if ! is-brush; then # Brush uses own preexec
   load-bash-preexec || {
     printf '%s%s\n' \
       "WARNING, ${BASH_SOURCE[0]##*/}: load preexec init failed, " \
