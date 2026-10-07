@@ -2,25 +2,26 @@
 // TODO toggle inline diagnostics
 [
   {
+    "use_key_equivalents": true,
     "unbind": {
       "ctrl-alt-,": "zed::OpenSettingsFile",
       "alt-cmd-,": "zed::OpenSettingsFile",
       "tab": "menu::SelectNext",
-      "shift-tab": "menu::SelectPrevious",
-    },
+      "shift-tab": "menu::SelectPrevious"
+    }
   },
   {
     "context": "Welcome",
     "unbind": {
-      "ctrl-n": "workspace::NewFile",
-    },
+      "ctrl-n": "workspace::NewFile"
+    }
   },
   {
     // move to top bc use ctrl-l as prefix a lot
     "context": "Editor",
     "unbind": {
-      "ctrl-l": "editor::SelectLine",
-    },
+      "ctrl-l": "editor::SelectLine"
+    }
   },
   // {
   //   "context": "Editor && VimControl && !VimWaiting && !menu",
@@ -29,13 +30,9 @@
   //     // "shift-k": "editor::Hover",
   //     // "space l a": "editor::ToggleCodeActions",
   //     // "space l r": "editor::Rename",
-  //     // "space l f": "editor::Format",
-  //     // "space l l": "diagnostics::Deploy",
   //     "space f": "file_finder::Toggle",
   //     "space o": "tab_switcher::Toggle",
-  //     "space e": "workspace::ToggleLeftDock",
   //     "space p": "outline::Toggle",
-  //     // "space v": "editor::GoToDefinitionSplit"
   //   }
   // },
   {
@@ -44,16 +41,16 @@
     "bindings": {
       "alt-e": "editor::Cancel",
       "tab": "editor::NextSnippetTabstop",
-      "shift-tab": "editor::PreviousSnippetTabstop",
-    },
+      "shift-tab": "editor::PreviousSnippetTabstop"
+    }
   },
   {
     "context": "Editor && showing_completions",
     "bindings": {
       "alt-e": "editor::Cancel",
       "tab": "editor::ConfirmCompletion",
-      "enter": "editor::Newline",
-    },
+      "enter": "editor::Newline"
+    }
   }, // better complition behavior end
   {
     // remap unused/uncomfy mapping begin
@@ -63,45 +60,45 @@
       "ctrl-k ctrl-shift-s": "workspace::SaveWithoutFormat",
       "cmd-k s": "workspace::SaveWithoutFormat",
       "ctrl-k ctrl-t": "theme_selector::Toggle",
-      "ctrl-n": "workspace::NewFile",
+      "ctrl-n": "workspace::NewFile"
     },
     "bindings": {
-      "ctrl-k ctrl-k": "zed::OpenKeymap",
-    },
+      "ctrl-k ctrl-k": "zed::OpenKeymap"
+    }
   },
   {
     "context": "!SettingsWindow",
     "unbind": {
       "ctrl-,": "zed::OpenSettings",
-      "cmd-,": "zed::OpenSettings",
+      "cmd-,": "zed::OpenSettings"
     },
     "bindings": {
-      "ctrl-k ctrl-s": "zed::OpenSettings",
-    },
+      "ctrl-k ctrl-s": "zed::OpenSettings"
+    }
   },
   {
     "context": "VimControl && !menu",
     "unbind": {
-      "shift-tab": "vim::Tab",
-    },
+      "shift-tab": "vim::Tab"
+    }
   },
   {
     "context": "Editor",
     "unbind": {
-      "shift-tab": "editor::Backtab",
-    },
+      "shift-tab": "editor::Backtab"
+    }
   }, // remap unused/uncomfy mapping end
   {
     // toggle dock begin
     "context": "AgentPanel",
     "unbind": {
-      "ctrl-shift-e": "project_panel::ToggleFocus",
-    },
+      "ctrl-shift-e": "project_panel::ToggleFocus"
+    }
   },
   {
     "unbind": {
-      "alt-shift-l": "lsp_tool::ToggleMenu",
-    },
+      "alt-shift-l": "lsp_tool::ToggleMenu"
+    }
   },
   {
     "context": "Editor",
@@ -109,23 +106,23 @@
       "ctrl-k ctrl-d": [
         "editor::SelectNext",
         {
-          "replace_newest": true,
-        },
+          "replace_newest": true
+        }
       ],
       "ctrl-k ctrl-l": "editor::ToggleFold",
       "ctrl-k ctrl-c": [
         "editor::ToggleComments",
         {
-          "advance_downwards": false,
-        },
-      ],
-    },
+          "advance_downwards": false
+        }
+      ]
+    }
   },
   {
     "context": "!Terminal",
     "unbind": {
-      "ctrl-shift-c": "collab_panel::ToggleFocus",
-    },
+      "ctrl-shift-c": "collab_panel::ToggleFocus"
+    }
   },
   {
     "context": "Workspace",
@@ -143,7 +140,7 @@
       "ctrl-j": "workspace::ToggleBottomDock",
       "ctrl-b": "workspace::ToggleLeftDock",
       "ctrl-alt-b": "workspace::ToggleRightDock",
-      "ctrl-k ctrl-shift-t": "theme::ToggleMode",
+      "ctrl-k ctrl-shift-t": "theme::ToggleMode"
     },
     "bindings": {
       "ctrl-k ctrl-t": "terminal_panel::Toggle",
@@ -160,8 +157,8 @@
       "ctrl-k ctrl-.": "workspace::ToggleRightDock",
       "ctrl-k ctrl-e": "editor::ToggleFocus",
       "ctrl-k ctrl-shift-t": "workspace::OpenInTerminal",
-      "ctrl-k ctrl-c": "collab_panel::Toggle",
-    },
+      "ctrl-k ctrl-c": "collab_panel::Toggle"
+    }
   }, //  toggle dock end
   {
     // editor begin
@@ -170,44 +167,44 @@
       // use same bindings for Format and FormatSelection
       // can`t place in one object due to json error begin
       "alt-shift-f": "editor::Format",
-      "ctrl-k ctrl-f": "editor::FormatSelections",
+      "ctrl-k ctrl-f": "editor::FormatSelections"
     },
     "bindings": {
-      "ctrl-l ctrl-f": "editor::Format",
-    },
+      "ctrl-l ctrl-f": "editor::Format"
+    }
   },
   {
     "context": "Editor && selection",
     "bindings": {
-      "ctrl-l ctrl-f": "editor::FormatSelections",
-    },
+      "ctrl-l ctrl-f": "editor::FormatSelections"
+    }
   },
   {
     "context": "Editor && vim_mode == visual",
     "bindings": {
-      "ctrl-l ctrl-f": "editor::FormatSelections",
-    },
+      "ctrl-l ctrl-f": "editor::FormatSelections"
+    }
   },
   {
     "context": "!AcpThread > Editor && mode == full",
     "unbind": {
-      "ctrl-shift-e": "pane::RevealInProjectPanel",
+      "ctrl-shift-e": "pane::RevealInProjectPanel"
     },
     "bindings": {
-      "ctrl-l ctrl-n": "pane::RevealInProjectPanel",
-    },
+      "ctrl-l ctrl-n": "pane::RevealInProjectPanel"
+    }
   },
   {
     "context": "Editor",
     "unbind": {
       "ctrl-k p": "workspace::CopyPath",
       "ctrl-k r": "editor::RevealInFileManager",
-      "ctrl-k ctrl-b": "editor::BlameHover",
+      "ctrl-k ctrl-b": "editor::BlameHover"
     },
     "bindings": {
       "ctrl-l ctrl-r": "editor::RevealInFileManager",
-      "ctrl-l ctrl-b": "editor::BlameHover",
-    },
+      "ctrl-l ctrl-b": "editor::BlameHover"
+    }
   }, // editor end
   {
     // remap/unmap unused toggle comments begin
@@ -216,27 +213,27 @@
       "ctrl-/": [
         "editor::ToggleComments",
         {
-          "advance_downwards": false,
-        },
+          "advance_downwards": false
+        }
       ],
       "ctrl-k ctrl-c": [
         "editor::ToggleComments",
         {
-          "advance_downwards": false,
-        },
+          "advance_downwards": false
+        }
       ],
       "alt-shift-a": "editor::ToggleBlockComments",
-      "ctrl-k ctrl-/": "editor::ToggleBlockComments",
+      "ctrl-k ctrl-/": "editor::ToggleBlockComments"
     },
     "bindings": {
       "ctrl-l ctrl-c": [
         "editor::ToggleComments",
         {
-          "advance_downwards": false,
-        },
+          "advance_downwards": false
+        }
       ],
-      "ctrl-l ctrl-shift-c": "editor::ToggleBlockComments",
-    },
+      "ctrl-l ctrl-shift-c": "editor::ToggleBlockComments"
+    }
   }, // remap/unmap unused toggle comments end
   {
     // better cursor placement begin
@@ -244,8 +241,8 @@
     "bindings": {
       "ctrl-d": ["workspace::SendKeystrokes", "ctrl-d z z"],
       "ctrl-u": ["workspace::SendKeystrokes", "ctrl-u z z"],
-      "shift-g": ["workspace::SendKeystrokes", "shift-g z z"],
-    },
+      "shift-g": ["workspace::SendKeystrokes", "shift-g z z"]
+    }
   }, // better cursor placement end
   {
     // subword motion to support snake_case, camelCase, etc
@@ -254,8 +251,8 @@
       "w": "vim::NextSubwordStart",
       "b": "vim::PreviousSubwordStart",
       "e": "vim::NextSubwordEnd",
-      "g e": "vim::PreviousSubwordEnd",
-    },
+      "g e": "vim::PreviousSubwordEnd"
+    }
   },
   {
     // vim surround
@@ -263,64 +260,64 @@
     "bindings": {
       "shift-s a": "vim::PushAddSurrounds",
       "shift-s d": "vim::PushDeleteSurrounds",
-      "shift-s c": "vim::PushChangeSurrounds",
-    },
+      "shift-s c": "vim::PushChangeSurrounds"
+    }
   },
   {
     // vim exchange
     "context": "vim_mode == visual",
     "bindings": {
-      "shift-x": "vim::Exchange",
-    },
+      "shift-x": "vim::Exchange"
+    }
   },
   {
     // vim sneak
     "context": "vim_mode == normal || vim_mode == visual",
     "bindings": {
       "shift-z f": "vim::PushSneak",
-      "shift-z b": "vim::PushSneakBackward",
-    },
+      "shift-z b": "vim::PushSneakBackward"
+    }
   },
   {
     // Use neovim's yank behavior: yank to end of line.
     "context": "vim_mode == normal && !menu",
     "bindings": {
-      "shift-y": ["workspace::SendKeystrokes", "y $"],
-    },
+      "shift-y": ["workspace::SendKeystrokes", "y $"]
+    }
   },
   {
     // move lines with ctrl + alt + hjkl begin
     "context": "Editor",
     "unbind": {
       "alt-up": "editor::MoveLineUp",
-      "alt-down": "editor::MoveLineDown",
+      "alt-down": "editor::MoveLineDown"
     },
     "bindings": {
       "ctrl-alt-j": "editor::MoveLineDown",
       "ctrl-alt-k": "editor::MoveLineUp",
       "ctrl-alt-h": "vim::Outdent",
-      "ctrl-alt-l": "vim::Indent",
-    },
+      "ctrl-alt-l": "vim::Indent"
+    }
   },
   {
     "context": "vim_mode == visual",
     "bindings": {
       "ctrl-alt-h": ["workspace::SendKeystrokes", "< g v"],
-      "ctrl-alt-l": ["workspace::SendKeystrokes", "> g v"],
-    },
+      "ctrl-alt-l": ["workspace::SendKeystrokes", "> g v"]
+    }
   },
   {
     "context": "vim_mode == normal || vim_mode == visual || vim_mode == operator",
     "unbind": {
       "[ e": "editor::MoveLineUp",
-      "] e": "editor::MoveLineDown",
-    },
+      "] e": "editor::MoveLineDown"
+    }
   },
   {
     "context": "VimControl && !menu",
     "unbind": {
-      "ctrl-j": "vim::Down",
-    },
+      "ctrl-j": "vim::Down"
+    }
   }, // move lines with ctrl + alt + hjkl end
   {
     // resize panes with alt + arrows begin
@@ -329,8 +326,8 @@
       "alt-up": "vim::ResizePaneUp",
       "alt-down": "vim::ResizePaneDown",
       "alt-left": "vim::ResizePaneLeft",
-      "alt-right": "vim::ResizePaneRight",
-    },
+      "alt-right": "vim::ResizePaneRight"
+    }
   },
   {
     "context": "(VimControl && !menu) || (!Editor && !Terminal)",
@@ -338,8 +335,8 @@
       "ctrl-w shift-=": "vim::ResizePaneUp",
       "ctrl-w -": "vim::ResizePaneDown",
       "ctrl-w shift-,": "vim::ResizePaneLeft",
-      "ctrl-w shift-.": "vim::ResizePaneRight",
-    },
+      "ctrl-w shift-.": "vim::ResizePaneRight"
+    }
   }, // resize panes with alt + arrows end
   {
     // use alt + hjkl to focus in all the editor docks
@@ -349,14 +346,14 @@
       "ctrl-k ctrl-up": "workspace::ActivatePaneUp",
       "ctrl-k ctrl-down": "workspace::ActivatePaneDown",
       "ctrl-k ctrl-left": "workspace::ActivatePaneLeft",
-      "ctrl-k ctrl-right": "workspace::ActivatePaneRight",
+      "ctrl-k ctrl-right": "workspace::ActivatePaneRight"
     },
     "bindings": {
       "alt-k": "workspace::ActivatePaneUp",
       "alt-j": "workspace::ActivatePaneDown",
       "alt-h": "workspace::ActivatePaneLeft",
-      "alt-l": "workspace::ActivatePaneRight",
-    },
+      "alt-l": "workspace::ActivatePaneRight"
+    }
   },
   {
     "context": "!Editor && !Terminal",
@@ -364,8 +361,8 @@
       "space w k": "workspace::ActivatePaneUp",
       "space w j": "workspace::ActivatePaneDown",
       "space w h": "workspace::ActivatePaneLeft",
-      "space w l": "workspace::ActivatePaneRight",
-    },
+      "space w l": "workspace::ActivatePaneRight"
+    }
   },
   {
     "context": "(VimControl && !menu) || (!Editor && !Terminal)",
@@ -381,8 +378,8 @@
       "ctrl-w ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-w l": "workspace::ActivatePaneRight",
       "ctrl-w right": "workspace::ActivatePaneRight",
-      "ctrl-w ctrl-l": "workspace::ActivatePaneRight",
-    },
+      "ctrl-w ctrl-l": "workspace::ActivatePaneRight"
+    }
     // use alt + hjkl to focus in all the editor docks
     // the terminal, project panel, assistant panel, ...) end
   },
@@ -391,20 +388,20 @@
     "context": "Terminal",
     "unbind": {
       "ctrl-shift-space": "terminal::ToggleViMode",
-      "ctrl-n": "workspace::NewTerminal",
+      "ctrl-n": "workspace::NewTerminal"
     },
     "bindings": {
       "ctrl-t ctrl-m": "terminal::ToggleViMode",
-      "ctrl-k ctrl-n": "workspace::NewTerminal",
-    },
+      "ctrl-k ctrl-n": "workspace::NewTerminal"
+    }
   }, // terminal end
   {
     // project panel begin
     "context": "ProjectPanel",
     "unbind": {
       "alt-shift-c": "workspace::CopyPath",
-      "ctrl-k ctrl-shift-c": "workspace::CopyRelativePath",
-    },
+      "ctrl-k ctrl-shift-c": "workspace::CopyRelativePath"
+    }
   },
   {
     "context": "ProjectPanel && not_editing",
@@ -418,7 +415,7 @@
       "p": "project_panel::Open",
       "t": "project_panel::OpenPermanent",
       "o": "project_panel::OpenSplitHorizontal",
-      "h": "project_panel::CollapseSelectedEntry",
+      "h": "project_panel::CollapseSelectedEntry"
     },
     "bindings": {
       "a": "project_panel::NewFile",
@@ -433,27 +430,27 @@
       "ctrl-o": "project_panel::Open",
       "ctrl-shift-o": "project_panel::OpenPermanent",
       "h": "project_panel::OpenSplitHorizontal",
-      "v": "project_panel::OpenSplitVertical",
-    },
+      "v": "project_panel::OpenSplitVertical"
+    }
   }, // project panel end
   {
     // outline panel begin
     "context": "OutlinePanel && not_editing",
     "unbind": {
       "alt-shift-c": "workspace::CopyPath",
-      "ctrl-alt-shift-c": "workspace::CopyRelativePath",
-    },
+      "ctrl-alt-shift-c": "workspace::CopyRelativePath"
+    }
   }, // outline panel end
   {
     // pane begin
     "context": "Pane",
     "unbind": {
       "ctrl-k shift-enter": "pane::TogglePinTab",
-      "alt-l": "search::ToggleSelection",
+      "alt-l": "search::ToggleSelection"
     },
     "bindings": {
-      "ctrl-l ctrl-p": "pane::TogglePinTab",
-    },
+      "ctrl-l ctrl-p": "pane::TogglePinTab"
+    }
   }, // pane end
   {
     // debugger begin
@@ -461,8 +458,8 @@
     "bindings": {
       "alt-d e": "editor::EnableBreakpoint",
       "alt-d d": "editor::DisableBreakpoint",
-      "alt-d t": "editor::ToggleBreakpoint",
-    },
+      "alt-d t": "editor::ToggleBreakpoint"
+    }
   },
   {
     "context": "Workspace",
@@ -476,14 +473,14 @@
       "alt-d b": "debugger::StepBack",
       "alt-d n": "debugger::StepOver",
       "alt-d o": "debugger::StepOut",
-      "alt-d v": "debugger::EvaluateSelectedText",
-    },
+      "alt-d v": "debugger::EvaluateSelectedText"
+    }
   },
   {
     "context": "Workspace && debugger_stopped",
     "bindings": {
-      "alt-d c": "debugger::Continue",
-    },
+      "alt-d c": "debugger::Continue"
+    }
   }, // debugger end
   {
     // task begin
@@ -494,15 +491,15 @@
       "alt-shift-r": [
         "task::Spawn",
         {
-          "reveal_target": "center",
-        },
+          "reveal_target": "center"
+        }
       ],
       "ctrl-shift-r": [
         "task::Rerun",
         {
-          "reevaluate_context": false,
-        },
-      ],
+          "reevaluate_context": false
+        }
+      ]
     },
     "bindings": {
       "alt-t n": "task::Spawn",
@@ -510,16 +507,16 @@
       "alt-t shift-n": [
         "task::Spawn",
         {
-          "reveal_target": "center",
-        },
+          "reveal_target": "center"
+        }
       ],
       "alt-t shift-r": [
         "task::Rerun",
         {
-          "reevaluate_context": false,
-        },
-      ],
-    },
+          "reevaluate_context": false
+        }
+      ]
+    }
   }, // task end
   {
     // remap spoiled copy/paste keymaps begin
@@ -528,28 +525,28 @@
       "ctrl-c": "editor::Copy",
       "ctrl-insert": "editor::Copy",
       "ctrl-v": "editor::Paste",
-      "shift-insert": "editor::Paste",
+      "shift-insert": "editor::Paste"
     },
     "bindings": {
       "ctrl-shift-c": "editor::Copy",
-      "ctrl-shift-v": "editor::Paste",
-    },
+      "ctrl-shift-v": "editor::Paste"
+    }
   },
   {
     "context": "Editor && extension == md",
     "unbind": {
-      "ctrl-shift-v": "markdown::OpenPreview",
-    },
+      "ctrl-shift-v": "markdown::OpenPreview"
+    }
   }, // remap spoiled copy/paste keymaps end
   {
     // TODO
     "context": "Editor",
     "unbind": {
-      "ctrl-k ctrl-i": "editor::Hover",
+      "ctrl-k ctrl-i": "editor::Hover"
     },
     "bindings": {
-      "ctrl-l ctrl-k": "editor::Hover",
-    },
+      "ctrl-l ctrl-k": "editor::Hover"
+    }
   },
   {
     // bookmarks
@@ -558,7 +555,7 @@
       "ctrl-l ctrl-m": "editor::ToggleBookmark",
       "ctrl-l ctrl-shift-m": "editor::ViewBookmarks",
       "ctrl-.": "editor::GoToNextBookmark",
-      "ctrl-,": "editor::GoToPreviousBookmark",
-    },
-  },
+      "ctrl-,": "editor::GoToPreviousBookmark"
+    }
+  }
 ]

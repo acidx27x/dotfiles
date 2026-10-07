@@ -1,13 +1,19 @@
 {
   // connections
+  // connections wsl
   "wsl_connections": [],
+  // connections ssh
+  "read_ssh_config": true,
   "ssh_connections": [],
+  // connections proxy
   "proxy": "",
   // general
+  // general telemetry
   "telemetry": {
     "metrics": false,
-    "diagnostics": false,
+    "diagnostics": false
   },
+  // general
   "confirm_quit": true,
   "reveal_if_open": true,
   "on_new_window": "empty_tab",
@@ -15,22 +21,19 @@
   "on_last_window_closed": "quit_app",
   "cli_default_open_behavior": "new_window",
   "when_closing_with_no_tabs": "close_window",
+  // general private
   "redact_private_values": true,
-  "private_files": [
-    "**/.env*",
-    "**/*.pem",
-    "**/*.key",
-    "**/*.cert",
-    "**/*.crt",
-    "**/secrets.yml"
-  ],
+  "private_files": ["**/.env*", "**/*.pem", "**/*.key", "**/*.cert", "**/*.crt", "**/secrets.yml"],
   // appearence
-  "cursor_blink": false,
+  "rounded_selection": false,
+  "text_rendering_mode": "grayscale",
+  // appearence theme
   "theme": "Kanagawa Dragon",
   "icon_theme": "Catppuccin Latte",
-  "buffer_font_family": "Fira Code",
+  // appearence buffer
   "buffer_font_size": 15.5,
   "buffer_font_fallbacks": null,
+  "buffer_font_family": "Fira Code",
   "buffer_font_features": {
     "calt": true,
     "cv01": true,
@@ -48,116 +51,132 @@
     "cv28": true,
     "ss06": true,
     "ss07": true,
-    "ss10": true,
-  },
-  "ui_font_family": "Fira Code",
-  "ui_font_size": 14.5,
-  "ui_font_fallbacks": null,
-  "agent_ui_font_size": 13.5,
-  "agent_buffer_font_size": 13.5,
-  "markdown_preview": {
-    "font_size": 14.5,
+    "ss10": true
   },
   "git_commit_buffer_font_size": 13.5,
-  "text_rendering_mode": "grayscale",
-  "cursor_animation": {
-    "enabled": false,
+  // appearence ui
+  "ui_font_size": 14.5,
+  "ui_font_fallbacks": null,
+  "ui_font_family": "Fira Code",
+  // appearence agent ui
+  "agent_ui_font_size": 13.5,
+  "agent_buffer_font_size": 13.5,
+  // appearence markdown
+  "markdown_preview": {
+    "font_size": 14.5
   },
-  "rounded_selection": false,
+  // appearence cursor
+  "cursor_blink": false,
+  "cursor_animation": {
+    "enabled": false
+  },
   // keymap
   "vim_mode": true,
   // editor
   "vim": {
     "use_regex_search": false,
-    "use_smartcase_find": true,
+    "use_smartcase_find": true
   },
+  // editor indent + line
   "tab_size": 2,
   "colorize_brackets": true,
-  "always_treat_brackets_as_autoclosed": true,
   "line_ending": "prefer_lf",
+  "soft_wrap": "bounded",
   "preferred_line_length": 100,
   "vertical_scroll_margin": 5.0,
   "show_whitespaces": "boundary",
   "relative_line_numbers": "enabled",
-  "which_key": {
-    "enabled": true,
-    "delay_ms": 1000,
-  },
-  "format_on_save": "off",
-  "use_on_type_format": false,
-  "formatter": "auto",
-  "autosave": {
-    "after_delay": {
-      "milliseconds": 5000,
-    },
-  },
-  "middle_click_paste": false,
-  "diff_view_style": "unified",
-  "gutter": {
-    "runnables": false,
-  },
-  "toolbar": {
-    "breadcrumbs": true,
-    "selections_menu": false,
-    "quick_actions": false,
-    "code_actions": false,
-  },
-  "scrollbar": {
-    "selected_symbol": false,
-    "selected_text": false,
-    "cursors": false,
-    "show": "always",
-    "diagnostics": "error",
-  },
-  "sticky_scroll": {
-    "enabled": true,
-  },
+  "always_treat_brackets_as_autoclosed": true,
   "indent_guides": {
     "line_width": 1,
     "active_line_width": 2,
     "coloring": "indent_aware",
-    "background_coloring": "indent_aware",
+    "background_coloring": "indent_aware"
   },
-  "snippet_sort_order": "bottom",
+  // editor format
+  "formatter": "language_server",
+  "format_on_save": "on",
+  "use_on_type_format": false,
+  // editor gutter
+  "gutter": {
+    "runnables": false
+  },
+  // editor toolbar
+  "toolbar": {
+    "breadcrumbs": true,
+    "code_actions": false,
+    "quick_actions": false,
+    "selections_menu": false
+  },
+  // editor scrollbar
+  "scrollbar": {
+    "show": "always",
+    "cursors": false,
+    "diagnostics": "error",
+    "selected_text": false,
+    "selected_symbol": false
+  },
+  "sticky_scroll": {
+    "enabled": true
+  },
+  // editor completion
   "completions": {
     "words": "enabled",
     "words_min_length": 4,
-    "lsp_insert_mode": "replace_subsequence",
+    "lsp_insert_mode": "replace_subsequence"
   },
+  "snippet_sort_order": "inline",
   "show_completions_on_input": true,
   "completion_menu_item_kind": "symbol",
   "completion_menu_scrollbar": "always",
-  "show_completion_documentation": true,
+  "completion_detail_alignment": "right",
+  "show_completion_documentation": false,
+  // editor inlay
   "inlay_hints": {
     "show_background": true,
     "show_value_hints": false,
     "toggle_on_modifiers_press": {
       "control": true,
-      "platform": true,
-    },
+      "platform": true
+    }
   },
+  // editor lsp
   "code_lens": "on",
-  "lsp_document_colors": "background", // need for 'color-highlight'
   "lsp_document_links": true,
   "lsp_results_location": "picker",
+  "lsp_document_colors": "background", // need for 'color-highlight'
+  // editor misc
+  "middle_click_paste": false,
+  "diff_view_style": "unified",
+  "which_key": {
+    "enabled": true,
+    "delay_ms": 1000
+  },
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 5000
+    }
+  },
   // language and tools
   "prettier": {
-    "allowed": true,
+    "allowed": true
   },
+  // language and tools go to
   "go_to_definition_fallback": "none",
   "go_to_definition_scroll_strategy": "center",
-  "diagnostics_max_severity": "all",
+  // language and tools diagnostics
   "diagnostics": {
-    "include_warnings": true,
     "inline": {
       "enabled": false,
-      "max_severity": "all",
+      "max_severity": "all"
     },
+    "include_warnings": true
   },
-  // need to overwrite for specific language in the end
-  "semantic_tokens": "off",
-  "document_symbols": "off",
-  "document_folding_ranges": "off",
+  "diagnostics_max_severity": "all",
+  // language and tools semantic aware, disable per lang if needed
+  "semantic_tokens": "combined",
+  "document_symbols": "on",
+  "document_folding_ranges": "on",
   // search and files
   "file_scan_exclusions": [
     "**/.git",
@@ -168,91 +187,104 @@
     "**/.DS_Store",
     "**/Thumbs.db",
     "**/.classpath",
-    "**/.settings",
+    "**/.settings"
   ],
+  "read_only_files": [],
+  // search and files search
   "search": {
-    "search_on_type": false,
-    "button": false,
     "regex": false,
+    "button": false,
     "whole_word": false,
+    "search_on_type": false,
     "include_ignored": true,
-    "center_on_match": true,
+    "center_on_match": true
   },
   "use_smartcase_search": true,
   "seed_search_query_from_cursor": "selection",
+  // search and files finder
   "file_finder": {
     "include_ignored": "all",
-    "modal_max_width": "medium",
+    "modal_max_width": "medium"
   },
   // window and layout
   "centered_layout": {
     "right_padding": 0.15,
-    "left_padding": 0.15,
+    "left_padding": 0.15
   },
+  // window and layout tabs
   "tabs": {
     "file_icons": true,
     "git_status": true,
-    "show_diagnostics": "errors",
+    "show_diagnostics": "errors"
   },
+  // window and layout title
+  "window_title_format": "${projectName}${separator}${remoteHost}${separator}${fileName}",
   "title_bar": {
     "show_menus": false,
-    "show_branch_status_icon": true,
+    "show_branch_status_icon": true
   },
+  // window and layout tab
   "tab_bar": {
     "show_nav_history_buttons": true,
-    "show_pinned_tabs_in_separate_row": true,
+    "show_pinned_tabs_in_separate_row": true
   },
+  // window and layout status
   "status_bar": {
-    "active_encoding_button": "enabled",
+    "active_encoding_button": "enabled"
   },
+  // window and layout preview
   "preview_tabs": {
     "enabled": true,
-    "enable_preview_from_file_finder": false,
     "enable_preview_from_multibuffer": true,
+    "enable_preview_from_file_finder": false,
     "enable_preview_from_project_panel": true,
     "enable_keep_preview_on_code_navigation": true,
     "enable_preview_file_from_code_navigation": true,
-    "enable_preview_multibuffer_from_code_navigation": true,
+    "enable_preview_multibuffer_from_code_navigation": true
   },
-  "window_title_format": "${projectName}${separator}${remoteHost}${separator}${fileName}",
+  // window and layout pane
   "active_pane_modifiers": {
     "border_size": 2.0,
-    "inactive_opacity": 0.85,
+    "inactive_opacity": 0.85
   },
   // panels
+  // panels git
   "git_panel": {
-    "folder_indicator": "chevron",
     "dock": "right",
     "tree_view": true,
     "show_count_badge": true,
-    "commit_title_max_length": 90,
-    "fallback_branch_name": "master",
-    "entry_primary_click_action": "file_diff",
-  },
-  "project_panel": {
     "folder_indicator": "chevron",
+    "commit_title_max_length": 50,
+    "fallback_branch_name": "master",
+    "entry_primary_click_action": "file_diff"
+  },
+  // panels project
+  "project_panel": {
     "dock": "left",
     "diagnostic_badges": true,
     "show_diagnostics": "errors",
     "git_status_indicator": true,
+    "folder_indicator": "chevron"
   },
+  // panels outline
   "outline_panel": {
-    "folder_indicator": "chevron",
     "dock": "right",
+    "folder_indicator": "chevron"
   },
+  // panels collab
   "collaboration_panel": {
-    "dock": "left",
+    "dock": "left"
   },
   // debugger
   "debugger": {
     "dock": "bottom",
-    "save_breakpoints": true,
+    "save_breakpoints": true
   },
   // terminal
   "terminal": {
     "font_size": 13.5,
     "toolbar": {
-      "breadcrumbs": false,
+      "breadcrumbs": false
     },
     "dock": "bottom",
     "blinking": "on",
@@ -261,95 +293,88 @@
     "show_count_badge": true,
     "keep_selection_on_copy": true,
     "env": {
-      "GIT_EDITOR": "zed --wait",
-    },
+      "GIT_EDITOR": "zed --wait"
+    }
   },
   // vcs
   "git": {
-    "worktree_directory": "..",
     "blame": {
-      "show_avatar": true,
+      "show_avatar": true
     },
     "inline_blame": {
       "enabled": false,
-      "show_commit_summary": true,
+      "show_commit_summary": true
     },
+    "worktree_directory": "../worktrees"
   },
   // collab
   "calls": {
-    "mute_on_join": true,
+    "mute_on_join": true
   },
   // ai
   "agent_servers": {
     "codex-acp": {
       "default_config_options": {
-        "collaboration_mode": "default",
         "fast-mode": false,
         "reasoning_effort": "xhigh",
+        "collaboration_mode": "default"
       },
       "favorite_config_option_values": {
-        "model": [
-          "gpt-5.6"
-        ],
-        "mode": [
-          "auto"
-        ],
-        "reasoning_effort": [
-          "medium",
-          "high"
-        ],
+        "mode": ["auto"],
+        "model": ["gpt-5.6"],
+        "reasoning_effort": ["medium", "high"]
       },
-      "type": "registry",
-    },
+      "type": "registry"
+    }
   },
   "agent": {
     "dock": "left",
     "sidebar_side": "left",
     "show_turn_stats": true,
+    "expand_edit_card": false,
+    "use_modifier_to_send": true,
+    "expand_terminal_card": false,
     "play_sound_when_agent_done": "always",
     "notify_when_agent_waiting": "all_screens",
-    "use_modifier_to_send": true,
-    "expand_edit_card": false,
-    "expand_terminal_card": false,
     "tool_permissions": {
       "default": "confirm",
       "tools": {
         "terminal": {
-          "default": "allow",
+          "default": "allow"
         },
         "edit_file": {
-          "default": "allow",
+          "default": "allow"
         },
         "delete_path": {
-          "default": "confirm",
+          "default": "confirm"
         },
         "copy_path": {
-          "default": "allow",
+          "default": "allow"
         },
         "move_path": {
-          "default": "confirm",
+          "default": "confirm"
         },
         "create_directory": {
-          "default": "allow",
+          "default": "allow"
         },
         "save_file": {
-          "default": "allow",
+          "default": "allow"
         },
         "fetch": {
-          "default": "confirm",
+          "default": "confirm"
         },
         "search_web": {
-          "default": "allow",
+          "default": "allow"
         },
         "restore_file_from_disk": {
-          "default": "confirm",
-        },
-      },
-    },
+          "default": "confirm"
+        }
+      }
+    }
   },
   "edit_predictions": {
-    "allow_data_collection": "no",
     "provider": "none",
+    "allow_data_collection": "no",
     "disabled_globs": [
       "**/.git",
       "**/.svn",
@@ -368,10 +393,10 @@
       "**/libs",
       "**/coverage",
       "**/.venv",
-      "**/__pycache__",
-    ],
+      "**/__pycache__"
+    ]
   },
-  // common extensions
+  // extensions
   "auto_install_extensions": {
     "kanagawa-themes": true,
     "catppuccin-icons": true,
@@ -386,68 +411,56 @@
     "dockerfile": true,
     "git-firefly": true,
     "editorconfig": true,
+    "windows-batch": true,
     "color-highlight": true,
-    "tree-sitter-query": true,
+    "tree-sitter-query": true
   },
-  // overrides
+  // custom overwrites and add-ons
   // file types
   "file_types": {
-    "C": [
-      "*.h.in",
-      "*.h.base"
-    ],
-    "C++": [
-      "*.hpp.in",
-      "*.hpp.base"
-    ],
-    "CMake": [
-      "*.cmake.in",
-      "*.cmake.base"
-    ],
-    "Python": [
-      "*.py.in",
-      "*.py.base"
-    ],
-    "Shell Script": [
-      "*.sh.in",
-      "*.sh.base",
-      "*.bash.in",
-      "*.bash.base"
-    ],
-    "YAML": [
-      ".clangd",
-      ".clang-tidy",
-      ".clang-format"
-    ],
+    // git
+    "Git Attributes": ["**/{git,.git,.git/info}/attributes"],
+    "Git Ignore": ["**/{git,.git}/ignore", "**/.git/info/exclude"],
+    "Git Config": ["*.gitconfig", "**/{git,.git,.git/modules,.git/modules/*}/config"],
+    // C/C++
+    "C": ["*.h.{in,base}"],
+    "C++": ["*.hpp.{in,base}"],
+    "CMake": ["*.cmake.{in,base}"],
+    // shell
+    "Shell Script": ["*.sh.{in,base}", "*.bash.{in,base}"],
+    // python
+    "Python": ["*.py.{in,base}"],
+    // yaml
+    "YAML": [".{clangd,clang-tidy,clang-format}", ".gersemirc"]
   },
   // languages
   "languages": {
-    "C": {
-      "document_symbols": "on",
-      "document_folding_ranges": "on",
-      "semantic_tokens": "combined",
+    "Git Commit": {
+      "wrap_guides": [50, 72],
+      "preferred_line_length": 72
     },
-    "C++": {
-      "document_symbols": "on",
-      "document_folding_ranges": "on",
-      "semantic_tokens": "combined",
-    },
-    "JavaScript": {
-      "format_on_save": "on",
-      "formatter": "prettier",
+    "CMake": {
+      "formatter": {
+        "external": {
+          "command": "gersemi",
+          "arguments": ["--stdin-filepath", "{buffer_path}", "-"]
+        }
+      }
     },
     "JSON": {
-      "format_on_save": "on",
-      "formatter": "prettier",
+      "formatter": "prettier"
       // "formatter": {
       //   "language_server": {
       //     "name": "biome",
       //   },
       // },
     },
-    "Python": {
-      "tab_size": 4,
+    "JSONC": {
+      "formatter": "prettier"
     },
+    "Python": {
+      "tab_size": 4
+    }
   },
   // lsp servers
   "lsp": {
@@ -462,13 +475,20 @@
           "--clang-tidy",
           "--enable-config",
           "--background-index",
-          "--pch-storage=disk",
+          "--pch-storage=memory",
           "--header-insertion=never",
           "--completion-style=detailed",
-          "--function-arg-placeholders=0",
-        ],
-      },
+          "--function-arg-placeholders=1"
+        ]
+      }
     },
+    "cmake": {
+      "initialization_options": {
+        "format": {
+          "enable": false
+        }
+      }
+    }
   },
   // themes
   "theme_overrides": {
@@ -480,27 +500,27 @@
           "color": "#4078F2FF",
           "background_color": "#00000000",
           "font_weight": 600,
-          "font_style": "italic",
+          "font_style": "italic"
         },
         "string.comment.info": {
           "color": "#50A14FFF",
           "background_color": "#00000000",
           "font_weight": 600,
-          "font_style": "italic",
+          "font_style": "italic"
         },
         "keyword.comment.warn": {
           "color": "#C18401FF",
           "background_color": "#00000000",
           "font_weight": 600,
-          "font_style": "italic",
+          "font_style": "italic"
         },
         "property.comment.error": {
           "color": "#CA1243FF",
           "background_color": "#00000000",
           "font_weight": 600,
-          "font_style": "italic",
-        },
-      },
-    },
-  },
+          "font_style": "italic"
+        }
+      }
+    }
+  }
 }
