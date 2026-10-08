@@ -1,0 +1,64 @@
+---
+UseColor: true
+SystemHeaders: false
+# WarningsAsErrors: '*'
+InheritParentConfig: false
+
+Checks:
+  # turn on all of a few categories by default.
+  - "-*"
+  - "bugprone-*"
+  - "google-*"
+  - "misc-*"
+  - "modernize-*"
+  - "performance-*"
+  - "readability-*"
+
+  - "-readability-identifier-length"
+  - "-readability-math-missing-parentheses"
+
+  # frequently warns on multiple parameters of the same type
+  - "-bugprone-easily-swappable-parameters"
+  # overlaps with 'readability-function-size'
+  - "-google-readability-function-size"
+  # suggests usernames on TODOs
+  - "-google-readability-todo"
+  # extremely slow. TODO: re-enable once
+  # https://github.com/llvm/llvm-project/issues/128797 is fixed
+  - "-misc-confusable-identifiers"
+  # overlaps with '-Wno-missing-prototypes'
+  - "-misc-use-internal-linkage"
+  # low value compared to the engineering cost
+  - "-performance-enum-size"
+  # duplicates 'modernize-pass-by-value'
+  - "-performance-unnecessary-value-param"
+  # warns on enums which use the 'LastValue = Value' pattern if all the other
+  # discriminants aren't given an explicit value
+  - "-readability-enum-initial-value"
+  # warns too frequently
+  - "-readability-function-cognitive-complexity"
+  # warns in reasonably documented situations
+  - "-readability-magic-numbers"
+  # warns on '= {}' which is also used to indicate which fields do not need to
+  # be explicitly initialized in aggregate initialization
+  - "-readability-redundant-member-init"
+  # warns when callers use similar names as different parameters
+  - "-readability-suspicious-call-argument"
+
+CheckOptions:
+  # don't warn on structs. done by ignoring when there are only public members
+  - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value: true
+
+  # use lines rather than statements to measure function size, because
+  # for readability purposes the code as written, before
+  # preprocessing
+  - key: readability-function-size.StatementThreshold
+    value: none
+  # chose 800 to match the default for StatementThreshold
+  - key: readability-function-size.LineThreshold
+    value: 800
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: 4
+  - key: google-readability-braces-around-statements.ShortStatementLines
+    value: 4

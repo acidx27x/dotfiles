@@ -1,0 +1,91 @@
+# Project local settings
+# CompileFlags:
+#   Remove: [-f*, -march=*]
+#   CompilationDatabase: ../build/cc/
+#   BuiltinHeaders: QueryDriver
+
+# Generic defaults
+Index:
+  Background: Build
+  StandardLibrary: Yes
+
+Diagnostics:
+  UnusedIncludes: Strict
+  ClangTidy:
+    FastCheckFilter: None
+
+Completion:
+  ArgumentLists: FullPlaceholders
+  HeaderInsertion: Never
+  CodePatterns: None
+
+InlayHints:
+  Enabled: Yes
+  DefaultArguments: Yes
+  BlockEnd: Yes
+
+Hover:
+  ShowAKA: Yes
+
+Documentation:
+  CommentFormat: Doxygen
+
+---
+# Treat .inl as C++
+If:
+  PathMatch: .*\.inl
+
+CompileFlags:
+  Add: [-xc++]
+
+######################################################
+# Example for project without compile database
+#
+# CompileFlags:
+#   CompilationDatabase: None
+#
+#   Compiler: clang
+#
+#   Add:
+#     - -xc
+#     - -std=c17
+#
+#     # Project headers
+#     - -Iinclude
+#     - -Isrc
+#
+#     # External/system headers
+#     - -isystem
+#     - /opt/somelib/include
+#
+#     # Defines
+#     - -DDEBUG=1
+#     - -DPROJECT_FEATURE_X=1
+#
+#     # Warnings, optional
+#     - -Wall
+#     - -Wextra
+#
+# ---
+# If:
+#   PathMatch: .*\.c
+#
+# CompileFlags:
+#   Compiler: clang
+#   Add:
+#     - -xc
+#     - -std=c17
+#
+# ---
+# If:
+#   PathMatch:
+#     - .*\.cc
+#     - .*\.cpp
+#     - .*\.cxx
+#
+# CompileFlags:
+#   Compiler: clang++
+#   Add:
+#     - -xc++
+#     - -std=c++23
+######################################################

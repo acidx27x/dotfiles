@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://www.schemastore.org/clang-format-21.x.json
+---
+# BasedOnStyle: InheritParentConfig
+BasedOnStyle: Google
+ColumnLimit: 120
+
+AllowShortBlocksOnASingleLine: Never
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+DerivePointerAlignment: false
+ExperimentalAutoDetectBinPacking: false
+FixNamespaceComments: true
+InsertBraces: true
+InsertTrailingCommas: None
+
+PointerAlignment: Left
+SpaceBeforeParens: ControlStatementsExceptControlMacros
+
+QualifierAlignment: Custom
+QualifierOrder:
+  [inline, static, friend, constexpr, const, volatile, restrict, type]
+
+IndentPPDirectives: AfterHash
+PPIndentWidth: 1
+
+# Include order
+IncludeBlocks: Regroup
+
+# Natural ordering: Foo2.h before Foo10.h
+SortIncludes:
+  Enabled: true
+  IgnoreCase: false
+  # Natural: true  # unsupported by clangd <= 23
