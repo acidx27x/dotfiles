@@ -1,5 +1,6 @@
 # Taps
 tap "jurplel/tap", trusted: true if OS.mac?  # macos instant-space-switcher
+tap "okeanos/tap", trusted: { formula: "blesh" }
 tap "pwndbg/tap",  trusted: true if OS.mac?  # pwndbg-gdb/-lldb
 #
 
@@ -23,6 +24,7 @@ brew "shfmt"
 # Linux
 brew "bash"              if OS.linux?
 brew "bash-completion@2" if OS.linux?
+brew "okeanos/tap/blesh", args: ["HEAD"] if OS.linux?
 brew "bash-preexec"      if OS.linux?
 # Mac
 brew "zsh"                     if OS.mac?
