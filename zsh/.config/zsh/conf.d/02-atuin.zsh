@@ -4,7 +4,7 @@
 export ATUIN_LOGS_DIR="$XDG_STATE_HOME/atuin/logs"
 
 _atuin_initialized=0
-_atuin_init_args=(init zsh --disable-ai)
+_atuin_init_args=(init zsh --disable-ai --disable-up-arrow)
 
 # Herdr already manages the pane PTY. Keep Atuin's history hooks, but let fzf
 # provide interactive history search there.
