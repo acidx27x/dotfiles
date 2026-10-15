@@ -85,7 +85,17 @@ sandbox = "elevated"
 # Codex must be able to execute its own Homebrew-installed runtime
 # from inside the bwrap sandbox.
 "/home/linuxbrew/.linuxbrew/Caskroom/codex" = "read"
-"/opt/homebrew/Caskroom/codex/" = "read"
+"/home/linuxbrew/.linuxbrew" = "read"
+"/opt/homebrew/Caskroom/codex" = "read"
+"/opt/homebrew" = "read"
+
+# Also may be needed.
+"~/.codex/packages/app-server-daemon" = "read"
+"~/.codex" = "read"
+
+# User specific common paths.
+"~/.local" = "read"
+"/opt/rust" = "read"
 
 # Required/recommended when using unbounded ** deny globs on platforms that
 # pre-expand glob matches before sandbox startup.
