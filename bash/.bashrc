@@ -73,6 +73,34 @@ set -o noclobber
 source "$_bash_config_dir/homebrew.bash"
 
 # ---------------------------------------------------------------------------
+# ble.sh line editor
+# ---------------------------------------------------------------------------
+
+_ble_loaded=0
+
+if ! is-brush; then
+  for _ble_file in \
+    "$XDG_DATA_HOME/blesh/ble.sh" \
+    "${HOMEBREW_PREFIX:-/usr/local}/opt/blesh/share/blesh/ble.sh" \
+    "${HOMEBREW_PREFIX:-/usr/local}/share/blesh/ble.sh" \
+    "/usr/share/blesh/ble.sh"; do
+    if [[ -r "$_ble_file" ]]; then
+      if source -- "$_ble_file" \
+        --attach=none \
+        --rcfile "$_bash_config_dir/blerc.bash"; then
+        _ble_loaded=1
+      else
+        printf 'WARNING, %s: ble.sh init failed\n' "${BASH_SOURCE[0]##*/}" >&2
+      fi
+
+      break
+    fi
+  done
+fi
+
+unset _ble_file
+
+# ---------------------------------------------------------------------------
 # Debian chroot
 # ---------------------------------------------------------------------------
 
@@ -140,7 +168,7 @@ fi
 
 unset _completion_status
 
-if ! is-brush; then # Brush uses own preexec
+if ! is-brush && ((_ble_loaded == 0)); then # Brush and ble.sh use their own hooks.
   load-bash-preexec || {
     printf '%s%s\n' \
       "WARNING, ${BASH_SOURCE[0]##*/}: load preexec init failed, " \
@@ -163,3 +191,11 @@ source-conf-dirs "$_bash_config_dir/conf.d" || true
 source-conf-dirs "$_bash_config_dir/conf.local.d" || true
 
 unset _bash_config_dir
+
+# Keep this last so ble.sh sees hooks installed by Atuin, fzf, and Starship.
+if ((_ble_loaded)); then
+  unset _ble_loaded
+  ble-attach
+else
+  unset _ble_loaded
+fi
