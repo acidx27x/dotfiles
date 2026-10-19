@@ -2,13 +2,13 @@
 name: dotfiles-shell-conventions
 description: >-
   Apply this repository's conventions when adding, editing, reviewing, or refactoring Bash
-  or Zsh startup files, helpers, functions, and conf.d modules. Use for Bash/Zsh parity,
-  shell-native idioms, fzf integration, line wrapping, diagnostics, optional commands, and
-  validation. Do not use for unrelated languages or one-off shell commands outside this
-  repository.
+  or Zsh startup files, helpers, functions, and conf.d modules, or when changing Stow package
+  layouts. Use for Bash/Zsh parity, shell-native idioms, fzf integration, line wrapping,
+  diagnostics, optional commands, Stow folding decisions, and validation. Do not use for
+  unrelated languages or one-off shell commands outside this repository.
 ---
 
-# Dotfiles Bash and Zsh conventions
+# Dotfiles shell and Stow conventions
 
 Keep changes small, behavior-driven, and native to the target shell. Do not copy an
 implementation verbatim between Bash and Zsh when either shell has a clearer native form.
@@ -19,6 +19,17 @@ implementation verbatim between Bash and Zsh when either shell has a clearer nat
 2. Identify shared behavior, shell-specific behavior, compatibility limits, and local style.
 3. Make the minimum change needed and preserve unrelated working-tree modifications.
 4. Validate syntax, diagnostics, generated command strings, and Bash/Zsh behavioral parity.
+
+## Stow package layout
+
+- When adding, removing, or relocating machine-local or application-generated files under a
+  Stow target, determine whether the target directory must remain a real directory instead of a
+  folded symlink. A `.gitignore` does not prevent applications from writing through a folded
+  directory link into the repository.
+- If the folding requirement changes, update the `--no-folding` package list, rationale, and
+  applicable command examples in `stow.md`. Keep setup scripts that invoke Stow consistent with
+  that documentation.
+- Do not require `--no-folding` merely because a package contains static tracked configuration.
 
 ## Shared conventions
 

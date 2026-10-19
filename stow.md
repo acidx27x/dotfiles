@@ -79,6 +79,61 @@ Short form:
 stow -v -t "$HOME" zsh git nvim
 ```
 
+### Keep Target Directories Real with `--no-folding`
+
+By default, Stow may replace an entire target directory with one symlink to the package
+directory. For example, it may make `~/.config/bash` a symlink to
+`~/dotfiles/bash/.config/bash`.
+
+Use `--no-folding` when an application or local configuration needs to create untracked files
+beside the linked files. Stow then keeps the target directories real and links their contents
+individually. A `.gitignore` prevents files from being tracked, but does not prevent them from
+being created inside the repository when their parent directory is a symlink.
+
+The following packages need or benefit from `--no-folding`:
+
+| Package | Target directory |
+|---|---|
+| `codex` | `~/.codex` |
+| `bash` | `~/.config/bash` |
+| `zsh` | `~/.config/zsh` |
+| `nvim` | `~/.config/nvim` |
+| `brew` | `~/.config/homebrew` |
+| `htop` | `~/.config/htop` |
+| `atuin` (future layout) | `~/.atuin` |
+
+- `codex`: Codex writes machine-local config, authentication, packages, logs, and other state.
+  Use `setup/codex.sh`, which creates the directory and passes `--no-folding`.
+- `bash` and `zsh`: `conf.local.d/` and local shell files are intentionally untracked.
+- `nvim`: `lua/core/paths_override.lua` and `nvim-pack-lock.json` are machine-local.
+- `brew`: Homebrew writes `trust.json` and `trust.json.lock`.
+- `htop`: htop writes `htop_history`.
+- `atuin`: newer layouts keep config, databases, keys, sessions, logs, and other state together.
+  The current Atuin 18.22 layout in this repository still uses `~/.config/atuin` and stores
+  data separately, so it does not require this yet.
+
+For example:
+
+```bash
+stow --no-folding --target="$HOME" bash zsh nvim brew htop
+```
+
+To convert packages that are already stowed with folded directory links, preview and then
+restow them:
+
+```bash
+stow --restow --simulate --verbose --no-folding --target="$HOME" bash zsh nvim brew htop
+stow --restow --verbose --no-folding --target="$HOME" bash zsh nvim brew htop
+```
+
+Inspect the package directories before converting them. Any generated or machine-local files
+that were already created through a folded directory link are physically inside the repository
+and remain package contents until moved back to the real target directory.
+
+It is safe to use `--no-folding` for every package. Doing so creates more individual symlinks,
+but gives applications no opportunity to place generated or machine-local files inside the
+repository through a folded directory symlink.
+
 ### Stow One Package
 
 ```bash
@@ -214,3 +269,4 @@ stow -v -t "$HOME" zsh git nvim
 | `stow -D -t "$HOME" <package>` | Remove symlinks |
 | `stow -R -t "$HOME" <package>` | Refresh symlinks |
 | `stow --adopt -t "$HOME" <package>` | Move conflicting target files into the package |
+| `stow --no-folding -t "$HOME" <package>` | Disable directory folding |
