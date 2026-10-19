@@ -1,8 +1,6 @@
 # ~/.config/bash/conf.d/01-atuin.bash
 # atuin setup must be done before fzf setup
 
-export ATUIN_LOGS_DIR="$XDG_STATE_HOME/atuin/logs"
-
 _atuin_initialized=0 # can be checked later
 _atuin_init_args=(init bash --disable-ai --disable-up-arrow)
 

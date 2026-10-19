@@ -1,8 +1,6 @@
 # ~/.config/zsh/conf.d/02-atuin.zsh
 # Atuin must initialize before fzf key bindings.
 
-export ATUIN_LOGS_DIR="$XDG_STATE_HOME/atuin/logs"
-
 _atuin_initialized=0
 _atuin_init_args=(init zsh --disable-ai --disable-up-arrow)
 
