@@ -1,0 +1,50 @@
+{
+  "config": {
+    "update_nightly": true
+  },
+  "buckets": [
+    {
+      "Name": "main",
+      "Source": "https://github.com/ScoopInstaller/Main"
+    },
+    {
+      "Name": "extras",
+      "Source": "https://github.com/ScoopInstaller/Extras"
+    },
+    {
+      "Name": "versions",
+      "Source": "https://github.com/ScoopInstaller/Versions"
+    },
+    {
+      "Name": "nerd-fonts",
+      "Source": "https://github.com/matthewjberger/scoop-nerd-fonts"
+    }
+  ],
+  "apps": [
+    { "Name": "git", "Source": "main", "Info": "" },
+    { "Name": "git-lfs", "Source": "main", "Info": "" },
+    { "Name": "delta", "Source": "main", "Info": "" },
+    { "Name": "neovim", "Source": "main", "Info": "" },
+    { "Name": "pwsh", "Source": "main", "Info": "" },
+    { "Name": "nu", "Source": "main", "Info": "" },
+    { "Name": "shellcheck", "Source": "main", "Info": "" },
+    { "Name": "shfmt", "Source": "main", "Info": "" },
+    { "Name": "atuin", "Source": "main", "Info": "" },
+    { "Name": "bat", "Source": "main", "Info": "" },
+    { "Name": "direnv", "Source": "main", "Info": "" },
+    { "Name": "eza", "Source": "main", "Info": "" },
+    { "Name": "fd", "Source": "main", "Info": "" },
+    { "Name": "fzf", "Source": "main", "Info": "" },
+    { "Name": "ripgrep", "Source": "main", "Info": "" },
+    { "Name": "sd", "Source": "main", "Info": "" },
+    { "Name": "starship", "Source": "main", "Info": "" },
+    { "Name": "yazi", "Source": "main", "Info": "" },
+    { "Name": "zoxide", "Source": "main", "Info": "" },
+    { "Name": "btop", "Source": "main", "Info": "" },
+    { "Name": "curl", "Source": "main", "Info": "" },
+    { "Name": "wget", "Source": "main", "Info": "" },
+    { "Name": "lazygit", "Source": "extras", "Info": "" },
+    { "Name": "wezterm-nightly", "Source": "versions", "Info": "" },
+    { "Name": "FiraCode-NF", "Source": "nerd-fonts", "Info": "" }
+  ]
+}
