@@ -1,0 +1,5 @@
+\.git
+\.gitignore
+\.DS_Store
+trust\.json
+trust\.json\.lock

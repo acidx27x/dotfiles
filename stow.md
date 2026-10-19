@@ -106,7 +106,8 @@ The following packages need or benefit from `--no-folding`:
   Use `setup/codex.sh`, which creates the directory and passes `--no-folding`.
 - `bash` and `zsh`: `conf.local.d/` and local shell files are intentionally untracked.
 - `nvim`: `lua/core/paths_override.lua` and `nvim-pack-lock.json` are machine-local.
-- `brew`: Homebrew writes `trust.json` and `trust.json.lock`.
+- `brew`: Homebrew writes `trust.json` and `trust.json.lock`. Its Stow-local ignore prevents
+  generated copies already in the package from being linked back into the target directory.
 - `htop`: htop writes `htop_history`.
 - `atuin`: newer layouts keep config, databases, keys, sessions, logs, and other state together.
   The current Atuin 18.22 layout in this repository still uses `~/.config/atuin` and stores
@@ -213,6 +214,51 @@ stow --adopt -t "$HOME" zsh
 git diff
 ```
 
+## Set Up Homebrew
+
+The Homebrew setup uses the official installer when `brew` is unavailable, ensures GNU Stow is
+installed, restows the `brew` package with `--no-folding`, and installs the global Brewfile:
+
+```bash
+./setup/homebrew.sh --dry-run
+./setup/homebrew.sh
+```
+
+The setup scripts are executable. On macOS, direct invocation uses Bash through the shebang;
+running `bash ./setup/homebrew.sh` is equivalent.
+
+The package is linked into `~/.config/homebrew`. Homebrew reads `brew.env` from that directory,
+and `brew bundle --global --no-upgrade` installs missing dependencies from the repository-managed
+`Brewfile` without upgrading everything already installed. The apply step may ask for `sudo`
+while the official Homebrew installer creates its platform-default prefix.
+
+## Set Up Rust
+
+The Rust setup follows the paths exported by the Bash and Zsh configurations:
+
+| Variable | Path |
+|---|---|
+| `RUST_HOME` | `/opt/rust` |
+| `RUSTUP_HOME` | `/opt/rust/rustup` |
+| `CARGO_HOME` | `/opt/rust/cargo` |
+| `CARGO_INSTALL_ROOT` | `/opt/rust` |
+
+Preview the setup, then install or update the stable toolchain with rustup's default profile:
+
+```bash
+./setup/rust.sh --dry-run
+./setup/rust.sh
+```
+
+Direct invocation works on macOS; `bash ./setup/rust.sh` is equivalent.
+
+The apply step may ask for `sudo` only when it needs to create `/opt/rust`; the directory is then
+owned by the current user. Rustup is invoked with `--no-modify-path`, because the shell configs
+already add `/opt/rust/bin` and `/opt/rust/cargo/bin` to `PATH`.
+
+The script does not install extra versioned or nightly toolchains, targets, or Cargo binaries.
+Declare those separately before treating them as portable bootstrap dependencies.
+
 ## Set Up Codex
 
 Codex uses two separate configuration layers in this repository:
@@ -256,9 +302,15 @@ The script is for clean setup, not migration. It stops instead of replacing an e
 git clone <repository-url> ~/dotfiles
 cd ~/dotfiles
 
+./setup/homebrew.sh
+./setup/rust.sh
+
 stow -n -v -t "$HOME" zsh git nvim
 stow -v -t "$HOME" zsh git nvim
 ```
+
+Each successful bootstrap script prints a terminal-restart reminder. On a new computer, finish
+the Stow commands first, then close the current terminal and open a new one once.
 
 ## Command Reference
 

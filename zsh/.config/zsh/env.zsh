@@ -94,8 +94,7 @@ export EDITOR="${EDITOR:-nvim}"
 export PAGER="${PAGER:-less}"
 
 # Rust
-# install with '--no-modify-path'
-# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path
+# Installed by setup/rust.sh without modifying shell startup files.
 export RUST_HOME="/opt/rust"
 export RUSTUP_HOME="$RUST_HOME/rustup"
 export CARGO_HOME="$RUST_HOME/cargo"
