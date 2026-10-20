@@ -24,6 +24,7 @@
     { "Name": "git", "Source": "main", "Info": "" },
     { "Name": "git-lfs", "Source": "main", "Info": "" },
     { "Name": "delta", "Source": "main", "Info": "" },
+    { "Name": "dotter", "Source": "main", "Info": "" },
     { "Name": "neovim", "Source": "main", "Info": "" },
     { "Name": "pwsh", "Source": "main", "Info": "" },
     { "Name": "nu", "Source": "main", "Info": "" },

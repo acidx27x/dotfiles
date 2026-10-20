@@ -1,0 +1,9 @@
+packages = [
+  "git",
+  "nvim",
+  "wezterm",
+  "atuin",
+  "starship",
+  "bat",
+  "lazygit",
+]

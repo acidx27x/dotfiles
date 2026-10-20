@@ -1,0 +1,24 @@
+[settings]
+default_target_type = "symbolic"
+
+[git.files]
+"git/.gitconfig" = "~/.gitconfig"
+
+[nvim.files]
+"nvim/.config/nvim" = "${LOCALAPPDATA}/nvim"
+
+[wezterm.files]
+"wezterm/.config/wezterm" = "~/.config/wezterm"
+
+[atuin.files]
+"atuin/.config/atuin/config.toml" = "~/.atuin/config.toml"
+"atuin/.config/atuin/themes" = "~/.atuin/themes"
+
+[starship.files]
+"starship/.config/starship/starship.toml" = "~/.config/starship.toml"
+
+[bat.files]
+"bat/.config/bat/config" = "${APPDATA}/bat/config"
+
+[lazygit.files]
+"lazygit/.config/lazygit/config.yml" = "${LOCALAPPDATA}/lazygit/config.yml"
