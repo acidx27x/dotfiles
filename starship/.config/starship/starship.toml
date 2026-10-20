@@ -11,9 +11,11 @@ $username\
 $hostname\
 $sudo\
 $directory\
-${custom.giturl}\
+${custom.giturl_unix}\
+${custom.giturl_windows}\
 $git_branch\
-${custom.git_worktree}\
+${custom.git_worktree_unix}\
+${custom.git_worktree_windows}\
 $git_status\
 $git_metrics\
 $line_break\
@@ -73,9 +75,10 @@ disabled = false
 time_format = "%R"
 format = "[[  $time ](fg:yellow bg:foam)]($style)"
 
-[custom.giturl]
+[custom.giturl_unix]
 description = "Display symbol for remote Git server"
 shell = ["bash"]
+os = "unix"
 command = """
 GIT_REMOTE=$(command git ls-remote --get-url 2> /dev/null)
 if [[ "$GIT_REMOTE" =~ "github" ]]; then
@@ -92,6 +95,32 @@ fi
 echo "$GIT_REMOTE_SYMBOL "
 """
 when = "git rev-parse --is-inside-work-tree 2> /dev/null"
+format = "$output"
+require_repo = true
+ignore_timeout = true
+
+[custom.giturl_windows]
+description = "Display symbol for remote Git server"
+shell = ["pwsh", "-NoProfile", "-Command", "-"]
+os = "windows"
+command = """
+$git_remote = git ls-remote --get-url 2>$null
+if ($LASTEXITCODE -ne 0) {
+  exit $LASTEXITCODE
+}
+$git_remote_symbol = switch -Regex ($git_remote) {
+  "github" { " "; break }
+  "gitlab" { " "; break }
+  "bitbucket" { " "; break }
+  "git" { " "; break }
+  default { " " }
+}
+Write-Output "$git_remote_symbol "
+"""
+when = """
+git rev-parse --is-inside-work-tree 2>$null | Out-Null
+exit $LASTEXITCODE
+"""
 format = "$output"
 require_repo = true
 ignore_timeout = true
@@ -123,8 +152,10 @@ ahead      = "[⇡${count}](teal)"
 behind     = "[⇣${count}](peach)"
 diverged   = "[⇕⇡${ahead_count}⇣${behind_count}](mauve)"
 
-[custom.git_worktree]
+[custom.git_worktree_unix]
 description = "Show indicator when inside a git worktree"
+shell = ["bash"]
+os = "unix"
 command = """
 if git rev-parse --git-dir >/dev/null 2>&1; then
   common_dir=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
@@ -135,6 +166,32 @@ if git rev-parse --git-dir >/dev/null 2>&1; then
 fi
 """
 when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1"
+format = " ([$output ]($style))"
+style = "bold green"
+require_repo = true
+ignore_timeout = true
+
+[custom.git_worktree_windows]
+description = "Show indicator when inside a git worktree"
+shell = ["pwsh", "-NoProfile", "-Command", "-"]
+os = "windows"
+command = """
+$common_dir = git rev-parse --path-format=absolute --git-common-dir 2>$null
+if ($LASTEXITCODE -ne 0) {
+  exit $LASTEXITCODE
+}
+$git_dir = git rev-parse --path-format=absolute --git-dir 2>$null
+if ($LASTEXITCODE -ne 0) {
+  exit $LASTEXITCODE
+}
+if ($common_dir -ne $git_dir) {
+  Write-Output "⛓ "
+}
+"""
+when = """
+git rev-parse --is-inside-work-tree 2>$null | Out-Null
+exit $LASTEXITCODE
+"""
 format = " ([$output ]($style))"
 style = "bold green"
 require_repo = true
