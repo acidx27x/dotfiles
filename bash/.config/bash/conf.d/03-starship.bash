@@ -21,7 +21,7 @@ stellar-help() {
   printf '  ~/.config/starship.toml as a symlink.\n'
 }
 
-export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+# export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 
 if has-cmd starship; then
   shell-init starship init bash || {

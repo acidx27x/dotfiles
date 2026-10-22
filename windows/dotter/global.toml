@@ -15,7 +15,7 @@ default_target_type = "symbolic"
 "atuin/.config/atuin/themes" = "~/.atuin/themes"
 
 [starship.files]
-"starship/.config/starship/starship.toml" = "~/.config/starship.toml"
+"starship/.config/starship.toml" = "~/.config/starship.toml"
 
 [bat.files]
 "bat/.config/bat/config" = "${APPDATA}/bat/config"
