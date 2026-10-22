@@ -263,8 +263,12 @@ Declare those separately before treating them as portable bootstrap dependencies
 
 Codex uses two separate configuration layers in this repository:
 
-- `codex-system/etc/codex/config.toml` is the portable base installed at `/etc/codex/config.toml`.
+- `codex-system/config.toml` is the portable base installed at `/etc/codex/config.toml`.
 - `codex/` contains files that are safe to Stow into `~/.codex`, including the `zed-acp` named profile.
+
+On Windows, the same portable base is installed at
+`%ProgramData%\OpenAI\Codex\config.toml` with `setup/codex.ps1`; see `windows.md` for the Windows
+workflow. The writable user config remains `%USERPROFILE%\.codex\config.toml`.
 
 Preview a clean setup, then apply it:
 

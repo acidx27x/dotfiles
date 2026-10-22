@@ -90,7 +90,7 @@ main() {
 
   script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
   dotfiles_root="$(cd -- "$script_dir/.." && pwd -P)"
-  base_config="$dotfiles_root/codex-system/etc/codex/config.toml"
+  base_config="$dotfiles_root/codex-system/config.toml"
   codex_home_dir="$HOME/.codex"
   system_config_dir="/etc/codex"
   system_config="$system_config_dir/config.toml"

@@ -275,3 +275,26 @@ Scoop roots.
 
 The bundle installs user-scoped packages. The global root is prepared for future elevated
 `scoop install --global` commands but the bootstrap does not install anything globally.
+
+## Codex Configuration Layers
+
+Codex on Windows reads machine-wide defaults from
+`%ProgramData%\OpenAI\Codex\config.toml` before the writable user config at
+`%USERPROFILE%\.codex\config.toml`. Install the repository's portable base from an elevated
+PowerShell 7 session:
+
+```powershell
+pwsh -NoProfile -File .\setup\codex.ps1 -WhatIf
+pwsh -NoProfile -File .\setup\codex.ps1
+```
+
+The script installs `codex-system/config.toml` into the machine-wide location. It is
+idempotent and only updates an existing file carrying this repository's managed marker. It never
+reads, creates, or changes the user config, where Codex can continue writing trusted projects,
+model migrations, notices, and other machine-local settings.
+
+Normal users can read the installed file but cannot modify it under the default `ProgramData`
+permissions. Run the script elevated again after changing the tracked base. Do not use
+`%USERPROFILE%\.codex\managed_config.toml`; current Codex versions use the `ProgramData` config
+for Windows defaults. `requirements.toml` in the same directory is reserved for enforced policy,
+not portable defaults.
