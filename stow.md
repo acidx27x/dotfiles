@@ -1,6 +1,8 @@
 # Dotfiles with GNU Stow
 
-This repository stores configuration files as GNU Stow packages and creates symbolic links in your home directory.
+This repository stores configuration files as GNU Stow packages and creates symbolic links in
+your home directory. `setup/stow.sh` provides the supported package/profile interface while GNU
+Stow remains the deployment engine and the package directory layout remains authoritative.
 
 ## Install GNU Stow
 
@@ -45,38 +47,31 @@ links to:
 ~/.config/nvim/init.lua
 ```
 
-## Basic Commands
+## Deployment Wrapper
 
-Run these commands from the dotfiles directory:
+The wrapper detects Linux or macOS, resolves the repository from its own path, validates every
+selection, targets `$HOME`, and passes `--no-folding` to Stow. It can be called from any working
+directory, including when the repository path contains spaces.
+
+Every operation first runs Stow with `--simulate`. If preflight reports a conflict, the apply step
+does not run. `--dry-run` stops after the simulation and creates no links, state, or cache files.
+The wrapper never passes `--adopt` or `--override`, and it isolates Stow from user `.stowrc`
+options so those settings cannot weaken conflict handling.
+
+### Deploy Packages
+
+Deploy is additive: packages not named by the command remain linked.
 
 ```bash
-cd ~/dotfiles
+./setup/stow.sh deploy --package nvim
+./setup/stow.sh deploy --package git,nvim
+./setup/stow.sh deploy --package git --package nvim
 ```
 
-### Preview Changes
-
-Shows what Stow will do without creating or removing links.
+Add `--dry-run` to preview any command:
 
 ```bash
-stow --simulate --verbose --target="$HOME" zsh git nvim
-```
-
-Short form:
-
-```bash
-stow -n -v -t "$HOME" zsh git nvim
-```
-
-### Create Symlinks
-
-```bash
-stow --verbose --target="$HOME" zsh git nvim
-```
-
-Short form:
-
-```bash
-stow -v -t "$HOME" zsh git nvim
+./setup/stow.sh deploy --package nvim --dry-run
 ```
 
 ### Keep Target Directories Real with `--no-folding`
@@ -89,6 +84,9 @@ Use `--no-folding` when an application or local configuration needs to create un
 beside the linked files. Stow then keeps the target directories real and links their contents
 individually. A `.gitignore` prevents files from being tracked, but does not prevent them from
 being created inside the repository when their parent directory is a symlink.
+
+The wrapper always enables `--no-folding`, including deploy, undeploy, restow, preflight, and
+replacement operations. The direct Stow examples below are retained for migration and diagnosis.
 
 The following packages need or benefit from `--no-folding`:
 
@@ -135,39 +133,80 @@ It is safe to use `--no-folding` for every package. Doing so creates more indivi
 but gives applications no opportunity to place generated or machine-local files inside the
 repository through a folded directory symlink.
 
-### Stow One Package
+### Deploy Profiles
 
 ```bash
-stow -t "$HOME" nvim
+./setup/stow.sh deploy --profile common
 ```
 
-### Remove a Package's Symlinks
-
-This removes the symlinks but keeps the files in the repository.
+Profiles under `stow/profiles/` contain package names only. `common` is the portable selection;
+`linux` and `macos` are the complete platform defaults. A plain deploy chooses the current
+platform's default profile:
 
 ```bash
-stow --delete --target="$HOME" nvim
+./setup/stow.sh deploy
 ```
 
-Short form:
+Package and profile options may be combined or repeated. Duplicate package names are removed
+before Stow runs. Profile contents are validated exactly like command-line package names.
+
+### Remove or Refresh Packages
+
+Undeploy removes only the selected package links and leaves unrelated packages in place. Complete
+removal requires the explicit `--all` option.
 
 ```bash
-stow -D -t "$HOME" nvim
+./setup/stow.sh undeploy --package nvim
+./setup/stow.sh undeploy --profile common
+./setup/stow.sh undeploy --all
 ```
 
-### Refresh a Package
-
-Useful after adding, moving, or deleting files inside a package.
+Restow removes and recreates only the selected package links. Use it after adding, moving, or
+deleting files inside a package:
 
 ```bash
-stow --restow --target="$HOME" nvim
+./setup/stow.sh restow --package nvim
 ```
 
-Short form:
+### Replace the Complete Selection
+
+`--replace` explicitly removes links belonging to every recognized Stow package and then deploys
+the requested selection in one Stow transaction. It is valid only with `deploy`:
 
 ```bash
-stow -R -t "$HOME" nvim
+./setup/stow.sh deploy --profile linux --replace
 ```
+
+Ordinary deploy, undeploy, and restow operations do not use an active-package database. Stow
+determines link ownership from the package directories and target links.
+
+### Package Validation
+
+A selectable package must be an existing top-level directory and must not be one of the explicit
+repository-only or platform exclusions: `.agents`, `.aws`, `.codex`, `.git`, `codex-system`,
+`setup`, `windows`, or `wsl`. Unknown packages and profiles fail before Stow runs. Configuration
+packages omitted from a default profile, such as `ssh`, remain available through `--package`.
+
+Profile files accept one package name per line, plus blank lines and full-line comments:
+
+```text
+# Example profile
+git
+nvim
+zsh
+```
+
+### Ignore Rules
+
+The `stow` package deploys `stow/.stow-global-ignore` as `~/.stow-global-ignore`. It retains GNU
+Stow's built-in exclusions for version-control metadata, package documentation, editor backups,
+autosave files, and lock files, and adds `.DS_Store`. It also excludes `stow/profiles/`, which is
+wrapper metadata rather than home-directory configuration. Known machine-local files beside
+managed configuration, including Neovim's `nvim-pack-lock.json` and `paths_override.lua`, are
+also excluded.
+
+A package's `.stow-local-ignore` continues to take precedence for that package, as defined by GNU
+Stow. The existing `brew` and `wsl` local rules remain unchanged.
 
 ## Add Existing Dotfiles
 
@@ -181,8 +220,7 @@ mv ~/.zshrc ~/dotfiles/zsh/
 Then create the symlink:
 
 ```bash
-cd ~/dotfiles
-stow -t "$HOME" zsh
+./setup/stow.sh deploy --package zsh
 ```
 
 For an application stored under `~/.config`:
@@ -190,7 +228,7 @@ For an application stored under `~/.config`:
 ```bash
 mkdir -p ~/dotfiles/nvim/.config
 mv ~/.config/nvim ~/dotfiles/nvim/.config/
-stow -t "$HOME" nvim
+./setup/stow.sh deploy --package nvim
 ```
 
 ## Resolve Conflicts
@@ -199,20 +237,12 @@ If a file already exists at the target location, back it up before running Stow:
 
 ```bash
 mv ~/.zshrc ~/.zshrc.backup
-stow -t "$HOME" zsh
+./setup/stow.sh deploy --package zsh
 ```
 
-Stow also supports adoption:
-
-```bash
-stow --adopt -t "$HOME" zsh
-```
-
-`--adopt` moves conflicting files from the target into the Stow package. Use it carefully and inspect the changes afterward:
-
-```bash
-git diff
-```
+The wrapper deliberately does not expose Stow's adoption or override features. It will not move
+an unmanaged target into the repository or replace one. Inspect and resolve each conflict
+explicitly, rerun with `--dry-run`, and then apply it.
 
 ## Set Up Homebrew
 
@@ -309,8 +339,8 @@ cd ~/dotfiles
 ./setup/homebrew.sh
 ./setup/rust.sh
 
-stow -n -v -t "$HOME" zsh git nvim
-stow -v -t "$HOME" zsh git nvim
+./setup/stow.sh deploy --dry-run
+./setup/stow.sh deploy
 ```
 
 Each successful bootstrap script prints a terminal-restart reminder. On a new computer, finish
@@ -320,9 +350,31 @@ the Stow commands first, then close the current terminal and open a new one once
 
 | Command | Purpose |
 |---|---|
-| `stow -n -v -t "$HOME" <package>` | Preview changes |
-| `stow -v -t "$HOME" <package>` | Create symlinks |
-| `stow -D -t "$HOME" <package>` | Remove symlinks |
-| `stow -R -t "$HOME" <package>` | Refresh symlinks |
-| `stow --adopt -t "$HOME" <package>` | Move conflicting target files into the package |
-| `stow --no-folding -t "$HOME" <package>` | Disable directory folding |
+| `setup/stow.sh deploy --package <name>` | Add one package |
+| `setup/stow.sh deploy --package <a,b>` | Add multiple packages |
+| `setup/stow.sh deploy --profile <name>` | Add a profile |
+| `setup/stow.sh undeploy --package <name>` | Remove one package |
+| `setup/stow.sh restow --package <name>` | Refresh one package |
+| `setup/stow.sh deploy --profile <name> --replace` | Replace the complete selection |
+| `setup/stow.sh undeploy --all` | Remove all recognized package links |
+| `<command> --dry-run` | Preview without applying changes |
+
+## Regression Tests
+
+Run the isolated Linux suite with GNU Stow and ripgrep installed:
+
+```bash
+./setup/tests/stow.Tests.sh
+```
+
+The suite uses a disposable home and repository path containing spaces. It covers additive and
+repeated deployment, profiles and duplicate names, selective removal, restow, replacement,
+remove-all, ignore rules, conflicts, unsafe user `.stowrc` options, and dry-run behavior.
+
+Run syntax and integration checks separately on macOS because the test suite intentionally uses
+the detected platform's default profile:
+
+```bash
+bash -n ./setup/stow.sh ./setup/tests/stow.Tests.sh
+./setup/stow.sh deploy --profile macos --dry-run
+```

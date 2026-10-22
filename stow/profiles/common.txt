@@ -1,0 +1,16 @@
+atuin
+bash
+bat
+btop
+curl
+git
+htop
+lazygit
+nvim
+starship
+stow
+wezterm
+wget
+zed
+zellij
+zsh

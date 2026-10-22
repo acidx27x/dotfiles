@@ -1,2 +1,30 @@
+# Version control metadata.
+RCS
+.+,v
+CVS
+\.\#.+
+\.cvsignore
+\.svn
+_darcs
+\.hg
 \.git
+\.gitignore
+\.gitmodules
+
+# Editor backup, autosave, and lock files.
+.+~
+\#.*\#
+
+# Package documentation.
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+# Platform and wrapper metadata.
 \.DS_Store
+^/profiles
+
+# Machine-local generated data found beside managed configuration.
+^/\.codex-test-data
+nvim-pack-lock\.json
+paths_override\.lua
