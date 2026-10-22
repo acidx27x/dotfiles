@@ -74,8 +74,11 @@ review, not as a direct replacement for the versionless tracked list.
 ## Deploy Dotfiles
 
 [Dotter](https://github.com/SuperCuber/dotter) provides the Windows equivalent of this
-repository's GNU Stow workflow. Its tracked Windows profile maps the existing package directories
-to native Windows destinations:
+repository's GNU Stow workflow. PowerShell 7 and Dotter 0.13.5 or newer are required. The wrapper
+resolves the repository from its own location, so commands work outside the repository and when
+its path contains spaces.
+
+`windows\dotter\global.toml` is the only source of file-to-target mappings:
 
 | Package | Destination |
 |---|---|
@@ -87,9 +90,14 @@ to native Windows destinations:
 | `bat` | `%APPDATA%\bat\config` |
 | `lazygit` | `%LOCALAPPDATA%\lazygit\config.yml` |
 
-The profile deploys Neovim as one directory symlink, like a folded GNU Stow package. Neovim can
-therefore create `nvim-pack-lock.json` and `lua/core/paths_override.lua` inside the repository;
-their existing `.gitignore` rules keep them untracked.
+`windows\dotter\windows.toml` remains the default tracked profile. The optional `minimal` profile
+contains `git`, `nvim`, and `starship`. Profiles contain package names only and are validated
+against `global.toml` before Dotter runs.
+
+Dotter recursively expands the current Neovim directory mapping into file symlinks. Generated
+files such as `%LOCALAPPDATA%\nvim\nvim-pack-lock.json` and
+`%LOCALAPPDATA%\nvim\lua\core\paths_override.lua` therefore remain outside the repository.
+Their existing repository `.gitignore` entries remain as additional protection.
 
 ### Typical Workflow
 
@@ -104,19 +112,78 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\setup\scoop.ps1 `
   -Root 'D:\Scoop'
 ```
 
-Close that terminal when the bootstrap prompts you, open PowerShell 7, return to the repository
-root, and deploy the configuration:
+Close that terminal when the bootstrap prompts you, open PowerShell 7, and preview the default
+Windows profile before deploying it:
 
 ```powershell
-Set-Location $HOME\dotfiles
 pwsh -NoProfile -File .\setup\dotter.ps1 -WhatIf
 pwsh -NoProfile -File .\setup\dotter.ps1
 ```
 
-Use `-WhatIf` whenever you want to inspect the proposed changes. On an already configured
-machine, pull repository updates and run the same preview and deployment commands again. Rerun the
-deployment when `windows\dotter\global.toml`, `windows\dotter\windows.toml`, or the set of managed
-files changes.
+The plain command selects the `windows` profile for backward compatibility. Normal deploys add to
+the active selection without removing unrelated packages:
+
+```powershell
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Package nvim
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Package git,nvim
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Profile minimal
+```
+
+Selective removal and refresh preserve every unrelated active package:
+
+```powershell
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -Package nvim
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Restow -Package nvim
+```
+
+Complete replacement and removal must be explicit:
+
+```powershell
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Profile minimal -Replace
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -All
+```
+
+`-Package` accepts comma-separated names and removes duplicates. `-Package` and `-Profile` are
+mutually exclusive. Undeploy and restow require an explicit package or profile; only
+`-Action Undeploy -All` removes the complete managed selection. Add `-WhatIf` to any command for a
+read-only preview.
+
+Edits to linked configuration files take effect immediately. Rerun `Restow` when mappings or the
+selected package contents change. Repeated deployments are idempotent.
+
+### Active State and Reconciliation
+
+Dotter uses one cache for the full deployed configuration, so the wrapper reconciles a complete
+desired package set for every operation. Machine-local data is stored under
+`%LOCALAPPDATA%\dotfiles\dotter`:
+
+| Path | Purpose |
+|---|---|
+| `active-packages.json` | Active package selection and Bat variable ownership |
+| `local.toml` | Generated complete Dotter selection |
+| `cache.toml` and `cache\` | Shared Dotter cache and generated data |
+| `backups\migration-*` | Pre-migration cache backups |
+
+Each real operation first runs Dotter's dry-run against the existing shared cache. It applies only
+after that preview succeeds, then saves the desired selection. A failed preview or deployment does
+not update active state. `-WhatIf` does not create state, backups, links, cache data, or environment
+variables.
+
+Do not edit the machine-local files to select packages; use the wrapper. They are deliberately
+outside Git and must not be committed.
+
+### Existing Installation Migration
+
+When a legacy wrapper cache exists without `active-packages.json`, the wrapper does not assume the
+default profile was installed. It reads cached source paths, associates each one with exactly one
+current package, and verifies that every cached target is still a symbolic link to the expected
+repository source.
+
+Migration stops without changing links when the cache contains unknown sources, templates,
+missing links, unexpected link targets, or unreconstructable cache data. A successful real
+migration backs up the old cache under `backups\migration-*`, reconciles the requested change, and
+only then writes active state. `-WhatIf` performs verification without creating the backup or
+state. Migration never undeploys existing links as an initialization step.
 
 Edits to an already linked configuration file take effect through the symlink, so changing only
 its contents does not require another deployment. Review those edits with `git diff` and commit
@@ -125,8 +192,10 @@ them from the repository as usual.
 ### Symlink Prerequisite
 
 Run deployment from a non-elevated PowerShell session with Windows Developer Mode enabled, or
-with equivalent permission to create symbolic links. The setup tests file-symlink creation and
-stops if it is unavailable. It never lets Dotter fall back to copied configuration files.
+with equivalent permission to create symbolic links. `-WhatIf` returns before permission tests, so
+preview works without Developer Mode or elevation. A real operation tests file and directory
+symlink capability only when the desired mappings require each type. Failures retain the original
+Windows exception as the inner error for diagnosis. The wrapper never falls back to copying.
 
 After the Scoop bootstrap has completed, close that terminal and open PowerShell 7 so `dotter` and
 `pwsh` are on `PATH`. Preview the complete deployment first:
@@ -141,26 +210,20 @@ Deploy after resolving any reported conflicts:
 pwsh -NoProfile -File .\setup\dotter.ps1
 ```
 
-Every real deployment first repeats Dotter's dry-run. An existing file that is not the expected
-link stops the operation before links are created. Back up or move the conflicting file manually;
-the wrapper does not expose Dotter's destructive `--force` behavior or an adopt operation.
-
-Preview and remove the managed links with:
-
-```powershell
-pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -WhatIf
-pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy
-```
-
-Dotter's generated cache is machine-local under `%LOCALAPPDATA%\dotfiles\dotter`; it never writes
-cache data into this repository.
+An existing unmanaged file, changed managed target, or unexpected symlink stops reconciliation.
+Back up or move the conflict manually. The wrapper does not expose Dotter's destructive `--force`
+behavior and never adopts unrelated files.
 
 ### bat Configuration
 
 Scoop sets `BAT_CONFIG_DIR` to its package directory and persists `bat`'s default configuration
-with a hard link. The deployment therefore sets the user-scoped `BAT_CONFIG_PATH` to the linked
-`%APPDATA%\bat\config` file. It refuses to replace a different existing value. Undeployment
-removes the variable only when it still has the managed value.
+with a hard link. When `bat` is selected and successfully deployed, the wrapper sets the
+user-scoped `BAT_CONFIG_PATH` to `%APPDATA%\bat\config` if it is unset. It refuses to replace a
+different existing value.
+
+Removing `bat` removes `BAT_CONFIG_PATH` only when the wrapper recorded ownership and the value is
+still the managed path. A verified legacy migration recognizes the value previously set by this
+wrapper. Selecting or removing unrelated packages never changes it.
 
 Close the terminal and open a new one after deployment or undeployment so the environment change
 is visible to new processes.
@@ -181,6 +244,26 @@ Unix, and PowerShell 7 on Windows. No separate generated Starship configuration 
 
 The deployed files are symbolic links, not filesystem read-only files. If an application rewrites
 a linked configuration file, it changes the repository source and will appear in `git diff`.
+
+The tracked Git configuration behavior is unchanged. For machine-local identity, use Git's normal
+conditional includes or a separate untracked include file rather than editing deployment state.
+
+### Regression Tests
+
+Run the isolated Windows suite after changing the wrapper or Dotter mappings:
+
+```powershell
+pwsh -NoProfile -File .\setup\tests\dotter.Tests.ps1
+```
+
+The suite uses a unique temporary target path containing spaces. It covers dry-run immutability,
+single and repeated deploys, duplicate names, profile validation, selective removal, restow,
+replacement, conflict rejection, failed-state preservation, verified migration with backup, and
+explicit remove-all. It does not change the normal Dotter state or `BAT_CONFIG_PATH`.
+
+For release validation, also run the default profile preview in a non-Developer-Mode session,
+exercise Bat deployment/removal on a disposable Windows user, and test a real clone whose
+repository path contains spaces.
 
 ## Location Limits
 
