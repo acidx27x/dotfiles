@@ -98,7 +98,7 @@ The following packages need or benefit from `--no-folding`:
 | `nvim` | `~/.config/nvim` |
 | `brew` | `~/.config/homebrew` |
 | `htop` | `~/.config/htop` |
-| `atuin` (future layout) | `~/.atuin` |
+| `atuin` | `~/.atuin` |
 
 - `codex`: Codex writes machine-local config, authentication, packages, logs, and other state.
   Use `setup/codex.sh`, which creates the directory and passes `--no-folding`.
@@ -107,22 +107,20 @@ The following packages need or benefit from `--no-folding`:
 - `brew`: Homebrew writes `trust.json` and `trust.json.lock`. Its Stow-local ignore prevents
   generated copies already in the package from being linked back into the target directory.
 - `htop`: htop writes `htop_history`.
-- `atuin`: newer layouts keep config, databases, keys, sessions, logs, and other state together.
-  The current Atuin 18.22 layout in this repository still uses `~/.config/atuin` and stores
-  data separately, so it does not require this yet.
+- `atuin`: Atuin keeps config, databases, keys, sessions, logs, and other state together.
 
 For example:
 
 ```bash
-stow --no-folding --target="$HOME" bash zsh nvim brew htop
+stow --no-folding --target="$HOME" bash zsh nvim brew htop atuin
 ```
 
 To convert packages that are already stowed with folded directory links, preview and then
 restow them:
 
 ```bash
-stow --restow --simulate --verbose --no-folding --target="$HOME" bash zsh nvim brew htop
-stow --restow --verbose --no-folding --target="$HOME" bash zsh nvim brew htop
+stow --restow --simulate --verbose --no-folding --target="$HOME" bash zsh nvim brew htop atuin
+stow --restow --verbose --no-folding --target="$HOME" bash zsh nvim brew htop atuin
 ```
 
 Inspect the package directories before converting them. Any generated or machine-local files

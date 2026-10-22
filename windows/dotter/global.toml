@@ -11,8 +11,8 @@ default_target_type = "symbolic"
 "wezterm/.config/wezterm" = "~/.config/wezterm"
 
 [atuin.files]
-"atuin/.config/atuin/config.toml" = "~/.atuin/config.toml"
-"atuin/.config/atuin/themes" = "~/.atuin/themes"
+"atuin/.atuin/config.toml" = "~/.atuin/config.toml"
+"atuin/.atuin/themes" = "~/.atuin/themes"
 
 [starship.files]
 "starship/.config/starship.toml" = "~/.config/starship.toml"
