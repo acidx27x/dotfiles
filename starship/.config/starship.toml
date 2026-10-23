@@ -59,9 +59,11 @@ truncate_to_repo = false
 
 [character]
 disabled = false
-success_symbol = "[❯ ](bold fg:green)"
-error_symbol = "[❯ ](bold fg:red)"
-vimcmd_symbol = "[❮ ](bold fg:yellow)"
+# Bash mirrors these values in blerc.bash because Starship cannot observe
+# ble.sh's active vi mode. Other supported shells use these values directly.
+success_symbol = "[❯](bold fg:green)"
+error_symbol = "[❯](bold fg:red)"
+vimcmd_symbol = "[❮](bold fg:yellow)"
 
 [custom.giturl_unix]
 description = "Display symbol for remote Git server"
@@ -121,17 +123,17 @@ format = "  [$symbol$branch]($style)[](base)"
 [git_status]
 format = "[$untracked$staged$modified$deleted$renamed$conflicted$stashed$ahead_behind ]($style)"
 # options available for format
-staged     = "[+](green)"
-modified   = "[!](yellow)"
-renamed    = "[»](blue)"
-deleted    = "[-](red)"
-untracked  = "[?](red)"
-stashed    = "[≡](lavender)"
+staged = "[+](green)"
+modified = "[!](yellow)"
+renamed = "[»](blue)"
+deleted = "[-](red)"
+untracked = "[?](red)"
+stashed = "[≡](lavender)"
 conflicted = "[✖](red bold)"
 
-ahead      = "[⇡${count}](teal)"
-behind     = "[⇣${count}](peach)"
-diverged   = "[⇕⇡${ahead_count}⇣${behind_count}](mauve)"
+ahead = "[⇡${count}](teal)"
+behind = "[⇣${count}](peach)"
+diverged = "[⇕⇡${ahead_count}⇣${behind_count}](mauve)"
 
 [custom.git_worktree_unix]
 description = "Show indicator when inside a git worktree"
@@ -270,4 +272,3 @@ sky = "#89b8c2"
 sapphire = "#84a0c6"
 blue = "#84a0c6"
 lavender = "#ada0d3"
-
