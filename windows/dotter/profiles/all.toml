@@ -1,0 +1,13 @@
+packages = [
+  "atuin",
+  "bat",
+  "codex",
+  "git",
+  "lazygit",
+  "llvm",
+  "nvim",
+  "starship",
+  "wezterm",
+  # "zed",
+  "zellij"
+]

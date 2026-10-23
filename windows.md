@@ -143,10 +143,13 @@ pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Profile minimal -Replac
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -All
 ```
 
-`-Package` accepts comma-separated names and removes duplicates. `-Package` and `-Profile` are
-mutually exclusive. Undeploy and restow require an explicit package or profile; only
-`-Action Undeploy -All` removes the complete managed selection. Add `-WhatIf` to any command for a
-read-only preview.
+`-Package` accepts comma-separated names and removes duplicates. Empty values and missing names
+around commas are rejected. `-Package` and `-Profile` are mutually exclusive. Undeploy and restow
+require an explicit package or profile; only `-Action Undeploy -All` removes the complete managed
+selection. Add `-WhatIf` to any command for a read-only preview.
+
+Run `pwsh -NoProfile -File .\setup\dotter.ps1 --help` for the complete option summary. Help exits
+before checking Dotter, environment variables, or machine state.
 
 Edits to linked configuration files take effect immediately. Rerun `Restow` when mappings or the
 selected package contents change. Repeated deployments are idempotent.
@@ -159,31 +162,40 @@ desired package set for every operation. Machine-local data is stored under
 
 | Path | Purpose |
 |---|---|
-| `active-packages.json` | Active package selection and Bat variable ownership |
-| `local.toml` | Generated complete Dotter selection |
+| `active-packages.json` | Versioned package selection, Bat ownership, and cache fingerprint |
 | `cache.toml` and `cache\` | Shared Dotter cache and generated data |
-| `backups\migration-*` | Pre-migration cache backups |
 
-Each real operation first runs Dotter's dry-run against the existing shared cache. It applies only
-after that preview succeeds, then saves the desired selection. A failed preview or deployment does
-not update active state. `-WhatIf` does not create state, backups, links, cache data, or environment
-variables.
+The wrapper fingerprints the cache file and recursively stored cache data after each successful
+operation. A later run stops if the cache no longer matches the saved fingerprint. A named mutex
+also prevents two wrapper processes from reconciling the same machine state concurrently.
+
+Each real operation runs Dotter's dry-run before applying changes and again afterward. State is
+saved only when the second preview reports no remaining work. A failed preview, deployment, or
+convergence check does not update active state. `-WhatIf` does not create persistent state, links,
+cache data, or environment variables.
 
 Do not edit the machine-local files to select packages; use the wrapper. They are deliberately
 outside Git and must not be committed.
 
-### Existing Installation Migration
+### Version 2 State Cutover
 
-When a legacy wrapper cache exists without `active-packages.json`, the wrapper does not assume the
-default profile was installed. It reads cached source paths, associates each one with exactly one
-current package, and verifies that every cached target is still a symbolic link to the expected
-repository source.
+The wrapper deliberately does not infer state from an old Dotter cache. Before switching from the
+version-1 wrapper, undeploy its complete selection, move its machine state to a recoverable backup,
+then preview and deploy with the new wrapper:
 
-Migration stops without changing links when the cache contains unknown sources, templates,
-missing links, unexpected link targets, or unreconstructable cache data. A successful real
-migration backs up the old cache under `backups\migration-*`, reconciles the requested change, and
-only then writes active state. `-WhatIf` performs verification without creating the backup or
-state. Migration never undeploys existing links as an initialization step.
+```powershell
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -All
+$stateRoot = Join-Path $env:LOCALAPPDATA 'dotfiles\dotter'
+$backupRoot = "$stateRoot.v1-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+Move-Item -LiteralPath $stateRoot -Destination $backupRoot
+
+pwsh -NoProfile -File .\setup\dotter.ps1 -WhatIf
+pwsh -NoProfile -File .\setup\dotter.ps1
+```
+
+Perform the undeploy with the old wrapper before updating it. If the new wrapper already reports
+legacy or unsupported state, temporarily restore the previous wrapper revision and follow the same
+sequence. The new wrapper refuses cache-only data and non-version-2 state without changing them.
 
 Edits to an already linked configuration file take effect through the symlink, so changing only
 its contents does not require another deployment. Review those edits with `git diff` and commit
@@ -193,9 +205,9 @@ them from the repository as usual.
 
 Run deployment from a non-elevated PowerShell session with Windows Developer Mode enabled, or
 with equivalent permission to create symbolic links. `-WhatIf` returns before permission tests, so
-preview works without Developer Mode or elevation. A real operation tests file and directory
-symlink capability only when the desired mappings require each type. Failures retain the original
-Windows exception as the inner error for diagnosis. The wrapper never falls back to copying.
+preview works without Developer Mode or elevation. Before applying previewed link additions, a real
+operation tests both file and directory symlink capability. Failures retain the original Windows
+exception as the inner error for diagnosis. The wrapper never falls back to copying.
 
 After the Scoop bootstrap has completed, close that terminal and open PowerShell 7 so `dotter` and
 `pwsh` are on `PATH`. Preview the complete deployment first:
@@ -222,8 +234,7 @@ user-scoped `BAT_CONFIG_PATH` to `%APPDATA%\bat\config` if it is unset. It refus
 different existing value.
 
 Removing `bat` removes `BAT_CONFIG_PATH` only when the wrapper recorded ownership and the value is
-still the managed path. A verified legacy migration recognizes the value previously set by this
-wrapper. Selecting or removing unrelated packages never changes it.
+still the managed path. Selecting or removing unrelated packages never changes it.
 
 Close the terminal and open a new one after deployment or undeployment so the environment change
 is visible to new processes.
@@ -256,10 +267,11 @@ Run the isolated Windows suite after changing the wrapper or Dotter mappings:
 pwsh -NoProfile -File .\setup\tests\dotter.Tests.ps1
 ```
 
-The suite uses a unique temporary target path containing spaces. It covers dry-run immutability,
-single and repeated deploys, duplicate names, profile validation, selective removal, restow,
-replacement, conflict rejection, failed-state preservation, verified migration with backup, and
-explicit remove-all. It does not change the normal Dotter state or `BAT_CONFIG_PATH`.
+The suite uses a unique temporary target path containing spaces. It covers malformed selections,
+dry-run immutability, single and repeated deploys, duplicate names, profile validation, selective
+removal, restow, replacement, conflict rejection, failed-state preservation, cache fingerprinting,
+state validation, execution locking, legacy-state rejection, and explicit remove-all. It does not
+change the normal Dotter state or `BAT_CONFIG_PATH`.
 
 For release validation, also run the default profile preview in a non-Developer-Mode session,
 exercise Bat deployment/removal on a disposable Windows user, and test a real clone whose

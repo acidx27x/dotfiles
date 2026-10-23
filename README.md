@@ -59,5 +59,5 @@ pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -All
 ```
 
 A plain deploy selects the tracked `windows` profile for backward compatibility. Add `-WhatIf`
-to any command for a read-only preview. See [windows.md](windows.md) for prerequisites, migration,
-state behavior, and the regression test command.
+to any command for a read-only preview. See [windows.md](windows.md) for prerequisites, the
+version-2 state cutover, cache integrity behavior, and the regression test command.

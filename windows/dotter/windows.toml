@@ -4,6 +4,5 @@ packages = [
   "wezterm",
   "atuin",
   "starship",
-  "bat",
   "lazygit",
 ]

@@ -27,7 +27,7 @@ function Assert-True {
     }
 }
 
-function Assert-Packages {
+function Assert-State {
     param(
         [Parameter(Mandatory)][string] $StatePath,
         [Parameter(Mandatory)][AllowEmptyCollection()][string[]] $Expected
@@ -35,6 +35,10 @@ function Assert-Packages {
 
     $state = Get-Content -LiteralPath $StatePath -Raw | ConvertFrom-Json
     $actual = @($state.packages)
+    Assert-True ($state.version -eq 2) 'Active state does not use version 2.'
+    Assert-True `
+        -Condition ($state.cacheFingerprint -match '^[0-9a-f]{64}$') `
+        -Message 'Active state does not contain a SHA-256 cache fingerprint.'
     Assert-True `
         -Condition (($actual -join "`n") -eq ($Expected -join "`n")) `
         -Message "Expected packages '$($Expected -join ', ')', got '$($actual -join ', ')'."
@@ -58,15 +62,58 @@ function Assert-WrapperFails {
     throw "Expected wrapper failure matching '$Pattern'."
 }
 
+function Get-Sha256Hex {
+    param([Parameter(Mandatory)][byte[]] $Bytes)
+
+    $sha256 = [Security.Cryptography.SHA256]::Create()
+    try {
+        return [BitConverter]::ToString(
+            $sha256.ComputeHash($Bytes)
+        ).Replace('-', '').ToLowerInvariant()
+    } finally {
+        $sha256.Dispose()
+    }
+}
+
 $oldOs = $env:OS
 $oldLocalAppData = $env:LOCALAPPDATA
 $oldAppData = $env:APPDATA
+$oldPath = $env:PATH
 
 Push-Location ([System.IO.Path]::GetTempPath())
 try {
     $env:OS = 'Windows_NT'
     $env:LOCALAPPDATA = Join-Path $testRoot 'Local'
     $env:APPDATA = Join-Path $testRoot 'Roaming'
+
+    $helpOutput = @(& pwsh -NoProfile -File $wrapper --help 2>&1)
+    Assert-True ($LASTEXITCODE -eq 0) '--help returned a failure exit code.'
+    Assert-True `
+        -Condition (($helpOutput -join "`n") -match '(?m)^Usage:') `
+        -Message '--help did not print usage information.'
+    Assert-True `
+        -Condition (($helpOutput -join "`n") -match '-Package <name\[,name\.\.\.\]>') `
+        -Message '--help did not document package selection.'
+    Assert-True `
+        -Condition (-not (Test-Path -LiteralPath $testRoot)) `
+        -Message '--help created persistent files or state.'
+
+    foreach ($invalidPackage in @('', ' ', ',', ',lazygit', 'lazygit,', 'git,,nvim')) {
+        Assert-WrapperFails `
+            -Operation {
+                & $wrapper -Action Deploy -Package $invalidPackage -Replace -WhatIf
+            } `
+            -Pattern 'empty package name|at least one package'
+    }
+    Assert-WrapperFails `
+        -Operation { & $wrapper -Action Deploy -Profile '' -WhatIf } `
+        -Pattern 'Profile name cannot be empty'
+    Assert-WrapperFails `
+        -Operation { & $wrapper -Action Undeploy -All -Package lazygit -WhatIf } `
+        -Pattern 'cannot be combined'
+    Assert-True `
+        -Condition (-not (Test-Path -LiteralPath $testRoot)) `
+        -Message 'Invalid input created persistent files or state.'
 
     & $wrapper -Action Deploy -Package lazygit -WhatIf *> $null
     Assert-True `
@@ -76,16 +123,22 @@ try {
     & $wrapper -Action Deploy -Package lazygit *> $null
     $stateRoot = Join-Path $env:LOCALAPPDATA 'dotfiles\dotter'
     $statePath = Join-Path $stateRoot 'active-packages.json'
-    $generatedConfig = Join-Path $stateRoot 'local.toml'
+    $cachePath = Join-Path $stateRoot 'cache.toml'
     $lazygitTarget = Join-Path $env:LOCALAPPDATA 'lazygit\config.yml'
     Assert-True (Test-Path -LiteralPath $lazygitTarget) 'lazygit was not deployed.'
-    Assert-Packages -StatePath $statePath -Expected @('lazygit')
+    Assert-State -StatePath $statePath -Expected @('lazygit')
+    Assert-True `
+        -Condition (-not (Test-Path -LiteralPath (Join-Path $stateRoot 'local.toml'))) `
+        -Message 'The wrapper persisted a generated local.toml.'
+    Assert-True `
+        -Condition (-not (Test-Path -LiteralPath (Join-Path $stateRoot 'backups'))) `
+        -Message 'The wrapper created a migration backup directory.'
 
     & $wrapper -Action Deploy -Package lazygit *> $null
-    Assert-Packages -StatePath $statePath -Expected @('lazygit')
+    Assert-State -StatePath $statePath -Expected @('lazygit')
 
     & $wrapper -Action Deploy -Package nvim,lazygit,nvim *> $null
-    Assert-Packages -StatePath $statePath -Expected @('nvim', 'lazygit')
+    Assert-State -StatePath $statePath -Expected @('nvim', 'lazygit')
     & $wrapper -Action Deploy -Profile minimal -WhatIf *> $null
 
     & $wrapper -Action Undeploy -Package nvim *> $null
@@ -93,16 +146,16 @@ try {
     Assert-True `
         -Condition (-not (Test-Path -LiteralPath (Join-Path $env:LOCALAPPDATA 'nvim\init.lua'))) `
         -Message 'Selective removal left nvim deployed.'
-    Assert-Packages -StatePath $statePath -Expected @('lazygit')
+    Assert-State -StatePath $statePath -Expected @('lazygit')
 
     & $wrapper -Action Restow -Package lazygit *> $null
-    Assert-Packages -StatePath $statePath -Expected @('lazygit')
+    Assert-State -StatePath $statePath -Expected @('lazygit')
 
     & $wrapper -Action Deploy -Package nvim -Replace *> $null
     Assert-True `
         -Condition (-not (Test-Path -LiteralPath $lazygitTarget)) `
         -Message 'Replace left lazygit deployed.'
-    Assert-Packages -StatePath $statePath -Expected @('nvim')
+    Assert-State -StatePath $statePath -Expected @('nvim')
 
     $conflictDirectory = Split-Path $lazygitTarget -Parent
     [System.IO.Directory]::CreateDirectory($conflictDirectory) | Out-Null
@@ -120,37 +173,61 @@ try {
     [System.IO.File]::Delete($lazygitTarget)
     [System.IO.Directory]::Delete($conflictDirectory)
 
-    [System.IO.File]::Delete($statePath)
-    [System.IO.File]::Delete($generatedConfig)
-    $cachePath = Join-Path $stateRoot 'cache.toml'
-    $cacheContent = (Get-Content -LiteralPath $cachePath -Raw).Replace(
-        'nvim/.config/nvim\init.lua',
-        'nvim/.legacy/nvim/init.lua'
-    )
-    [System.IO.File]::WriteAllText($cachePath, $cacheContent)
-    $nvimTarget = Join-Path $env:LOCALAPPDATA 'nvim\init.lua'
-    [System.IO.File]::Delete($nvimTarget)
-    $dotfilesRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
-    New-Item `
-        -ItemType SymbolicLink `
-        -Path $nvimTarget `
-        -Target (Join-Path $dotfilesRoot 'nvim\.legacy\nvim\init.lua') | Out-Null
-    & $wrapper -Action Deploy -Package lazygit -WhatIf *> $null
+    $cacheBeforeTamper = Get-Content -LiteralPath $cachePath -Raw
+    [System.IO.File]::AppendAllText($cachePath, "`n# fingerprint tamper`n")
+    Assert-WrapperFails `
+        -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
+        -Pattern 'cache data changed outside the wrapper'
     Assert-True `
-        -Condition (-not (Test-Path -LiteralPath $statePath)) `
-        -Message 'Migration WhatIf created active state.'
-    Assert-True `
-        -Condition (-not (Test-Path -LiteralPath (Join-Path $stateRoot 'backups'))) `
-        -Message 'Migration WhatIf created a backup.'
+        -Condition ((Get-Content -LiteralPath $statePath -Raw) -eq $stateBeforeFailure) `
+        -Message 'Cache fingerprint failure changed active state.'
+    [System.IO.File]::WriteAllText($cachePath, $cacheBeforeTamper)
 
-    & $wrapper -Action Deploy -Package lazygit *> $null
-    Assert-Packages -StatePath $statePath -Expected @('nvim', 'lazygit')
-    Assert-True `
-        -Condition ([bool](Get-ChildItem `
-            -LiteralPath (Join-Path $stateRoot 'backups') `
-            -Directory `
-            -Filter 'migration-*')) `
-        -Message 'Migration did not back up the previous cache.'
+    $validState = Get-Content -LiteralPath $statePath -Raw
+    [System.IO.File]::WriteAllText(
+        $statePath,
+        '{"version":1,"packages":["nvim"],"batConfigPathManaged":false}'
+    )
+    Assert-WrapperFails `
+        -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
+        -Pattern 'not version 2'
+    [System.IO.File]::WriteAllText($statePath, $validState)
+
+    $invalidState = $validState | ConvertFrom-Json -AsHashtable
+    $invalidState.packages = 'nvim'
+    [System.IO.File]::WriteAllText($statePath, ($invalidState | ConvertTo-Json))
+    Assert-WrapperFails `
+        -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
+        -Pattern 'invalid packages value'
+    [System.IO.File]::WriteAllText($statePath, $validState)
+
+    $canonicalRoot = [System.IO.Path]::GetFullPath($stateRoot).ToLowerInvariant()
+    $rootHash = (Get-Sha256Hex `
+        -Bytes ([Text.Encoding]::UTF8.GetBytes($canonicalRoot))).Substring(0, 32)
+    $mutex = [Threading.Mutex]::new($false, "Local\dotfiles-dotter-$rootHash")
+    try {
+        Assert-True ($mutex.WaitOne(0)) 'Test could not acquire the Dotter mutex.'
+        $mutexOutput = @(& pwsh `
+            -NoProfile `
+            -File $wrapper `
+            -Action Deploy `
+            -Package lazygit `
+            -WhatIf 2>&1)
+        $mutexExitCode = $LASTEXITCODE
+        Assert-True ($mutexExitCode -ne 0) 'A second Dotter process acquired the mutex.'
+        Assert-True `
+            -Condition (($mutexOutput -join "`n") -match 'already using this machine state') `
+            -Message 'The mutex failure did not explain the concurrent invocation.'
+    } finally {
+        $mutex.ReleaseMutex()
+        $mutex.Dispose()
+    }
+
+    $env:PATH = ''
+    Assert-WrapperFails `
+        -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
+        -Pattern 'Dotter is not installed'
+    $env:PATH = $oldPath
 
     $stateBeforeFailure = Get-Content -LiteralPath $statePath -Raw
     Assert-WrapperFails `
@@ -161,14 +238,22 @@ try {
         -Message 'Unknown package changed active state.'
 
     & $wrapper -Action Undeploy -All *> $null
-    Assert-Packages -StatePath $statePath -Expected @()
+    Assert-State -StatePath $statePath -Expected @()
 
-    & $wrapper -Action Deploy -Package lazygit *> $null
     [System.IO.File]::Delete($statePath)
-    [System.IO.File]::Delete($generatedConfig)
-    [System.IO.File]::Delete($lazygitTarget)
-    & $wrapper -Action Undeploy -Package lazygit *> $null
-    Assert-Packages -StatePath $statePath -Expected @()
+    Assert-WrapperFails `
+        -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
+        -Pattern 'without version-2 active state'
+
+    [System.IO.File]::Delete($cachePath)
+    $cacheDirectory = Join-Path $stateRoot 'cache'
+    if ([System.IO.Directory]::Exists($cacheDirectory)) {
+        [System.IO.Directory]::Delete($cacheDirectory, $true)
+    }
+    [System.IO.File]::WriteAllText((Join-Path $stateRoot 'local.toml'), 'packages = []')
+    Assert-WrapperFails `
+        -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
+        -Pattern 'without version-2 active state'
 
     Write-Host '[PASS] Dotter wrapper regression tests completed.'
 } finally {
@@ -176,6 +261,7 @@ try {
     $env:OS = $oldOs
     $env:LOCALAPPDATA = $oldLocalAppData
     $env:APPDATA = $oldAppData
+    $env:PATH = $oldPath
     if ([System.IO.Directory]::Exists($resolvedTest)) {
         [System.IO.Directory]::Delete($resolvedTest, $true)
     }
