@@ -122,6 +122,19 @@ try {
 
     [System.IO.File]::Delete($statePath)
     [System.IO.File]::Delete($generatedConfig)
+    $cachePath = Join-Path $stateRoot 'cache.toml'
+    $cacheContent = (Get-Content -LiteralPath $cachePath -Raw).Replace(
+        'nvim/.config/nvim\init.lua',
+        'nvim/.legacy/nvim/init.lua'
+    )
+    [System.IO.File]::WriteAllText($cachePath, $cacheContent)
+    $nvimTarget = Join-Path $env:LOCALAPPDATA 'nvim\init.lua'
+    [System.IO.File]::Delete($nvimTarget)
+    $dotfilesRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
+    New-Item `
+        -ItemType SymbolicLink `
+        -Path $nvimTarget `
+        -Target (Join-Path $dotfilesRoot 'nvim\.legacy\nvim\init.lua') | Out-Null
     & $wrapper -Action Deploy -Package lazygit -WhatIf *> $null
     Assert-True `
         -Condition (-not (Test-Path -LiteralPath $statePath)) `
@@ -148,6 +161,13 @@ try {
         -Message 'Unknown package changed active state.'
 
     & $wrapper -Action Undeploy -All *> $null
+    Assert-Packages -StatePath $statePath -Expected @()
+
+    & $wrapper -Action Deploy -Package lazygit *> $null
+    [System.IO.File]::Delete($statePath)
+    [System.IO.File]::Delete($generatedConfig)
+    [System.IO.File]::Delete($lazygitTarget)
+    & $wrapper -Action Undeploy -Package lazygit *> $null
     Assert-Packages -StatePath $statePath -Expected @()
 
     Write-Host '[PASS] Dotter wrapper regression tests completed.'

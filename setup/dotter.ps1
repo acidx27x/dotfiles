@@ -241,13 +241,20 @@ function Get-CachePackages {
         [Parameter(Mandatory)] $Cache,
         [Parameter(Mandatory)][System.Collections.IDictionary] $Definitions,
         [Parameter(Mandatory)][string] $DotfilesRoot,
-        [switch] $VerifyLinks
+        [switch] $VerifyLinks,
+        [AllowEmptyCollection()][string[]] $AllowMissingLinksForPackages = @()
     )
 
     if ($Cache.TemplateCount -ne 0) {
         throw 'The existing Dotter cache contains templates and cannot be migrated safely.'
     }
 
+    $allowMissingLinks = [System.Collections.Generic.HashSet[string]]::new(
+        [StringComparer]::OrdinalIgnoreCase
+    )
+    foreach ($packageName in $AllowMissingLinksForPackages) {
+        [void] $allowMissingLinks.Add($packageName)
+    }
     $packages = [System.Collections.Generic.List[string]]::new()
     foreach ($entry in $Cache.Symlinks) {
         $cacheSource = $entry.Source.Replace('\', '/').TrimStart('.', '/')
@@ -264,13 +271,35 @@ function Get-CachePackages {
             }
         }
 
+        if ($matches.Count -eq 0) {
+            $cacheSourceRoot = $cacheSource.Split('/', 2)[0]
+            foreach ($packageName in $Definitions.Keys) {
+                foreach ($source in $Definitions[$packageName]) {
+                    $configuredSource = $source.Source.Replace('\', '/')
+                    $configuredSource = $configuredSource.TrimStart('.', '/')
+                    $configuredSourceRoot = $configuredSource.Split('/', 2)[0]
+                    if ([StringComparer]::OrdinalIgnoreCase.Equals(
+                        $cacheSourceRoot,
+                        $configuredSourceRoot
+                    )) {
+                        [void] $matches.Add($packageName)
+                        break
+                    }
+                }
+            }
+        }
+
         if ($matches.Count -ne 1) {
             throw "Cannot associate cached source '$($entry.Source)' with exactly one package."
         }
-        $packages.Add(@($matches)[0])
+        $packageName = @($matches)[0]
+        $packages.Add($packageName)
 
         if ($VerifyLinks) {
             $target = Get-Item -LiteralPath $entry.Target -Force -ErrorAction SilentlyContinue
+            if ($null -eq $target -and $allowMissingLinks.Contains($packageName)) {
+                continue
+            }
             if ($null -eq $target -or $target.LinkType -ne 'SymbolicLink') {
                 throw "Cached target '$($entry.Target)' is missing or is not a symbolic link."
             }
@@ -575,11 +604,17 @@ function Main {
         }
 
         if ($isMigration) {
+            $allowMissingLinksForPackages = if ($Action -eq 'Undeploy') {
+                if ($All) { $cachedPackages } else { $selectedPackages }
+            } else {
+                @()
+            }
             $currentPackages = @(Get-CachePackages `
                 -Cache $cache `
                 -Definitions $definitions `
                 -DotfilesRoot $dotfilesRoot `
-                -VerifyLinks)
+                -VerifyLinks `
+                -AllowMissingLinksForPackages $allowMissingLinksForPackages)
             Write-Info "Verified existing Dotter packages: $($currentPackages -join ', ')."
         } else {
             $currentPackages = @()

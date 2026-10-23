@@ -22,3 +22,19 @@ default_target_type = "symbolic"
 
 [lazygit.files]
 "lazygit/.config/lazygit/config.yml" = "${LOCALAPPDATA}/lazygit/config.yml"
+
+[zed.files]
+"zed/.config/zed" = "${APPDATA}/Zed"
+
+[codex.files]
+"codex/.codex/AGENTS.md" = "~/.codex/AGENTS.md"
+"codex/.codex/zed-acp.config.toml" = "~/.codex/zed-acp.config.toml"
+
+[llvm.files]
+"llvm/.clang-format" = "~/.clang-format"
+"llvm/.clang-tidy" = "~/.clang-tidy"
+"llvm/.lldbinit" = "~/.lldbinit"
+"llvm/.config/clangd/config.yaml" = "${LOCALAPPDATA}/clangd/config.yaml"
+
+[zellij.files]
+"zellij/.config/zellij/config.kdl" = "${APPDATA}/Zellij/config.kdl"
