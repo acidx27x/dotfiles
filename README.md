@@ -51,13 +51,13 @@ Deploy a profile, remove one package, refresh a package, replace the complete ac
 or explicitly remove everything:
 
 ```powershell
-pwsh -NoProfile -File .\setup\dotter.ps1 -Profile windows
+pwsh -NoProfile -File .\setup\dotter.ps1 -Profile all
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -Package nvim
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Restow -Package nvim
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Profile minimal -Replace
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -All
 ```
 
-A plain deploy selects the tracked `windows` profile for backward compatibility. Add `-WhatIf`
-to any command for a read-only preview. See [windows.md](windows.md) for prerequisites, the
-version-2 state cutover, cache integrity behavior, and the regression test command.
+A plain deploy selects the tracked `all` profile. Add `-WhatIf` to any command for a read-only
+preview. See [windows.md](windows.md) for prerequisites, cache integrity behavior, and the
+regression test command.

@@ -58,7 +58,7 @@ Examples:
   dotter.ps1 -Profile minimal -Replace
   dotter.ps1 -Action Undeploy -All
 
-See windows.md for prerequisites, state cutover, and recovery guidance.
+See windows.md for prerequisites, state integrity, and recovery guidance.
 '@
 }
 
@@ -210,13 +210,10 @@ function Resolve-ProfilePackages {
         throw 'Profile name cannot be empty.'
     }
 
-    $profiles = [ordered]@{
-        windows = Join-Path $DotterConfigRoot 'windows.toml'
-    }
+    $profiles = [ordered]@{}
     $profileNames = [System.Collections.Generic.HashSet[string]]::new(
         [StringComparer]::OrdinalIgnoreCase
     )
-    [void] $profileNames.Add('windows')
 
     $profileRoot = Join-Path $DotterConfigRoot 'profiles'
     if (Test-Path -LiteralPath $profileRoot -PathType Container) {
@@ -319,7 +316,7 @@ function Read-ActiveState {
         }
     }
     if (-not $versionIsInteger -or $state.version -ne 2) {
-        throw "Active Dotter state '$Path' is not version 2. A clean cutover is required."
+        throw "Active Dotter state '$Path' has an unsupported version."
     }
     if ($state.packages -isnot [System.Collections.IList] -or
         $state.packages -is [string]) {
@@ -636,7 +633,7 @@ function Main {
                 -KnownNames $knownPackages `
                 -Names @($Package))
         } else {
-            $profileName = if ($profileSpecified) { $Profile } else { 'windows' }
+            $profileName = if ($profileSpecified) { $Profile } else { 'all' }
             $selectedPackages = @(Resolve-ProfilePackages `
                 -Name $profileName `
                 -DotterConfigRoot $dotterConfigRoot `
@@ -646,7 +643,6 @@ function Main {
 
     $stateRoot = Join-Path $env:LOCALAPPDATA 'dotfiles\dotter'
     $stateFile = Join-Path $stateRoot 'active-packages.json'
-    $legacyConfig = Join-Path $stateRoot 'local.toml'
     $cacheFile = Join-Path $stateRoot 'cache.toml'
     $cacheDirectory = Join-Path $stateRoot 'cache'
     $mutex = Enter-DotterMutex -StateRoot $stateRoot
@@ -662,17 +658,16 @@ function Main {
                 -CacheDirectory $cacheDirectory
             if ($currentFingerprint -ne $activeState.CacheFingerprint) {
                 throw 'Dotter cache data changed outside the wrapper. Restore the cache and ' +
-                    'state together, or perform the documented clean cutover.'
+                    'state together before retrying.'
             }
             $currentPackages = @($activeState.Packages)
             $batConfigPathManaged = $activeState.BatConfigPathManaged
         } else {
-            $legacyArtifacts = (Test-Path -LiteralPath $cacheFile) -or
-                (Test-Path -LiteralPath $cacheDirectory) -or
-                (Test-Path -LiteralPath $legacyConfig)
-            if ($legacyArtifacts) {
-                throw 'Dotter data exists without version-2 active state. Perform the ' +
-                    'documented clean cutover before using this wrapper.'
+            $orphanedCache = (Test-Path -LiteralPath $cacheFile) -or
+                (Test-Path -LiteralPath $cacheDirectory)
+            if ($orphanedCache) {
+                throw 'Dotter cache data exists without active state. Restore or remove the ' +
+                    'orphaned cache before using this wrapper.'
             }
             $currentPackages = @()
             $batConfigPathManaged = $false

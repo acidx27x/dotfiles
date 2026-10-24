@@ -90,7 +90,7 @@ its path contains spaces.
 | `bat` | `%APPDATA%\bat\config` |
 | `lazygit` | `%LOCALAPPDATA%\lazygit\config.yml` |
 
-`windows\dotter\windows.toml` remains the default tracked profile. The optional `minimal` profile
+`windows\dotter\profiles\all.toml` is the default tracked profile. The optional `minimal` profile
 contains `git`, `nvim`, and `starship`. Profiles contain package names only and are validated
 against `global.toml` before Dotter runs.
 
@@ -120,8 +120,8 @@ pwsh -NoProfile -File .\setup\dotter.ps1 -WhatIf
 pwsh -NoProfile -File .\setup\dotter.ps1
 ```
 
-The plain command selects the `windows` profile for backward compatibility. Normal deploys add to
-the active selection without removing unrelated packages:
+The plain command selects the `all` profile. Normal deploys add to the active selection without
+removing unrelated packages:
 
 ```powershell
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Package nvim
@@ -176,26 +176,6 @@ cache data, or environment variables.
 
 Do not edit the machine-local files to select packages; use the wrapper. They are deliberately
 outside Git and must not be committed.
-
-### Version 2 State Cutover
-
-The wrapper deliberately does not infer state from an old Dotter cache. Before switching from the
-version-1 wrapper, undeploy its complete selection, move its machine state to a recoverable backup,
-then preview and deploy with the new wrapper:
-
-```powershell
-pwsh -NoProfile -File .\setup\dotter.ps1 -Action Undeploy -All
-$stateRoot = Join-Path $env:LOCALAPPDATA 'dotfiles\dotter'
-$backupRoot = "$stateRoot.v1-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
-Move-Item -LiteralPath $stateRoot -Destination $backupRoot
-
-pwsh -NoProfile -File .\setup\dotter.ps1 -WhatIf
-pwsh -NoProfile -File .\setup\dotter.ps1
-```
-
-Perform the undeploy with the old wrapper before updating it. If the new wrapper already reports
-legacy or unsupported state, temporarily restore the previous wrapper revision and follow the same
-sequence. The new wrapper refuses cache-only data and non-version-2 state without changing them.
 
 Edits to an already linked configuration file take effect through the symlink, so changing only
 its contents does not require another deployment. Review those edits with `git diff` and commit
@@ -270,7 +250,7 @@ pwsh -NoProfile -File .\setup\tests\dotter.Tests.ps1
 The suite uses a unique temporary target path containing spaces. It covers malformed selections,
 dry-run immutability, single and repeated deploys, duplicate names, profile validation, selective
 removal, restow, replacement, conflict rejection, failed-state preservation, cache fingerprinting,
-state validation, execution locking, legacy-state rejection, and explicit remove-all. It does not
+state validation, execution locking, orphaned-cache rejection, and explicit remove-all. It does not
 change the normal Dotter state or `BAT_CONFIG_PATH`.
 
 For release validation, also run the default profile preview in a non-Developer-Mode session,

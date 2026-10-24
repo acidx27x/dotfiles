@@ -1,8 +1,0 @@
-packages = [
-  "git",
-  "nvim",
-  "wezterm",
-  "atuin",
-  "starship",
-  "lazygit",
-]

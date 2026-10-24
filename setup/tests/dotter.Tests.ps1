@@ -109,6 +109,9 @@ try {
         -Operation { & $wrapper -Action Deploy -Profile '' -WhatIf } `
         -Pattern 'Profile name cannot be empty'
     Assert-WrapperFails `
+        -Operation { & $wrapper -Action Deploy -Profile windows -WhatIf } `
+        -Pattern "Unknown Dotter profile 'windows'"
+    Assert-WrapperFails `
         -Operation { & $wrapper -Action Undeploy -All -Package lazygit -WhatIf } `
         -Pattern 'cannot be combined'
     Assert-True `
@@ -130,10 +133,6 @@ try {
     Assert-True `
         -Condition (-not (Test-Path -LiteralPath (Join-Path $stateRoot 'local.toml'))) `
         -Message 'The wrapper persisted a generated local.toml.'
-    Assert-True `
-        -Condition (-not (Test-Path -LiteralPath (Join-Path $stateRoot 'backups'))) `
-        -Message 'The wrapper created a migration backup directory.'
-
     & $wrapper -Action Deploy -Package lazygit *> $null
     Assert-State -StatePath $statePath -Expected @('lazygit')
 
@@ -190,7 +189,7 @@ try {
     )
     Assert-WrapperFails `
         -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
-        -Pattern 'not version 2'
+        -Pattern 'unsupported version'
     [System.IO.File]::WriteAllText($statePath, $validState)
 
     $invalidState = $validState | ConvertFrom-Json -AsHashtable
@@ -243,17 +242,7 @@ try {
     [System.IO.File]::Delete($statePath)
     Assert-WrapperFails `
         -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
-        -Pattern 'without version-2 active state'
-
-    [System.IO.File]::Delete($cachePath)
-    $cacheDirectory = Join-Path $stateRoot 'cache'
-    if ([System.IO.Directory]::Exists($cacheDirectory)) {
-        [System.IO.Directory]::Delete($cacheDirectory, $true)
-    }
-    [System.IO.File]::WriteAllText((Join-Path $stateRoot 'local.toml'), 'packages = []')
-    Assert-WrapperFails `
-        -Operation { & $wrapper -Action Deploy -Package lazygit -WhatIf } `
-        -Pattern 'without version-2 active state'
+        -Pattern 'cache data exists without active state'
 
     Write-Host '[PASS] Dotter wrapper regression tests completed.'
 } finally {
