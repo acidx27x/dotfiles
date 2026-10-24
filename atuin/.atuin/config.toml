@@ -128,9 +128,9 @@ show_preview = true
 ## For details on the supported regular expression syntax, see
 ## https://docs.rs/regex/latest/regex/#syntax
 history_filter = [
-  "^ls$",           # exclude bare 'ls', but not 'ls -la'
-  "^cd ",           # exclude cd commands
-  "--password",     # exclude anything with a password flag
+  "^ls$", # exclude bare 'ls', but not 'ls -la'
+  "^cd ", # exclude cd commands
+  "--password", # exclude anything with a password flag
 ]
 
 ## prevent commands run with cwd matching any of these regexes from being written
@@ -139,9 +139,9 @@ history_filter = [
 ## For details on the supported regular expression syntax, see
 ## https://docs.rs/regex/latest/regex/#syntax
 cwd_filter = [
-  "^/tmp",                    # nothing run from /tmp
-  "/node_modules/",           # nothing run inside any node_modules
-  "^/home/user/scratch",      # a scratch directory
+  "^/tmp", # nothing run from /tmp
+  "/node_modules/", # nothing run inside any node_modules
+  "^/home/user/scratch", # a scratch directory
 ]
 
 ## Configure the maximum height of the preview to show.
@@ -159,12 +159,13 @@ cwd_filter = [
 
 ## Configure whether or not the tabs row may be auto-hidden, which includes the current Atuin
 ## tab, such as Search or Inspector, and other tabs you may wish to see. This will
-## only be hidden if there are fewer than this count of lines available, and does not affect the use
-## of keyboard shortcuts to switch tab. 0 to never auto-hide, default is 8 (lines).
+## only be hidden if there are fewer than this count of lines available, and does not affect the
+## use of keyboard shortcuts to switch tab. 0 to never auto-hide, default is 8 (lines).
 ## This is ignored except in `compact` mode.
 # auto_hide_height = 8
 
-## Defaults to true. This matches history against a set of default regex, and will not save it if we get a match. Defaults include
+## Defaults to true. This matches history against a set of default regex, and will not save it if
+## we get a match. Defaults include
 ## 1. AWS key id
 ## 2. Github pat (old and new)
 ## 3. Slack oauth tokens (bot, user)
@@ -175,10 +176,12 @@ cwd_filter = [
 ## Defaults to true. If enabled, upon hitting enter Atuin will immediately execute the command,
 ## whereas tab will put the command in the prompt for editing.
 ## If set to false, both enter and tab will place the command in the prompt for editing.
-## This applies for new installs. Old installs will keep the old behaviour unless configured otherwise.
+## This applies for new installs. Old installs will keep the old behaviour unless configured
+## otherwise.
 enter_accept = false
 
-## Defaults to false. If enabled, when triggered after &&, || or |, Atuin will complete commands to chain rather than replace the current line.
+## Defaults to false. If enabled, when triggered after &&, || or |, Atuin will complete commands to
+## chain rather than replace the current line.
 command_chaining = true
 
 ## This specifies the keymap on the startup of `atuin search`. If this is set
@@ -210,11 +213,13 @@ command_chaining = true
 ## Alternatively, set env NO_MOTION=true
 # prefers_reduced_motion = false
 
-## Defaults to true. Configures whether to store commands that failed (those with non-zero exit status) or not.
+## Defaults to true. Configures whether to store commands that failed (those with non-zero exit
+## status) or not.
 # store_failed = true
 
 [stats]
-## Set commands where we should consider the subcommand for statistics. Eg, kubectl get vs just kubectl
+## Set commands where we should consider the subcommand for statistics. Eg, kubectl get vs just
+## kubectl
 # common_subcommands = [
 #   "apt",
 #   "cargo",
@@ -250,19 +255,23 @@ command_chaining = true
 # ]
 
 [keys]
-# Defaults to true. If disabled, using the up/down key won't exit the TUI when scrolled past the first/last entry.
+# Defaults to true. If disabled, using the up/down key won't exit the TUI when scrolled past the
+# first/last entry.
 scroll_exits = false
 
 # Defaults to true. The left arrow key will exit the TUI when scrolling before the first character
 # exit_past_line_start = true
 
-# Defaults to true. The right arrow key performs the same functionality as Tab and copies the selected line to the command line to be modified.
+# Defaults to true. The right arrow key performs the same functionality as Tab and copies the
+# selected line to the command line to be modified.
 # accept_past_line_end = true
 
-# Defaults to false. The left arrow key performs the same functionality as Tab and copies the selected line to the command line to be modified.
+# Defaults to false. The left arrow key performs the same functionality as Tab and copies the
+# selected line to the command line to be modified.
 # accept_past_line_start = false
 
-# Defaults to false. The backspace key performs the same functionality as Tab and copies the selected line to the command line to be modified when at the start of the line.
+# Defaults to false. The backspace key performs the same functionality as Tab and copies the
+# selected line to the command line to be modified when at the start of the line.
 # accept_with_backspace = false
 
 [preview]
@@ -293,7 +302,8 @@ autostart = true
 ## Defaults to the Atuin data directory.
 # pidfile_path = "~/.atuin/data/atuin-daemon.pid"
 
-## Use systemd socket activation rather than opening the given path (the path must still be correct for the client)
+## Use systemd socket activation rather than opening the given path (the path must still be correct
+## for the client)
 ## linux: false
 ## mac/windows: Not Supported
 # systemd_socket = false
@@ -350,7 +360,8 @@ name = "catppuccin-mocha-mauve"
 ## When enabled and running inside tmux, Atuin will use a popup window for interactive search.
 ## Set to false to disable the popup.
 ## This can also be controlled with the ATUIN_TMUX_POPUP environment variable.
-## Note: The tmux popup is currently supported in zsh, bash, and fish shells. This currently doesn't work with iTerm native tmux integration.
+## Note: The tmux popup is currently supported in zsh, bash, and fish shells. This currently doesn't
+## work with iTerm native tmux integration.
 enabled = true
 
 ## Width of the tmux popup window
@@ -400,7 +411,12 @@ enabled = true
 # columns = ["exit", "duration", "command"]
 ##
 ## Make directory expand instead of command:
-# columns = ["duration", "time", { type = "directory", expand = true }, { type = "command", expand = false }]
+# columns = [
+#   "duration",
+#   "time",
+#   { type = "directory", expand = true },
+#   { type = "command", expand = false },
+# ]
 
 ## Syntax highlight commands in the search results, using the theme's colors.
 ## Not available on all platforms (e.g. Windows).
