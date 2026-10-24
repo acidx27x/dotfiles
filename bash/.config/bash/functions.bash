@@ -115,37 +115,37 @@ detect-encoding() {
   fi
 
   case "$encoding" in
-  "" | unknown | UNKNOWN)
-    has-cmd file || {
-      printf 'Neither uchardet nor file is available.\n' >&2
-      return 127
-    }
+    "" | unknown | UNKNOWN)
+      has-cmd file || {
+        printf 'Neither uchardet nor file is available.\n' >&2
+        return 127
+      }
 
-    encoding=$(file -b --mime-encoding -- "$file") || return
-    ;;
+      encoding=$(file -b --mime-encoding -- "$file") || return
+      ;;
   esac
 
   case "$encoding" in
-  binary | BINARY)
-    printf 'binary\n'
-    ;;
+    binary | BINARY)
+      printf 'binary\n'
+      ;;
 
-  us-ascii | US-ASCII | ascii | ASCII)
-    printf 'UTF-8\n'
-    ;;
+    us-ascii | US-ASCII | ascii | ASCII)
+      printf 'UTF-8\n'
+      ;;
 
-  utf-8 | UTF-8)
-    printf 'UTF-8\n'
-    ;;
+    utf-8 | UTF-8)
+      printf 'UTF-8\n'
+      ;;
 
-  unknown-8bit | UNKNOWN-8BIT | unknown | UNKNOWN | "")
-    printf 'Could not determine encoding: %s\n' "$file" >&2
-    return 2
-    ;;
+    unknown-8bit | UNKNOWN-8BIT | unknown | UNKNOWN | "")
+      printf 'Could not determine encoding: %s\n' "$file" >&2
+      return 2
+      ;;
 
-  *)
-    printf '%s\n' "$encoding"
-    ;;
+    *)
+      printf '%s\n' "$encoding"
+      ;;
   esac
 }
 
@@ -399,12 +399,12 @@ proxy-status() {
       value=${!name}
 
       case "$value" in
-      *://*@*)
-        scheme=${value%%://*}
-        remainder=${value#*://}
-        remainder=${remainder#*@}
-        value="${scheme}://<redacted>@${remainder}"
-        ;;
+        *://*@*)
+          scheme=${value%%://*}
+          remainder=${value#*://}
+          remainder=${remainder#*@}
+          value="${scheme}://<redacted>@${remainder}"
+          ;;
       esac
     else
       value='<unset>'

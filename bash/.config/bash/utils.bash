@@ -251,9 +251,9 @@ add-prompt-command() {
   fi
 
   case ";${PROMPT_COMMAND-};" in
-  *";$new_command;"*) ;;
-  ';;') PROMPT_COMMAND="$new_command" ;;
-  *) PROMPT_COMMAND="${PROMPT_COMMAND};$new_command" ;;
+    *";$new_command;"*) ;;
+    ';;') PROMPT_COMMAND="$new_command" ;;
+    *) PROMPT_COMMAND="${PROMPT_COMMAND};$new_command" ;;
   esac
 }
 

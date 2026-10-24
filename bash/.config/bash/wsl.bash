@@ -14,8 +14,8 @@ _wsl-windows-drive-letter() {
   letter=$(printf '%s' "$drive" | tr '[:upper:]' '[:lower:]') || return
 
   case "$letter" in
-  [a-z]) printf '%s\n' "$letter" ;;
-  *) return 2 ;;
+    [a-z]) printf '%s\n' "$letter" ;;
+    *) return 2 ;;
   esac
 }
 

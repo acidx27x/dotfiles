@@ -2,8 +2,8 @@
 
 # Stop here for non-interactive shells.
 case $- in
-*i*) ;;
-*) return ;;
+  *i*) ;;
+  *) return ;;
 esac
 
 # ---------------------------------------------------------------------------
