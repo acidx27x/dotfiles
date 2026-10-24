@@ -1,8 +1,8 @@
 # Dotfiles with GNU Stow
 
-This repository stores configuration files as GNU Stow packages and creates symbolic links in
-your home directory. `setup/stow.sh` provides the supported package/profile interface while GNU
-Stow remains the deployment engine and the package directory layout remains authoritative.
+This repository stores configuration files as GNU Stow packages and creates symbolic links in your
+home directory. `setup/stow.sh` provides the supported package/profile interface while GNU Stow
+remains the deployment engine and the package directory layout remains authoritative.
 
 ## Install GNU Stow
 
@@ -19,7 +19,8 @@ brew install stow
 
 ## Example Repository Structure
 
-Most top-level directories are Stow packages. Setup-only directories such as `codex-system/` are exceptions.
+Most top-level directories are Stow packages. Setup-only directories such as `codex-system/` are
+exceptions.
 
 ```text
 ~/dotfiles/
@@ -55,8 +56,8 @@ directory, including when the repository path contains spaces.
 
 Every operation first runs Stow with `--simulate`. If preflight reports a conflict, the apply step
 does not run. `--dry-run` stops after the simulation and creates no links, state, or cache files.
-The wrapper never passes `--adopt` or `--override`, and it isolates Stow from user `.stowrc`
-options so those settings cannot weaken conflict handling.
+The wrapper never passes `--adopt` or `--override`, and it isolates Stow from user `.stowrc` options
+so those settings cannot weaken conflict handling.
 
 ### Deploy Packages
 
@@ -76,32 +77,31 @@ Add `--dry-run` to preview any command:
 
 ### Keep Target Directories Real with `--no-folding`
 
-By default, Stow may replace an entire target directory with one symlink to the package
-directory. For example, it may make `~/.config/bash` a symlink to
-`~/dotfiles/bash/.config/bash`.
+By default, Stow may replace an entire target directory with one symlink to the package directory.
+For example, it may make `~/.config/bash` a symlink to `~/dotfiles/bash/.config/bash`.
 
-Use `--no-folding` when an application or local configuration needs to create untracked files
-beside the linked files. Stow then keeps the target directories real and links their contents
-individually. A `.gitignore` prevents files from being tracked, but does not prevent them from
-being created inside the repository when their parent directory is a symlink.
+Use `--no-folding` when an application or local configuration needs to create untracked files beside
+the linked files. Stow then keeps the target directories real and links their contents individually.
+A `.gitignore` prevents files from being tracked, but does not prevent them from being created
+inside the repository when their parent directory is a symlink.
 
 The wrapper always enables `--no-folding`, including deploy, undeploy, restow, preflight, and
 replacement operations. The direct Stow examples below are retained for migration and diagnosis.
 
 The following packages need or benefit from `--no-folding`:
 
-| Package | Target directory |
-|---|---|
-| `codex` | `~/.codex` |
-| `bash` | `~/.config/bash` |
-| `zsh` | `~/.config/zsh` |
-| `nvim` | `~/.config/nvim` |
-| `brew` | `~/.config/homebrew` |
-| `htop` | `~/.config/htop` |
-| `atuin` | `~/.atuin` |
+| Package | Target directory     |
+| ------- | -------------------- |
+| `codex` | `~/.codex`           |
+| `bash`  | `~/.config/bash`     |
+| `zsh`   | `~/.config/zsh`      |
+| `nvim`  | `~/.config/nvim`     |
+| `brew`  | `~/.config/homebrew` |
+| `htop`  | `~/.config/htop`     |
+| `atuin` | `~/.atuin`           |
 
-- `codex`: Codex writes machine-local config, authentication, packages, logs, and other state.
-  Use `setup/codex.sh`, which creates the directory and passes `--no-folding`.
+- `codex`: Codex writes machine-local config, authentication, packages, logs, and other state. Use
+  `setup/codex.sh`, which creates the directory and passes `--no-folding`.
 - `bash` and `zsh`: `conf.local.d/` and local shell files are intentionally untracked.
 - `nvim`: `lua/core/paths_override.lua` and `nvim-pack-lock.json` are machine-local.
 - `brew`: Homebrew writes `trust.json` and `trust.json.lock`. Its Stow-local ignore prevents
@@ -115,21 +115,21 @@ For example:
 stow --no-folding --target="$HOME" bash zsh nvim brew htop atuin
 ```
 
-To convert packages that are already stowed with folded directory links, preview and then
-restow them:
+To convert packages that are already stowed with folded directory links, preview and then restow
+them:
 
 ```bash
 stow --restow --simulate --verbose --no-folding --target="$HOME" bash zsh nvim brew htop atuin
 stow --restow --verbose --no-folding --target="$HOME" bash zsh nvim brew htop atuin
 ```
 
-Inspect the package directories before converting them. Any generated or machine-local files
-that were already created through a folded directory link are physically inside the repository
-and remain package contents until moved back to the real target directory.
+Inspect the package directories before converting them. Any generated or machine-local files that
+were already created through a folded directory link are physically inside the repository and remain
+package contents until moved back to the real target directory.
 
-It is safe to use `--no-folding` for every package. Doing so creates more individual symlinks,
-but gives applications no opportunity to place generated or machine-local files inside the
-repository through a folded directory symlink.
+It is safe to use `--no-folding` for every package. Doing so creates more individual symlinks, but
+gives applications no opportunity to place generated or machine-local files inside the repository
+through a folded directory symlink.
 
 ### Deploy Profiles
 
@@ -146,8 +146,8 @@ platform's default profile:
 ```
 
 Use either `--package` or `--profile`, not both. `--package` may be repeated and accepts
-comma-separated names; `--profile` selects exactly one profile. Duplicate package names are
-removed before Stow runs. Profile contents are validated exactly like command-line package names.
+comma-separated names; `--profile` selects exactly one profile. Duplicate package names are removed
+before Stow runs. Profile contents are validated exactly like command-line package names.
 
 ### Remove or Refresh Packages
 
@@ -169,8 +169,8 @@ deleting files inside a package:
 
 ### Replace the Complete Selection
 
-`--replace` explicitly removes links belonging to every recognized Stow package and then deploys
-the requested selection in one Stow transaction. It is valid only with `deploy`:
+`--replace` explicitly removes links belonging to every recognized Stow package and then deploys the
+requested selection in one Stow transaction. It is valid only with `deploy`:
 
 ```bash
 ./setup/stow.sh deploy --profile linux --replace
@@ -200,9 +200,8 @@ zsh
 The `stow` package deploys `stow/.stow-global-ignore` as `~/.stow-global-ignore`. It retains GNU
 Stow's built-in exclusions for version-control metadata, package documentation, editor backups,
 autosave files, and lock files, and adds `.DS_Store`. It also excludes `stow/profiles/`, which is
-wrapper metadata rather than home-directory configuration. Known machine-local files beside
-managed configuration, including Neovim's `nvim-pack-lock.json` and `paths_override.lua`, are
-also excluded.
+wrapper metadata rather than home-directory configuration. Known machine-local files beside managed
+configuration, including Neovim's `nvim-pack-lock.json` and `paths_override.lua`, are also excluded.
 
 A package's `.stow-local-ignore` continues to take precedence for that package, as defined by GNU
 Stow. The existing `brew` and `wsl` local rules remain unchanged.
@@ -239,9 +238,9 @@ mv ~/.zshrc ~/.zshrc.backup
 ./setup/stow.sh deploy --package zsh
 ```
 
-The wrapper deliberately does not expose Stow's adoption or override features. It will not move
-an unmanaged target into the repository or replace one. Inspect and resolve each conflict
-explicitly, rerun with `--dry-run`, and then apply it.
+The wrapper deliberately does not expose Stow's adoption or override features. It will not move an
+unmanaged target into the repository or replace one. Inspect and resolve each conflict explicitly,
+rerun with `--dry-run`, and then apply it.
 
 ## Set Up Homebrew
 
@@ -253,24 +252,24 @@ installed, restows the `brew` package with `--no-folding`, and installs the glob
 ./setup/homebrew.sh
 ```
 
-The setup scripts are executable. On macOS, direct invocation uses Bash through the shebang;
-running `bash ./setup/homebrew.sh` is equivalent.
+The setup scripts are executable. On macOS, direct invocation uses Bash through the shebang; running
+`bash ./setup/homebrew.sh` is equivalent.
 
-The package is linked into `~/.config/homebrew`. Homebrew reads `brew.env` from that directory,
-and `brew bundle --global --no-upgrade` installs missing dependencies from the repository-managed
-`Brewfile` without upgrading everything already installed. The apply step may ask for `sudo`
-while the official Homebrew installer creates its platform-default prefix.
+The package is linked into `~/.config/homebrew`. Homebrew reads `brew.env` from that directory, and
+`brew bundle --global --no-upgrade` installs missing dependencies from the repository-managed
+`Brewfile` without upgrading everything already installed. The apply step may ask for `sudo` while
+the official Homebrew installer creates its platform-default prefix.
 
 ## Set Up Rust
 
 The Rust setup follows the paths exported by the Bash and Zsh configurations:
 
-| Variable | Path |
-|---|---|
-| `RUST_HOME` | `/opt/rust` |
-| `RUSTUP_HOME` | `/opt/rust/rustup` |
-| `CARGO_HOME` | `/opt/rust/cargo` |
-| `CARGO_INSTALL_ROOT` | `/opt/rust` |
+| Variable             | Path               |
+| -------------------- | ------------------ |
+| `RUST_HOME`          | `/opt/rust`        |
+| `RUSTUP_HOME`        | `/opt/rust/rustup` |
+| `CARGO_HOME`         | `/opt/rust/cargo`  |
+| `CARGO_INSTALL_ROOT` | `/opt/rust`        |
 
 Preview the setup, then install or update the stable toolchain with rustup's default profile:
 
@@ -293,11 +292,12 @@ Declare those separately before treating them as portable bootstrap dependencies
 Codex uses two separate configuration layers in this repository:
 
 - `codex-system/config.toml` is the portable base installed at `/etc/codex/config.toml`.
-- `codex/` contains files that are safe to Stow into `~/.codex`, including the `zed-acp` named profile.
+- `codex/` contains files that are safe to Stow into `~/.codex`, including the `zed-acp` named
+  profile.
 
-On Windows, the same portable base is installed at
-`%ProgramData%\OpenAI\Codex\config.toml` with `setup/codex.ps1`; see `windows.md` for the Windows
-workflow. The writable user config remains `%USERPROFILE%\.codex\config.toml`.
+On Windows, the same portable base is installed at `%ProgramData%\OpenAI\Codex\config.toml` with
+`setup/codex.ps1`; see `windows.md` for the Windows workflow. The writable user config remains
+`%USERPROFILE%\.codex\config.toml`.
 
 Preview a clean setup, then apply it:
 
@@ -306,9 +306,13 @@ Preview a clean setup, then apply it:
 ./setup/codex.sh
 ```
 
-The apply step may ask for `sudo` when `/etc/codex/config.toml` needs to be installed or updated. It creates `~/.codex` as a real directory and uses Stow's `--no-folding` option so that the directory itself does not become a repository symlink.
+The apply step may ask for `sudo` when `/etc/codex/config.toml` needs to be installed or updated. It
+creates `~/.codex` as a real directory and uses Stow's `--no-folding` option so that the directory
+itself does not become a repository symlink.
 
-Keep machine-local settings in `~/.codex/config.toml`. That file is intentionally not tracked, linked, created, read, or modified by the setup script. Examples of machine-local settings include trusted projects, absolute workspace paths, and notices written by Codex.
+Keep machine-local settings in `~/.codex/config.toml`. That file is intentionally not tracked,
+linked, created, read, or modified by the setup script. Examples of machine-local settings include
+trusted projects, absolute workspace paths, and notices written by Codex.
 
 Codex merges configuration in this order, from highest to lowest precedence:
 
@@ -325,12 +329,16 @@ Run the repository's workspace-oriented named profile explicitly with:
 codex --profile zed-acp
 ```
 
-Zed remains configured through its registry-managed `codex-acp` settings. Its `mode = "auto"` and reasoning setting do not automatically select the `zed-acp` Codex CLI profile.
+Zed remains configured through its registry-managed `codex-acp` settings. Its `mode = "auto"` and
+reasoning setting do not automatically select the `zed-acp` Codex CLI profile.
 
-The script is for clean setup, not migration. It stops instead of replacing an existing `~/.codex` symlink, an unrelated `/etc/codex/config.toml`, or conflicting Stow targets. Resolve those conditions manually before running it again.
+The script is for clean setup, not migration. It stops instead of replacing an existing `~/.codex`
+symlink, an unrelated `/etc/codex/config.toml`, or conflicting Stow targets. Resolve those
+conditions manually before running it again.
 
 ## Set Up on a New Computer
 
+<!-- dprint-ignore -->
 ```bash
 git clone <repository-url> ~/dotfiles
 cd ~/dotfiles
@@ -342,21 +350,21 @@ cd ~/dotfiles
 ./setup/stow.sh deploy
 ```
 
-Each successful bootstrap script prints a terminal-restart reminder. On a new computer, finish
-the Stow commands first, then close the current terminal and open a new one once.
+Each successful bootstrap script prints a terminal-restart reminder. On a new computer, finish the
+Stow commands first, then close the current terminal and open a new one once.
 
 ## Command Reference
 
-| Command | Purpose |
-|---|---|
-| `setup/stow.sh deploy --package <name>` | Add one package |
-| `setup/stow.sh deploy --package <a,b>` | Add multiple packages |
-| `setup/stow.sh deploy --profile <name>` | Add a profile |
-| `setup/stow.sh undeploy --package <name>` | Remove one package |
-| `setup/stow.sh restow --package <name>` | Refresh one package |
-| `setup/stow.sh deploy --profile <name> --replace` | Replace the complete selection |
-| `setup/stow.sh undeploy --all` | Remove all recognized package links |
-| `<command> --dry-run` | Preview without applying changes |
+| Command                                           | Purpose                             |
+| ------------------------------------------------- | ----------------------------------- |
+| `setup/stow.sh deploy --package <name>`           | Add one package                     |
+| `setup/stow.sh deploy --package <a,b>`            | Add multiple packages               |
+| `setup/stow.sh deploy --profile <name>`           | Add a profile                       |
+| `setup/stow.sh undeploy --package <name>`         | Remove one package                  |
+| `setup/stow.sh restow --package <name>`           | Refresh one package                 |
+| `setup/stow.sh deploy --profile <name> --replace` | Replace the complete selection      |
+| `setup/stow.sh undeploy --all`                    | Remove all recognized package links |
+| `<command> --dry-run`                             | Preview without applying changes    |
 
 ## Regression Tests
 
@@ -371,8 +379,8 @@ selections, additive and repeated deployment, profiles and duplicate package nam
 removal, restow, replacement, remove-all, ignore rules, conflicts, unsafe user `.stowrc` options,
 and dry-run behavior.
 
-Run syntax and integration checks separately on macOS because the test suite intentionally uses
-the detected platform's default profile:
+Run syntax and integration checks separately on macOS because the test suite intentionally uses the
+detected platform's default profile:
 
 ```bash
 bash -n ./setup/stow.sh ./setup/tests/stow.Tests.sh

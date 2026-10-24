@@ -1,6 +1,6 @@
 root = true
 
-# Default rules for all files
+# Defaults
 [*]
 charset = utf-8
 indent_style = space
@@ -10,36 +10,36 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# Python
 [*.py]
-charset = utf-8-bom
 indent_size = 4
 max_line_length = 88
 
-# Shell scripts
-[*.{sh,bash,zsh}]
-charset = utf-8
+[*.{lua,luau,json,jsonc,toml,yaml,yml,kdl,ps1,psd1,psm1}]
 indent_size = 2
+
+[*.{sh,bash,mksh,bats,zsh}]
+binary_next_line = false
+function_next_line = false
+simplify = false
+space_redirects = false
+switch_case_indent = true
+
+[{.bashrc,.bash_profile,.bash_logout,.zshrc,.zshenv,.zprofile,.zlogin,.zlogout}]
+binary_next_line = false
+function_next_line = false
+simplify = false
+space_redirects = false
+switch_case_indent = true
 
 [*.{bat,cmd}]
-charset = utf-8
 end_of_line = crlf
 
-[*.{ps1}]
-charset = utf-8
-
-# Markdown
 [*.md]
-charset = utf-8-bom
 trim_trailing_whitespace = false
-max_line_length = off
+max_line_length = 100
 
-# Git-related files
 [{.gitignore,.gitattributes,.gitmodules,.git-blame-ignore-revs,.mailmap,COMMIT_EDITMSG,MERGE_MSG,TAG_EDITMSG}]
-charset = utf-8-bom
 indent_size = 2
 
-# Makefile
 [{Makefile,Makefile.am,Makefile.in,*.mk}]
-charset = utf-8
 indent_style = tab

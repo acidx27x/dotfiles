@@ -1,0 +1,55 @@
+{
+  "$schema": "https://dprint.dev/schemas/v0.json",
+  "lineWidth": 100,
+  "indentWidth": 2,
+  "useTabs": false,
+  "newLineKind": "lf",
+  "incremental": false,
+  "excludes": ["**/*-lock.json", "zed/**", "ssh/**"],
+  "json": {},
+  "markdown": {
+    "textWrap": "always",
+    "wrapCodeSpans": false
+  },
+  "toml": {},
+  "yaml": {
+    "associations": ["**/*.yaml", "**/*.yml", "**/.clang-format", "**/.clang-tidy"]
+  },
+  "kdl": {
+    "kdlVersion": "v1"
+  },
+  "shfmt": {
+    "binaryNextLine": false,
+    "switchCaseIndent": true,
+    "spaceRedirects": false,
+    "functionNextLine": false,
+    "simplify": false
+  },
+  "stylua": {
+    "syntax": "all",
+    "quoteStyle": "autoPreferDouble",
+    "callParentheses": "always",
+    "collapseSimpleStatement": "never",
+    "sortRequires": false
+  },
+  "exec": {
+    "cwd": "${configDir}",
+    "commands": [
+      {
+        "command": "pwsh -NoProfile -NonInteractive -File .dprint-powershell.ps1",
+        "exts": ["ps1", "psm1", "psd1"],
+        "cacheKeyFiles": [".dprint-powershell.ps1", ".PSScriptAnalyzerSettings.psd1"]
+      }
+    ]
+  },
+  "plugins": [
+    "npm:@dprint/json@0.25.2",
+    "npm:@dprint/markdown@0.28.0@d85e31caadc027de132b4b6ff259eb5cb527346ee0768bb3468ef3ce38eb0a5d",
+    "npm:@dprint/toml@0.9.0@2cac97483311ab7e36373e02592b9757f9619f6aa2f7e232bb0a6bd143a75caa",
+    "npm:dprint-plugin-yaml@0.6.0@aee3873f443c9f749521ea171cd38ed381491123aa4530684dd0d6e3deb6727b",
+    "npm:@dprint/kdl@0.4.3@9f0bbf63e887e33c9b3dc869a0a0c350209ca51fa3b95f873dadd59592004d3f",
+    "npm:@dprint/shfmt@0.1.2@8befc8c014cea691274c5c1e846d0854f26209d618209db584965b4a6bf6342e",
+    "npm:@dprint/stylua@0.1.0@8e23e5b0ef0813cf2a998ab89506261cf7a09ddd3b3032740b0d2b8c3378f57e",
+    "npm:@dprint/exec@0.8.0/plugin.json@9d6234ea05810c775f388c2a4cce82b9116b69294b65e0e1e9d64f1446283ef3"
+  ]
+}
