@@ -145,8 +145,9 @@ platform's default profile:
 ./setup/stow.sh deploy
 ```
 
-Package and profile options may be combined or repeated. Duplicate package names are removed
-before Stow runs. Profile contents are validated exactly like command-line package names.
+Use either `--package` or `--profile`, not both. `--package` may be repeated and accepts
+comma-separated names; `--profile` selects exactly one profile. Duplicate package names are
+removed before Stow runs. Profile contents are validated exactly like command-line package names.
 
 ### Remove or Refresh Packages
 
@@ -365,9 +366,10 @@ Run the isolated Linux suite with GNU Stow and ripgrep installed:
 ./setup/tests/stow.Tests.sh
 ```
 
-The suite uses a disposable home and repository path containing spaces. It covers additive and
-repeated deployment, profiles and duplicate names, selective removal, restow, replacement,
-remove-all, ignore rules, conflicts, unsafe user `.stowrc` options, and dry-run behavior.
+The suite uses a disposable home and repository path containing spaces. It covers malformed
+selections, additive and repeated deployment, profiles and duplicate package names, selective
+removal, restow, replacement, remove-all, ignore rules, conflicts, unsafe user `.stowrc` options,
+and dry-run behavior.
 
 Run syntax and integration checks separately on macOS because the test suite intentionally uses
 the detected platform's default profile:

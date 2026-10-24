@@ -92,6 +92,13 @@ cd -- "$TEST_ROOT"
 HOME="$TARGET_HOME" "$WRAPPER" deploy --package alpha --dry-run > /dev/null
 assert_absent "$TARGET_HOME/.config/alpha/config"
 
+assert_fails 'mutually exclusive' \
+  env HOME="$TARGET_HOME" "$WRAPPER" deploy --package alpha --profile common
+assert_fails 'only once' \
+  env HOME="$TARGET_HOME" "$WRAPPER" deploy --profile common --profile linux
+assert_fails 'Invalid profile name' \
+  env HOME="$TARGET_HOME" "$WRAPPER" deploy --profile common,linux
+
 HOME="$TARGET_HOME" "$WRAPPER" deploy --package alpha > /dev/null
 assert_symlink_to \
   "$FIXTURE_ROOT/alpha/.config/alpha/config" \

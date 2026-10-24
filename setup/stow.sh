@@ -11,7 +11,8 @@ DOTFILES_ROOT=""
 TARGET_HOME=""
 STOW_BIN=""
 PACKAGE_GROUPS=()
-PROFILE_GROUPS=()
+PROFILE=""
+PROFILE_SPECIFIED=false
 AVAILABLE_PACKAGES=()
 SELECTED_PACKAGES=()
 
@@ -23,13 +24,14 @@ Deploy, remove, or refresh GNU Stow packages in the current user's home director
 
 Options:
   --package NAME[,NAME...]  Select one or more packages. May be repeated.
-  --profile NAME[,NAME...]  Select one or more profiles. May be repeated.
+  --profile NAME            Select one profile.
   --replace                 Replace the complete deployed selection (deploy only).
   --all                     Select every package (undeploy only).
   --dry-run                 Preview without changing the filesystem.
   -h, --help                Show this help text.
 
 A deploy with no selection uses the linux or macos profile for the current platform.
+Package and profile selections are mutually exclusive.
 EOF
 }
 
@@ -84,7 +86,10 @@ parse_args() {
         ;;
       --profile)
         (($# > 1)) || die_usage '--profile requires a value.'
-        PROFILE_GROUPS+=("$2")
+        [[ "$PROFILE_SPECIFIED" == "false" ]] ||
+          die_usage '--profile may be specified only once.'
+        PROFILE="$2"
+        PROFILE_SPECIFIED=true
         shift
         ;;
       --replace)
@@ -113,9 +118,13 @@ parse_args() {
   if [[ "$ALL" == "true" && "$ACTION" != "undeploy" ]]; then
     die_usage '--all is valid only with undeploy.'
   fi
-  if [[ "$ALL" == "true" ]] &&
-    ((${#PACKAGE_GROUPS[@]} > 0 || ${#PROFILE_GROUPS[@]} > 0)); then
+  if [[ "$ALL" == "true" ]] && {
+    ((${#PACKAGE_GROUPS[@]} > 0)) || [[ "$PROFILE_SPECIFIED" == "true" ]]
+  }; then
     die_usage '--all cannot be combined with --package or --profile.'
+  fi
+  if ((${#PACKAGE_GROUPS[@]} > 0)) && [[ "$PROFILE_SPECIFIED" == "true" ]]; then
+    die_usage '--package and --profile are mutually exclusive.'
   fi
 }
 
@@ -268,28 +277,6 @@ resolve_profile() {
   ((package_count > 0)) || die_usage "Profile '$profile_name' does not select any packages."
 }
 
-resolve_profile_group() {
-  local group="$1"
-  local candidate
-
-  while :; do
-    case "$group" in
-      *,*)
-        candidate="${group%%,*}"
-        group="${group#*,}"
-        ;;
-      *)
-        candidate="$group"
-        group=""
-        ;;
-    esac
-
-    [[ -n "$candidate" ]] || die_usage 'Profile lists cannot contain empty names.'
-    resolve_profile "$candidate"
-    [[ -n "$group" ]] || break
-  done
-}
-
 resolve_selection() {
   local group
   local package_name
@@ -302,16 +289,15 @@ resolve_selection() {
   fi
 
   if [[ "$ACTION" == "deploy" && ${#PACKAGE_GROUPS[@]} -eq 0 &&
-    ${#PROFILE_GROUPS[@]} -eq 0 ]]; then
-    PROFILE_GROUPS+=("$PLATFORM")
+    "$PROFILE_SPECIFIED" == "false" ]]; then
+    PROFILE="$PLATFORM"
+    PROFILE_SPECIFIED=true
   fi
 
   for group in "${PACKAGE_GROUPS[@]}"; do
     resolve_package_group "$group"
   done
-  for group in "${PROFILE_GROUPS[@]}"; do
-    resolve_profile_group "$group"
-  done
+  [[ "$PROFILE_SPECIFIED" == "false" ]] || resolve_profile "$PROFILE"
 
   ((${#SELECTED_PACKAGES[@]} > 0)) ||
     die_usage "$ACTION requires --package or --profile. Use --all to remove everything."
