@@ -39,7 +39,6 @@ background_terminal_max_timeout = 900000
 # Options: "cached", "live", "disabled".
 web_search = "live"
 
-
 ###############################################################################
 # Approval and permission policy
 ###############################################################################
@@ -60,7 +59,6 @@ default_permissions = "locked_folders_only"
 # Prevent shell tools from using login-shell behavior.
 allow_login_shell = false
 
-
 ###############################################################################
 # Windows sandbox
 ###############################################################################
@@ -68,7 +66,6 @@ allow_login_shell = false
 # Recommended when running Codex natively on Windows.
 # Use "unelevated" only if elevated setup fails or you lack admin permissions.
 sandbox = "elevated"
-
 
 ###############################################################################
 # Strong filesystem permissions profile
@@ -106,7 +103,6 @@ sandbox = "elevated"
 # pre-expand glob matches before sandbox startup.
 glob_scan_max_depth = 3
 
-
 [permissions.locked_folders_only.filesystem.":workspace_roots"]
 # Allow read/write access inside each workspace root supplied by the current
 # Codex session. A user config may add extra workspace_roots when needed.
@@ -129,7 +125,6 @@ glob_scan_max_depth = 3
 "**/.aws/**" = "deny"
 "**/.ssh/**" = "deny"
 
-
 ###############################################################################
 # Network policy for the locked profile
 ###############################################################################
@@ -139,7 +134,6 @@ enabled = true
 # Keep limited even if you later enable network in another profile.
 # Options: "limited", "full".
 mode = "limited"
-
 
 ###############################################################################
 # Shell environment hardening
@@ -171,7 +165,7 @@ include_only = [
   "GOMODCACHE",
   "GOPATH",
   "CARGO_HOME",
-  "RUSTUP_HOME"
+  "RUSTUP_HOME",
 ]
 
 # Explicitly remove secrets if they slip through.
@@ -185,16 +179,14 @@ exclude = [
   "GITHUB_TOKEN",
   "OPENAI_API_KEY",
   "ANTHROPIC_API_KEY",
-  "AZURE_OPENAI_API_KEY"
+  "AZURE_OPENAI_API_KEY",
 ]
 
 # Do not keep variables containing KEY/SECRET/TOKEN before filters run.
 ignore_default_excludes = false
 
-
 [shell_environment_policy.set]
 CODEX_LOCKED_FOLDERS_ONLY_PERMISSIONS = "1"
-
 
 ###############################################################################
 # Feature flags
@@ -223,13 +215,11 @@ undo = true
 # Do not let Codex make git commits unless explicitly desired.
 codex_git_commit = false
 
-
 ###############################################################################
 # Privacy, analytics, and telemetry
 ###############################################################################
 [analytics]
 enabled = false
-
 
 [otel]
 exporter = "none"
@@ -237,13 +227,24 @@ metrics_exporter = "none"
 trace_exporter = "none"
 log_user_prompt = false
 
-
 ###############################################################################
 # TUI
 ###############################################################################
 [tui]
 pet = "disabled"
 theme = "gruvbox-dark"
-status_line = ["model-with-reasoning", "current-dir", "git-branch", "run-state", "context-used", "five-hour-limit", "weekly-limit", "used-tokens", "thread-title", "task-progress", "fast-mode"]
+status_line = [
+  "model-with-reasoning",
+  "current-dir",
+  "git-branch",
+  "run-state",
+  "context-used",
+  "five-hour-limit",
+  "weekly-limit",
+  "used-tokens",
+  "thread-title",
+  "task-progress",
+  "fast-mode",
+]
 status_line_use_colors = true
 terminal_title = ["activity", "project-name", "run-state", "thread-title", "task-progress"]
