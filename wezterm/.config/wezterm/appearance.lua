@@ -13,7 +13,6 @@ function module.apply_to_config(config, platform)
       "calt",
       "cv01",
       "cv02",
-      "cv09",
       "ss01",
       "cv13",
       "cv14",

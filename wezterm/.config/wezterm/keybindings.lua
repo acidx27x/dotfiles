@@ -85,7 +85,6 @@ function module.apply_to_config(config, platform)
     {
       key = "d",
       mods = modifier,
-
       action = act.DetachDomain("CurrentPaneDomain"),
     },
   }
