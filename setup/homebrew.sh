@@ -126,8 +126,7 @@ main() {
 
   platform="$(uname -s)"
   case "$platform" in
-    Darwin | Linux)
-      ;;
+    Darwin | Linux) ;;
     *)
       die "Unsupported platform: $platform"
       ;;

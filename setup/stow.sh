@@ -272,7 +272,7 @@ resolve_profile() {
     esac
     add_package "$package_name"
     package_count=$((package_count + 1))
-  done < "$profile_path"
+  done <"$profile_path"
 
   ((package_count > 0)) || die_usage "Profile '$profile_name' does not select any packages."
 }
