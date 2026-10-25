@@ -1,8 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/lukas-reineke/indent-blankline.nvim" },
-  { src = "https://github.com/TheGLander/indent-rainbowline.nvim" },
-})
-
 require("ibl.highlights").setup()
 local whitespace_hl = require("indent-rainbowline").make_hl_groups({
   colors = { 0xffaacc, 0x7366bd, 0xff79ff, 0x9b81ba },
@@ -12,9 +7,8 @@ local whitespace_hl = require("indent-rainbowline").make_hl_groups({
   auto_setup = true,
 })
 
-local is_mac = vim.loop.os_uname().sysname == "Darwin"
-local is_linux = vim.loop.os_uname().sysname == "Linux"
-local is_windows = vim.loop.os_uname().sysname == "Windows_NT"
+local is_mac = vim.uv.os_uname().sysname == "Darwin"
+local is_linux = vim.uv.os_uname().sysname == "Linux"
 
 local indent_char = "|"
 if is_linux then

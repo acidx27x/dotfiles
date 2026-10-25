@@ -1,7 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/SmiteshP/nvim-navic" },
-})
-
 local navic = require("nvim-navic")
 
 navic.setup({

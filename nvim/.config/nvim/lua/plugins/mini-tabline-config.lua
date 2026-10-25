@@ -1,8 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/nvim-mini/mini.icons" }, -- uses by default, fb to nvim-web-devicons
-  { src = "https://github.com/nvim-mini/mini.tabline" },
-})
-
 require("mini.tabline").setup({
   show_icons = true,
   tabpage_section = "right",

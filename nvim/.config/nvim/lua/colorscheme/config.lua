@@ -1,13 +1,5 @@
--- colorscheme group
-vim.pack.add({
-  { src = "https://github.com/vague-theme/vague.nvim" },
-  { src = "https://github.com/rebelot/kanagawa.nvim" },
-})
+require("colorscheme.kanagawa-nvim-config")
 
-require("vague-nvim-config")
-require("kanagawa-nvim-config")
-
---vim.cmd("colorscheme vague")
 vim.cmd.colorscheme("kanagawa")
 --
 

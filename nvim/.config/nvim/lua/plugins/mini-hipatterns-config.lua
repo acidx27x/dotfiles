@@ -1,7 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/nvim-mini/mini.hipatterns" },
-})
-
 local hipatterns = require("mini.hipatterns")
 
 hipatterns.setup({

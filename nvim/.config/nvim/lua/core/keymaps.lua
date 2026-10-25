@@ -1,59 +1,122 @@
-local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc })
-end
+local map = require("core.keymap")
 
 -- Key mappings
 vim.g.mapleader = " " -- Set leader key to space
 vim.g.maplocalleader = " " -- Set local leader key (NEW)
+local alt_modifier = vim.uv.os_uname().sysname == "Darwin" and "M" or "A"
 
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+map({ "n", "v" }, "<Space>", "<Nop>", "leader prefix")
 
 -- Normal mode mappings
-keymap_ns("n", "<leader>nh", ":nohlsearch<CR>", "hlsearch: clear")
+map("n", "<leader>nh", ":nohlsearch<CR>", "hlsearch: clear")
 
 -- Center screen when jumping
-keymap_ns("n", "n", "nzzzv", "search: next result (centered)")
-keymap_ns("n", "N", "Nzzzv", "search: previous result (centered)")
+map("n", "n", "nzzzv", "search: next result (centered)")
+map("n", "N", "Nzzzv", "search: previous result (centered)")
 
-keymap_ns("n", "<C-d>", "<C-d>zz", "page move: down (centered)")
-keymap_ns("n", "<C-u>", "<C-u>zz", "page move: up (centered)")
+map("n", "<C-d>", "<C-d>zz", "page move: down (centered)")
+map("n", "<C-u>", "<C-u>zz", "page move: up (centered)")
 
 -- Delete without yanking
---keymap_ns({ "n", "v" }, "<leader>d", '"_d', "edit: delete without yanking")
-keymap_ns({ "n", "v" }, "<leader>d", "<Nop>", "edit: prevent delete with just '<leader>d'")
-keymap_ns({ "n", "v" }, "<leader>o", "<Nop>", "edit: prevent enter insert with just '<leader>o'")
-keymap_ns({ "n", "v" }, "<leader>p", "<Nop>", "edit: prevent enter insert with just '<leader>p'")
+--map({ "n", "v" }, "<leader>d", '"_d', "edit: delete without yanking")
+map({ "n", "v" }, "<leader>d", "<Nop>", "edit: prevent delete with just '<leader>d'")
+map({ "n", "v" }, "<leader>o", "<Nop>", "edit: prevent enter insert with just '<leader>o'")
+map({ "n", "v" }, "<leader>p", "<Nop>", "edit: prevent enter insert with just '<leader>p'")
 
 -- Buffer navigation
-keymap_ns("n", "<leader>bd", ":bdelete<CR>", "buffer: delete")
-keymap_ns("n", "<leader>bn", ":bnext<CR>", "buffer: next")
-keymap_ns("n", "<leader>bp", ":bprevious<CR>", "buffer: previous")
+map("n", "<leader>bd", function()
+  require("mini.bufremove").delete(0, false)
+end, "buffer: delete and preserve layout")
+map("n", "<leader>bn", ":bnext<CR>", "buffer: next")
+map("n", "<leader>bp", ":bprevious<CR>", "buffer: previous")
+map("n", "]b", ":bnext<CR>", "buffer: next")
+map("n", "[b", ":bprevious<CR>", "buffer: previous")
+map("n", "<leader>bb", "<C-^>", "buffer: alternate")
 
 -- Better window navigation
-keymap_ns("n", "<leader>q", ":close<CR>", "window: close")
-keymap_ns("n", "<leader>Q", ":quit<CR>", "window: quit")
+map("n", "<leader>q", ":close<CR>", "window: close")
+map("n", "<leader>Q", ":quit<CR>", "window: quit")
 
-keymap_ns("n", "<A-h>", "<C-w>h", "window: move to left (alt)")
-keymap_ns("n", "<M-h>", "<C-w>h", "window: move to left (meta)")
-keymap_ns("n", "<A-j>", "<C-w>j", "window: move to bottom (alt)")
-keymap_ns("n", "<M-j>", "<C-w>j", "window: move to bottom (meta)")
-keymap_ns("n", "<A-k>", "<C-w>k", "window: move to top (alt)")
-keymap_ns("n", "<M-k>", "<C-w>k", "window: move to top (meta)")
-keymap_ns("n", "<A-l>", "<C-w>l", "window: move to right (alt)")
-keymap_ns("n", "<M-l>", "<C-w>l", "window: move to right (meta)")
+map("n", ("<%s-h>"):format(alt_modifier), "<C-w>h", "window: move to left (alt/meta)")
+map("n", ("<%s-j>"):format(alt_modifier), "<C-w>j", "window: move to bottom (alt/meta)")
+map("n", ("<%s-k>"):format(alt_modifier), "<C-w>k", "window: move to top (alt/meta)")
+map("n", ("<%s-l>"):format(alt_modifier), "<C-w>l", "window: move to right (alt/meta)")
 
 -- Splitting & Resizing
-keymap_ns("n", "<leader>sv", ":vsplit<CR>", "window: split vertically")
-keymap_ns("n", "<leader>sh", ":split<CR>", "window: split horizontally")
+map("n", "<leader>sv", ":vsplit<CR>", "window: split vertically")
+map("n", "<leader>sh", ":split<CR>", "window: split horizontally")
 
-keymap_ns("n", "<A-Up>", ":resize +2<CR>", "window: increase height (alt)")
-keymap_ns("n", "<M-Up>", ":resize +2<CR>", "window: increase height (meta)")
-keymap_ns("n", "<A-Down>", ":resize -2<CR>", "window: decrease height (alt)")
-keymap_ns("n", "<M-Down>", ":resize -2<CR>", "window: decrease height (meta)")
-keymap_ns("n", "<A-Right>", ":vertical resize +2<CR>", "window: increase width (alt)")
-keymap_ns("n", "<M-Right>", ":vertical resize +2<CR>", "window: increase width (meta)")
-keymap_ns("n", "<A-Left>", ":vertical resize -2<CR>", "window: decrease width (alt)")
-keymap_ns("n", "<M-Left>", ":vertical resize -2<CR>", "window: decrease width (meta)")
+local function normal_window_count()
+  local count = 0
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.api.nvim_win_get_config(win).relative == "" then
+      count = count + 1
+    end
+  end
+  return count
+end
+
+map("n", "<leader>st", function()
+  local win = vim.api.nvim_get_current_win()
+  if vim.api.nvim_win_get_config(win).relative ~= "" then
+    vim.cmd("tab split")
+    vim.api.nvim_win_close(win, true)
+  elseif normal_window_count() > 1 then
+    vim.cmd("wincmd T")
+  else
+    vim.cmd("tab split")
+  end
+end, "window: move to new tab")
+
+map("n", "<leader>sf", function()
+  local win = vim.api.nvim_get_current_win()
+  if vim.api.nvim_win_get_config(win).relative ~= "" then
+    for _, target in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      if vim.api.nvim_win_get_config(target).relative == "" then
+        vim.api.nvim_win_set_config(win, { split = "right", win = target })
+        return
+      end
+    end
+  end
+
+  local width = math.max(1, math.floor(vim.o.columns * 0.8))
+  local height = math.max(1, math.floor(vim.o.lines * 0.7))
+  local config = {
+    relative = "editor",
+    row = math.floor((vim.o.lines - height) / 2),
+    col = math.floor((vim.o.columns - width) / 2),
+    width = width,
+    height = height,
+    border = "rounded",
+  }
+  if normal_window_count() == 1 then
+    vim.api.nvim_open_win(vim.api.nvim_win_get_buf(win), true, config)
+  else
+    vim.api.nvim_win_set_config(win, config)
+  end
+end, "window: toggle float or split")
+
+map("n", "<leader>sH", "<C-w>H", "window: move split left")
+map("n", "<leader>sJ", "<C-w>J", "window: move split bottom")
+map("n", "<leader>sK", "<C-w>K", "window: move split top")
+map("n", "<leader>sL", "<C-w>L", "window: move split right")
+map("n", "<leader>sx", "<C-w>x", "window: exchange splits")
+map("n", "<leader>s=", "<C-w>=", "window: equalize splits")
+
+map("n", ("<%s-Up>"):format(alt_modifier), ":resize +2<CR>", "window: increase height (alt/meta)")
+map("n", ("<%s-Down>"):format(alt_modifier), ":resize -2<CR>", "window: decrease height (alt/meta)")
+map(
+  "n",
+  ("<%s-Right>"):format(alt_modifier),
+  ":vertical resize +2<CR>",
+  "window: increase width (alt/meta)"
+)
+map(
+  "n",
+  ("<%s-Left>"):format(alt_modifier),
+  ":vertical resize -2<CR>",
+  "window: decrease width (alt/meta)"
+)
 
 -- Move focused floating windows
 local function float_move(drow, dcol)
@@ -72,53 +135,41 @@ local function float_move(drow, dcol)
   end
 end
 
-keymap_ns("n", "<A-w>", function()
+map("n", ("<%s-w>"):format(alt_modifier), function()
   float_move(-1, 0)
-end)
-keymap_ns("n", "<M-w>", function()
-  float_move(-1, 0)
-end)
-keymap_ns("n", "<A-s>", function()
+end, "window: move floating window up")
+map("n", ("<%s-s>"):format(alt_modifier), function()
   float_move(1, 0)
-end)
-keymap_ns("n", "<M-s>", function()
-  float_move(1, 0)
-end)
-keymap_ns("n", "<A-a>", function()
+end, "window: move floating window down")
+map("n", ("<%s-a>"):format(alt_modifier), function()
   float_move(0, -2)
-end)
-keymap_ns("n", "<M-a>", function()
-  float_move(0, -2)
-end)
-keymap_ns("n", "<A-d>", function()
+end, "window: move floating window left")
+map("n", ("<%s-d>"):format(alt_modifier), function()
   float_move(0, 2)
-end)
-keymap_ns("n", "<M-d>", function()
-  float_move(0, 2)
-end)
+end, "window: move floating window right")
 
 -- Better indenting in visual mode
 -- now use mini.move in both modes
--- keymap_ns("v", "<", "<gv", "edit: indent left and reselect")
--- keymap_ns("v", ">", ">gv", "edit: indent right and reselect")
+-- map("v", "<", "<gv", "edit: indent left and reselect")
+-- map("v", ">", ">gv", "edit: indent right and reselect")
 
 -- Quick config editing
-keymap_ns("n", "<leader>rc", function()
+map("n", "<leader>rc", function()
   local path = vim.fn.stdpath("config") .. "/init.lua"
   vim.cmd("edit " .. path)
 end, "utils: open nvim config")
 
 -- Copy Full File-Path
-keymap_ns("n", "<leader>fp", function()
+map("n", "<leader>fp", function()
   local path = vim.fn.expand("%:p")
   vim.fn.setreg("+", path)
   print("file:", path)
 end, "utils: copy current full file path")
 
 -- Terminal window
-keymap_ns("n", "<leader>tt", ":tabnew | terminal<CR>", "terminal: open in tab")
-keymap_ns("n", "<leader>tv", ":vnew | terminal<CR>", "terminal: open in split vertically")
-keymap_ns("n", "<leader>th", ":new | terminal<CR>", "terminal: open in split horizontally")
+map("n", "<leader>tt", ":tabnew | terminal<CR>", "terminal: open in tab")
+map("n", "<leader>tv", ":vnew | terminal<CR>", "terminal: open in split vertically")
+map("n", "<leader>th", ":new | terminal<CR>", "terminal: open in split horizontally")
 
 -- Open buffer in tab with number
 vim.api.nvim_create_user_command("BTab", function(opts)
@@ -143,14 +194,14 @@ end, {
 vim.cmd("cabbrev btab BTab")
 
 -- Better cd -> lcd
-keymap_ns("n", "<leader>cd", function()
+map("n", "<leader>cd", function()
   local bufname = vim.api.nvim_buf_get_name(0)
   local path = bufname ~= "" and vim.fn.expand("%:p:h") or vim.fn.getcwd()
   if vim.fn.isdirectory(path) == 1 then
     vim.cmd("lcd " .. vim.fn.fnameescape(path))
   else
     vim.notify(
-      "<leader>cd: no valid directory found, at '" .. path("'"),
+      "<leader>cd: no valid directory found, at '" .. path .. "'",
       vim.log.levels.WARN,
       { title = "User Keymaps", timeout = 1000 }
     )

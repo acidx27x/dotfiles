@@ -1,8 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/nvim-mini/mini.icons" }, -- uses by default, fb to nvim-web-devicons
-  { src = "https://github.com/stevearc/oil.nvim" },
-})
-
 -- toggle file column detail info
 local column_detail = false
 
@@ -83,8 +78,8 @@ require("oil").setup({
       desc = "Oil: select in tab",
     },
     ["<C-p>"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview" },
-    ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Oil: scrolll preview up" },
-    ["<C-b>"] = { "actions.preview_scroll_up", mode = "n", desc = "Oil: scrolll preview down" },
+    ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Oil: scroll preview down" },
+    ["<C-b>"] = { "actions.preview_scroll_up", mode = "n", desc = "Oil: scroll preview up" },
 
     ["<leader>or"] = { "actions.refresh", mode = "n", desc = "Oil: refresh" },
 
@@ -95,7 +90,7 @@ require("oil").setup({
       "actions.cd",
       opts = { scope = "win" },
       mode = "n",
-      desc = "Oil: cd (tab)",
+      desc = "Oil: cd (window)",
     },
     ["<leader>ox"] = { "actions.open_external", mode = "n", desc = "Oil: open external" },
     ["<leader>os"] = { "actions.change_sort", mode = "n", desc = "Oil: change sort" },
@@ -165,11 +160,9 @@ require("oil").setup({
   },
 })
 
-local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc })
-end
+local map = require("core.keymap")
 
-keymap_ns("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")
-keymap_ns("n", "<leader>of", ":Oil --float<CR>", "Oil: open in float")
-keymap_ns("n", "<leader>ov", ":vnew | Oil<CR>", "Oil: open in split vertically")
-keymap_ns("n", "<leader>oh", ":new | Oil<CR>", "Oil: open in split horizontally")
+map("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")
+map("n", "<leader>of", ":Oil --float<CR>", "Oil: open in float")
+map("n", "<leader>ov", ":vnew | Oil<CR>", "Oil: open in split vertically")
+map("n", "<leader>oh", ":new | Oil<CR>", "Oil: open in split horizontally")

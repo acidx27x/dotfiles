@@ -1,4 +1,4 @@
-local base = require("lsp-base-config")
+local base = require("lsp.lsp-base-config")
 
 local name = "basedpyright"
 vim.lsp.config[name] = {

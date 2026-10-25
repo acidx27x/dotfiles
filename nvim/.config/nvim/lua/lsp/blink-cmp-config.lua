@@ -1,23 +1,31 @@
-vim.pack.add({
-  { src = "https://github.com/nvim-mini/mini.icons" },
-  { src = "https://github.com/onsails/lspkind.nvim" },
-  {
-    src = "https://github.com/Saghen/blink.cmp",
-    version = "v1",
-  },
-  -- { src = "https://github.com/acidx27x/blink.cmp" },
-})
-
 require("lspkind").setup({
   --
 })
 
-require("blink.cmp").setup({
+local function path_icon(ctx)
+  local category = "file"
+  if ctx.item.kind == vim.lsp.protocol.CompletionItemKind.Folder then
+    category = "directory"
+  end
+  return require("mini.icons").get(category, ctx.label)
+end
+
+local blink = require("blink.cmp")
+if not blink.build then
+  vim.notify(
+    "Update blink.cmp to v2 with :PackUpdate ++lockfile blink.cmp, then restart Neovim",
+    vim.log.levels.WARN
+  )
+  return
+end
+blink.build():pwait()
+blink.setup({
   keymap = {
     ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
     ["<C-h>"] = { "show_documentation", "hide_documentation" },
-    ["<S-Tab>"] = { "select_and_accept", "fallback" },
-    ["<Tab>"] = false,
+    ["<C-g>s"] = { function(cmp) return cmp.show({ providers = { "snippets" } }) end },
+    ["<S-Tab>"] = { "snippet_backward", "select_and_accept", "fallback" },
+    ["<Tab>"] = { "snippet_forward", "fallback" },
 
     ["<C-e>"] = { "hide", "fallback" },
     ["<C-y>"] = { "accept", "fallback" },
@@ -25,14 +33,14 @@ require("blink.cmp").setup({
 
     ["<C-n>"] = {
       function(cmp)
-        cmp.select_next({ auto_insert = false })
+        return cmp.select_next({ auto_insert = false })
       end,
-    }, -- not working with default fb
+    },
     ["<C-p>"] = {
       function(cmp)
-        cmp.select_prev({ auto_insert = false })
+        return cmp.select_prev({ auto_insert = false })
       end,
-    }, -- instantly fb to neovim c-n
+    },
 
     ["<C-b>"] = { "scroll_documentation_up", "fallback" },
     ["<C-f>"] = { "scroll_documentation_down", "fallback" },
@@ -85,7 +93,7 @@ require("blink.cmp").setup({
         score_offset = 7,
       },
       snippets = {
-        enabled = false,
+        enabled = true,
         name = "SNIP",
         module = "blink.cmp.sources.snippets",
         score_offset = 1,
@@ -103,8 +111,6 @@ require("blink.cmp").setup({
       show_on_backspace_after_accept = false,
       show_on_backspace_after_insert_enter = false,
       show_on_trigger_character = false,
-      show_on_accept_on_trigger_character = false,
-      show_on_insert_on_trigger_character = false,
     },
 
     accept = { auto_brackets = { enabled = false } },
@@ -117,7 +123,7 @@ require("blink.cmp").setup({
       max_items = 100,
       selection = {
         preselect = true,
-        auto_insert = true,
+        auto_insert = false,
       },
       cycle = {
         from_top = true,
@@ -141,11 +147,11 @@ require("blink.cmp").setup({
           },
           kind_icon = { -- from doc/recipes.md
             text = function(ctx)
-              if vim.tbl_contains({ "CMD" }, ctx.source_name) then
+              if ctx.source_name == "CMD" then
                 return ctx.icon_gap
               end
-              if vim.tbl_contains({ "PATH" }, ctx.source_name) then
-                local mini_icon, _ = require("mini.icons").get(ctx.item.data.type, ctx.label)
+              if ctx.source_name == "PATH" then
+                local mini_icon = path_icon(ctx)
                 if mini_icon then
                   return mini_icon .. ctx.icon_gap
                 end
@@ -154,19 +160,8 @@ require("blink.cmp").setup({
               return icon .. ctx.icon_gap
             end,
             highlight = function(ctx)
-              if vim.tbl_contains({ "PATH" }, ctx.source_name) then
-                local mini_icon, mini_hl = require("mini.icons").get(ctx.item.data.type, ctx.label)
-                if mini_icon then
-                  return mini_hl
-                end
-              end
-              return ctx.kind_hl
-            end,
-          },
-          kind = { -- from doc/recipes.md
-            highlight = function(ctx)
-              if vim.tbl_contains({ "PATH" }, ctx.source_name) then
-                local mini_icon, mini_hl = require("mini.icons").get(ctx.item.data.type, ctx.label)
+              if ctx.source_name == "PATH" then
+                local mini_icon, mini_hl = path_icon(ctx)
                 if mini_icon then
                   return mini_hl
                 end
@@ -179,7 +174,7 @@ require("blink.cmp").setup({
     },
 
     ghost_text = {
-      enabled = true,
+      enabled = function() return vim.b.blink_ghost_typing == true end,
       show_with_menu = false,
     },
   },
@@ -190,27 +185,29 @@ require("blink.cmp").setup({
       preset = "cmdline",
       ["<C-n>"] = {
         function(cmp)
-          cmp.select_next({ auto_insert = false })
+          return cmp.select_next({ auto_insert = false })
         end,
-      }, -- not working with default fb
+      },
       ["<C-p>"] = {
         function(cmp)
-          cmp.select_prev({ auto_insert = false })
+          return cmp.select_prev({ auto_insert = false })
         end,
-      }, -- instantly fb to neovim c-n
+      },
       ["<Left>"] = false,
       ["<Right>"] = false,
     },
-    sources = function()
-      local type = vim.fn.getcmdtype()
-      if type == "/" or type == "?" then
-        return { "buffer" }
-      end
-      if type == ":" or type == "@" then
-        return { "cmdline", "buffer" }
-      end
-      return {}
-    end,
+    sources = {
+      default = function()
+        local type = vim.fn.getcmdtype()
+        if type == "/" or type == "?" then
+          return { "buffer" }
+        end
+        if type == ":" or type == "@" then
+          return { "cmdline" }
+        end
+        return {}
+      end,
+    },
     completion = {
       list = {
         selection = {
@@ -232,16 +229,16 @@ require("blink.cmp").setup({
       ["<Right>"] = false,
       ["<C-n>"] = {
         function(cmp)
-          cmp.select_next({ auto_insert = false })
+          return cmp.select_next({ auto_insert = false })
         end,
-      }, -- not working with default fb
+      },
       ["<C-p>"] = {
         function(cmp)
-          cmp.select_prev({ auto_insert = false })
+          return cmp.select_prev({ auto_insert = false })
         end,
-      }, -- instantly fb to neovim c-n
+      },
     },
-    sources = { "buffer" },
+    sources = { default = { "buffer" } },
     completion = {
       list = {
         selection = {
@@ -274,19 +271,21 @@ require("blink.cmp").setup({
   },
 })
 
--- HACK
--- signature trigger is disabled by this configuration
--- so, when i trigger it manually, it is not sync with current argument position
--- that is why need to force to update it when it is shown manually
--- even with: signature = { trigger = { enabled = false, }, },
--- NOTE
--- this may be removed in future for new releases
--- when suitable api for dynamic trigger handling arrive
-local signature_trigger_show_old = require("blink.cmp.signature.trigger").show
-require("blink.cmp.signature.trigger").show = function(opts)
-  opts = opts or {}
-  if require("blink.cmp").is_signature_visible() then
-    opts.force = true
-  end
-  signature_trigger_show_old(opts)
-end
+-- Keep ghost text for edits, but clear it after cursor-only movement.
+vim.api.nvim_create_autocmd({ "InsertEnter", "InsertCharPre", "CursorMovedI" }, {
+  callback = function(args)
+    if args.event == "InsertCharPre" then
+      vim.b[args.buf].blink_ghost_typing = true
+      return
+    end
+
+    local tick = vim.api.nvim_buf_get_changedtick(args.buf)
+    if args.event == "InsertEnter" then
+      vim.b[args.buf].blink_ghost_typing = false
+    elseif vim.b[args.buf].blink_ghost_tick == tick then
+      vim.b[args.buf].blink_ghost_typing = false
+      blink.hide()
+    end
+    vim.b[args.buf].blink_ghost_tick = tick
+  end,
+})

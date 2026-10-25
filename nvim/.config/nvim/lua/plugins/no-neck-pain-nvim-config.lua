@@ -1,25 +1,25 @@
-vim.pack.add({
-  { src = "https://github.com/shortcuts/no-neck-pain.nvim" },
-})
+local lazy = require("plugins.lazy")
+local M = {}
 
-require("no-neck-pain").setup({
-  width = 120,
-  buffers = {
-    scratchPad = {
-      enabled = true,
-      fileName = "scratch-notes",
-      location = nil, -- or full path
+function M.setup()
+  require("no-neck-pain").setup({
+    width = 120,
+    buffers = {
+      scratchPad = {
+        enabled = true,
+        fileName = "scratch-notes",
+        location = nil, -- or full path
+      },
+      bo = {
+        filetype = "md",
+        fillchars = "eob: ",
+      },
     },
-    bo = {
-      filetype = "md",
-      fillchars = "eob: ",
-    },
-  },
-})
+  })
+end
 
-vim.keymap.set(
-  "n",
-  "<leader>np",
-  ":NoNeckPain<CR>",
-  { noremap = true, silent = true, desc = "no-neck-pain: toggle" }
-)
+lazy.keymap("n", "<leader>np", "no_neck_pain", "plugins.no-neck-pain-nvim-config", function()
+  vim.cmd.NoNeckPain()
+end, "layout: toggle centered buffer")
+
+return M

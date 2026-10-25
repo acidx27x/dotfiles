@@ -1,59 +1,49 @@
-vim.pack.add({
-  { src = "https://github.com/nvzone/volt" },
-  { src = "https://github.com/nvzone/floaterm" },
-})
+local lazy = require("plugins.lazy")
+local M = {}
 
-local fterm = require("floaterm")
-local fterm_state = require("floaterm.state")
+function M.setup()
+  local fterm = require("floaterm")
+  local fterm_state = require("floaterm.state")
+  local map = require("core.keymap")
 
-fterm.setup({
-  border = true,
+  fterm.setup({
+    border = true,
 
-  mappings = {
-    sidebar = function(bufnr)
-      vim.keymap.set(
-        "n",
-        "<Esc>",
-        "<Nop>",
-        { noremap = true, silent = true, buffer = bufnr, desc = "floaterm: disable escape key" }
-      )
-      vim.keymap.set(
-        "n",
-        "q",
-        fterm.toggle,
-        { noremap = true, silent = true, buffer = bufnr, desc = "floaterm: remap q to toggle" }
-      )
-    end,
-  },
+    mappings = {
+      sidebar = function(bufnr)
+        map("n", "<Esc>", "<Nop>", "floaterm: disable escape key", { buf = bufnr })
+        map("n", "q", fterm.toggle, "floaterm: remap q to toggle", { buf = bufnr })
+      end,
+    },
 
-  terminals = {
-    { name = "Terminal" },
-    -- cmd can be function too
-    -- { name = "Terminal", cmd = "neofetch" },
-  },
-})
-
-vim.keymap.set(
-  "n",
-  "<leader>tf",
-  fterm.toggle,
-  { noremap = true, silent = true, desc = "floaterm: toggle float window" }
-)
-
--- WARN: idk if this plugins is stable, this may brake if api changes
-vim.api.nvim_create_user_command("FloatermClose", function()
-  require("volt.utils").close({
-    bufs = { fterm_state.buf, fterm_state.sidebuf, fterm_state.barbuf },
-    after_close = function()
-      if fterm_state.bar_redraw_timer then
-        require("floaterm.utils").close_timers()
-      end
-      fterm_state.volt_set = false
-      fterm_state.terminals = nil
-      fterm_state.buf = nil
-      fterm_state.sidebuf = nil
-      fterm_state.barbuf = nil
-      vim.api.nvim_del_augroup_by_name("FloatermAu")
-    end,
+    terminals = {
+      { name = "Terminal" },
+      -- cmd can be function too
+      -- { name = "Terminal", cmd = "neofetch" },
+    },
   })
-end, { desc = "floaterm: close float window" })
+
+  -- WARN: idk if this plugins is stable, this may brake if api changes
+  vim.api.nvim_create_user_command("FloatermClose", function()
+    require("volt.utils").close({
+      bufs = { fterm_state.buf, fterm_state.sidebuf, fterm_state.barbuf },
+      after_close = function()
+        if fterm_state.bar_redraw_timer then
+          require("floaterm.utils").close_timers()
+        end
+        fterm_state.volt_set = false
+        fterm_state.terminals = nil
+        fterm_state.buf = nil
+        fterm_state.sidebuf = nil
+        fterm_state.barbuf = nil
+        vim.api.nvim_del_augroup_by_name("FloatermAu")
+      end,
+    })
+  end, { desc = "floaterm: close float window" })
+end
+
+lazy.keymap("n", "<leader>tf", "floaterm", "plugins.floaterm-config", function()
+  require("floaterm").toggle()
+end, "terminal: toggle floating terminal")
+
+return M

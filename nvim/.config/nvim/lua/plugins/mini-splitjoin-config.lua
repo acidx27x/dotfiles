@@ -1,7 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/nvim-mini/mini.splitjoin" },
-})
-
 require("mini.splitjoin").setup({
   mappings = {
     toggle = "",

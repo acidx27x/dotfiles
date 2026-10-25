@@ -1,68 +1,71 @@
-vim.pack.add({
-  { src = "https://github.com/stevearc/conform.nvim" },
-})
+local lazy = require("plugins.lazy")
+local M = {}
 
-vim.g.disable_autoformat = true
+function M.setup()
+  vim.g.disable_autoformat = true
 
-require("conform").setup({
-  formatters_by_ft = {
-    lua = { "stylua", lsp_format = "never" },
+  require("conform").setup({
+    formatters_by_ft = {
+      lua = { "stylua" },
 
-    c = { "clang-format", lsp_format = "never" },
-    cpp = { "clang-format", lsp_format = "never" },
+      c = { "clang-format" },
+      cpp = { "clang-format" },
 
-    cmake = { "gersemi", lsp_format = "never" },
+      cmake = { "gersemi", filter = function(client) return client.name ~= "neocmake" end },
 
-    python = { "ruff_format", lsp_format = "never" },
+      python = { "ruff_format", filter = function(client) return client.name ~= "ruff" end },
 
-    --["*"] = { "codespell" },
-    --["_"] = { "trim_whitespace" },
-    ["*"] = nil,
-    ["_"] = nil,
-  },
+      --["*"] = { "codespell" },
+      --["_"] = { "trim_whitespace" },
+      ["*"] = nil,
+      ["_"] = nil,
+    },
 
-  formatters = {
-    ["clang-format"] = { command = _G.Paths["clang-format"] },
+    formatters = {
+      ["clang-format"] = { command = _G.Paths["clang-format"] },
 
-    gersemi = { command = _G.Paths.gersemi },
+      gersemi = { command = _G.Paths.gersemi },
 
-    ruff_format = { command = _G.Paths.ruff },
-  },
+      ruff_format = { command = _G.Paths.ruff },
+    },
 
-  default_format_opts = {
-    timeout_ms = 1000,
-    lsp_format = "never",
-  },
+    default_format_opts = {
+      timeout_ms = 1000,
+      lsp_format = "fallback",
+    },
 
-  format_on_save = function(bufnr)
-    return
-  end,
-  format_after_save = function(bufnr)
-    return
-  end,
+    format_on_save = function(bufnr)
+      return
+    end,
+    format_after_save = function(bufnr)
+      return
+    end,
 
-  log_level = vim.log.levels.WARN,
-})
+    log_level = vim.log.levels.WARN,
+  })
 
-vim.keymap.set({ "n", "v" }, "<leader>cf", function()
-  require("conform").format({ async = false, lsp_format = "never" })
-end, { noremap = true, silent = true, desc = desc })
+  -- conform.format({ formatters = { "ruff_fix" } }) to use with specific formater for injected code
 
--- conform.format({ formatters = { "ruff_fix" } }) to use with specific formater for injected code
+  -- example
+  --require("conform").setup({
+  --  formatters = {
+  --    yamlfix = {
+  --      -- Change where to find the command
+  --      command = "local/path/yamlfix",
+  --      command = require("conform.util").find_executable({"local/path/to/dir",}, "yamlfix")
+  --      -- Adds environment args to the yamlfix formatter
+  --      env = {
+  --        YAMLFIX_SEQUENCE_STYLE = "block_style",
+  --      },
+  --    },
+  --    args = { "-filename", "$FILENAME", "-i", "2" },
+  --    append_args = { "-i", "2" },
+  --  },
+  --})
+end
 
--- example
---require("conform").setup({
---  formatters = {
---    yamlfix = {
---      -- Change where to find the command
---      command = "local/path/yamlfix",
---      command = require("conform.util").find_executable({"local/path/to/dir",}, "yamlfix")
---      -- Adds environment args to the yamlfix formatter
---      env = {
---        YAMLFIX_SEQUENCE_STYLE = "block_style",
---      },
---    },
---    args = { "-filename", "$FILENAME", "-i", "2" },
---    append_args = { "-i", "2" },
---  },
---})
+lazy.keymap({ "n", "v" }, "<leader>cf", "conform", "plugins.conform-nvim-config", function()
+  require("conform").format({ async = false })
+end, "format: buffer or selection")
+
+return M

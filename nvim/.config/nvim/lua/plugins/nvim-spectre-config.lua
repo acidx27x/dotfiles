@@ -1,33 +1,27 @@
-vim.pack.add({
-  { src = "https://github.com/nvim-lua/plenary.nvim" },
-  { src = "https://github.com/nvim-mini/mini.icons" },
-  { src = "https://github.com/nvim-pack/nvim-spectre" },
-})
+local lazy = require("plugins.lazy")
+local M = {}
 
-require("spectre").setup({
-  default = {
-    find = {
-      cmd = "rg",
-      options = { "ignore-case" },
+function M.setup()
+  require("spectre").setup({
+    default = {
+      find = {
+        cmd = "rg",
+        options = { "ignore-case" },
+      },
+      replace = {
+        cmd = "sd",
+      },
     },
-    replace = {
-      cmd = "sd",
-    },
-  },
 
-  is_block_ui_break = true,
-})
+    is_block_ui_break = true,
+  })
+end
 
-vim.keymap.set(
-  "n",
-  "<leader>S",
-  require("spectre").toggle,
-  { noremap = true, silent = true, desc = "spectre: toggle" }
-)
+lazy.keymap("n", "<leader>S", "spectre", "plugins.nvim-spectre-config", function()
+  require("spectre").toggle()
+end, "search: toggle Spectre")
+lazy.keymap("v", "<leader>S", "spectre", "plugins.nvim-spectre-config", function()
+  require("spectre").open_visual()
+end, "search: open selection in Spectre")
 
-vim.keymap.set(
-  "v",
-  "<leader>S",
-  require("spectre").open_visual,
-  { noremap = true, silent = true, desc = "spectre: open and search current word" }
-)
+return M

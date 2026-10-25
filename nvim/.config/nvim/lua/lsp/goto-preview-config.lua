@@ -1,8 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/rmagatti/logger.nvim" },
-  { src = "https://github.com/rmagatti/goto-preview" },
-})
-
 require("goto-preview").setup({
   width = 120,
   height = 20,

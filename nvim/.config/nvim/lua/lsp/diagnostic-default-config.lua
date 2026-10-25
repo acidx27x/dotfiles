@@ -37,23 +37,21 @@ vim.diagnostic.config({
 
 vim.lsp.log.set_level(vim.log.levels.ERROR)
 
-local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc })
-end
+local map = require("core.keymap")
 
-keymap_ns("n", "<C-w>dt", function()
+map("n", "<C-w>dt", function()
   vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, "diagnostic: toggle (global)")
 
 -- f is for Focus
-keymap_ns("n", "<C-w>dft", function()
+map("n", "<C-w>dft", function()
   if vim.diagnostic.config().virtual_text.current_line then
     vim.diagnostic.config({ virtual_text = { current_line = nil } })
   else
     vim.diagnostic.config({ virtual_text = { current_line = true } })
   end
 end, "diagnostic: show virtual text for current line (global)")
-keymap_ns("n", "<C-w>dfl", function()
+map("n", "<C-w>dfl", function()
   if vim.diagnostic.config().virtual_lines then
     vim.diagnostic.config({ virtual_lines = false })
   else
@@ -61,15 +59,14 @@ keymap_ns("n", "<C-w>dfl", function()
   end
 end, "diagnostic: show virtual lines for current line (global)")
 
-keymap_ns("n", "<C-w>dl", vim.diagnostic.setloclist, "diagnostic: setloclist")
-keymap_ns("n", "<C-w>do", vim.diagnostic.open_float, "diagnostic: open float")
+map("n", "<C-w>dl", vim.diagnostic.setloclist, "diagnostic: setloclist")
+map("n", "<C-w>do", vim.diagnostic.open_float, "diagnostic: open float")
 
-keymap_ns("n", "]d", function()
+map("n", "]d", function()
   vim.diagnostic.jump({ count = 1 })
 end, "diagnostic: jump next")
-keymap_ns("n", "[d", function()
+map("n", "[d", function()
   vim.diagnostic.jump({ count = -1 })
 end, "diagnostic: jump prev")
 
--- restore some remapped combinations
-keymap_ns("n", "<C-w>d", "<C-w>d", "") -- open_float
+map("n", "<C-w>d", vim.diagnostic.open_float, "diagnostic: open float (native key)")

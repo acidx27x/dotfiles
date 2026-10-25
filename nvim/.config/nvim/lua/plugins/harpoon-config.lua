@@ -1,47 +1,44 @@
-vim.pack.add({
-  { src = "https://github.com/nvim-lua/plenary.nvim" },
-  {
-    src = "https://github.com/ThePrimeagen/harpoon",
-    version = "harpoon2",
-  },
-})
+local lazy = require("plugins.lazy")
+local M = {}
 
-local harpoon = require("harpoon")
-local harpoon_extensions = require("harpoon.extensions")
+function M.setup()
+  local harpoon = require("harpoon")
+  local harpoon_extensions = require("harpoon.extensions")
 
-harpoon:setup()
-harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
+  harpoon:setup()
+  harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
 
-local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc })
+  local map = require("core.keymap")
+
+  harpoon:extend({
+    UI_CREATE = function(cx)
+      map("n", "<C-s>", function()
+        harpoon.ui:select_menu_item({ vsplit = true })
+      end, "harpoon: open in split vertically", { buf = cx.bufnr })
+
+      map("n", "<C-h>", function()
+        harpoon.ui:select_menu_item({ split = true })
+      end, "harpoon: open in split horizontally", { buf = cx.bufnr })
+
+      map("n", "<C-t>", function()
+        harpoon.ui:select_menu_item({ tabedit = true })
+      end, "harpoon: open in tab", { buf = cx.bufnr })
+    end,
+  })
 end
 
-keymap_ns("n", "<leader>ha", function()
-  harpoon:list():add()
-end, "harpoon: list add")
-keymap_ns("n", "<leader>ht", function()
+lazy.keymap("n", "<leader>ha", "harpoon", "plugins.harpoon-config", function()
+  require("harpoon"):list():add()
+end, "harpoon: add current file")
+lazy.keymap("n", "<leader>ht", "harpoon", "plugins.harpoon-config", function()
+  local harpoon = require("harpoon")
   harpoon.ui:toggle_quick_menu(harpoon:list(), { border = "rounded", ui_width_ratio = 0.60 })
 end, "harpoon: toggle menu")
+lazy.keymap("n", "<leader>hn", "harpoon", "plugins.harpoon-config", function()
+  require("harpoon"):list():next()
+end, "harpoon: next item")
+lazy.keymap("n", "<leader>hp", "harpoon", "plugins.harpoon-config", function()
+  require("harpoon"):list():prev()
+end, "harpoon: previous item")
 
-keymap_ns("n", "<leader>hn", function()
-  harpoon:list():prev()
-end, "harpoon: list next")
-keymap_ns("n", "<leader>hp", function()
-  harpoon:list():next()
-end, "harpoon: list prev")
-
-harpoon:extend({
-  UI_CREATE = function(cx)
-    vim.keymap.set("n", "<C-s>", function()
-      harpoon.ui:select_menu_item({ vsplit = true })
-    end, { buffer = cx.bufnr, desc = "harpoon: open in split vertically" })
-
-    vim.keymap.set("n", "<C-h>", function()
-      harpoon.ui:select_menu_item({ split = true })
-    end, { buffer = cx.bufnr, desc = "harpoon: open in split horizontally" })
-
-    vim.keymap.set("n", "<C-t>", function()
-      harpoon.ui:select_menu_item({ tabedit = true })
-    end, { buffer = cx.bufnr, desc = "harpoon: open in tab" })
-  end,
-})
+return M

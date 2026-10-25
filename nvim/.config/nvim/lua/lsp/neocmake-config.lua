@@ -1,4 +1,4 @@
-local base = require("lsp-base-config")
+local base = require("lsp.lsp-base-config")
 
 local name = "neocmake"
 vim.lsp.config[name] = {
@@ -15,7 +15,6 @@ vim.lsp.config[name] = {
 
   init_options = {
     lint = { enable = true },
-    format = { enable = false },
     semantic_token = false, -- else got lagging
     scan_cmake_in_package = true,
   },

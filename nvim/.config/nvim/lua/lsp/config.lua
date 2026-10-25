@@ -1,29 +1,17 @@
--- lsp plugin group
-vim.pack.add({
-  { src = "https://github.com/neovim/nvim-lspconfig" },
-})
+require("lsp.blink-cmp-config")
 
-require("blink-cmp-config")
-
-require("nvim-navic-config")
-
-require("goto-preview-config")
-
-require("symbol-usage-nvim-config")
-
-require("actions-preview-nvim-config")
---
+require("lsp.nvim-navic-config")
 
 -- lsp server group
-require("lsp-default-config")
-require("diagnostic-default-config")
+require("lsp.lsp-default-config")
+require("lsp.diagnostic-default-config")
 
 -- c/c++
-require("clangd-config")
-require("neocmake-config")
+require("lsp.clangd-config")
+require("lsp.neocmake-config")
 
 -- python
-require("basedpyright-config")
-require("ruff-config")
-require("ty-config")
+require("lsp.basedpyright-config")
+require("lsp.ruff-config")
+require("lsp.ty-config")
 --

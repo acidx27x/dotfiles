@@ -78,18 +78,28 @@ vim.api.nvim_create_autocmd("VimResized", {
   desc = "VimResized: auto-resize splits when window is resized",
 })
 
--- Save and Load view
+local function is_file_buffer(bufnr)
+  return vim.bo[bufnr].buftype == "" and vim.api.nvim_buf_get_name(bufnr) ~= ""
+end
+
+-- Save and load views only for named file buffers.
 vim.api.nvim_create_autocmd("BufWinLeave", {
   group = augroup,
-  pattern = "*",
-  command = "silent! mkview",
-  desc = "BufWinLeave: save view, when closing file",
+  callback = function(args)
+    if is_file_buffer(args.buf) then
+      vim.cmd.mkview()
+    end
+  end,
+  desc = "BufWinLeave: save file-buffer view",
 })
 vim.api.nvim_create_autocmd("BufWinEnter", {
   group = augroup,
-  pattern = "*",
-  command = "silent! loadview",
-  desc = "BufWinEnter: load view, when opening file",
+  callback = function(args)
+    if is_file_buffer(args.buf) then
+      pcall(vim.cmd.loadview)
+    end
+  end,
+  desc = "BufWinEnter: load file-buffer view",
 })
 
 -- Return to last edit position when opening files

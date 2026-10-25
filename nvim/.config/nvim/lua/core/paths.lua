@@ -12,7 +12,6 @@ M.paths = {
 
   -- dap tools
   codelldb = "codelldb",
-  ["lldb-dap"] = "lldb-dap",
 
   -- format tools
   gersemi = "gersemi",

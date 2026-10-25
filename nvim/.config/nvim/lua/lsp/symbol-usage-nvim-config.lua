@@ -1,7 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/Wansmer/symbol-usage.nvim" },
-})
-
 local kind = vim.lsp.protocol.SymbolKind
 
 require("symbol-usage").setup({
