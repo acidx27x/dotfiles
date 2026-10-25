@@ -1,35 +1,35 @@
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 
 local module = {}
 
 function module.apply_to_config(config, platform)
-  config.color_scheme = 'duskfox'
+  config.color_scheme = "duskfox"
 
-  config.font = wezterm.font {
-    family = 'FiraCode Nerd Font',
-    weight = 'Medium',
+  config.font = wezterm.font({
+    family = "FiraCode Nerd Font",
+    weight = "Medium",
 
     harfbuzz_features = {
-      'calt',
-      'cv01',
-      'cv02',
-      'cv06',
-      'ss01',
-      'cv13',
-      'cv14',
-      'ss05',
-      'ss04',
-      'cv18',
-      'cv16',
-      'cv31',
-      'cv29',
-      'cv30',
-      'cv28',
-      'ss06',
-      'ss07',
-      'ss10',
+      "calt",
+      "cv01",
+      "cv02",
+      "cv06",
+      "ss01",
+      "cv13",
+      "cv14",
+      "ss05",
+      "ss04",
+      "cv18",
+      "cv16",
+      "cv31",
+      "cv29",
+      "cv30",
+      "cv28",
+      "ss06",
+      "ss07",
+      "ss10",
     },
-  }
+  })
 
   config.font_size = 16
 

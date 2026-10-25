@@ -1,9 +1,9 @@
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 
 local module = {}
 
 local function trim(value)
-  return (value:gsub('^%s+', ''):gsub('%s+$', ''))
+  return (value:gsub("^%s+", ""):gsub("%s+$", ""))
 end
 
 function module.apply_to_config(config, platform, settings)
@@ -20,9 +20,7 @@ function module.apply_to_config(config, platform, settings)
       end
 
       -- Default WSL distro
-      if settings.DEFAULT_WSL_DISTRO
-        and domain.distribution == settings.DEFAULT_WSL_DISTRO
-      then
+      if settings.DEFAULT_WSL_DISTRO and domain.distribution == settings.DEFAULT_WSL_DISTRO then
         selected_default_domain = domain.name
       end
     end
@@ -33,10 +31,7 @@ function module.apply_to_config(config, platform, settings)
       if selected_default_domain then
         config.default_domain = selected_default_domain
       else
-        wezterm.log_warn(
-          'DEFAULT_WSL_DISTRO was not found: '
-            .. settings.DEFAULT_WSL_DISTRO
-        )
+        wezterm.log_warn("DEFAULT_WSL_DISTRO was not found: " .. settings.DEFAULT_WSL_DISTRO)
       end
     end
   end
@@ -75,44 +70,38 @@ function module.apply_to_config(config, platform, settings)
 
   if platform.is_windows then
     table.insert(config.launch_menu, {
-      label = 'PowerShell 7',
+      label = "PowerShell 7",
       domain = {
-        DomainName = 'local',
+        DomainName = "local",
       },
       args = {
-        'pwsh.exe',
-        '-NoLogo',
+        "pwsh.exe",
+        "-NoLogo",
       },
     })
 
-    local program_files_x86 = os.getenv('ProgramFiles(x86)')
+    local program_files_x86 = os.getenv("ProgramFiles(x86)")
 
     if program_files_x86 then
-      local vswhere =
-        program_files_x86
-        .. '\\Microsoft Visual Studio\\Installer\\vswhere.exe'
+      local vswhere = program_files_x86 .. "\\Microsoft Visual Studio\\Installer\\vswhere.exe"
 
-      local success, stdout, stderr =
-        wezterm.run_child_process {
-          vswhere,
-          '-latest',
-          '-products',
-          '*',
-          '-property',
-          'installationPath',
-        }
+      local success, stdout, stderr = wezterm.run_child_process({
+        vswhere,
+        "-latest",
+        "-products",
+        "*",
+        "-property",
+        "installationPath",
+      })
 
       if success then
         local vs_installation = trim(stdout)
 
-        if vs_installation ~= '' then
-          local dev_shell_script =
-            vs_installation
-            .. '\\Common7\\Tools\\Launch-VsDevShell.ps1'
+        if vs_installation ~= "" then
+          local dev_shell_script = vs_installation .. "\\Common7\\Tools\\Launch-VsDevShell.ps1"
 
           -- Escape apostrophes for PowerShell single-quoted strings.
-          local escaped_script =
-            dev_shell_script:gsub("'", "''")
+          local escaped_script = dev_shell_script:gsub("'", "''")
 
           local command = string.format(
             "& '%s' -Arch amd64 -HostArch amd64 -SkipAutomaticLocation",
@@ -120,27 +109,25 @@ function module.apply_to_config(config, platform, settings)
           )
 
           vs_dev_shell_args = {
-            'pwsh.exe',
-            '-NoLogo',
-            '-NoExit',
-            '-Command',
+            "pwsh.exe",
+            "-NoLogo",
+            "-NoExit",
+            "-Command",
             command,
           }
 
           table.insert(config.launch_menu, {
-            label = 'Visual Studio Developer PowerShell 7 — x64',
+            label = "Visual Studio Developer PowerShell 7 — x64",
 
             domain = {
-              DomainName = 'local',
+              DomainName = "local",
             },
 
             args = vs_dev_shell_args,
           })
         end
       else
-        wezterm.log_warn(
-          'vswhere failed: ' .. (stderr or '')
-        )
+        wezterm.log_warn("vswhere failed: " .. (stderr or ""))
       end
     end
   end

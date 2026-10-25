@@ -1,9 +1,9 @@
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 
 local module = {}
 
 function module.register()
-  wezterm.on('update-right-status', function(window, pane)
+  wezterm.on("update-right-status", function(window, pane)
     local parts = {}
 
     local key_table = window:active_key_table()
@@ -11,7 +11,7 @@ function module.register()
     if key_table then
       table.insert(parts, key_table:upper())
     elseif window:leader_is_active() then
-      table.insert(parts, 'LEADER')
+      table.insert(parts, "LEADER")
     end
 
     -- Shows where this terminal actually lives:
@@ -20,9 +20,7 @@ function module.register()
 
     table.insert(parts, window:active_workspace())
 
-    window:set_right_status(
-      ' ' .. table.concat(parts, '  |  ') .. ' '
-    )
+    window:set_right_status(" " .. table.concat(parts, "  |  ") .. " ")
   end)
 end
 

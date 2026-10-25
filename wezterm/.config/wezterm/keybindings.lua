@@ -1,4 +1,4 @@
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 local act = wezterm.action
 
 local module = {}
@@ -8,8 +8,8 @@ function module.apply_to_config(config, platform, domain_context)
   -- Windows: Left Alt + S
   -- Then release and press the second key.
   config.leader = {
-    key = 's',
-    mods = 'ALT',
+    key = "s",
+    mods = "ALT",
     timeout_milliseconds = 1200,
   }
 
@@ -24,200 +24,199 @@ function module.apply_to_config(config, platform, domain_context)
   config.keys = {
     -- Let shell receive Alt+Left / Alt+Right.
     {
-      key = 'LeftArrow',
-      mods = 'ALT',
+      key = "LeftArrow",
+      mods = "ALT",
       action = act.DisableDefaultAssignment,
     },
 
     {
-      key = 'RightArrow',
-      mods = 'ALT',
+      key = "RightArrow",
+      mods = "ALT",
       action = act.DisableDefaultAssignment,
     },
 
     -- Escape hatch for shell Alt+S. Since Alt+S is the WezTerm leader,
     -- Alt+S, s sends the original Alt+S to the shell.
     {
-      key = 's',
-      mods = 'LEADER',
+      key = "s",
+      mods = "LEADER",
 
-      action = act.SendKey {
-        key = 's',
-        mods = 'ALT',
-      },
+      action = act.SendKey({
+        key = "s",
+        mods = "ALT",
+      }),
     },
 
     {
-      key = 'r',
-      mods = 'LEADER',
+      key = "r",
+      mods = "LEADER",
       action = act.ReloadConfiguration,
     },
 
     {
-      key = 'x',
-      mods = 'LEADER',
+      key = "x",
+      mods = "LEADER",
 
-      action = act.CloseCurrentPane {
+      action = act.CloseCurrentPane({
         confirm = true,
-      },
+      }),
     },
 
     -- New window in the current domain:
     -- local -> local, WSL -> same WSL, SSHMUX -> same remote domain.
     {
-      key = 'n',
-      mods = 'LEADER',
+      key = "n",
+      mods = "LEADER",
 
-      action = act.SpawnCommandInNewWindow {
-        domain = 'CurrentPaneDomain',
-      },
+      action = act.SpawnCommandInNewWindow({
+        domain = "CurrentPaneDomain",
+      }),
     },
 
     {
-      key = 'c',
-      mods = 'LEADER',
+      key = "c",
+      mods = "LEADER",
 
-      action = act.SpawnTab 'CurrentPaneDomain',
+      action = act.SpawnTab("CurrentPaneDomain"),
     },
 
     {
-      key = 'h',
-      mods = 'LEADER|SHIFT',
+      key = "h",
+      mods = "LEADER|SHIFT",
 
       action = act.ActivateTabRelative(-1),
     },
 
     {
-      key = 'l',
-      mods = 'LEADER|SHIFT',
+      key = "l",
+      mods = "LEADER|SHIFT",
 
       action = act.ActivateTabRelative(1),
     },
 
     {
-      key = ',',
-      mods = 'LEADER',
+      key = ",",
+      mods = "LEADER",
 
       action = act.MoveTabRelative(-1),
     },
 
     {
-      key = '.',
-      mods = 'LEADER',
+      key = ".",
+      mods = "LEADER",
 
       action = act.MoveTabRelative(1),
     },
 
     {
-      key = '\\',
-      mods = 'LEADER',
+      key = "\\",
+      mods = "LEADER",
 
-      action = act.SplitPane {
-        direction = 'Right',
+      action = act.SplitPane({
+        direction = "Right",
         size = {
           Percent = 50,
         },
 
         command = {
-          domain = 'CurrentPaneDomain',
+          domain = "CurrentPaneDomain",
         },
-      },
+      }),
     },
 
     {
-      key = '-',
-      mods = 'LEADER',
+      key = "-",
+      mods = "LEADER",
 
-      action = act.SplitPane {
-        direction = 'Down',
+      action = act.SplitPane({
+        direction = "Down",
         size = {
           Percent = 50,
         },
 
         command = {
-          domain = 'CurrentPaneDomain',
+          domain = "CurrentPaneDomain",
         },
-      },
+      }),
     },
 
     {
-      key = 'h',
-      mods = 'LEADER',
-      action = act.ActivatePaneDirection 'Left',
+      key = "h",
+      mods = "LEADER",
+      action = act.ActivatePaneDirection("Left"),
     },
 
     {
-      key = 'j',
-      mods = 'LEADER',
-      action = act.ActivatePaneDirection 'Down',
+      key = "j",
+      mods = "LEADER",
+      action = act.ActivatePaneDirection("Down"),
     },
 
     {
-      key = 'k',
-      mods = 'LEADER',
-      action = act.ActivatePaneDirection 'Up',
+      key = "k",
+      mods = "LEADER",
+      action = act.ActivatePaneDirection("Up"),
     },
 
     {
-      key = 'l',
-      mods = 'LEADER',
-      action = act.ActivatePaneDirection 'Right',
+      key = "l",
+      mods = "LEADER",
+      action = act.ActivatePaneDirection("Right"),
     },
 
     {
-      key = 'z',
-      mods = 'LEADER',
+      key = "z",
+      mods = "LEADER",
       action = act.TogglePaneZoomState,
     },
 
     {
-      key = 'p',
-      mods = 'LEADER',
+      key = "p",
+      mods = "LEADER",
 
-      action = act.PaneSelect {
-        mode = 'Activate',
+      action = act.PaneSelect({
+        mode = "Activate",
         show_pane_ids = true,
-      },
+      }),
     },
 
     -- Alt+S, e enters resize mode. h/j/k/l resize; Enter/Escape exits.
     {
-      key = 'e',
-      mods = 'LEADER',
+      key = "e",
+      mods = "LEADER",
 
-      action = act.ActivateKeyTable {
-        name = 'resize_pane',
+      action = act.ActivateKeyTable({
+        name = "resize_pane",
         one_shot = false,
         timeout_milliseconds = 5000,
-      },
+      }),
     },
 
     -- WSL, SSH, SSHMUX, Windows profiles, and workspaces.
     {
-      key = 'o',
-      mods = 'LEADER',
+      key = "o",
+      mods = "LEADER",
 
-      action = act.ShowLauncherArgs {
-        flags =
-          'FUZZY|DOMAINS|LAUNCH_MENU_ITEMS|WORKSPACES',
+      action = act.ShowLauncherArgs({
+        flags = "FUZZY|DOMAINS|LAUNCH_MENU_ITEMS|WORKSPACES",
 
-        title = 'Launch',
-      },
+        title = "Launch",
+      }),
     },
 
     {
-      key = 'w',
-      mods = 'LEADER',
+      key = "w",
+      mods = "LEADER",
 
-      action = act.ShowLauncherArgs {
-        flags = 'FUZZY|WORKSPACES',
-        title = 'Workspaces',
-      },
+      action = act.ShowLauncherArgs({
+        flags = "FUZZY|WORKSPACES",
+        title = "Workspaces",
+      }),
     },
 
     {
-      key = 'p',
-      mods = 'LEADER|SHIFT',
+      key = "p",
+      mods = "LEADER|SHIFT",
 
       action = act.ActivateCommandPalette,
     },
@@ -225,10 +224,10 @@ function module.apply_to_config(config, platform, domain_context)
     -- Particularly useful with SSHMUX. Detaching does not terminate the
     -- remote mux session.
     {
-      key = 'd',
-      mods = 'LEADER',
+      key = "d",
+      mods = "LEADER",
 
-      action = act.DetachDomain 'CurrentPaneDomain',
+      action = act.DetachDomain("CurrentPaneDomain"),
     },
   }
 
@@ -236,7 +235,7 @@ function module.apply_to_config(config, platform, domain_context)
   for i = 1, 9 do
     table.insert(config.keys, {
       key = tostring(i),
-      mods = 'LEADER',
+      mods = "LEADER",
       action = act.ActivateTab(i - 1),
     })
   end
@@ -246,25 +245,25 @@ function module.apply_to_config(config, platform, domain_context)
   if vs_dev_shell_args then
     -- Alt+S, v: new Visual Studio Developer PowerShell 7 x64 tab.
     table.insert(config.keys, {
-      key = 'v',
-      mods = 'LEADER',
+      key = "v",
+      mods = "LEADER",
 
-      action = act.SpawnCommandInNewTab {
+      action = act.SpawnCommandInNewTab({
         domain = {
-          DomainName = 'local',
+          DomainName = "local",
         },
 
         args = vs_dev_shell_args,
-      },
+      }),
     })
 
     -- Alt+S, Shift+V: Visual Studio Developer PowerShell 7 x64 split.
     table.insert(config.keys, {
-      key = 'v',
-      mods = 'LEADER|SHIFT',
+      key = "v",
+      mods = "LEADER|SHIFT",
 
-      action = act.SplitPane {
-        direction = 'Right',
+      action = act.SplitPane({
+        direction = "Right",
 
         size = {
           Percent = 50,
@@ -272,66 +271,66 @@ function module.apply_to_config(config, platform, domain_context)
 
         command = {
           domain = {
-            DomainName = 'local',
+            DomainName = "local",
           },
 
           args = vs_dev_shell_args,
         },
-      },
+      }),
     })
   end
 
   config.key_tables = {
     resize_pane = {
       {
-        key = 'h',
-        mods = 'NONE',
+        key = "h",
+        mods = "NONE",
 
-        action = act.AdjustPaneSize {
-          'Left',
+        action = act.AdjustPaneSize({
+          "Left",
           3,
-        },
+        }),
       },
 
       {
-        key = 'j',
-        mods = 'NONE',
+        key = "j",
+        mods = "NONE",
 
-        action = act.AdjustPaneSize {
-          'Down',
+        action = act.AdjustPaneSize({
+          "Down",
           3,
-        },
+        }),
       },
 
       {
-        key = 'k',
-        mods = 'NONE',
+        key = "k",
+        mods = "NONE",
 
-        action = act.AdjustPaneSize {
-          'Up',
+        action = act.AdjustPaneSize({
+          "Up",
           3,
-        },
+        }),
       },
 
       {
-        key = 'l',
-        mods = 'NONE',
+        key = "l",
+        mods = "NONE",
 
-        action = act.AdjustPaneSize {
-          'Right',
+        action = act.AdjustPaneSize({
+          "Right",
           3,
-        },
+        }),
       },
 
       {
-        key = 'Enter',
-        mods = 'NONE',
+        key = "Enter",
+        mods = "NONE",
         action = act.PopKeyTable,
       },
 
       {
-        key = 'Escape',
-        mods = 'NONE',
+        key = "Escape",
+        mods = "NONE",
         action = act.PopKeyTable,
       },
     },
@@ -343,14 +342,13 @@ function module.apply_to_config(config, platform, domain_context)
       event = {
         Up = {
           streak = 1,
-          button = 'Left',
+          button = "Left",
         },
       },
 
-      mods = 'NONE',
+      mods = "NONE",
 
-      action =
-        act.CompleteSelectionOrOpenLinkAtMouseCursor 'Clipboard',
+      action = act.CompleteSelectionOrOpenLinkAtMouseCursor("Clipboard"),
     },
   }
 end
