@@ -81,8 +81,8 @@
   "tab_size": 2,
   "colorize_brackets": true,
   "line_ending": "prefer_lf",
-  "soft_wrap": "bounded",
-  "preferred_line_length": 100,
+  "soft_wrap": "editor_width",
+  "preferred_line_length": 120,
   "vertical_scroll_margin": 5.0,
   "show_whitespaces": "boundary",
   "relative_line_numbers": "enabled",
@@ -167,8 +167,10 @@
   // language and tools diagnostics
   "diagnostics": {
     "inline": {
-      "enabled": false,
-      "max_severity": "all"
+      "enabled": true,
+      "padding": 2,
+      "min_column": 0,
+      "max_severity": "error"
     },
     "include_warnings": true
   },
@@ -305,7 +307,7 @@
       "enabled": false,
       "show_commit_summary": true
     },
-    "worktree_directory": "../worktrees"
+    "worktree_directory": "../zed-worktrees"
   },
   // collab
   "calls": {
@@ -328,8 +330,10 @@
     }
   },
   "agent": {
+    "threads_sidebar": {
+      "position": "left"
+    },
     "dock": "left",
-    "sidebar_side": "left",
     "show_turn_stats": true,
     "expand_edit_card": false,
     "use_modifier_to_send": true,
