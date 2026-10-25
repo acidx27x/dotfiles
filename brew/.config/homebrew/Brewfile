@@ -81,6 +81,7 @@ brew "ninja"
 brew "pkgconf"
 brew "pwndbg-gdb"  if OS.mac?
 brew "pwndbg-lldb" if OS.mac?
+brew "tree-sitter-cli"
 #
 
 # Python

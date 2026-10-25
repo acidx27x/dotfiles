@@ -30,6 +30,7 @@
     { "Name": "nu", "Source": "main", "Info": "" },
     { "Name": "shellcheck", "Source": "main", "Info": "" },
     { "Name": "shfmt", "Source": "main", "Info": "" },
+    { "Name": "tree-sitter", "Source": "main", "Info": "" },
     { "Name": "atuin", "Source": "main", "Info": "" },
     { "Name": "bat", "Source": "main", "Info": "" },
     { "Name": "direnv", "Source": "main", "Info": "" },
