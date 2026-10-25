@@ -133,7 +133,11 @@ enabled = true
 
 # Keep limited even if you later enable network in another profile.
 # Options: "limited", "full".
-mode = "limited"
+mode = "full"
+
+# Specific sites only settings.
+# [permissions.locked_folders_only.network.domains]
+# "registry.npmjs.org" = "allow"
 
 ###############################################################################
 # Shell environment hardening
@@ -198,6 +202,9 @@ shell_snapshot = true
 # Enable the standard shell tool.
 shell_tool = true
 
+# Enforce permission-profile network domain rules for sandboxed commands.
+network_proxy = true
+
 # More predictable and simpler behavior.
 multi_agent = false
 
@@ -247,4 +254,10 @@ status_line = [
   "fast-mode",
 ]
 status_line_use_colors = true
-terminal_title = ["activity", "project-name", "run-state", "thread-title", "task-progress"]
+terminal_title = [
+  "activity",
+  "project-name",
+  "run-state",
+  "thread-title",
+  "task-progress",
+]
