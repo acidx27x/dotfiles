@@ -18,11 +18,11 @@ local platform = {
 }
 
 appearance.apply_to_config(config, platform)
-terminal.apply_to_config(config, platform)
+terminal.apply_to_config(config, platform, settings)
 
-local domain_context = domains.apply_to_config(config, platform, settings)
+domains.apply_to_config(config, platform, settings)
 
-keybindings.apply_to_config(config, platform, domain_context)
+keybindings.apply_to_config(config, platform)
 status.register()
 
 return config

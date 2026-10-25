@@ -10,8 +10,6 @@ function module.register()
 
     if key_table then
       table.insert(parts, key_table:upper())
-    elseif window:leader_is_active() then
-      table.insert(parts, "LEADER")
     end
 
     -- Shows where this terminal actually lives:

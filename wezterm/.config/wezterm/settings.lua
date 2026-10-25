@@ -1,30 +1,36 @@
 local settings = {}
 
--- All WSL distributions are discovered automatically.
---
--- Set this to the *distribution* name shown by:
---
---   wsl -l -v
---
--- Example:
---
---   settings.DEFAULT_WSL_DISTRO = 'Ubuntu-24.04'
---
--- Leave nil if you want WezTerm to start in the normal local domain.
+-- These settings can be overwrited by 'local_settings.lua'
 settings.DEFAULT_WSL_DISTRO = nil
+settings.WSL_ALIASES = {}
+settings.UNIX_HOSTS = {}
+settings.DEFAULT_PROG = {}
+settings.SSH_DOMAIN_OVERRIDES = {}
 
--- Optional friendly names.
---
--- Keys are the exact distribution names from:
---
---   wsl -l -v
---
--- You DO NOT need to list all your WSL distributions here.
--- This table is only for renaming them.
-settings.WSL_ALIASES = {
-  -- ['Ubuntu-24.04'] = 'WSL:Ubuntu Dev',
-  -- ['Debian'] = 'WSL:Debian',
-  -- ['FedoraLinux-42'] = 'WSL:Fedora',
-}
+local local_settings_path = package.searchpath("local_settings", package.path)
+
+if local_settings_path then
+  local local_settings = require("local_settings")
+
+  if local_settings.DEFAULT_WSL_DISTRO ~= nil then
+    settings.DEFAULT_WSL_DISTRO = local_settings.DEFAULT_WSL_DISTRO
+  end
+
+  for distro, alias in pairs(local_settings.WSL_ALIASES or {}) do
+    settings.WSL_ALIASES[distro] = alias
+  end
+
+  if local_settings.UNIX_HOSTS then
+    settings.UNIX_HOSTS = local_settings.UNIX_HOSTS
+  end
+
+  for platform, program in pairs(local_settings.DEFAULT_PROG or {}) do
+    settings.DEFAULT_PROG[platform] = program
+  end
+
+  for domain, overrides in pairs(local_settings.SSH_DOMAIN_OVERRIDES or {}) do
+    settings.SSH_DOMAIN_OVERRIDES[domain] = overrides
+  end
+end
 
 return settings

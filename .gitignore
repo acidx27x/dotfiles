@@ -4,3 +4,4 @@
 !.agents/skills/**
 /.codex/
 /.config/
+/wezterm/.config/wezterm/local_settings.lua

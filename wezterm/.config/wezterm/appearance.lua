@@ -47,15 +47,13 @@ function module.apply_to_config(config, platform)
   end
 
   -- Acrylic-style backdrop on Windows later:
-  --
-  -- if platform.is_windows then
-  --   config.win32_system_backdrop = 'Acrylic'
-  -- end
+  if platform.is_windows then
+    config.win32_system_backdrop = 'Acrylic'
+  end
 
-  -- Retro tab bar fits Miasma better than the native/fancy tab bar.
   config.use_fancy_tab_bar = true
 
-  config.hide_tab_bar_if_only_one_tab = true
+  config.hide_tab_bar_if_only_one_tab = false
 
   config.show_tab_index_in_tab_bar = true
 

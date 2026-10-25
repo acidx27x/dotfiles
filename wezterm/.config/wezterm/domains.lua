@@ -46,23 +46,31 @@ function module.apply_to_config(config, platform, settings)
   -- SSHMUX requires wezterm on the remote machine.
   config.ssh_domains = wezterm.default_ssh_domains()
 
-  -- If every regular SSH host you use is Unix/Linux, you may enable this.
-  -- It improves cwd handling for plain SSH domains.
-  --
-  -- for _, domain in ipairs(config.ssh_domains) do
-  --   if domain.multiplexing == 'None' then
-  --     domain.assume_shell = 'Posix'
-  --   end
-  -- end
+  local unix_hosts = {}
 
-  -- Example customization for one SSHMUX server:
-  --
-  -- for _, domain in ipairs(config.ssh_domains) do
-  --   if domain.name == 'SSHMUX:devbox' then
-  --     domain.remote_wezterm_path = '/usr/local/bin/wezterm'
-  --     domain.local_echo_threshold_ms = 20
-  --   end
-  -- end
+  for _, host in ipairs(settings.UNIX_HOSTS) do
+    unix_hosts[host] = true
+  end
+
+  for _, domain in ipairs(config.ssh_domains) do
+    local host = domain.name:match("^SSH:(.+)$")
+
+    if domain.multiplexing == "None" and host and unix_hosts[host] then
+      domain.assume_shell = "Posix"
+    end
+
+    local overrides = settings.SSH_DOMAIN_OVERRIDES[domain.name]
+
+    if overrides then
+      if overrides.remote_wezterm_path then
+        domain.remote_wezterm_path = overrides.remote_wezterm_path
+      end
+
+      if overrides.local_echo_threshold_ms then
+        domain.local_echo_threshold_ms = overrides.local_echo_threshold_ms
+      end
+    end
+  end
 
   config.launch_menu = {}
 
@@ -131,10 +139,6 @@ function module.apply_to_config(config, platform, settings)
       end
     end
   end
-
-  return {
-    vs_dev_shell_args = vs_dev_shell_args,
-  }
 end
 
 return module
