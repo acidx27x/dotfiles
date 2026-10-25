@@ -150,8 +150,8 @@ fi
 
 # less does not create colors, but -R preserves safe ANSI color sequences.
 case " ${LESS:-} " in
-*' -R '* | *' --RAW-CONTROL-CHARS '*) ;;
-*) export LESS="${LESS:+$LESS }-R" ;;
+  *' -R '* | *' --RAW-CONTROL-CHARS '*) ;;
+  *) export LESS="${LESS:+$LESS }-R" ;;
 esac
 
 # Colored man-page headings and emphasis through less termcap capabilities.

@@ -67,8 +67,8 @@ set-xdg-user-dir XDG_MUSIC_DIR MUSIC "$HOME/Music"
 set-xdg-user-dir XDG_PICTURES_DIR PICTURES "$HOME/Pictures"
 
 case ${OSTYPE:-} in
-darwin*) _xdg_videos_fallback="$HOME/Movies" ;;
-*) _xdg_videos_fallback="$HOME/Videos" ;;
+  darwin*) _xdg_videos_fallback="$HOME/Movies" ;;
+  *) _xdg_videos_fallback="$HOME/Videos" ;;
 esac
 
 set-xdg-user-dir XDG_VIDEOS_DIR VIDEOS "$_xdg_videos_fallback"

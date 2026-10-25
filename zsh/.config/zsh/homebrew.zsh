@@ -118,27 +118,27 @@ fi
 
 if [[ -z $_brew_bin ]]; then
   case ${OSTYPE:-} in
-  darwin*)
-    for _candidate in \
-      /opt/homebrew/bin/brew \
-      /usr/local/bin/brew; do
-      if [[ -x $_candidate ]]; then
-        _brew_bin=$_candidate
-        break
-      fi
-    done
-    ;;
+    darwin*)
+      for _candidate in \
+        /opt/homebrew/bin/brew \
+        /usr/local/bin/brew; do
+        if [[ -x $_candidate ]]; then
+          _brew_bin=$_candidate
+          break
+        fi
+      done
+      ;;
 
-  linux*)
-    for _candidate in \
-      /home/linuxbrew/.linuxbrew/bin/brew \
-      "$HOME/.linuxbrew/bin/brew"; do
-      if [[ -x $_candidate ]]; then
-        _brew_bin=$_candidate
-        break
-      fi
-    done
-    ;;
+    linux*)
+      for _candidate in \
+        /home/linuxbrew/.linuxbrew/bin/brew \
+        "$HOME/.linuxbrew/bin/brew"; do
+        if [[ -x $_candidate ]]; then
+          _brew_bin=$_candidate
+          break
+        fi
+      done
+      ;;
   esac
 fi
 

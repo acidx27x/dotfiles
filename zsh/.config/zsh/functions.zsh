@@ -114,33 +114,33 @@ detect-encoding() {
   fi
 
   case $encoding in
-  '' | unknown | UNKNOWN)
-    has-cmd file || {
-      print -u2 -- 'Neither uchardet nor file is available.'
-      return 127
-    }
+    '' | unknown | UNKNOWN)
+      has-cmd file || {
+        print -u2 -- 'Neither uchardet nor file is available.'
+        return 127
+      }
 
-    encoding=$(file -b --mime-encoding -- "$file") || return
-    ;;
+      encoding=$(file -b --mime-encoding -- "$file") || return
+      ;;
   esac
 
   case $encoding in
-  binary | BINARY)
-    print -r -- binary
-    ;;
+    binary | BINARY)
+      print -r -- binary
+      ;;
 
-  us-ascii | US-ASCII | ascii | ASCII | utf-8 | UTF-8)
-    print -r -- UTF-8
-    ;;
+    us-ascii | US-ASCII | ascii | ASCII | utf-8 | UTF-8)
+      print -r -- UTF-8
+      ;;
 
-  unknown-8bit | UNKNOWN-8BIT | unknown | UNKNOWN | '')
-    print -u2 -- "Could not determine encoding: $file"
-    return 2
-    ;;
+    unknown-8bit | UNKNOWN-8BIT | unknown | UNKNOWN | '')
+      print -u2 -- "Could not determine encoding: $file"
+      return 2
+      ;;
 
-  *)
-    print -r -- "$encoding"
-    ;;
+    *)
+      print -r -- "$encoding"
+      ;;
   esac
 }
 
@@ -366,12 +366,12 @@ proxy-status() {
       value=${(P)name}
 
       case $value in
-      *://*@*)
-        scheme=${value%%://*}
-        remainder=${value#*://}
-        remainder=${remainder#*@}
-        value="${scheme}://<redacted>@${remainder}"
-        ;;
+        *://*@*)
+          scheme=${value%%://*}
+          remainder=${value#*://}
+          remainder=${remainder#*@}
+          value="${scheme}://<redacted>@${remainder}"
+          ;;
       esac
     else
       value='<unset>'
