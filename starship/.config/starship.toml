@@ -34,7 +34,7 @@ disabled = true
 ssh_only = false
 ssh_symbol = "󰣀 SSH"
 style = "bold dimmed fg:green"
-format = '[@$hostname]($style)( [$ssh_symbol](bold fg:crust bg:green))'
+format = "[@$hostname]($style)( [$ssh_symbol](bold fg:crust bg:green))"
 
 [sudo]
 disabled = false
