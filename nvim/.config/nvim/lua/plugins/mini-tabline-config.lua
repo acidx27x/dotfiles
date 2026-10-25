@@ -1,14 +1,11 @@
-
 vim.pack.add({
-  { src = "https://github.com/nvim-mini/mini.icons" },  -- uses by default, fb to nvim-web-devicons
+  { src = "https://github.com/nvim-mini/mini.icons" }, -- uses by default, fb to nvim-web-devicons
   { src = "https://github.com/nvim-mini/mini.tabline" },
 })
 
-
 require("mini.tabline").setup({
-  show_icons      = true,
+  show_icons = true,
   tabpage_section = "right",
-
 
   format = function(buf_id, label)
     local suffix = vim.bo[buf_id].modified and "+" or " "
@@ -26,7 +23,9 @@ require("mini.tabline").setup({
           break
         end
       end
-      if tab_num ~= 0 then break end
+      if tab_num ~= 0 then
+        break
+      end
     end
 
     local base_label = MiniTabline.default_format(buf_id, label)
@@ -34,6 +33,5 @@ require("mini.tabline").setup({
   end,
 })
 
-
-vim.opt.showtabline = 2  -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
-vim.opt.hidden      = true  -- Allow hidden buffers
+vim.opt.showtabline = 2 -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
+vim.opt.hidden = true -- Allow hidden buffers

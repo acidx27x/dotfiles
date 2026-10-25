@@ -1,11 +1,8 @@
-
 vim.pack.add({
   { src = "https://github.com/SmiteshP/nvim-navic" },
 })
 
-
 local navic = require("nvim-navic")
-
 
 navic.setup({
   highlight = true,
@@ -17,13 +14,13 @@ navic.setup({
   click = true,
 })
 
-
 local M = {}
-
 
 function M.get()
   local wininfo = vim.fn.getwininfo(vim.api.nvim_get_current_win())[1]
-  if not wininfo then return "" end
+  if not wininfo then
+    return ""
+  end
 
   local signcol_setting = vim.wo.signcolumn
   local sign_width = 0
@@ -37,10 +34,12 @@ function M.get()
 
   local total_off = wininfo.textoff or 0
   local num_width = total_off - sign_width
-  if num_width < 0 then num_width = 0 end
+  if num_width < 0 then
+    num_width = 0
+  end
 
   local sign_pad = string.rep(" ", sign_width)
-  local num_pad  = string.rep(" ", num_width)
+  local num_pad = string.rep(" ", num_width)
 
   local format = ""
 
@@ -58,9 +57,7 @@ function M.get()
   return string.format(format, sign_pad, num_pad, loc)
 end
 
-
 _G.navic_winbar = M
-
 
 -- dont do vim.wo[winid] because will be ugly in split when buffer is not supported
 vim.opt.winbar = "%{%v:lua.navic_winbar.get()%}"

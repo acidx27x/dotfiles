@@ -1,10 +1,9 @@
-
 -- TODO
 -- https://github.com/microsoft/vscode-cpptools/releases/
 require("dap").adapters.cppdbg = {
-  type    = "executable",
+  type = "executable",
   command = "OpenDebugAD7",
-  args    = {},
+  args = {},
   options = {
     env = {},
   },

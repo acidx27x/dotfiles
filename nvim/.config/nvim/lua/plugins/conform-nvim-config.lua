@@ -1,22 +1,19 @@
-
 vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim" },
 })
 
-
 vim.g.disable_autoformat = true
-
 
 require("conform").setup({
   formatters_by_ft = {
-    lua = { "stylua", lsp_format = "never", },
+    lua = { "stylua", lsp_format = "never" },
 
-    c   = { "clang-format", lsp_format = "never", },
-    cpp = { "clang-format", lsp_format = "never", },
+    c = { "clang-format", lsp_format = "never" },
+    cpp = { "clang-format", lsp_format = "never" },
 
-    cmake = { "gersemi", lsp_format = "never", },
+    cmake = { "gersemi", lsp_format = "never" },
 
-    python = { "ruff_format", lsp_format = "never", },
+    python = { "ruff_format", lsp_format = "never" },
 
     --["*"] = { "codespell" },
     --["_"] = { "trim_whitespace" },
@@ -25,11 +22,11 @@ require("conform").setup({
   },
 
   formatters = {
-    ["clang-format"] = { command = _G.Paths["clang-format"], },
+    ["clang-format"] = { command = _G.Paths["clang-format"] },
 
-    gersemi = { command = _G.Paths.gersemi, },
+    gersemi = { command = _G.Paths.gersemi },
 
-    ruff_format = { command = _G.Paths.ruff, },
+    ruff_format = { command = _G.Paths.ruff },
   },
 
   default_format_opts = {
@@ -37,19 +34,21 @@ require("conform").setup({
     lsp_format = "never",
   },
 
-  format_on_save    = function(bufnr) return end,
-  format_after_save = function(bufnr) return end,
+  format_on_save = function(bufnr)
+    return
+  end,
+  format_after_save = function(bufnr)
+    return
+  end,
 
   log_level = vim.log.levels.WARN,
 })
 
-
 vim.keymap.set({ "n", "v" }, "<leader>cf", function()
-  require("conform").format({ async = false, lsp_format = "never", })
-end, { noremap = true, silent = true, desc = desc})
+  require("conform").format({ async = false, lsp_format = "never" })
+end, { noremap = true, silent = true, desc = desc })
 
 -- conform.format({ formatters = { "ruff_fix" } }) to use with specific formater for injected code
-
 
 -- example
 --require("conform").setup({

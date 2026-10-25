@@ -1,7 +1,5 @@
-
 -- Basic autocommands
 local augroup = vim.api.nvim_create_augroup("UserConfig", {})
-
 
 -- Change cwd on enter
 -- vim.api.nvim_create_autocmd("VimEnter", {
@@ -34,12 +32,11 @@ vim.api.nvim_create_autocmd("DirChanged", {
     vim.notify(
       "cwd: " .. vim.fn.getcwd(),
       vim.log.levels.INFO,
-      { title = "User Autocmd", timeout = 1000, }
+      { title = "User Autocmd", timeout = 1000 }
     )
   end,
   desc = "DirChanged: notify about cwd",
 })
-
 
 -- Highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -49,8 +46,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
   desc = "TextYankPost: highlight on yank",
 })
-
-
 
 -- Auto-close terminal when process exits
 vim.api.nvim_create_autocmd("TermClose", {
@@ -63,7 +58,6 @@ vim.api.nvim_create_autocmd("TermClose", {
   desc = "TermClose: close terminal buffer if process exits",
 })
 
-
 -- Disable line numbers in terminal
 vim.api.nvim_create_autocmd("TermOpen", {
   group = augroup,
@@ -75,7 +69,6 @@ vim.api.nvim_create_autocmd("TermOpen", {
   desc = "TermOpen: remove extra ui",
 })
 
-
 -- Auto-resize splits when window is resized
 vim.api.nvim_create_autocmd("VimResized", {
   group = augroup,
@@ -84,7 +77,6 @@ vim.api.nvim_create_autocmd("VimResized", {
   end,
   desc = "VimResized: auto-resize splits when window is resized",
 })
-
 
 -- Save and Load view
 vim.api.nvim_create_autocmd("BufWinLeave", {

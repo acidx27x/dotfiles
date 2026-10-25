@@ -1,11 +1,9 @@
-
 local base = require("lsp-base-config")
-
 
 local name = "ty"
 vim.lsp.config[name] = {
-  on_init      = base.get_on_init(name),
-  on_attach    = base.get_on_attach(name),
+  on_init = base.get_on_init(name),
+  on_attach = base.get_on_attach(name),
   capabilities = base.get_capabilities(name),
 
   name = name,
@@ -22,7 +20,7 @@ vim.lsp.config[name] = {
   settings = {
     ty = {
       inlayHints = {
-        variableTypes     = true,
+        variableTypes = true,
         callArgumentNames = true,
       },
     },

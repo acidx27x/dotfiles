@@ -1,8 +1,6 @@
-
 vim.pack.add({
   { src = "https://github.com/aznhe21/actions-preview.nvim" },
 })
-
 
 require("actions-preview").setup({
   diff = {
@@ -15,5 +13,5 @@ require("actions-preview").setup({
     require("actions-preview.highlight").diff_so_fancy(_G.Paths["diff-so-fancy"]),
   },
 
-  backend = { "minipick", },
+  backend = { "minipick" },
 })

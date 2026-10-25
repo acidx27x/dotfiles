@@ -1,13 +1,11 @@
-
 vim.pack.add({
-  { src = "https://github.com/nvim-mini/mini.icons" },  -- uses by default, fb to nvim-web-devicons
+  { src = "https://github.com/nvim-mini/mini.icons" }, -- uses by default, fb to nvim-web-devicons
   { src = "https://github.com/leath-dub/snipe.nvim" },
 })
 
-
 require("snipe").setup({
   ui = {
-    position = "center",  -- or topleft, topright
+    position = "center", -- or topleft, topright
 
     open_win_override = {
       border = "rounded",
@@ -30,9 +28,15 @@ require("snipe").setup({
     -- leader key. For example (with tag "a"):
     -- ,ad -> run leader_map["d"](m, i)
     leader_map = {
-      ["d"] = function (m, i) require("snipe").close_buf(m, i) end,
-      ["v"] = function (m, i) require("snipe").open_vsplit(m, i) end,
-      ["h"] = function (m, i) require("snipe").open_split(m, i) end,
+      ["d"] = function(m, i)
+        require("snipe").close_buf(m, i)
+      end,
+      ["v"] = function(m, i)
+        require("snipe").open_vsplit(m, i)
+      end,
+      ["h"] = function(m, i)
+        require("snipe").open_split(m, i)
+      end,
     },
 
     next_page = "<C-f>",
@@ -41,13 +45,17 @@ require("snipe").setup({
     under_cursor = "<CR>",
     cancel_snipe = "<Esc>",
     close_buffer = "D",
-    open_vsplit  = "<C-s>",
-    open_split   = "<C-h>",
+    open_vsplit = "<C-s>",
+    open_split = "<C-h>",
     -- change_tag   = "C",  -- or disable persist_tags
   },
 
-  sort = "default",  -- or last
+  sort = "default", -- or last
 })
 
-vim.keymap.set("n", "<leader>sn", require("snipe").open_buffer_menu,
-  { noremap = true, silent = true, desc = "snipe: open menu", })
+vim.keymap.set(
+  "n",
+  "<leader>sn",
+  require("snipe").open_buffer_menu,
+  { noremap = true, silent = true, desc = "snipe: open menu" }
+)

@@ -1,8 +1,6 @@
-
 vim.pack.add({
   { src = "https://github.com/nvim-mini/mini.comment" },
 })
-
 
 require("mini.comment").setup({
   options = {
@@ -11,9 +9,9 @@ require("mini.comment").setup({
   },
 
   mappings = {
-    comment        = "<leader>cc",
+    comment = "<leader>cc",
     comment_visual = "<leader>cc",
-    comment_line   = "<leader>ccl",
+    comment_line = "<leader>ccl",
 
     textobject = "<leader>cc",
   },

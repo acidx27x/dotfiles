@@ -1,11 +1,9 @@
-
 vim.pack.add({
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
 })
 
-
 require("gitsigns").setup({
-  sign_priority=100,
+  sign_priority = 100,
 
   on_attach = function(bufnr)
     local git = require("gitsigns")
@@ -20,7 +18,7 @@ require("gitsigns").setup({
     -- Navigation
     keyn("]c", function()
       if vim.wo.diff then
-        vim.cmd.normal({ "]c", bang = true, })
+        vim.cmd.normal({ "]c", bang = true })
       else
         git.nav_hunk("next")
       end
@@ -28,7 +26,7 @@ require("gitsigns").setup({
 
     keyn("[c", function()
       if vim.wo.diff then
-        vim.cmd.normal({ "[c", bang = true, })
+        vim.cmd.normal({ "[c", bang = true })
       else
         git.nav_hunk("prev")
       end
@@ -43,7 +41,7 @@ require("gitsigns").setup({
     end, getopts("git: stage hunk (v)"))
 
     vim.keymap.set("v", "<leader>gr", function()
-      git.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+      git.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
     end, getopts("git: reset hunk (v)"))
 
     keyn("<leader>gS", git.stage_buffer, getopts("git: stage buffer"))
@@ -51,17 +49,23 @@ require("gitsigns").setup({
     keyn("<leader>gp", git.preview_hunk, getopts("git: preview hunk"))
     keyn("<leader>gi", git.preview_hunk_inline, getopts("git: preview hunk inline"))
 
-    keyn("<leader>gb", function() git.blame_line({ full = true }) end, getopts("git: blame line (full)"))
+    keyn("<leader>gb", function()
+      git.blame_line({ full = true })
+    end, getopts("git: blame line (full)"))
     keyn("<leader>gB", git.blame, getopts("git: blame"))
 
     keyn("<leader>gd", git.diffthis, getopts("git: diff"))
-    keyn("<leader>gD", function() git.diffthis("~") end, getopts("git: diff (~)"))
+    keyn("<leader>gD", function()
+      git.diffthis("~")
+    end, getopts("git: diff (~)"))
 
     keyn("<leader>gq", git.setqflist, getopts("git: qflist"))
-    keyn("<leader>gQ", function() git.setqflist("all") end, getopts("git: qflist (all)"))
+    keyn("<leader>gQ", function()
+      git.setqflist("all")
+    end, getopts("git: qflist (all)"))
 
     -- Toggles
     keyn("<leader>gtw", git.toggle_word_diff, getopts("git: toggle word diff"))
     keyn("<leader>gtb", git.toggle_current_line_blame, getopts("git: toggle blame inline"))
-  end
+  end,
 })

@@ -1,6 +1,4 @@
-
 local M = {}
-
 
 -- common paths
 M.paths = {
@@ -12,16 +10,13 @@ M.paths = {
   -- linter tools
   ruff = "ruff",
 
-
   -- dap tools
   codelldb = "codelldb",
   ["lldb-dap"] = "lldb-dap",
 
-
   -- format tools
   gersemi = "gersemi",
   ["clang-format"] = "clang-format",
-
 
   -- utils
   ctags = "ctags-universal",
@@ -40,7 +35,6 @@ if has_paths_override and type(paths_override) == "table" then
     M.paths[k] = v
   end
 end
-
 
 _G.Paths = M.paths
 

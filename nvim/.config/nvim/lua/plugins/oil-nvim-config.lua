@@ -1,23 +1,21 @@
-
 vim.pack.add({
-  { src = "https://github.com/nvim-mini/mini.icons" },  -- uses by default, fb to nvim-web-devicons
+  { src = "https://github.com/nvim-mini/mini.icons" }, -- uses by default, fb to nvim-web-devicons
   { src = "https://github.com/stevearc/oil.nvim" },
 })
-
 
 -- toggle file column detail info
 local column_detail = false
 
-
 -- to show window cwd in winbar
 local M = {}
-
 
 function M.get()
   local winid = vim.api.nvim_get_current_win()
   local bufnr = vim.api.nvim_win_get_buf(winid)
   local wininfo = vim.fn.getwininfo(vim.api.nvim_get_current_win())[1]
-  if not wininfo then return "" end
+  if not wininfo then
+    return ""
+  end
 
   local winconfig = vim.api.nvim_win_get_config(winid)
   local is_floating = winconfig.relative ~= ""
@@ -32,10 +30,12 @@ function M.get()
 
   local total_off = wininfo.textoff or 0
   local num_width = total_off - sign_width
-  if num_width < 0 then num_width = 0 end
+  if num_width < 0 then
+    num_width = 0
+  end
 
   local sign_pad = string.rep(" ", sign_width)
-  local num_pad  = string.rep(" ", num_width)
+  local num_pad = string.rep(" ", num_width)
 
   local format = ""
 
@@ -51,61 +51,68 @@ function M.get()
   return string.format(format, sign_pad, num_pad, dir)
 end
 
-
 _G.oil_winbar = M
 --
-
 
 require("oil").setup({
   default_file_explorer = true,
 
   use_default_keymaps = false,
   keymaps = {
-    ["<leader>o?"] = { "actions.show_help", mode = "n", desc = "Oil: show help", },
+    ["<leader>o?"] = { "actions.show_help", mode = "n", desc = "Oil: show help" },
     -- use :q to exit as close may duplicate parent buffer
     -- ["<C-c>"]      = { "actions.close",     mode = "n", desc = "Oil: close", },
 
-    ["<CR>"]        = { "actions.select", mode = "n", desc = "Oil: select", },
+    ["<CR>"] = { "actions.select", mode = "n", desc = "Oil: select" },
     ["<C-s>"] = {
       "actions.select",
-      mode = "n", opts = { vertical = true }, desc = "Oil: select in vertical",
+      mode = "n",
+      opts = { vertical = true },
+      desc = "Oil: select in vertical",
     },
     ["<C-h>"] = {
       "actions.select",
-      mode = "n", opts = { horizontal = true }, desc = "Oil: select in horizontal",
+      mode = "n",
+      opts = { horizontal = true },
+      desc = "Oil: select in horizontal",
     },
     ["<C-t>"] = {
       "actions.select",
-      mode = "n", opts = { tab = true }, desc = "Oil: select in tab",
+      mode = "n",
+      opts = { tab = true },
+      desc = "Oil: select in tab",
     },
-    ["<C-p>"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview", },
-    ["<C-f>"]   = { "actions.preview_scroll_down", mode = "n", desc = "Oil: scrolll preview up", },
-    ["<C-b>"]   = { "actions.preview_scroll_up",   mode = "n", desc = "Oil: scrolll preview down", },
+    ["<C-p>"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview" },
+    ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Oil: scrolll preview up" },
+    ["<C-b>"] = { "actions.preview_scroll_up", mode = "n", desc = "Oil: scrolll preview down" },
 
-    ["<leader>or"] = { "actions.refresh", mode = "n", desc = "Oil: refresh", },
+    ["<leader>or"] = { "actions.refresh", mode = "n", desc = "Oil: refresh" },
 
-    ["<leader>ob"] = { "actions.open_cwd", mode = "n", desc = "Oil: open cwd", },
-    ["<leader>o-"] = { "actions.parent",   mode = "n", desc = "Oil: open parent", },
-    ["<leader>o."] = { "actions.cd",       mode = "n", desc = "Oil: cd", },
+    ["<leader>ob"] = { "actions.open_cwd", mode = "n", desc = "Oil: open cwd" },
+    ["<leader>o-"] = { "actions.parent", mode = "n", desc = "Oil: open parent" },
+    ["<leader>o."] = { "actions.cd", mode = "n", desc = "Oil: cd" },
     ["<leader>o,"] = {
       "actions.cd",
-      opts = { scope = "win" }, mode = "n", desc = "Oil: cd (tab)",
+      opts = { scope = "win" },
+      mode = "n",
+      desc = "Oil: cd (tab)",
     },
-    ["<leader>ox"] = { "actions.open_external", mode = "n", desc = "Oil: open external", },
-    ["<leader>os"] = { "actions.change_sort",   mode = "n", desc = "Oil: change sort", },
+    ["<leader>ox"] = { "actions.open_external", mode = "n", desc = "Oil: open external" },
+    ["<leader>os"] = { "actions.change_sort", mode = "n", desc = "Oil: change sort" },
 
-    ["<leader>oth"] = { "actions.toggle_hidden", mode = "n", desc = "Oil: toggle hidden", },
-    ["<leader>ott"] = { "actions.toggle_trash",  mode = "n", desc = "Oil: toggle trash", },
+    ["<leader>oth"] = { "actions.toggle_hidden", mode = "n", desc = "Oil: toggle hidden" },
+    ["<leader>ott"] = { "actions.toggle_trash", mode = "n", desc = "Oil: toggle trash" },
     ["<leader>otc"] = {
       callback = function()
         column_detail = not column_detail
         if column_detail then
-          require("oil").set_columns({ "permissions", "size", "mtime", "icon", })
+          require("oil").set_columns({ "permissions", "size", "mtime", "icon" })
         else
-          require("oil").set_columns({ "icon", })
+          require("oil").set_columns({ "icon" })
         end
       end,
-      mode = "n", desc = "Oil: toggle column detail",
+      mode = "n",
+      desc = "Oil: toggle column detail",
     },
   },
 
@@ -115,7 +122,7 @@ require("oil").setup({
 
   delete_to_trash = true,
 
-  lsp_file_methods = { enabled = false, },
+  lsp_file_methods = { enabled = false },
 
   win_options = {
     winbar = "%{%v:lua.oil_winbar.get()%}",
@@ -124,7 +131,7 @@ require("oil").setup({
   float = {
     padding = 2,
 
-    max_width  = 0.65,
+    max_width = 0.65,
     max_height = 0.8,
 
     win_options = {
@@ -146,21 +153,20 @@ require("oil").setup({
 
   preview_win = {
     win_options = {
-      wrap  = false,
-      list  = false,
+      wrap = false,
+      list = false,
       spell = false,
 
-      number       = true,
-      foldcolumn   = "0",
-      signcolumn   = "no",
+      number = true,
+      foldcolumn = "0",
+      signcolumn = "no",
       cursorcolumn = false,
     },
   },
 })
 
-
 local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc, })
+  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc })
 end
 
 keymap_ns("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")

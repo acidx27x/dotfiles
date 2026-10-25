@@ -1,4 +1,3 @@
-
 require("paths")
 require("filetypes")
 require("options")

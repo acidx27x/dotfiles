@@ -1,8 +1,6 @@
-
 vim.pack.add({
   { src = "https://github.com/shortcuts/no-neck-pain.nvim" },
 })
-
 
 require("no-neck-pain").setup({
   width = 120,
@@ -10,7 +8,7 @@ require("no-neck-pain").setup({
     scratchPad = {
       enabled = true,
       fileName = "scratch-notes",
-      location = nil,  -- or full path
+      location = nil, -- or full path
     },
     bo = {
       filetype = "md",
@@ -19,5 +17,9 @@ require("no-neck-pain").setup({
   },
 })
 
-vim.keymap.set("n", "<leader>np", ":NoNeckPain<CR>",
-  { noremap = true, silent = true, desc = "no-neck-pain: toggle", })
+vim.keymap.set(
+  "n",
+  "<leader>np",
+  ":NoNeckPain<CR>",
+  { noremap = true, silent = true, desc = "no-neck-pain: toggle" }
+)

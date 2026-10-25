@@ -1,6 +1,4 @@
-
 local M = {}
-
 
 M.lsp_keymaps = function(bufnr)
   local function getopts(desc)
@@ -11,45 +9,48 @@ M.lsp_keymaps = function(bufnr)
   end
 
   -- base goto smth lsp operations
-  keyn("gd", vim.lsp.buf.definition,      getopts("LSP: definition"))
+  keyn("gd", vim.lsp.buf.definition, getopts("LSP: definition"))
   keyn("gy", vim.lsp.buf.type_definition, getopts("LSP: type definition"))
-  keyn("gc", vim.lsp.buf.declaration,     getopts("LSP: declaration"))
-  keyn("gr", vim.lsp.buf.references,      getopts("LSP: references"))
-  keyn("gi", vim.lsp.buf.implementation,  getopts("LSP: implementation"))
+  keyn("gc", vim.lsp.buf.declaration, getopts("LSP: declaration"))
+  keyn("gr", vim.lsp.buf.references, getopts("LSP: references"))
+  keyn("gi", vim.lsp.buf.implementation, getopts("LSP: implementation"))
 
   local has_preview, preview = pcall(require, "goto-preview")
   if has_preview then
-    keyn("gpd", preview.goto_preview_definition,      getopts("LSP: preview definition"))
+    keyn("gpd", preview.goto_preview_definition, getopts("LSP: preview definition"))
     keyn("gpy", preview.goto_preview_type_definition, getopts("LSP: preview type definition"))
-    keyn("gpc", preview.goto_preview_declaration,     getopts("LSP: preview declaration"))
-    keyn("gpr", preview.goto_preview_references,      getopts("LSP: preview references"))
-    keyn("gpi", preview.goto_preview_implementation,  getopts("LSP: preview implementation"))
-    keyn("gpq", preview.close_all_win,                getopts("LSP: preview close all"))
+    keyn("gpc", preview.goto_preview_declaration, getopts("LSP: preview declaration"))
+    keyn("gpr", preview.goto_preview_references, getopts("LSP: preview references"))
+    keyn("gpi", preview.goto_preview_implementation, getopts("LSP: preview implementation"))
+    keyn("gpq", preview.close_all_win, getopts("LSP: preview close all"))
   end
   --
 
   -- additional lsp operations (C-s because lSp)
-  keyn("<C-s>h", vim.lsp.buf.hover,          getopts("LSP: hover"))
+  keyn("<C-s>h", vim.lsp.buf.hover, getopts("LSP: hover"))
   keyn("<C-s>s", vim.lsp.buf.signature_help, getopts("LSP: signature help"))
 
-  keyn("<C-s>rn", vim.lsp.buf.rename,         getopts("LSP: rename"))
+  keyn("<C-s>rn", vim.lsp.buf.rename, getopts("LSP: rename"))
   keyn("<C-s>ic", vim.lsp.buf.incoming_calls, getopts("LSP: incoming calls"))
   keyn("<C-s>oc", vim.lsp.buf.outgoing_calls, getopts("LSP: outgoing calls"))
-  keyn("<C-s>th", vim.lsp.buf.typehierarchy,  getopts("LSP: typehierarchy"))
-  keyn("<C-s>ca", vim.lsp.buf.code_action,    getopts("LSP: code action"))
+  keyn("<C-s>th", vim.lsp.buf.typehierarchy, getopts("LSP: typehierarchy"))
+  keyn("<C-s>ca", vim.lsp.buf.code_action, getopts("LSP: code action"))
 
   local has_action, action = pcall(require, "actions-preview")
   if has_action then
-    vim.keymap.set({ "v", "n" }, "<C-s>ca", action.code_actions,
+    vim.keymap.set(
+      { "v", "n" },
+      "<C-s>ca",
+      action.code_actions,
       getopts("LSP: code action (with picker preview)")
     )
   end
 
-  keyn("<C-s>ds", vim.lsp.buf.document_symbol,    getopts("LSP: document symbol"))
+  keyn("<C-s>ds", vim.lsp.buf.document_symbol, getopts("LSP: document symbol"))
   keyn("<C-s>dh", vim.lsp.buf.document_highlight, getopts("LSP: document highlight"))
-  keyn("<C-s>cr", vim.lsp.buf.clear_references,   getopts("LSP: clear references"))
+  keyn("<C-s>cr", vim.lsp.buf.clear_references, getopts("LSP: clear references"))
 
-  keyn("<C-s>ws", vim.lsp.buf.workspace_symbol,      getopts("LSP: workspace symbol"))
+  keyn("<C-s>ws", vim.lsp.buf.workspace_symbol, getopts("LSP: workspace symbol"))
   keyn("<C-s>wd", vim.lsp.buf.workspace_diagnostics, getopts("LSP: workspace diagnostics"))
   -- TODO vim.lsp.buf.selection_range
 
@@ -62,24 +63,23 @@ M.lsp_keymaps = function(bufnr)
 
   local has_usage, usage = pcall(require, "symbol-usage")
   if has_usage then
-    keyn("<C-s>u", usage.toggle,          getopts("LSP: symbol usage toggle"))
+    keyn("<C-s>u", usage.toggle, getopts("LSP: symbol usage toggle"))
     keyn("<C-s>U", usage.toggle_globally, getopts("LSP: symbol usage toggle (global)"))
   end
   --
 
   -- restore some remapped combinations
-  keyn("K",   "K",   getopts(""))  -- hover
-  keyn("gri", "gri", getopts(""))  -- implementation
-  keyn("grn", "grn", getopts(""))  -- rename
-  keyn("grr", "grr", getopts(""))  -- references
-  keyn("grt", "grt", getopts(""))  -- type_definition
-  keyn("gO",  "gO",  getopts(""))  -- document_symbol
+  keyn("K", "K", getopts("")) -- hover
+  keyn("gri", "gri", getopts("")) -- implementation
+  keyn("grn", "grn", getopts("")) -- rename
+  keyn("grr", "grr", getopts("")) -- references
+  keyn("grt", "grt", getopts("")) -- type_definition
+  keyn("gO", "gO", getopts("")) -- document_symbol
 
-  vim.keymap.set({ "n", "v" }, "gra", "gra", getopts(""))  -- code_action
-  vim.keymap.set("i", "<C-s>", "<C-s>", getopts(""))  -- signature_help
+  vim.keymap.set({ "n", "v" }, "gra", "gra", getopts("")) -- code_action
+  vim.keymap.set("i", "<C-s>", "<C-s>", getopts("")) -- signature_help
   --
 end
-
 
 M.get_capabilities = function(server_name)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -93,7 +93,7 @@ M.get_capabilities = function(server_name)
     dynamicRegistration = false,
   }
   capabilities.textDocument.rangeFormatting = {
-    rangesSupport       = false,
+    rangesSupport = false,
     dynamicRegistration = false,
   }
 
@@ -108,20 +108,19 @@ M.get_capabilities = function(server_name)
     vim.notify(
       "blink.cmp is not installed, falling back to default lsp capabilities",
       vim.log.levels.WARN,
-      { title = "LSP", }
+      { title = "LSP" }
     )
     return capabilities
   end
 end
-
 
 M.on_attach = function(client, bufnr)
   M.lsp_keymaps(bufnr)
 
   -- shared manually set capabilities
   vim.bo[bufnr].formatexpr = nil
-  client.server_capabilities.documentFormattingProvider       = false
-  client.server_capabilities.documentRangeFormattingProvider  = false
+  client.server_capabilities.documentFormattingProvider = false
+  client.server_capabilities.documentRangeFormattingProvider = false
   client.server_capabilities.documentOnTypeFormattingProvider = false
   --
 
@@ -146,7 +145,7 @@ M.on_attach = function(client, bufnr)
       vim.notify(
         "nvim-navic is not installed, falling back to default winbar",
         vim.log.levels.WARN,
-        { title = "LSP", }
+        { title = "LSP" }
       )
     end
   end
@@ -160,13 +159,14 @@ M.get_on_attach = function(server_name, override)
     if on_attach_old then
       on_attach_old(client, bufnr)
     end
-    if override then override(client, bufnr) end  -- option to pass custom on_attach to override default settings
+    if override then
+      override(client, bufnr)
+    end -- option to pass custom on_attach to override default settings
     M.on_attach(client, bufnr)
   end
 
   return on_attach_new
 end
-
 
 M.get_on_init = function(server_name)
   local on_init_old = vim.lsp.config[server_name] and vim.lsp.config[server_name].on_init
@@ -179,6 +179,5 @@ M.get_on_init = function(server_name)
 
   return on_init_new
 end
-
 
 return M

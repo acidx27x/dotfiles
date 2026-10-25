@@ -1,4 +1,3 @@
-
 -- plugin code begin
 local config = {
   highlight = "DiffDelete",
@@ -58,14 +57,14 @@ whitespace.toggle = function()
     vim.notify(
       "[trailing‑whitespace] enabled",
       vim.log.levels.INFO,
-      { title = "trailing-whitespace", }
+      { title = "trailing-whitespace" }
     )
     whitespace.highlight()
   else
     vim.notify(
       "[trailing‑whitespace] disabled",
       vim.log.levels.INFO,
-      { title = "trailing-whitespace", }
+      { title = "trailing-whitespace" }
     )
     whitespace.clear_highlight()
   end
@@ -113,16 +112,16 @@ whitespace.setup = function(options)
 end
 -- plugin code end
 
-
 whitespace.setup({
   ignored_filetypes = { "TelescopePrompt", "Trouble", "help", "dashboard" },
-  highlight       = "DiffDelete",
+  highlight = "DiffDelete",
   ignore_terminal = true,
-  return_cursor   = true,
-  enabled         = true,
+  return_cursor = true,
+  enabled = true,
 })
 
-vim.keymap.set({ 'n', 'v' }, "<leader>tw", whitespace.toggle, {
-  noremap = true, silent  = true,
-  desc    = "Toggle Trailing Whitespace Viewer"
+vim.keymap.set({ "n", "v" }, "<leader>tw", whitespace.toggle, {
+  noremap = true,
+  silent = true,
+  desc = "Toggle Trailing Whitespace Viewer",
 })

@@ -1,23 +1,21 @@
-
 vim.pack.add({
   { src = "https://github.com/nvim-mini/mini.move" },
 })
 
-
 require("mini.move").setup({
   mappings = {
     -- Move visual selection in Visual mode
-    left  = "<C-h>",
+    left = "<C-h>",
     right = "<C-l>",
-    down  = "<C-j>",
-    up    = "<C-k>",
+    down = "<C-j>",
+    up = "<C-k>",
 
     -- Move current line in Normal mode
-    line_left  = "<C-h>",
+    line_left = "<C-h>",
     line_right = "<C-l>",
-    line_down  = "<C-j>",
-    line_up    = "<C-k>",
+    line_down = "<C-j>",
+    line_up = "<C-k>",
   },
 
-  options = { reindent_linewise = false, },
+  options = { reindent_linewise = false },
 })

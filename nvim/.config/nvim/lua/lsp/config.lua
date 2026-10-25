@@ -1,4 +1,3 @@
-
 -- lsp plugin group
 vim.pack.add({
   { src = "https://github.com/neovim/nvim-lspconfig" },
@@ -14,7 +13,6 @@ require("symbol-usage-nvim-config")
 
 require("actions-preview-nvim-config")
 --
-
 
 -- lsp server group
 require("lsp-default-config")

@@ -1,18 +1,15 @@
-
-local dragon_colors  = require("kanagawa.colors").setup({ theme = "dragon" })
+local dragon_colors = require("kanagawa.colors").setup({ theme = "dragon" })
 local dragon_palette = dragon_colors.palette
 
-
 require("kanagawa").setup({
-  compile     = true,
+  compile = true,
   dimInactive = true,
 
   theme = "dragon",
   background = {
-    dark  = "dragon",
-    light = "lotus"
+    dark = "dragon",
+    light = "lotus",
   },
-
 
   colors = {
     theme = {
@@ -28,67 +25,65 @@ require("kanagawa").setup({
           },
         },
         syn = {
-          type       = dragon_palette.dragonOrange2,
-          constant   = dragon_palette.carpYellow,
-          parameter  = dragon_palette.waveAqua2,
+          type = dragon_palette.dragonOrange2,
+          constant = dragon_palette.carpYellow,
+          parameter = dragon_palette.waveAqua2,
           identifier = dragon_palette.sakuraPink,
-          statement  = dragon_palette.dragonAqua,
-          comment    = dragon_palette.fujiGray,
+          statement = dragon_palette.dragonAqua,
+          comment = dragon_palette.fujiGray,
         },
         diag = {
-          error   = dragon_palette.waveRed,
+          error = dragon_palette.waveRed,
           warning = dragon_palette.surimiOrange,
         },
       },
     },
   },
 
-
   overrides = function(colors)
     local theme = colors.theme
 
     local is_dragon = theme.name == "dragon"
-    local is_lotus  = theme.name == "lotus"
-    local is_wave   = theme.name == "wave"
+    local is_lotus = theme.name == "lotus"
+    local is_wave = theme.name == "wave"
 
     return {
       -- default hl
-      CursorLineNr = { fg = theme.ui.special, },
+      CursorLineNr = { fg = theme.ui.special },
 
-      MatchParen = { bold = false, },
+      MatchParen = { bold = false },
 
-      WinBar   = { link = "StatusLine",   force = true, },
-      WinBarNC = { link = "StatusLineNC", force = true, },
+      WinBar = { link = "StatusLine", force = true },
+      WinBarNC = { link = "StatusLineNC", force = true },
 
-      EndOfBuffer = { link = "NonText", force = true, },
+      EndOfBuffer = { link = "NonText", force = true },
 
-      DiagnosticError = { bold = true, italic = false, nocombine = true, },
-      DiagnosticWarn  = { bold = true, italic = false, nocombine = true, },
-      DiagnosticInfo  = { bold = true, italic = false, nocombine = true, },
-      DiagnosticHint  = { bold = true, italic = false, nocombine = true, },
-      DiagnosticOk    = { bold = true, italic = false, nocombine = true, },
+      DiagnosticError = { bold = true, italic = false, nocombine = true },
+      DiagnosticWarn = { bold = true, italic = false, nocombine = true },
+      DiagnosticInfo = { bold = true, italic = false, nocombine = true },
+      DiagnosticHint = { bold = true, italic = false, nocombine = true },
+      DiagnosticOk = { bold = true, italic = false, nocombine = true },
       --
 
       -- plugin hl group
-      NeoTreeFloatBorder = { bg = theme.ui.bg, },
-      NeoTreeFloatTitle  = { link = "FloatTitle", force = true, },
+      NeoTreeFloatBorder = { bg = theme.ui.bg },
+      NeoTreeFloatTitle = { link = "FloatTitle", force = true },
 
-      OilFloatBorder = { bg = theme.ui.bg, },
-      OilNormalFloat = { bg = theme.ui.bg, },
+      OilFloatBorder = { bg = theme.ui.bg },
+      OilNormalFloat = { bg = theme.ui.bg },
 
-      NavicText = { link = "NonText", force = true, },
+      NavicText = { link = "NonText", force = true },
 
-      BlinkCmpGhostText      = { fg = theme.ui.special, force = true, },
-      BlinkCmpMenuBorder     = { link = "FloatBorder",  force = true, },
-      BlinkCmpScrollBarThumb = { link = "CursorLine",  force = true, },
+      BlinkCmpGhostText = { fg = theme.ui.special, force = true },
+      BlinkCmpMenuBorder = { link = "FloatBorder", force = true },
+      BlinkCmpScrollBarThumb = { link = "CursorLine", force = true },
 
+      DapUIFloatBorder = { link = "FloatBorder", force = true },
 
-      DapUIFloatBorder = { link = "FloatBorder", force = true, },
-
-      MiniHipatternsFixme = { bold = true, italic = false, nocombine = true, },
-      MiniHipatternsHack  = { bold = true, italic = false, nocombine = true, },
-      MiniHipatternsNote  = { bold = true, italic = false, nocombine = true, },
-      MiniHipatternsTodo  = { bold = true, italic = false, nocombine = true, },
+      MiniHipatternsFixme = { bold = true, italic = false, nocombine = true },
+      MiniHipatternsHack = { bold = true, italic = false, nocombine = true },
+      MiniHipatternsNote = { bold = true, italic = false, nocombine = true },
+      MiniHipatternsTodo = { bold = true, italic = false, nocombine = true },
       --
     }
   end,

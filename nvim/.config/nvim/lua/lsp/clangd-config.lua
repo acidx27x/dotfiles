@@ -1,17 +1,16 @@
-
 local base = require("lsp-base-config")
-
 
 local name = "clangd"
 vim.lsp.config[name] = {
-  on_init      = base.get_on_init(name),
-  on_attach    = base.get_on_attach(name),
+  on_init = base.get_on_init(name),
+  on_attach = base.get_on_attach(name),
   capabilities = base.get_capabilities(name),
 
   name = name,
   cmd = {
     _G.Paths[name],
-    "-j", "8",
+    "-j",
+    "8",
     "--pretty",
     "--log=error",
     "--clang-tidy",
@@ -25,7 +24,6 @@ vim.lsp.config[name] = {
 }
 
 vim.lsp.enable(name)
-
 
 --[=====[ base .clangd
 CompileFlags:  # ignore some gcc unsupported flags

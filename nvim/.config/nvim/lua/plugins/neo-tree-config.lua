@@ -1,4 +1,3 @@
-
 vim.pack.add({
   { src = "https://github.com/MunifTanjim/nui.nvim" },
   { src = "https://github.com/nvim-lua/plenary.nvim" },
@@ -6,21 +5,20 @@ vim.pack.add({
   { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
 })
 
-
 require("neo-tree").setup({
   popup_border_style = "",
 
   window = {
     popup = {
       size = {
-        width  = "65%",
+        width = "65%",
         height = "80%",
       },
     },
   },
 
   source_selector = {
-    winbar     = false,
+    winbar = false,
     statusline = true,
   },
 
@@ -40,16 +38,19 @@ require("neo-tree").setup({
   },
 })
 
-
 -- mb need to comment, depends on colorscheme
 vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", { fg = "none", bg = "none" })
 
-
 local function keymap_ns(mode, key, func, desc)
-  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc, })
+  vim.keymap.set(mode, key, func, { noremap = true, silent = true, desc = desc })
 end
 
-keymap_ns("n", "<leader>|o", ":Neotree position=left action=focus<CR>", "Neo-tree: open in left side")
+keymap_ns(
+  "n",
+  "<leader>|o",
+  ":Neotree position=left action=focus<CR>",
+  "Neo-tree: open in left side"
+)
 keymap_ns("n", "<leader>|c", ":Neotree action=close<CR>", "Neo-tree: close")
 keymap_ns("n", "<leader>|t", ":Neotree position=left toggle<CR>", "Neo-tree: toggle")
 

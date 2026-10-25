@@ -1,23 +1,19 @@
-
 -- builtin override and common group
-require("nvim-notify-config")  -- vim.notify
+require("nvim-notify-config") -- vim.notify
 
-require("multinput-nvim-config")  -- vim.ui.input
+require("multinput-nvim-config") -- vim.ui.input
 
 require("icons-config")
 --
-
 
 -- ts group, lots of pluggins use it
 require("nvim-treesitter-config")
 --
 
-
 -- git group (must be upper than plugins below,
 -- bc can be required during config)
 require("gitsigns-nvim-config")
 --
-
 
 -- file explorer group
 require("neo-tree-config")
@@ -31,14 +27,12 @@ require("snipe-nvim-config")
 require("nvim-spectre-config")
 --
 
-
 -- formatter group
 require("conform-nvim-config")
 --
 
-
 -- mini.nvim group
-require("mini-pick-config")  -- WARN: also overrides builtin vim.ui.select
+require("mini-pick-config") -- WARN: also overrides builtin vim.ui.select
 
 require("mini-statusline-config")
 
@@ -61,12 +55,9 @@ require("mini-bufremove-config")
 require("mini-trailspace-config")
 --
 
-
 -- term group
 require("floaterm-config")
 --
-
-
 
 -- utils group
 require("indent-blankline-nvim-config")
