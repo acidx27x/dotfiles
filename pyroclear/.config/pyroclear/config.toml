@@ -2,7 +2,7 @@
 palette = "fire"
 
 [animation]
-fps       = 75
-wind      = 2
-height    = 1
+fps = 75
+wind = 2
+height = 1
 direction = false
