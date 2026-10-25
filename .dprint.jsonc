@@ -11,7 +11,9 @@
     "textWrap": "always",
     "wrapCodeSpans": false
   },
-  "toml": {},
+  "toml": {
+    "comment.forceLeadingSpace": false
+  },
   "yaml": {
     "associations": ["**/*.yaml", "**/*.yml", "**/.clang-format", "**/.clang-tidy"]
   },
@@ -19,6 +21,7 @@
     "kdlVersion": "v1"
   },
   "shfmt": {
+    "associations": ["**/.brushrc"],
     "binaryNextLine": false,
     "switchCaseIndent": true,
     "spaceRedirects": false,

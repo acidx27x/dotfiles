@@ -6,4 +6,3 @@ syntax-highlighting = true
 [experimental]
 terminal-shell-integration = true
 zsh-hooks = true
-

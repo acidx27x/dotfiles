@@ -24,7 +24,7 @@ simplify = false
 space_redirects = false
 switch_case_indent = true
 
-[{.bashrc,.bash_profile,.bash_logout,.zshrc,.zshenv,.zprofile,.zlogin,.zlogout}]
+[{.bashrc,.bash_profile,.bash_logout,.brushrc,.zshrc,.zshenv,.zprofile,.zlogin,.zlogout}]
 binary_next_line = false
 function_next_line = false
 simplify = false

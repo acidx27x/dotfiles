@@ -1,6 +1,6 @@
 # ~/.brushrc: interactive Brush configuration.
 
 precmd() {
-  history -a  # append every command
+  history -a # append every command
   # history -n  # unsupported by Brush
 }
