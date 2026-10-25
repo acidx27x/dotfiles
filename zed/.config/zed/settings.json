@@ -33,12 +33,12 @@
   // appearence buffer
   "buffer_font_size": 15.5,
   "buffer_font_fallbacks": null,
-  "buffer_font_family": "Fira Code",
+  "buffer_font_family": "FiraCode Nerd Font",
   "buffer_font_features": {
     "calt": true,
     "cv01": true,
     "cv02": true,
-    "cv06": true,
+    "cv09": true,
     "ss01": true,
     "cv13": true,
     "cv14": true,
@@ -48,16 +48,14 @@
     "cv16": true,
     "cv29": true,
     "cv30": true,
-    "cv28": true,
     "ss06": true,
-    "ss07": true,
     "ss10": true
   },
   "git_commit_buffer_font_size": 13.5,
   // appearence ui
   "ui_font_size": 14.5,
   "ui_font_fallbacks": null,
-  "ui_font_family": "Fira Code",
+  "ui_font_family": "FiraCode Nerd Font",
   // appearence agent ui
   "agent_ui_font_size": 13.5,
   "agent_buffer_font_size": 13.5,
