@@ -5,4 +5,4 @@ path-prepend "$HOME/.local/bin"
 path-prepend "$RUST_HOME/bin" "$CARGO_HOME/bin"
 
 # User defined paths
-source-if-exists "$(current-file-dir)/.paths.zsh" || true
+source-if-exists "$(current-file-dir)/local_paths.zsh" || true

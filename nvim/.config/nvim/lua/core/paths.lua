@@ -29,9 +29,9 @@ M.paths = {
 -- return {
 --   name = "path"
 -- }
-local has_paths_override, paths_override = pcall(require, "paths_override")
-if has_paths_override and type(paths_override) == "table" then
-  for k, v in pairs(paths_override) do
+local has_local_paths, local_paths = pcall(require, "local_paths")
+if has_local_paths and type(local_paths) == "table" then
+  for k, v in pairs(local_paths) do
     M.paths[k] = v
   end
 end
