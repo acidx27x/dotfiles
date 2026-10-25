@@ -9,5 +9,5 @@ packages = [
   "starship",
   "wezterm",
   # "zed",
-  "zellij"
+  "zellij",
 ]
