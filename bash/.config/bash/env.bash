@@ -109,4 +109,4 @@ export CARGO_HOME="$RUST_HOME/cargo"
 export CARGO_INSTALL_ROOT="$RUST_HOME"
 
 # User defined env
-source-if-exists "$(current-file-dir)/.env.bash" || true
+source-if-exists "$(current-file-dir)/local_env.bash" || true
