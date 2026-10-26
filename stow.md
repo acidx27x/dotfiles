@@ -182,9 +182,10 @@ determines link ownership from the package directories and target links.
 ### Package Validation
 
 A selectable package must be an existing top-level directory and must not be one of the explicit
-repository-only or platform exclusions: `.agents`, `.aws`, `.codex`, `.git`, `codex-system`,
-`setup`, `windows`, or `wsl`. Unknown packages and profiles fail before Stow runs. Configuration
-packages omitted from a default profile, such as `ssh`, remain available through `--package`.
+repository-only or platform exclusions: `.agents`, `.aws`, `.codex`, `.git`, `brave`,
+`codex-system`, `setup`, `windows`, or `wsl`. Unknown packages and profiles fail before Stow runs.
+Configuration packages omitted from a default profile, such as `ssh`, remain available through
+`--package`.
 
 Profile files accept one package name per line, plus blank lines and full-line comments:
 

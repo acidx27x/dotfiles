@@ -1,0 +1,56 @@
+# Brave preferences that are local to the browser profile.
+# Apply with: uvx dotbrave apply --dry-run brave/brave.toml
+# Install Fira Code on each machine: https://github.com/tonsky/FiraCode/wiki/Installing
+# Shortcut example (leave commented until you want a custom binding):
+# [shortcuts]
+# new_tab = ["Control+KeyT", "Meta+KeyT"]
+# Meta is Command on macOS and Super on Windows/Linux.
+
+[settings]
+"bookmark_bar.show_on_all_tabs" = false
+"brave.containers.enabled" = true
+"brave.darker_mode" = true
+"brave.enable_window_closing_confirm" = true
+"brave.history.retention_days" = 180
+"brave.location_bar_is_wide" = false
+"brave.mru_cycling_enabled" = true
+"brave.new_tab_page.show_brave_news" = false
+"brave.new_tab_page.show_clock" = true
+"brave.new_tab_page.show_together" = false
+"brave.new_tab_page.shows_options" = 1
+"brave.news.open-articles-in-new-tab" = true
+"brave.shields.advanced_view_enabled" = true
+"brave.sidebar.sidebar_items" = [
+  { built_in_item_type = 1, type = 0 },
+  { built_in_item_type = 3, type = 0 },
+  { built_in_item_type = 4, type = 0 },
+  { built_in_item_type = 8, type = 0 },
+]
+"brave.sidebar.sidebar_show_option" = 1
+"brave.tabs.always_use_mini_accent_icon" = true
+"brave.tabs.hover_mode" = 2
+"brave.tabs.mute_indicator_not_clickable" = false
+"brave.tabs.scrollable_horizontal_tab_strip" = false
+"brave.tabs.tree_tabs_enabled" = true
+"brave.tabs.vertical_tabs_collapsed" = true
+"brave.tabs.vertical_tabs_enabled" = true
+"brave.tabs.vertical_tabs_expanded_width" = 192
+"brave.tabs.vertical_tabs_floating_enabled" = true
+"brave.tabs.vertical_tabs_hide_completely_when_collapsed" = false
+"brave.tabs.vertical_tabs_on_right" = false
+"brave.tabs.vertical_tabs_show_scrollbar" = false
+"brave.today.opted_in" = true
+"brave.today.should_show_toolbar_button" = false
+"brave.wallet.show_wallet_icon_on_toolbar" = false
+"brave.web_view_rounded_corners" = true
+"intl.accept_languages" = "en-US,ru"
+"intl.selected_languages" = "en-US,ru"
+"ntp.custom_links_visible" = true
+"ntp.shortcust_visible" = false
+"spellcheck.dictionaries" = ["en-US", "ru"]
+"tab_search.pinned_to_tabstrip" = true
+"webkit.webprefs.default_fixed_font_size" = 15
+"webkit.webprefs.default_font_size" = 18
+"webkit.webprefs.fonts.fixed.Zyyy" = "Fira Code"
+"webkit.webprefs.fonts.standard.Zyyy" = "Fira Code"
+"webkit.webprefs.minimum_font_size" = 7
