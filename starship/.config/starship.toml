@@ -14,6 +14,7 @@ $directory\
 ${custom.giturl_unix}\
 ${custom.giturl_windows}\
 $git_branch\
+$git_commit\
 ${custom.git_worktree_unix}\
 ${custom.git_worktree_windows}\
 $git_status\
@@ -30,15 +31,15 @@ style_root = "bold fg:red"
 format = "[$user]($style)"
 
 [hostname]
-disabled = true
-ssh_only = false
+disabled = false
+ssh_only = true
 ssh_symbol = "󰣀 SSH"
 style = "bold dimmed fg:green"
 format = "[@$hostname]($style)( [$ssh_symbol](bold fg:crust bg:green))"
 
 [sudo]
 disabled = false
-symbol = "󰌾 SUDO"
+symbol = "sudo"
 style = "bold fg:red"
 format = "[ $symbol]($style)"
 
@@ -116,9 +117,15 @@ require_repo = true
 ignore_timeout = true
 
 [git_branch]
-symbol = "[](base) "
+symbol = " "
 style = "bold fg:green bg:base"
-format = "  [$symbol$branch]($style)[](base)"
+format = "  [$symbol$branch]($style)"
+
+[git_commit]
+only_detached = false
+tag_disabled = false
+tag_symbol = ""
+format = "(\\[$tag\\])"
 
 [git_status]
 format = "[$untracked$staged$modified$deleted$renamed$conflicted$stashed$ahead_behind ]($style)"
