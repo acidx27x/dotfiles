@@ -3,12 +3,14 @@ bash
 bat
 brew
 btop
+codex
 curl
 git
 htop
 lazygit
 llvm
 nvim
+ssh
 starship
 stow
 wezterm

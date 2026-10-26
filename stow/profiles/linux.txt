@@ -2,7 +2,9 @@ atuin
 bash
 bat
 brush
+brew
 btop
+codex
 curl
 gcc
 git
@@ -11,6 +13,7 @@ lazygit
 llvm
 nvim
 pyroclear
+ssh
 starship
 stow
 wezterm
