@@ -49,7 +49,7 @@ ble/prompt/backslash:blerc/starship-character() {
     ble/keymap:vi/script/get-mode
   fi
   if [[ $mode == *n ]]; then
-    color='226;164;120'
+    color='155;174;216'
     symbol='❮'
   elif [[ ${STARSHIP_CMD_STATUS:-0} != 0 ]]; then
     color='226;120;120'
