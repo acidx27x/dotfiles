@@ -1,0 +1,77 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm" {
+                // Dragon background with richer Kanagawa accents
+                color_fg "#C5C9C5"
+                color_bg "#181616"
+                color_surface "#282727"
+                color_muted "#7A8382"
+                color_black "#0D0C0C"
+                color_red "#E46876"
+                color_green "#98BB6C"
+                color_yellow "#E6C384"
+                color_blue "#7E9CD8"
+                color_magenta "#957FB8"
+                color_cyan "#7AA89F"
+                color_white "#C5C9C5"
+                color_orange "#FFA066"
+
+                format_left   "{mode}#[bg=$bg] {tabs}"
+                format_center ""
+                format_right  "#[bg=$bg,fg=$muted] {session} {datetime}"
+                format_space  "#[bg=$bg]"
+                format_hide_on_overlength "true"
+                format_precedence "lrc"
+
+                hide_frame_for_single_pane "true"
+
+                mode_normal        "#[bg=$surface,fg=$green] NORMAL #[bg=$bg]"
+                mode_locked        "#[bg=$surface,fg=$red,bold] LOCKED  #[bg=$bg]"
+                mode_resize        "#[bg=$surface,fg=$blue,bold] RESIZE #[bg=$bg]"
+                mode_pane          "#[bg=$surface,fg=$blue,bold] PANE #[bg=$bg]"
+                mode_tab           "#[bg=$surface,fg=$yellow,bold] TAB #[bg=$bg]"
+                mode_scroll        "#[bg=$surface,fg=$blue,bold] SCROLL #[bg=$bg]"
+                mode_enter_search  "#[bg=$surface,fg=$orange,bold] ENT-SEARCH #[bg=$bg]"
+                mode_search        "#[bg=$surface,fg=$orange,bold] SEARCH #[bg=$bg]"
+                mode_rename_tab    "#[bg=$surface,fg=$yellow,bold] RENAME-TAB #[bg=$bg]"
+                mode_rename_pane   "#[bg=$surface,fg=$blue,bold] RENAME-PANE #[bg=$bg]"
+                mode_session       "#[bg=$surface,fg=$blue,bold] SESSION #[bg=$bg]"
+                mode_move          "#[bg=$surface,fg=$blue,bold] MOVE #[bg=$bg]"
+                mode_prompt        "#[bg=$surface,fg=$blue,bold] PROMPT #[bg=$bg]"
+                mode_tmux          "#[bg=$surface,fg=$magenta,bold] TMUX #[bg=$bg]"
+
+                // formatting for inactive tabs
+                tab_normal              "#[bg=$bg,fg=$muted] {index}:{name}{floating_indicator} "
+                tab_normal_fullscreen   "#[bg=$bg,fg=$muted] {index}:{name}{fullscreen_indicator} "
+                tab_normal_sync         "#[bg=$bg,fg=$muted] {index}:{name}{sync_indicator} "
+
+                // formatting for the current active tab
+                tab_active              "#[bg=$surface,fg=$blue] {index}:{name}{floating_indicator} #[bg=$bg]"
+                tab_active_fullscreen   "#[bg=$surface,fg=$blue] {index}:{name}{fullscreen_indicator} #[bg=$bg]"
+                tab_active_sync         "#[bg=$surface,fg=$blue] {index}:{name}{sync_indicator} #[bg=$bg]"
+
+                // separator between the tabs
+                tab_separator           "#[bg=$bg] "
+
+                // indicators
+                tab_sync_indicator       " "
+                tab_fullscreen_indicator " 󰊓"
+                tab_floating_indicator   " 󰹙"
+
+                command_git_branch_command     "git rev-parse --abbrev-ref HEAD"
+                command_git_branch_format      "#[fg=$blue] {stdout} "
+                command_git_branch_interval    "10"
+                command_git_branch_rendermode  "static"
+
+                datetime        "#[bg=$bg,fg=$muted] {format} "
+                datetime_format "%Y-%m-%d %H:%M"
+                datetime_timezone "Europe/Moscow"
+            }
+        }
+        children
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+}
