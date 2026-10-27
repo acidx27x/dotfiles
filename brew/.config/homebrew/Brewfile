@@ -2,6 +2,7 @@
 tap "jurplel/tap", trusted: true if OS.mac?  # macos instant-space-switcher
 tap "okeanos/tap", trusted: { formula: "blesh" }
 tap "pwndbg/tap",  trusted: true if OS.mac?  # pwndbg-gdb/-lldb
+tap "raine/workmux", trusted: { formula: "workmux" }
 #
 
 brew "hello"
@@ -13,6 +14,7 @@ brew "git"
 brew "git-delta"
 brew "git-lfs"
 brew "lazygit"
+brew "raine/workmux/workmux"
 brew "stow"
 #
 
