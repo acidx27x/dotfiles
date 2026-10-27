@@ -16,66 +16,60 @@ layout {
                 color_cyan "#7AA89F"
                 color_white "#C5C9C5"
                 color_orange "#FFA066"
-
-                format_left   "{mode}#[bg=$bg] {tabs}"
+                format_left "{mode}#[bg=$bg] {tabs}"
                 format_center ""
-                format_right  "#[bg=$bg,fg=$muted] {session} {datetime}"
-                format_space  "#[bg=$bg]"
+                format_right "#[bg=$bg,fg=$muted] {session} {datetime}"
+                format_space "#[bg=$bg]"
                 format_hide_on_overlength "true"
                 format_precedence "lrc"
-
                 hide_frame_for_single_pane "true"
-
-                mode_normal        "#[bg=$surface,fg=$green] NORMAL #[bg=$bg]"
-                mode_locked        "#[bg=$surface,fg=$red,bold] LOCKED  #[bg=$bg]"
-                mode_resize        "#[bg=$surface,fg=$blue,bold] RESIZE #[bg=$bg]"
-                mode_pane          "#[bg=$surface,fg=$blue,bold] PANE #[bg=$bg]"
-                mode_tab           "#[bg=$surface,fg=$yellow,bold] TAB #[bg=$bg]"
-                mode_scroll        "#[bg=$surface,fg=$blue,bold] SCROLL #[bg=$bg]"
-                mode_enter_search  "#[bg=$surface,fg=$orange,bold] ENT-SEARCH #[bg=$bg]"
-                mode_search        "#[bg=$surface,fg=$orange,bold] SEARCH #[bg=$bg]"
-                mode_rename_tab    "#[bg=$surface,fg=$yellow,bold] RENAME-TAB #[bg=$bg]"
-                mode_rename_pane   "#[bg=$surface,fg=$blue,bold] RENAME-PANE #[bg=$bg]"
-                mode_session       "#[bg=$surface,fg=$blue,bold] SESSION #[bg=$bg]"
-                mode_move          "#[bg=$surface,fg=$blue,bold] MOVE #[bg=$bg]"
-                mode_prompt        "#[bg=$surface,fg=$blue,bold] PROMPT #[bg=$bg]"
-                mode_tmux          "#[bg=$surface,fg=$magenta,bold] TMUX #[bg=$bg]"
-
+                mode_normal "#[bg=$surface,fg=$green] NORMAL #[bg=$bg]"
+                mode_locked "#[bg=$surface,fg=$red,bold] LOCKED  #[bg=$bg]"
+                mode_resize "#[bg=$surface,fg=$blue,bold] RESIZE #[bg=$bg]"
+                mode_pane "#[bg=$surface,fg=$blue,bold] PANE #[bg=$bg]"
+                mode_tab "#[bg=$surface,fg=$yellow,bold] TAB #[bg=$bg]"
+                mode_scroll "#[bg=$surface,fg=$blue,bold] SCROLL #[bg=$bg]"
+                mode_enter_search "#[bg=$surface,fg=$orange,bold] ENT-SEARCH #[bg=$bg]"
+                mode_search "#[bg=$surface,fg=$orange,bold] SEARCH #[bg=$bg]"
+                mode_rename_tab "#[bg=$surface,fg=$yellow,bold] RENAME-TAB #[bg=$bg]"
+                mode_rename_pane "#[bg=$surface,fg=$blue,bold] RENAME-PANE #[bg=$bg]"
+                mode_session "#[bg=$surface,fg=$blue,bold] SESSION #[bg=$bg]"
+                mode_move "#[bg=$surface,fg=$blue,bold] MOVE #[bg=$bg]"
+                mode_prompt "#[bg=$surface,fg=$blue,bold] PROMPT #[bg=$bg]"
+                mode_tmux "#[bg=$surface,fg=$magenta,bold] TMUX #[bg=$bg]"
                 // formatting for inactive tabs
-                tab_normal              "#[bg=$bg,fg=$muted] {index}:{name}{floating_indicator} "
-                tab_normal_fullscreen   "#[bg=$bg,fg=$muted] {index}:{name}{fullscreen_indicator} "
-                tab_normal_sync         "#[bg=$bg,fg=$muted] {index}:{name}{sync_indicator} "
-
+                tab_normal "#[bg=$bg,fg=$muted] {index}:{name}{floating_indicator} "
+                tab_normal_fullscreen "#[bg=$bg,fg=$muted] {index}:{name}{fullscreen_indicator} "
+                tab_normal_sync "#[bg=$bg,fg=$muted] {index}:{name}{sync_indicator} "
                 // formatting for the current active tab
-                tab_active              "#[bg=$surface,fg=$blue] {index}:{name}{floating_indicator} #[bg=$bg]"
-                tab_active_fullscreen   "#[bg=$surface,fg=$blue] {index}:{name}{fullscreen_indicator} #[bg=$bg]"
-                tab_active_sync         "#[bg=$surface,fg=$blue] {index}:{name}{sync_indicator} #[bg=$bg]"
-
+                tab_active "#[bg=$surface,fg=$blue] {index}:{name}{floating_indicator} #[bg=$bg]"
+                tab_active_fullscreen "#[bg=$surface,fg=$blue] {index}:{name}{fullscreen_indicator} #[bg=$bg]"
+                tab_active_sync "#[bg=$surface,fg=$blue] {index}:{name}{sync_indicator} #[bg=$bg]"
                 // separator between the tabs
-                tab_separator           "#[bg=$bg] "
-
+                tab_separator "#[bg=$bg] "
                 // indicators
-                tab_sync_indicator       " "
+                tab_sync_indicator " "
                 tab_fullscreen_indicator " 󰊓"
-                tab_floating_indicator   " 󰹙"
-
-                command_git_branch_command     "git rev-parse --abbrev-ref HEAD"
-                command_git_branch_format      "#[fg=$blue] {stdout} "
-                command_git_branch_interval    "10"
-                command_git_branch_rendermode  "static"
-
-                datetime        "#[bg=$bg,fg=$muted] {format} "
+                tab_floating_indicator " 󰹙"
+                command_git_branch_command "git rev-parse --abbrev-ref HEAD"
+                command_git_branch_format "#[fg=$blue] {stdout} "
+                command_git_branch_interval "10"
+                command_git_branch_rendermode "static"
+                datetime "#[bg=$bg,fg=$muted] {format} "
                 datetime_format "%Y-%m-%d %H:%M"
                 datetime_timezone "Europe/Moscow"
             }
         }
         children
-        pane size=1 borderless=true {
+        pane size=2 borderless=true {
             plugin location="zjstatus" {
                 format_left "{pipe_zjstatus_hints}"
                 format_center ""
                 format_right ""
                 format_space "#[bg=#181616]"
+                border_enabled "true"
+                border_char " "
+                border_position "top"
                 pipe_zjstatus_hints_format "{output}"
                 pipe_zjstatus_hints_rendermode "raw"
             }
