@@ -27,6 +27,7 @@ ble-face -s syntax_brace 'fg=#84a0c6,bold'
 ble-face -s syntax_tilde 'fg=#a093c7,bold'
 ble-face -s syntax_document 'fg=#828597'
 ble-face -s syntax_document_begin 'fg=#828597,bold'
+ble-face -s auto_complete 'fg=#828597,bg=#1e2132'
 
 # Command classification overrides syntax_command, so configure it separately.
 ble-face -s command_builtin_dot 'fg=#e27878,bold'
