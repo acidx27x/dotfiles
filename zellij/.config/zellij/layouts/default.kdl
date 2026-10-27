@@ -71,7 +71,14 @@ layout {
         }
         children
         pane size=1 borderless=true {
-            plugin location="status-bar"
+            plugin location="zjstatus" {
+                format_left "{pipe_zjstatus_hints}"
+                format_center ""
+                format_right ""
+                format_space "#[bg=#181616]"
+                pipe_zjstatus_hints_format "{output}"
+                pipe_zjstatus_hints_rendermode "raw"
+            }
         }
     }
 }
