@@ -7,21 +7,17 @@ keybinds clear-defaults=true {
         bind "Ctrl g" { SwitchToMode "normal"; }
     }
     pane {
-        bind "left" { MoveFocus "left"; }
-        bind "down" { MoveFocus "down"; }
-        bind "up" { MoveFocus "up"; }
-        bind "right" { MoveFocus "right"; }
+        bind "left" "h" { MoveFocus "left"; }
+        bind "down" "j" { MoveFocus "down"; }
+        bind "up" "k" { MoveFocus "up"; }
+        bind "right" "l" { MoveFocus "right"; }
         bind ";" { FocusLastPane; }
         bind "c" { SwitchToMode "renamepane"; PaneNameInput 0; }
         bind "d" { NewPane "down"; SwitchToMode "normal"; }
         bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "normal"; }
         bind "f" { ToggleFocusFullscreen; SwitchToMode "normal"; }
         bind "Shift f" { ToggleFocusNoUiFullscreen; SwitchToMode "normal"; }
-        bind "h" { MoveFocus "left"; }
         bind "i" { TogglePanePinned; SwitchToMode "normal"; }
-        bind "j" { MoveFocus "down"; }
-        bind "k" { MoveFocus "up"; }
-        bind "l" { MoveFocus "right"; }
         bind "n" { NewPane; SwitchToMode "normal"; }
         bind "p" { SwitchFocus; }
         bind "Ctrl p" { SwitchToMode "normal"; }
@@ -59,10 +55,10 @@ keybinds clear-defaults=true {
         bind "tab" { ToggleTab; }
     }
     resize {
-        bind "left" { Resize "Increase left"; }
-        bind "down" { Resize "Increase down"; }
-        bind "up" { Resize "Increase up"; }
-        bind "right" { Resize "Increase right"; }
+        bind "left" "h" { Resize "Increase left"; }
+        bind "down" "j" { Resize "Increase down"; }
+        bind "up" "k" { Resize "Increase up"; }
+        bind "right" "l" { Resize "Increase right"; }
         bind "+" { Resize "Increase"; }
         bind "-" { Resize "Decrease"; }
         bind "=" { Resize "Increase"; }
@@ -70,37 +66,25 @@ keybinds clear-defaults=true {
         bind "J" { Resize "Decrease down"; }
         bind "K" { Resize "Decrease up"; }
         bind "L" { Resize "Decrease right"; }
-        bind "h" { Resize "Increase left"; }
-        bind "j" { Resize "Increase down"; }
-        bind "k" { Resize "Increase up"; }
-        bind "l" { Resize "Increase right"; }
         bind "Ctrl n" { SwitchToMode "normal"; }
     }
     move {
-        bind "left" { MovePane "left"; }
-        bind "down" { MovePane "down"; }
-        bind "up" { MovePane "up"; }
-        bind "right" { MovePane "right"; }
-        bind "h" { MovePane "left"; }
+        bind "left" "h" { MovePane "left"; }
+        bind "down" "j" { MovePane "down"; }
+        bind "up" "k" { MovePane "up"; }
+        bind "right" "l" { MovePane "right"; }
         bind "Ctrl h" { SwitchToMode "normal"; }
-        bind "j" { MovePane "down"; }
-        bind "k" { MovePane "up"; }
-        bind "l" { MovePane "right"; }
         bind "n" { MovePane; }
         bind "p" { MovePaneBackwards; }
         bind "tab" { MovePane; }
     }
     scroll {
-        bind "Alt left" { MoveFocusOrTab "left"; SwitchToMode "normal"; }
-        bind "Alt down" { MoveFocus "down"; SwitchToMode "normal"; }
-        bind "Alt up" { MoveFocus "up"; SwitchToMode "normal"; }
-        bind "Alt right" { MoveFocusOrTab "right"; SwitchToMode "normal"; }
+        bind "Alt left" "Alt h" { MoveFocusOrTab "left"; SwitchToMode "normal"; }
+        bind "Alt down" "Alt j" { MoveFocus "down"; SwitchToMode "normal"; }
+        bind "Alt up" "Alt k" { MoveFocus "up"; SwitchToMode "normal"; }
+        bind "Alt right" "Alt l" { MoveFocusOrTab "right"; SwitchToMode "normal"; }
         bind "c" { CopyLastCommandOutput; SwitchToMode "normal"; }
         bind "e" { EditScrollback; SwitchToMode "normal"; }
-        bind "Alt h" { MoveFocusOrTab "left"; SwitchToMode "normal"; }
-        bind "Alt j" { MoveFocus "down"; SwitchToMode "normal"; }
-        bind "Alt k" { MoveFocus "up"; SwitchToMode "normal"; }
-        bind "Alt l" { MoveFocusOrTab "right"; SwitchToMode "normal"; }
         bind "s" { SwitchToMode "entersearch"; SearchInput 0; }
     }
     search {
@@ -173,14 +157,12 @@ keybinds clear-defaults=true {
         bind "Alt Shift p" { ToggleGroupMarking; }
         bind "Ctrl q" { Quit; }
         bind "Ctrl y" {
-            LaunchOrFocusPlugin "https://github.com/rvcas/room/releases/download/v1.2.1/room.wasm" {
+            LaunchOrFocusPlugin "room" {
                 floating true
-                ignore_case true
-                quick_jump true
             }
         }
         bind "Alt y" {
-            LaunchOrFocusPlugin "https://github.com/karimould/zellij-forgot/releases/download/0.4.2/zellij_forgot.wasm" {
+            LaunchOrFocusPlugin "forgot" {
                 floating true
             }
         }
@@ -192,14 +174,10 @@ keybinds clear-defaults=true {
         bind "Ctrl o" { SwitchToMode "session"; }
     }
     shared_except "locked" "scroll" {
-        bind "Alt left" { MoveFocusOrTab "left"; }
-        bind "Alt down" { MoveFocus "down"; }
-        bind "Alt up" { MoveFocus "up"; }
-        bind "Alt right" { MoveFocusOrTab "right"; }
-        bind "Alt h" { MoveFocusOrTab "left"; }
-        bind "Alt j" { MoveFocus "down"; }
-        bind "Alt k" { MoveFocus "up"; }
-        bind "Alt l" { MoveFocusOrTab "right"; }
+        bind "Alt left" "Alt h" { MoveFocusOrTab "left"; }
+        bind "Alt down" "Alt j" { MoveFocus "down"; }
+        bind "Alt up" "Alt k" { MoveFocus "up"; }
+        bind "Alt right" "Alt l" { MoveFocusOrTab "right"; }
     }
     shared_except "locked" "scroll" "search" "tmux" {
         bind "Ctrl b" { SwitchToMode "tmux"; }
@@ -264,10 +242,10 @@ keybinds clear-defaults=true {
         bind "d" { Detach; }
     }
     tmux {
-        bind "left" { MoveFocus "left"; SwitchToMode "normal"; }
-        bind "down" { MoveFocus "down"; SwitchToMode "normal"; }
-        bind "up" { MoveFocus "up"; SwitchToMode "normal"; }
-        bind "right" { MoveFocus "right"; SwitchToMode "normal"; }
+        bind "left" "h" { MoveFocus "left"; SwitchToMode "normal"; }
+        bind "down" "j" { MoveFocus "down"; SwitchToMode "normal"; }
+        bind "up" "k" { MoveFocus "up"; SwitchToMode "normal"; }
+        bind "right" "l" { MoveFocus "right"; SwitchToMode "normal"; }
         bind "space" { NextSwapLayout; }
         bind "\"" { NewPane "down"; SwitchToMode "normal"; }
         bind "%" { NewPane "right"; SwitchToMode "normal"; }
@@ -275,10 +253,6 @@ keybinds clear-defaults=true {
         bind "[" { SwitchToMode "scroll"; }
         bind "Ctrl b" { Write 2; SwitchToMode "normal"; }
         bind "c" { NewTab; SwitchToMode "normal"; }
-        bind "h" { MoveFocus "left"; SwitchToMode "normal"; }
-        bind "j" { MoveFocus "down"; SwitchToMode "normal"; }
-        bind "k" { MoveFocus "up"; SwitchToMode "normal"; }
-        bind "l" { MoveFocus "right"; SwitchToMode "normal"; }
         bind "n" { GoToNextTab; SwitchToMode "normal"; }
         bind "o" { FocusNextPane; }
         bind "p" { GoToPreviousTab; SwitchToMode "normal"; }
@@ -290,7 +264,6 @@ keybinds clear-defaults=true {
 // changing these requires a restart to take effect
 plugins {
     about location="zellij:about"
-    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/download/0.3.0/zellij-autolock.wasm"
     compact-bar location="zellij:compact-bar"
     configuration location="zellij:configuration"
     filepicker location="zellij:strider" {
@@ -304,15 +277,23 @@ plugins {
     welcome-screen location="zellij:session-manager" {
         welcome_screen true
     }
+
+    // External plugins
+    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/download/0.3.0/zellij-autolock.wasm"
+    forgot location="https://github.com/karimould/zellij-forgot/releases/download/0.4.2/zellij_forgot.wasm"
+    room location="https://github.com/rvcas/room/releases/download/v1.2.1/room.wasm" {
+        ignore_case true
+        quick_jump true
+    }
+    zjframes location="https://github.com/dj95/zjstatus/releases/latest/download/zjframes.wasm"
+    zjstatus location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm"
 }
 
 // Plugins to load in the background when a new session starts
-// eg. "file:/path/to/my-plugin.wasm"
-// eg. "https://example.com/my-plugin.wasm"
 load_plugins {
     autolock
     zellij:link
-    "https://github.com/dj95/zjstatus/releases/latest/download/zjframes.wasm"
+    zjframes
 }
 web_client {
     font "monospace"
