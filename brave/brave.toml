@@ -26,7 +26,7 @@
   { built_in_item_type = 4, type = 0 },
   { built_in_item_type = 8, type = 0 },
 ]
-"brave.sidebar.sidebar_show_option" = 1
+"brave.sidebar.sidebar_show_option" = 3
 "brave.tabs.always_use_mini_accent_icon" = true
 "brave.tabs.hover_mode" = 2
 "brave.tabs.mute_indicator_not_clickable" = false
