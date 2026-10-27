@@ -166,6 +166,12 @@ keybinds clear-defaults=true {
                 floating true
             }
         }
+        bind "Alt Shift y" {
+            LaunchOrFocusPlugin "zellij-palette" {
+                floating true
+                move_to_focused_tab true
+            }
+        }
     }
     shared_except "locked" "move" {
         bind "Ctrl h" { SwitchToMode "move"; }
@@ -279,12 +285,16 @@ plugins {
     }
 
     // External plugins
-    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/download/0.3.0/zellij-autolock.wasm"
+    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/download/0.3.0/zellij-autolock.wasm" {
+        lock_regex ".*"
+        ignore_regex "^(zellij:.*|https?://.*|zellij|sh|ash|dash|bash|zsh|fish|ksh|mksh|csh|tcsh|nu|xonsh|elvish|pwsh|powershell|cmd|ls|lsd|eza|starship|direnv|\\(atuin\\)|atuin history start.*)(\\.exe)?$"
+    }
     forgot location="https://github.com/karimould/zellij-forgot/releases/download/0.4.2/zellij_forgot.wasm"
     room location="https://github.com/rvcas/room/releases/download/v1.2.1/room.wasm" {
         ignore_case true
         quick_jump true
     }
+    zellij-palette location="https://github.com/timonwong/zellij-palette/releases/download/v0.2.2/zellij-palette.wasm"
     zjframes location="https://github.com/dj95/zjstatus/releases/latest/download/zjframes.wasm"
     zjstatus location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm"
 }
