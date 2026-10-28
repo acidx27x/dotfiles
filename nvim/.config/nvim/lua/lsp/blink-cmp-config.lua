@@ -13,17 +13,26 @@ end
 local blink = require("blink.cmp")
 if not blink.build then
   vim.notify(
-    "Update blink.cmp to v2 with :PackUpdate ++lockfile blink.cmp, then restart Neovim",
+    'Run :lua vim.pack.update({"blink.cmp"}, {target="lockfile"}) and restart for Blink v2',
     vim.log.levels.WARN
   )
   return
 end
-blink.build():pwait()
+if not blink.library_available() and vim.fn.executable("cargo") == 1 then
+  pcall(function()
+    blink.build():pwait()
+  end)
+end
+local use_rust = blink.library_available()
 blink.setup({
   keymap = {
     ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
     ["<C-h>"] = { "show_documentation", "hide_documentation" },
-    ["<C-g>s"] = { function(cmp) return cmp.show({ providers = { "snippets" } }) end },
+    ["<C-g>s"] = {
+      function(cmp)
+        return cmp.show({ providers = { "snippets" } })
+      end,
+    },
     ["<S-Tab>"] = { "snippet_backward", "select_and_accept", "fallback" },
     ["<Tab>"] = { "snippet_forward", "fallback" },
 
@@ -174,7 +183,9 @@ blink.setup({
     },
 
     ghost_text = {
-      enabled = function() return vim.b.blink_ghost_typing == true end,
+      enabled = function()
+        return vim.b.blink_ghost_typing == true
+      end,
       show_with_menu = false,
     },
   },
@@ -259,6 +270,7 @@ blink.setup({
   },
 
   fuzzy = {
+    implementation = use_rust and "rust" or "lua",
     frecency = {
       enabled = true,
       path = vim.fn.stdpath("cache") .. "/blink/cmp/frecency.dat",

@@ -162,7 +162,7 @@ require("oil").setup({
 
 local map = require("core.keymap")
 
-map("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")
+map("n", "<leader>oT", ":tabnew | Oil<CR>", "Oil: open in tab")
 map("n", "<leader>of", ":Oil --float<CR>", "Oil: open in float")
 map("n", "<leader>ov", ":vnew | Oil<CR>", "Oil: open in split vertically")
 map("n", "<leader>oh", ":new | Oil<CR>", "Oil: open in split horizontally")

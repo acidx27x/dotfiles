@@ -11,9 +11,19 @@ function M.setup()
       c = { "clang-format" },
       cpp = { "clang-format" },
 
-      cmake = { "gersemi", filter = function(client) return client.name ~= "neocmake" end },
+      cmake = {
+        "gersemi",
+        filter = function(client)
+          return client.name ~= "neocmake"
+        end,
+      },
 
-      python = { "ruff_format", filter = function(client) return client.name ~= "ruff" end },
+      python = {
+        "ruff_format",
+        filter = function(client)
+          return client.name ~= "ruff"
+        end,
+      },
 
       --["*"] = { "codespell" },
       --["_"] = { "trim_whitespace" },

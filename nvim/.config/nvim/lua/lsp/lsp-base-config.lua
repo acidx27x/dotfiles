@@ -9,8 +9,6 @@ M.lsp_keymaps = function(bufnr)
   -- base goto smth lsp operations
   keyn("gd", vim.lsp.buf.definition, "LSP: definition")
   keyn("gy", vim.lsp.buf.type_definition, "LSP: type definition")
-  keyn("gc", vim.lsp.buf.declaration, "LSP: declaration")
-  keyn("gr", vim.lsp.buf.references, "LSP: references")
   keyn("gi", vim.lsp.buf.implementation, "LSP: implementation")
 
   local function preview(action)
@@ -42,6 +40,7 @@ M.lsp_keymaps = function(bufnr)
 
   keyn("<C-s>ds", vim.lsp.buf.document_symbol, "LSP: document symbol")
   keyn("<C-s>dh", vim.lsp.buf.document_highlight, "LSP: document highlight")
+  keyn("<C-s>dc", vim.lsp.buf.declaration, "LSP: declaration")
   keyn("<C-s>cr", vim.lsp.buf.clear_references, "LSP: clear references")
 
   keyn("<C-s>ws", vim.lsp.buf.workspace_symbol, "LSP: workspace symbol")
@@ -73,7 +72,6 @@ M.lsp_keymaps = function(bufnr)
   keyn("grt", vim.lsp.buf.type_definition, "LSP: type definition (native key)")
   keyn("gO", vim.lsp.buf.document_symbol, "LSP: document symbols (native key)")
   map({ "n", "v" }, "gra", vim.lsp.buf.code_action, "LSP: code action", { buf = bufnr })
-  map("i", "<C-s>", vim.lsp.buf.signature_help, "LSP: signature help", { buf = bufnr })
 
   vim.api.nvim_buf_call(bufnr, function()
     require("mini.clue").ensure_buf_triggers()

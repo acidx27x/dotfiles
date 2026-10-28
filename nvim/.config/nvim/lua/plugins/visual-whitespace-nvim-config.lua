@@ -18,8 +18,15 @@ function M.setup()
   })
 end
 
-lazy.keymap({ "n", "v" }, "<leader>vw", "buffer_ui", "plugins.visual-whitespace-nvim-config", function()
-  require("visual-whitespace").toggle()
-end, "Toggle Visual Whitespace Viewer")
+lazy.keymap(
+  { "n", "v" },
+  "<leader>vw",
+  "buffer_ui",
+  "plugins.visual-whitespace-nvim-config",
+  function()
+    require("visual-whitespace").toggle()
+  end,
+  "Toggle Visual Whitespace Viewer"
+)
 
 return M

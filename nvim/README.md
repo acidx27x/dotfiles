@@ -17,23 +17,26 @@ Then start Neovim. The first launch installs missing packages through `vim.pack`
 the package prompt. First install and updates require Git and network access. See the
 [plugin inventory](docs/plugins.md) for all packages and load groups.
 
+Install `tree-sitter-cli` 0.26.1 or newer through your system package manager before installing or
+updating Tree-sitter parsers. Confirm it is available with `tree-sitter --version`.
+
 ## Find a mapping
 
-The [keymap reference](docs/keymaps.md) is the complete searchable list, including LSP, buffer-local,
-plugin UI, and lazy-loaded mappings. Space is the leader. Common mappings:
+The [keymap reference](docs/keymaps.md) is the complete searchable list, including LSP,
+buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common mappings:
 
-| Keys | Action |
-| --- | --- |
-| `<Space>pf` / `<Space>pg` | Find files / live grep with MiniPick |
-| `<Space>pb` | Pick a buffer |
-| `<Space>bd` / `<Space>bn` / `<Space>bp` | Delete / next / previous buffer |
-| `<Space>bb` / `]b` / `[b` | Alternate / next / previous buffer |
-| `<Space>sv` / `<Space>sh` | Vertical / horizontal split |
-| `<Space>sf` / `<Space>st` | Toggle float/split / move window to a tab |
-| `gd` / `gr` / `gi` / `gy` / `gc` | LSP definition / references / implementation / type / declaration |
-| `<C-s>h` / `<C-s>rn` / `<C-s>ca` | LSP hover / rename / code action |
-| `<Space>ha` / `<Space>ht` | Harpoon add / menu |
-| `<Space>tf` | Toggle floating terminal |
+| Keys                                    | Action                                                            |
+| --------------------------------------- | ----------------------------------------------------------------- |
+| `<Space>pf` / `<Space>pg`               | Find files / live grep with MiniPick                              |
+| `<Space>pb`                             | Pick a buffer                                                     |
+| `<Space>bd` / `<Space>bn` / `<Space>bp` | Delete / next / previous buffer                                   |
+| `<Space>bb` / `]b` / `[b`               | Alternate / next / previous buffer                                |
+| `<Space>sv` / `<Space>sh`               | Vertical / horizontal split                                       |
+| `<Space>sf` / `<Space>st`               | Toggle float/split / move window to a tab                         |
+| `gd` / `grr` / `gi` / `gy` / `<C-s>dc`  | LSP definition / references / implementation / type / declaration |
+| `<C-s>h` / `<C-s>rn` / `<C-s>ca`        | LSP hover / rename / code action                                  |
+| `<Space>ha` / `<Space>ht`               | Harpoon add / menu                                                |
+| `<Space>tf`                             | Toggle floating terminal                                          |
 
 MiniClue shows descriptions while typing prefixes. `<Space>pk` opens the configured keymap picker.
 For practical examples of quickfix, terminal windows, splits, buffers, and other built-in Vim tools,
@@ -44,23 +47,34 @@ see the [workflow guide](docs/workflows.md).
 - `.config/nvim/init.lua` and `lua/core/`: startup, options, core mappings, and shared helpers.
 - `lua/plugins/spec.lua`: centralized native package specs and lazy groups.
 - `lua/plugins/` and `lua/lsp/`: plugin and language-server modules.
-- Feature files with global mappings register those keys at startup and defer plugin setup until
-  the first relevant event or keypress.
+- Feature files with global mappings register those keys at startup and defer plugin setup until the
+  first relevant event or keypress.
 - `lua/dap/`: debugger setup; `after/ftplugin/`: filetype-specific settings.
 - `nvim-pack-lock.json`: locked plugin revisions maintained by `vim.pack`.
-- `docs/`: [workflows](docs/workflows.md), [review](docs/review.md), [plugins](docs/plugins.md),
-  and [keymaps](docs/keymaps.md).
+- `docs/`: [workflows](docs/workflows.md), [review](docs/review.md), [plugins](docs/plugins.md), and
+  [keymaps](docs/keymaps.md).
 
 ## Plugin management and validation
 
-Use Neovim's native package commands; no external plugin manager is used:
+Use Neovim's native package API; no external plugin manager is used:
 
 ```vim
-:PackUpdate
-:PackUpdate nvim-treesitter
+:lua vim.pack.update()
+:lua vim.pack.update({"nvim-treesitter"})
+:lua vim.pack.update({"blink.cmp"}, {target="lockfile"})
+```
+
+The package hook runs `:TSUpdate` after updating `nvim-treesitter`. You can also run these checks
+and parser commands manually:
+
+```vim
+:TSInstallConfigured
+:TSUpdate
 :checkhealth
 :messages
 ```
+
+`:TSInstallConfigured` adds newly configured parsers, including CMake.
 
 Useful command-line checks:
 

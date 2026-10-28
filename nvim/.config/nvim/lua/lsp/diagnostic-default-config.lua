@@ -39,19 +39,18 @@ vim.lsp.log.set_level(vim.log.levels.ERROR)
 
 local map = require("core.keymap")
 
-map("n", "<C-w>dt", function()
+map("n", "<leader>ed", function()
   vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, "diagnostic: toggle (global)")
 
--- f is for Focus
-map("n", "<C-w>dft", function()
+map("n", "<leader>et", function()
   if vim.diagnostic.config().virtual_text.current_line then
     vim.diagnostic.config({ virtual_text = { current_line = nil } })
   else
     vim.diagnostic.config({ virtual_text = { current_line = true } })
   end
 end, "diagnostic: show virtual text for current line (global)")
-map("n", "<C-w>dfl", function()
+map("n", "<leader>el", function()
   if vim.diagnostic.config().virtual_lines then
     vim.diagnostic.config({ virtual_lines = false })
   else
@@ -59,8 +58,7 @@ map("n", "<C-w>dfl", function()
   end
 end, "diagnostic: show virtual lines for current line (global)")
 
-map("n", "<C-w>dl", vim.diagnostic.setloclist, "diagnostic: setloclist")
-map("n", "<C-w>do", vim.diagnostic.open_float, "diagnostic: open float")
+map("n", "<leader>eq", vim.diagnostic.setloclist, "diagnostic: setloclist")
 
 map("n", "]d", function()
   vim.diagnostic.jump({ count = 1 })
@@ -68,5 +66,3 @@ end, "diagnostic: jump next")
 map("n", "[d", function()
   vim.diagnostic.jump({ count = -1 })
 end, "diagnostic: jump prev")
-
-map("n", "<C-w>d", vim.diagnostic.open_float, "diagnostic: open float (native key)")
