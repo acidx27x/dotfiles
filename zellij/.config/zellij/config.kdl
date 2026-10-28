@@ -659,13 +659,10 @@ plugins {
         quick_jump true
     }
     zellij-palette location="https://github.com/timonwong/zellij-palette/releases/download/v0.2.2/zellij-palette.wasm"
-    zjframes location="https://github.com/dj95/zjstatus/releases/latest/download/zjframes.wasm"
-    zjstatus location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm"
 }
 // Plugins to load in the background when a new session starts
 load_plugins {
     zellij:link
-    zjframes
 }
 web_client {
     font "monospace"
@@ -682,143 +679,10 @@ simplified_ui false
 //   - false
 //
 // osc8_hyperlinks true
-// Choose the theme that is specified in the themes section.
+// Choose the theme to use.
 // Default: default
 //
-themes {
-    kanagawa-dragon {
-        text_unselected {
-            base "#C48A5F"
-            background "#181616"
-            emphasis_0 "#9E9B93"
-            emphasis_1 "#7AA89F"
-            emphasis_2 "#98BB6C"
-            emphasis_3 "#957FB8"
-        }
-        text_selected {
-            base "#C5C9C5"
-            background "#282727"
-            emphasis_0 "#FFA066"
-            emphasis_1 "#7AA89F"
-            emphasis_2 "#98BB6C"
-            emphasis_3 "#957FB8"
-        }
-        ribbon_unselected {
-            base "#7AA89F"
-            background "#282727"
-            emphasis_0 "#FFA066"
-            emphasis_1 "#98BB6C"
-            emphasis_2 "#E6C384"
-            emphasis_3 "#957FB8"
-        }
-        ribbon_selected {
-            base "#264653"
-            background "#98BB6C"
-            emphasis_0 "#181616"
-            emphasis_1 "#FFA066"
-            emphasis_2 "#957FB8"
-            emphasis_3 "#7E9CD8"
-        }
-        table_title {
-            base "#98BB6C"
-            background "#181616"
-            emphasis_0 "#FFA066"
-            emphasis_1 "#7AA89F"
-            emphasis_2 "#98BB6C"
-            emphasis_3 "#957FB8"
-        }
-        table_cell_unselected {
-            base "#C5C9C5"
-            background "#181616"
-            emphasis_0 "#FFA066"
-            emphasis_1 "#7AA89F"
-            emphasis_2 "#98BB6C"
-            emphasis_3 "#957FB8"
-        }
-        table_cell_selected {
-            base "#C5C9C5"
-            background "#282727"
-            emphasis_0 "#FFA066"
-            emphasis_1 "#7AA89F"
-            emphasis_2 "#98BB6C"
-            emphasis_3 "#957FB8"
-        }
-        list_unselected {
-            base "#C5C9C5"
-            background "#181616"
-            emphasis_0 "#FFA066"
-            emphasis_1 "#7AA89F"
-            emphasis_2 "#98BB6C"
-            emphasis_3 "#957FB8"
-        }
-        list_selected {
-            base "#C5C9C5"
-            background "#282727"
-            emphasis_0 "#FFA066"
-            emphasis_1 "#7AA89F"
-            emphasis_2 "#98BB6C"
-            emphasis_3 "#957FB8"
-        }
-        frame_selected {
-            base "#98BB6C"
-            background "#181616"
-            emphasis_0 "#FFA066"
-            emphasis_1 "#7AA89F"
-            emphasis_2 "#957FB8"
-            emphasis_3 "#7E9CD8"
-        }
-        frame_highlight {
-            base "#FFA066"
-            background "#181616"
-            emphasis_0 "#957FB8"
-            emphasis_1 "#FFA066"
-            emphasis_2 "#FFA066"
-            emphasis_3 "#FFA066"
-        }
-        exit_code_success {
-            base "#98BB6C"
-            background "#181616"
-            emphasis_0 "#7AA89F"
-            emphasis_1 "#181616"
-            emphasis_2 "#957FB8"
-            emphasis_3 "#7E9CD8"
-        }
-        exit_code_error {
-            base "#E46876"
-            background "#181616"
-            emphasis_0 "#E6C384"
-            emphasis_1 "#181616"
-            emphasis_2 "#957FB8"
-            emphasis_3 "#7E9CD8"
-        }
-        multiplayer_user_colors {
-            player_1 "#957FB8"
-            player_2 "#7E9CD8"
-            player_3 "#98BB6C"
-            player_4 "#E6C384"
-            player_5 "#7AA89F"
-            player_6 "#FFA066"
-            player_7 "#E46876"
-            player_8 "#C5C9C5"
-            player_9 "#957FB8"
-            player_10 "#E6C384"
-        }
-    }
-}
-theme "kanagawa-dragon"
-// Theme to use when the host terminal reports a dark color palette.
-// Requires `theme_light` to also be set; otherwise `theme` is used.
-//
-theme_dark "kanagawa-dragon"
-// Theme to use when the host terminal reports a light color palette.
-// Requires `theme_dark` to also be set; otherwise `theme` is used.
-//
-theme_light "kanagawa-dragon"
-// Pin the session to a dark or light appearance, ignoring what the
-// host terminal reports. When unset, the host terminal decides.
-// Options: dark, light
-//
-explicit_theme_hue "dark"
+theme "kanagawa"
 // Choose the base input mode of zellij.
 // Default: normal
 //
@@ -861,7 +725,7 @@ pane_frames true
 //   - full
 //   - titles (default)
 //
-pane_frame_style "full"
+pane_frame_style "titles"
 // When attaching to an existing session with other users,
 // should the session be mirrored (true)
 // or should each user have their own cursor (false)
