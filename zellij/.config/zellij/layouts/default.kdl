@@ -25,7 +25,7 @@ layout {
                 hide_frame_for_single_pane "true"
                 // Keep mode labels 13 cells wide so switching modes does not move the tabs.
                 mode_normal "#[bg=$surface,fg=$green] NORMAL      #[bg=$bg]"
-                mode_locked "#[bg=$surface,fg=$red,bold] LOCKED     #[bg=$bg]"
+                mode_locked "#[bg=$surface,fg=$red,bold] LOCKED      #[bg=$bg]"
                 mode_resize "#[bg=$surface,fg=$blue,bold] RESIZE      #[bg=$bg]"
                 mode_pane "#[bg=$surface,fg=$blue,bold] PANE        #[bg=$bg]"
                 mode_tab "#[bg=$surface,fg=$yellow,bold] TAB         #[bg=$bg]"
@@ -62,18 +62,8 @@ layout {
             }
         }
         children
-        pane size=2 borderless=true {
-            plugin location="zjstatus" {
-                format_left "{pipe_zjstatus_hints}"
-                format_center ""
-                format_right ""
-                format_space "#[bg=#181616]"
-                border_enabled "true"
-                border_char " "
-                border_position "top"
-                pipe_zjstatus_hints_format "{output}"
-                pipe_zjstatus_hints_rendermode "raw"
-            }
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
         }
     }
 }

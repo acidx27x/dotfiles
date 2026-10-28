@@ -652,10 +652,6 @@ plugins {
         welcome_screen true
     }
     // External plugins
-    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/download/0.3.0/zellij-autolock.wasm" {
-        lock_regex ".*"
-        ignore_regex "^(zellij:.*|https?://.*|zellij|sh|ash|dash|bash|zsh|fish|ksh|mksh|csh|tcsh|nu|xonsh|elvish|pwsh|powershell|cmd|ls|lsd|eza|starship|direnv|\\(atuin\\)|atuin history start.*)(\\.exe)?$"
-    }
     forgot location="https://github.com/karimould/zellij-forgot/releases/download/0.4.2/zellij_forgot.wasm"
     harpoon location="https://github.com/Nacho114/harpoon/releases/download/v0.3.0/harpoon.wasm"
     room location="https://github.com/rvcas/room/releases/download/v1.2.1/room.wasm" {
@@ -665,14 +661,11 @@ plugins {
     zellij-palette location="https://github.com/timonwong/zellij-palette/releases/download/v0.2.2/zellij-palette.wasm"
     zjframes location="https://github.com/dj95/zjstatus/releases/latest/download/zjframes.wasm"
     zjstatus location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm"
-    zjstatus-hints location="https://github.com/b0o/zjstatus-hints/releases/download/v0.1.4/zjstatus-hints.wasm"
 }
 // Plugins to load in the background when a new session starts
 load_plugins {
-    autolock
     zellij:link
     zjframes
-    zjstatus-hints
 }
 web_client {
     font "monospace"
@@ -711,7 +704,7 @@ themes {
             emphasis_3 "#957FB8"
         }
         ribbon_unselected {
-            base "#9E9B93"
+            base "#7AA89F"
             background "#282727"
             emphasis_0 "#FFA066"
             emphasis_1 "#98BB6C"
@@ -719,7 +712,7 @@ themes {
             emphasis_3 "#957FB8"
         }
         ribbon_selected {
-            base "#181616"
+            base "#264653"
             background "#98BB6C"
             emphasis_0 "#181616"
             emphasis_1 "#FFA066"

@@ -4,8 +4,7 @@ The source of truth is [config.kdl](.config/zellij/config.kdl). This config clea
 bindings, so only the configured shortcuts apply. `Ctrl+P`, then `n` means press the keys in
 sequence; `Ctrl+P` by itself enters Pane mode. `Shift` is written explicitly when required.
 
-Autolock switches to Locked mode when a focused program needs the keyboard. Most shortcuts below
-work outside Locked mode. Press `Alt+Z` to lock or unlock manually.
+Most shortcuts below work outside Locked mode. Press `Alt+Z` to lock or unlock manually.
 
 ## Common shortcuts
 
