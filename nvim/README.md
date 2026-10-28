@@ -36,6 +36,8 @@ plugin UI, and lazy-loaded mappings. Space is the leader. Common mappings:
 | `<Space>tf` | Toggle floating terminal |
 
 MiniClue shows descriptions while typing prefixes. `<Space>pk` opens the configured keymap picker.
+For practical examples of quickfix, terminal windows, splits, buffers, and other built-in Vim tools,
+see the [workflow guide](docs/workflows.md).
 
 ## Layout
 
@@ -46,7 +48,8 @@ MiniClue shows descriptions while typing prefixes. `<Space>pk` opens the configu
   the first relevant event or keypress.
 - `lua/dap/`: debugger setup; `after/ftplugin/`: filetype-specific settings.
 - `nvim-pack-lock.json`: locked plugin revisions maintained by `vim.pack`.
-- `docs/`: [review](docs/review.md), [plugins](docs/plugins.md), and [keymaps](docs/keymaps.md).
+- `docs/`: [workflows](docs/workflows.md), [review](docs/review.md), [plugins](docs/plugins.md),
+  and [keymaps](docs/keymaps.md).
 
 ## Plugin management and validation
 
