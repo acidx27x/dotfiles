@@ -259,7 +259,13 @@ SwitchToMode "normal"
             EditScrollback
 SwitchToMode "normal"
         }
-        bind "s" {
+        bind "g" {
+            ScrollToTop
+        }
+        bind "Shift g" {
+            ScrollToBottom
+        }
+        bind "s" "/" {
             SwitchToMode "entersearch"
 SearchInput 0
         }
@@ -268,8 +274,17 @@ SearchInput 0
         bind "c" {
             SearchToggleOption "CaseSensitivity"
         }
+        bind "g" {
+            ScrollToTop
+        }
+        bind "Shift g" {
+            ScrollToBottom
+        }
         bind "n" {
             Search "down"
+        }
+        bind "Shift n" {
+            Search "up"
         }
         bind "o" {
             SearchToggleOption "WholeWord"
