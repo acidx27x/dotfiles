@@ -90,15 +90,16 @@ replacement operations. The direct Stow examples below are retained for migratio
 
 The following packages need or benefit from `--no-folding`:
 
-| Package | Target directory     |
-| ------- | -------------------- |
-| `codex` | `~/.codex`           |
-| `bash`  | `~/.config/bash`     |
-| `zsh`   | `~/.config/zsh`      |
-| `nvim`  | `~/.config/nvim`     |
-| `brew`  | `~/.config/homebrew` |
-| `htop`  | `~/.config/htop`     |
-| `atuin` | `~/.atuin`           |
+| Package     | Target directory       |
+| ----------- | ---------------------- |
+| `codex`     | `~/.codex`             |
+| `bash`      | `~/.config/bash`       |
+| `zsh`       | `~/.config/zsh`        |
+| `nvim`      | `~/.config/nvim`       |
+| `brew`      | `~/.config/homebrew`   |
+| `htop`      | `~/.config/htop`       |
+| `atuin`     | `~/.atuin`             |
+| `worktrunk` | `~/.config/worktrunk`  |
 
 - `codex`: Codex writes machine-local config, authentication, packages, logs, and other state. Use
   `setup/codex.sh`, which creates the directory and passes `--no-folding`.
@@ -108,19 +109,22 @@ The following packages need or benefit from `--no-folding`:
   generated copies already in the package from being linked back into the target directory.
 - `htop`: htop writes `htop_history`.
 - `atuin`: Atuin keeps config, databases, keys, sessions, logs, and other state together.
+- `worktrunk`: Worktrunk writes `approvals.toml` beside its user config.
 
 For example:
 
 ```bash
-stow --no-folding --target="$HOME" bash zsh nvim brew htop atuin
+stow --no-folding --target="$HOME" bash zsh nvim brew htop atuin worktrunk
 ```
 
 To convert packages that are already stowed with folded directory links, preview and then restow
 them:
 
 ```bash
-stow --restow --simulate --verbose --no-folding --target="$HOME" bash zsh nvim brew htop atuin
-stow --restow --verbose --no-folding --target="$HOME" bash zsh nvim brew htop atuin
+stow --restow --simulate --verbose --no-folding --target="$HOME" \
+  bash zsh nvim brew htop atuin worktrunk
+stow --restow --verbose --no-folding --target="$HOME" \
+  bash zsh nvim brew htop atuin worktrunk
 ```
 
 Inspect the package directories before converting them. Any generated or machine-local files that

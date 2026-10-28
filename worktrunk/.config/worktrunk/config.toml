@@ -1,0 +1,17 @@
+worktree-path = "{{ repo_path }}/../{{ repo }}-worktrees/{{ branch | sanitize }}"
+
+[pre-start]
+copy = "wt step copy-ignored --require-include"
+
+# Include branches that don't have worktrees yet
+[list]
+branches = true
+
+# Conservative merge behavior
+[merge]
+commit = false
+remove = false
+
+# Preserve branches when removing worktrees
+[remove]
+delete-branch = false

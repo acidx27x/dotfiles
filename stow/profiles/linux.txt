@@ -18,6 +18,7 @@ starship
 stow
 wezterm
 wget
+worktrunk
 zed
 zellij
 zsh
