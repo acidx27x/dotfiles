@@ -32,7 +32,10 @@ if has-cmd starship; then
 
         [[ $PS1 == *"❯$reset" ]] || return 0
         PS1=${PS1%"❯$reset"}
-        PS1=${PS1%\\\[*}
+        # Starship may reuse the preceding color for the error symbol.
+        if [[ $PS1 == *'\]' ]]; then
+          PS1=${PS1%\\\[*}
+        fi
         PS1=$PS1'\q{blerc/starship-character}'
       }
 
