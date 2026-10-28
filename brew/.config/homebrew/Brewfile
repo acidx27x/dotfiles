@@ -1,8 +1,8 @@
 # Taps
-tap "jurplel/tap", trusted: true if OS.mac?  # macos instant-space-switcher
-tap "okeanos/tap", trusted: { formula: "blesh" }
-tap "pwndbg/tap",  trusted: true if OS.mac?  # pwndbg-gdb/-lldb
-tap "raine/workmux", trusted: { formula: "workmux" }
+tap "jurplel/tap", trusted: true if OS.mac?   # macos instant-space-switcher
+tap "okeanos/tap", trusted: true if OS.linux? # linux ble.sh
+tap "pwndbg/tap",  trusted: true if OS.mac?   # pwndbg-gdb/-lldb
+tap "raine/workmux", trusted: true
 #
 
 brew "hello"
@@ -14,8 +14,9 @@ brew "git"
 brew "git-delta"
 brew "git-lfs"
 brew "lazygit"
-brew "raine/workmux/workmux"
+brew "workmux"
 brew "stow"
+brew "worktrunk"
 #
 
 # Shell
@@ -24,10 +25,10 @@ brew "nushell"
 brew "shellcheck"
 brew "shfmt"
 # Linux
-brew "bash"              if OS.linux?
-brew "bash-completion@2" if OS.linux?
-brew "okeanos/tap/blesh", args: ["HEAD"] if OS.linux?
-brew "bash-preexec"      if OS.linux?
+brew "bash"                  if OS.linux?
+brew "bash-completion@2"     if OS.linux?
+brew "blesh", args: ["HEAD"] if OS.linux?
+brew "bash-preexec"          if OS.linux?
 # Mac
 brew "zsh"                     if OS.mac?
 brew "zsh-autocomplete"        if OS.mac?
