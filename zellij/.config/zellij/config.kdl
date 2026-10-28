@@ -862,13 +862,13 @@ default_layout "default"
 //   - true (default, enabled)
 //   - false
 //
-pane_frames false
+pane_frames true
 // Set the pane frame style when pane_frames is enabled
 // Options:
 //   - full
 //   - titles (default)
 //
-// pane_frame_style "titles"
+pane_frame_style "full"
 // When attaching to an existing session with other users,
 // should the session be mirrored (true)
 // or should each user have their own cursor (false)
@@ -1030,7 +1030,7 @@ pane_frames false
 // Whether stacked panes display as a list with the expanded pane pinned to the bottom
 // Default: true
 //
-// stacked_pane_list false
+stacked_pane_list false
 // Whether to show tips on startup
 // Default: true
 //
