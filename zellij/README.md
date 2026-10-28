@@ -5,13 +5,13 @@ bindings, so only the configured shortcuts apply. `Ctrl+P`, then `n` means press
 sequence; `Ctrl+P` by itself enters Pane mode. `Shift` is written explicitly when required.
 
 Autolock switches to Locked mode when a focused program needs the keyboard. Most shortcuts below
-work outside Locked mode. Press `Ctrl+G` to lock or unlock manually.
+work outside Locked mode. Press `Alt+Z` to lock or unlock manually.
 
 ## Common shortcuts
 
 | Shortcut                     | Action                                             |
 | ---------------------------- | -------------------------------------------------- |
-| `Ctrl+G`                     | Toggle Locked and Normal modes                     |
+| `Alt+Z`                      | Toggle Locked and Normal modes                     |
 | `Alt+H/J/K/L` or `Alt+Arrow` | Focus an adjacent pane; left/right can switch tabs |
 | `Alt+N`                      | New pane                                           |
 | `Alt+F`                      | Show or hide floating panes                        |
