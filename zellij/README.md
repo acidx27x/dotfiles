@@ -71,7 +71,7 @@ work outside Locked mode. Press `Ctrl+G` to lock or unlock manually.
 | `[` / `]`                 | Break pane to the left / right      |
 | `Tab`                     | Toggle between current and last tab |
 
-## Resize and Move modes
+## Resize (`Ctrl+N`) and Move (`Ctrl+H`) modes
 
 | Mode   | Key                 | Action                                      |
 | ------ | ------------------- | ------------------------------------------- |
@@ -81,7 +81,7 @@ work outside Locked mode. Press `Ctrl+G` to lock or unlock manually.
 | Move   | `h/j/k/l` or arrows | Move pane left/down/up/right                |
 | Move   | `n` / `Tab` / `p`   | Move pane forward / forward / backward      |
 
-## Scroll and Search modes
+## Scroll (`Ctrl+S`) and Search (`Ctrl+S`, then `s` and `Enter`) modes
 
 | Mode   | Key                       | Action                                     |
 | ------ | ------------------------- | ------------------------------------------ |
@@ -99,7 +99,7 @@ work outside Locked mode. Press `Ctrl+G` to lock or unlock manually.
 `PageUp` and `PageDown` also work in Scroll and Search modes. In Scroll mode, `Alt+H/J/K/L` or
 `Alt+Arrow` focuses another pane and returns to Normal mode.
 
-## Session and Tmux modes
+## Session (`Ctrl+O`) and Tmux (`Ctrl+B`) modes
 
 | Mode    | Key                   | Action                                                  |
 | ------- | --------------------- | ------------------------------------------------------- |
