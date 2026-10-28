@@ -47,7 +47,7 @@ function module.apply_to_config(config, platform)
 
   -- Acrylic-style backdrop on Windows later:
   if platform.is_windows then
-    config.win32_system_backdrop = 'Acrylic'
+    config.win32_system_backdrop = "Acrylic"
   end
 
   config.use_fancy_tab_bar = true

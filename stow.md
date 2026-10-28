@@ -90,16 +90,16 @@ replacement operations. The direct Stow examples below are retained for migratio
 
 The following packages need or benefit from `--no-folding`:
 
-| Package     | Target directory       |
-| ----------- | ---------------------- |
-| `codex`     | `~/.codex`             |
-| `bash`      | `~/.config/bash`       |
-| `zsh`       | `~/.config/zsh`        |
-| `nvim`      | `~/.config/nvim`       |
-| `brew`      | `~/.config/homebrew`   |
-| `htop`      | `~/.config/htop`       |
-| `atuin`     | `~/.atuin`             |
-| `worktrunk` | `~/.config/worktrunk`  |
+| Package     | Target directory      |
+| ----------- | --------------------- |
+| `codex`     | `~/.codex`            |
+| `bash`      | `~/.config/bash`      |
+| `zsh`       | `~/.config/zsh`       |
+| `nvim`      | `~/.config/nvim`      |
+| `brew`      | `~/.config/homebrew`  |
+| `htop`      | `~/.config/htop`      |
+| `atuin`     | `~/.atuin`            |
+| `worktrunk` | `~/.config/worktrunk` |
 
 - `codex`: Codex writes machine-local config, authentication, packages, logs, and other state. Use
   `setup/codex.sh`, which creates the directory and passes `--no-folding`.

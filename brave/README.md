@@ -36,8 +36,8 @@ When you already have `brave.toml` and want to keep a change made in Brave's set
    other known or previously managed keys, so identify the specific change before copying it.
 4. Add or update that key in `brave/brave.toml`. Keep the rest of the file; do not replace it with
    the whole export.
-5. Run `uvx dotbrave apply --dry-run brave/brave.toml` to check the result. On the machine where
-   you made the UI change, the value may already match and produce no value diff.
+5. Run `uvx dotbrave apply --dry-run brave/brave.toml` to check the result. On the machine where you
+   made the UI change, the value may already match and produce no value diff.
 6. Run `uvx dotbrave export --snapshot --clear` when finished.
 
 If you **already changed** a setting without a snapshot, try `uvx dotbrave export` and compare its
@@ -49,11 +49,11 @@ then change it again and export. Do this only if you know the old value.
 
 The HTML `<link>` and CSS `@import` in Fira Code's
 [browser example](https://github.com/tonsky/FiraCode#browser-support) are for website authors to
-load and style a web font. They are not Brave preferences and do not go in `brave.toml`. This
-config selects your locally installed `Fira Code` as Brave's standard and fixed-width font. A
-After applying it, check `brave://settings/fonts`: **Standard font** and **Fixed-width font** should
-both show Fira Code. Serif and Sans-serif keep their current values. A website's own CSS may select
-a different font; whether its code ligatures appear depends on the site's styles and browser
+load and style a web font. They are not Brave preferences and do not go in `brave.toml`. This config
+selects your locally installed `Fira Code` as Brave's standard and fixed-width font. A After
+applying it, check `brave://settings/fonts`: **Standard font** and **Fixed-width font** should both
+show Fira Code. Serif and Sans-serif keep their current values. A website's own CSS may select a
+different font; whether its code ligatures appear depends on the site's styles and browser
 rendering. The `Fira Code VF` name in that example is for its web font CSS, so it does not require
 another entry in this config.
 
@@ -63,16 +63,15 @@ Run these from the repository root.
 
 - `uvx dotbrave export`: show the current profile's customizations as TOML.
 - `uvx dotbrave export -a`: include all shortcut bindings when looking up command names.
-- `uvx dotbrave -p "Profile 1" apply --dry-run brave/brave.toml`: preview another profile.
-  The default profile is `Default`.
-- `uvx dotbrave --channel beta apply --dry-run brave/brave.toml`: preview Brave Beta.
-  `nightly` is also supported.
+- `uvx dotbrave -p "Profile 1" apply --dry-run brave/brave.toml`: preview another profile. The
+  default profile is `Default`.
+- `uvx dotbrave --channel beta apply --dry-run brave/brave.toml`: preview Brave Beta. `nightly` is
+  also supported.
 - `-r <profile-root>`: use a custom Brave profile root when auto-detection does not find it.
 
 To save an export, use `uvx dotbrave export -o <path>`. Review it before copying keys into
-`brave.toml`: exports can contain machine-specific or private values.
-`uvx dotbrave export --help` and
-`uvx dotbrave apply --help` show the complete options.
+`brave.toml`: exports can contain machine-specific or private values. `uvx dotbrave export --help`
+and `uvx dotbrave apply --help` show the complete options.
 
 The file currently has no active `[shortcuts]` table because you have no custom key bindings. It
 includes a commented cross-platform example. Leave the table absent until you want to manage
@@ -82,5 +81,4 @@ shortcuts; an empty table clears previously managed shortcuts in `dotbrave`.
 
 Run `dotbrave` directly after installing Brave and Fira Code on a machine. Do not add this TOML to
 the global Stow or Dotter profiles: those tools create file links and do not apply Brave
-preferences.
-The `brave/` directory is excluded from the Stow package list for that reason.
+preferences. The `brave/` directory is excluded from the Stow package list for that reason.
