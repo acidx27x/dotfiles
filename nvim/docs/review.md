@@ -108,9 +108,10 @@ window maps are documented in [keymaps.md](keymaps.md); no documentation mismatc
 keymap edit was found.
 
 LSP uses Neovim 0.12's `vim.lsp.config`/`enable` API with `clangd`, `neocmake`, `ruff`, and `ty`
-enabled; `basedpyright` is configured but disabled. Blink supplies completion capabilities.
+enabled; `basedpyright` is configured but disabled. Blink tries LSP completion, then a valid
+buffer-local omnifunc, then buffer words. Path and snippet sources run independently.
 On attach the config installs buffer-local LSP maps, sets folding when offered, suppresses
-Tree-sitter for semantic-token servers, clears the LSP omnifunc when completion is offered, and
+Tree-sitter for semantic-token servers, retains Neovim's LSP omnifunc for manual completion, and
 attaches Navic for document symbols. Clangd attachment and buffer-local `gd` registration were
 observed; the other servers were unavailable. Conform's CMake/Python client filters are supported
 filetype options, but those fallback combinations could not be exercised here.

@@ -141,10 +141,6 @@ M.on_attach = function(client, bufnr)
     vim.treesitter.stop(bufnr)
   end
 
-  if client.server_capabilities.completionProvider then
-    vim.bo[bufnr].omnifunc = nil
-  end
-
   if client.server_capabilities.documentSymbolProvider then
     local has_navic, navic = pcall(require, "nvim-navic")
     if has_navic then

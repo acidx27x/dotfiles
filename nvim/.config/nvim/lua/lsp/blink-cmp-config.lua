@@ -20,6 +20,24 @@ if not blink.library_available() and vim.fn.executable("cargo") == 1 then
   end)
 end
 local use_rust = blink.library_available()
+
+local function get_omnifunc()
+  local func = vim.bo.omnifunc
+  if func == "" or func == "v:lua.vim.lsp.omnifunc" then
+    return nil
+  end
+  if func:match("^v:lua%.") or vim.fn.exists("*" .. func) == 1 then
+    return func
+  end
+  local autoload = func:match("^(.*)#[^#]+$")
+  if
+    autoload
+    and #vim.api.nvim_get_runtime_file("autoload/" .. autoload:gsub("#", "/") .. ".vim", false) > 0
+  then
+    return func
+  end
+end
+
 blink.setup({
   keymap = {
     ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
@@ -70,20 +88,23 @@ blink.setup({
         name = "LSP",
         module = "blink.cmp.sources.lsp",
         score_offset = 10,
-        fallbacks = {}, -- to enable other provider when available, w/o waiting for fb
+        fallbacks = function(_, enabled_sources)
+          return vim.tbl_contains(enabled_sources, "omni") and { "omni" } or { "buffer" }
+        end,
       },
       omni = {
         enabled = function()
-          return vim.bo.omnifunc and vim.bo.omnifunc ~= "v:lua.vim.lsp.omnifunc"
+          return get_omnifunc() ~= nil
         end,
         name = "OMNI",
         module = "blink.cmp.sources.complete_func",
         opts = {
           complete_func = function()
-            return vim.bo.omnifunc
+            return get_omnifunc()
           end,
         },
         score_offset = 9,
+        fallbacks = { "buffer" },
       },
       buffer = {
         enabled = true,
@@ -96,6 +117,7 @@ blink.setup({
         name = "PATH",
         module = "blink.cmp.sources.path",
         score_offset = 7,
+        fallbacks = {},
       },
       snippets = {
         enabled = true,
@@ -192,12 +214,12 @@ blink.setup({
       preset = "cmdline",
       ["<C-n>"] = {
         function(cmp)
-          return cmp.select_next({ auto_insert = false })
+          return cmp.select_next({ auto_insert = true })
         end,
       },
       ["<C-p>"] = {
         function(cmp)
-          return cmp.select_prev({ auto_insert = false })
+          return cmp.select_prev({ auto_insert = true })
         end,
       },
       ["<Left>"] = false,
@@ -253,7 +275,7 @@ blink.setup({
           auto_insert = true,
         },
       },
-      menu = { auto_show = true },
+      menu = { auto_show = false },
     },
   },
 
