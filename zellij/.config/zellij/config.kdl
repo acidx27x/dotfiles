@@ -393,20 +393,39 @@ SwitchToMode "normal"
             ToggleGroupMarking
         }
         bind "Ctrl q" {
-            Quit
+            // Quit
+            Detach
+        }
+        // Custom binds
+        bind "Alt Shift s" {
+            LaunchOrFocusPlugin "strider" {
+                move_to_focused_tab true
+            }
+        }
+        bind "Alt Shift f" {
+            LaunchPlugin "filepicker" {
+                floating true
+                close_on_selection true
+            }
+            Resize "Increase"
+            Resize "Increase"
+            Resize "Increase"
+            Resize "Increase"
         }
         bind "Ctrl y" {
             LaunchOrFocusPlugin "room" {
                 floating true
+                move_to_focused_tab true
             }
         }
         bind "Alt y" {
-            LaunchOrFocusPlugin "forgot" {
+            LaunchOrFocusPlugin "zellij-palette" {
                 floating true
+                move_to_focused_tab true
             }
         }
         bind "Alt Shift y" {
-            LaunchOrFocusPlugin "zellij-palette" {
+            LaunchOrFocusPlugin "forgot" {
                 floating true
                 move_to_focused_tab true
             }
@@ -697,7 +716,7 @@ default_mode "normal"
 // The name of the default layout to load on startup
 // Default: "default"
 //
-default_layout "default"
+default_layout "custom"
 // The folder in which Zellij will look for layouts
 // (Requires restart)
 //
