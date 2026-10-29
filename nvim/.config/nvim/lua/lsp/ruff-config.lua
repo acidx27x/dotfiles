@@ -61,4 +61,4 @@ vim.lsp.config[name] = {
   },
 }
 
-vim.lsp.enable(name)
+base.enable(name, { "python" })

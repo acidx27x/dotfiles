@@ -237,6 +237,14 @@ end, { desc = "editor: show window-local working directory" })
 
 -- Better ctags support
 vim.api.nvim_create_user_command("CTags", function(opts)
+  local executable = require("core.tools").ensure_executable(
+    "ctags",
+    { "ctags-universal", "ctags" },
+    "CTags"
+  )
+  if not executable then
+    return
+  end
   local args = opts.fargs
   local langs = {}
   local exclude = { "build", "dist", "run" }
@@ -262,7 +270,7 @@ vim.api.nvim_create_user_command("CTags", function(opts)
   end
 
   -- Construct the ctags command
-  local cmd = { _G.Paths.ctags, "-R", "-f", tagfile }
+  local cmd = { executable, "-R", "-f", tagfile }
   table.insert(cmd, "--languages=" .. table.concat(langs, ","))
 
   for _, ex in ipairs(exclude) do

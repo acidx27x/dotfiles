@@ -30,7 +30,6 @@ local eager = {
   { src = "https://github.com/rcarriga/nvim-notify" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
   { src = "https://github.com/stevearc/oil.nvim" },
-  { src = "https://github.com/onsails/lspkind.nvim" },
 }
 
 local optional = {
@@ -42,7 +41,6 @@ local optional = {
   { src = "https://github.com/rmagatti/goto-preview" },
   { src = "https://github.com/ThePrimeagen/harpoon", version = "harpoon2" },
   { src = "https://github.com/lukas-reineke/indent-blankline.nvim" },
-  { src = "https://github.com/TheGLander/indent-rainbowline.nvim" },
   { src = "https://github.com/rmagatti/logger.nvim" },
   { src = "https://github.com/mfussenegger/nvim-dap" },
   { src = "https://github.com/rcarriga/nvim-dap-ui" },
@@ -64,7 +62,6 @@ M.groups = {
     "auto-save.nvim",
     "gitsigns.nvim",
     "indent-blankline.nvim",
-    "indent-rainbowline.nvim",
     "smartcolumn.nvim",
     "visimatch.nvim",
     "visual-whitespace.nvim",

@@ -1,6 +1,31 @@
 local M = {}
 local map = require("core.keymap")
 
+M.enable = function(name, filetypes)
+  local commands = {
+    clangd = "clangd",
+    neocmake = "neocmakelsp",
+    ruff = "ruff",
+    ty = "ty",
+  }
+  local autocmd
+  autocmd = vim.api.nvim_create_autocmd("FileType", {
+    pattern = filetypes,
+    callback = function()
+      local command = require("core.tools").ensure_executable(
+        name,
+        { commands[name] },
+        name .. " LSP"
+      )
+      if command then
+        vim.lsp.config[name].cmd[1] = command
+        vim.api.nvim_del_autocmd(autocmd)
+        vim.lsp.enable(name)
+      end
+    end,
+  })
+end
+
 M.lsp_keymaps = function(bufnr)
   local function keyn(key, func, desc)
     map("n", key, func, desc, { buf = bufnr })
@@ -34,7 +59,13 @@ M.lsp_keymaps = function(bufnr)
   keyn("<C-s>oc", vim.lsp.buf.outgoing_calls, "LSP: outgoing calls")
   keyn("<C-s>th", vim.lsp.buf.typehierarchy, "LSP: typehierarchy")
   map({ "v", "n" }, "<C-s>ca", function()
-    require("plugins.lazy").load("lsp_actions", "lsp.actions-preview-nvim-config")
+    local command = require("core.tools").ensure_executable(
+      "diff-so-fancy",
+      { "diff-so-fancy" },
+      "Code action preview",
+      true
+    )
+    require("plugins.lazy").load("lsp_actions", "lsp.actions-preview-nvim-config", command)
     require("actions-preview").code_actions()
   end, "LSP: code action (with picker preview)", { buf = bufnr })
 

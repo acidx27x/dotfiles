@@ -1,7 +1,3 @@
-require("lspkind").setup({
-  --
-})
-
 local function path_icon(ctx)
   local category = "file"
   if ctx.item.kind == vim.lsp.protocol.CompletionItemKind.Folder then
@@ -165,7 +161,7 @@ blink.setup({
                   return mini_icon .. ctx.icon_gap
                 end
               end
-              local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol_text" })
+              local icon = require("mini.icons").get("lsp", ctx.kind)
               return icon .. ctx.icon_gap
             end,
             highlight = function(ctx)
@@ -284,6 +280,19 @@ blink.setup({
 })
 
 -- Keep ghost text for edits, but clear it after cursor-only movement.
+vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter", "TermEnter" }, {
+  once = true,
+  callback = function()
+    if not use_rust then
+      if
+        require("core.tools").ensure_executable(nil, { "cargo" }, "Blink native matcher", true)
+      then
+        vim.notify_once("Blink native matcher unavailable; using Lua matcher", vim.log.levels.WARN)
+      end
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd({ "InsertEnter", "InsertCharPre", "CursorMovedI" }, {
   callback = function(args)
     if args.event == "InsertCharPre" then

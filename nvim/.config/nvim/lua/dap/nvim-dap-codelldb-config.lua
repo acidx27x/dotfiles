@@ -1,14 +1,24 @@
 local dap = require("dap")
 
-dap.adapters.codelldb = {
-  type = "server",
-  port = "${port}",
-  executable = {
-    command = _G.Paths.codelldb,
-    args = { "--port", "${port}" },
-    detached = vim.uv.os_uname().sysname ~= "Windows_NT",
-  },
-}
+dap.adapters.codelldb = function(callback)
+  local command = require("core.tools").ensure_executable(
+    "codelldb",
+    { "codelldb" },
+    "Debug session"
+  )
+  if not command then
+    return
+  end
+  callback({
+    type = "server",
+    port = "${port}",
+    executable = {
+      command = command,
+      args = { "--port", "${port}" },
+      detached = vim.uv.os_uname().sysname ~= "Windows_NT",
+    },
+  })
+end
 
 local launch = {
   name = "CodeLLDB: Launch file",

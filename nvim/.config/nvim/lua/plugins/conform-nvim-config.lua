@@ -75,7 +75,32 @@ function M.setup()
 end
 
 lazy.keymap({ "n", "v" }, "<leader>cf", "conform", "plugins.conform-nvim-config", function()
-  require("conform").format({ async = false })
+  local conform = require("conform")
+  local commands = {
+    stylua = "stylua",
+    ["clang-format"] = "clang-format",
+    gersemi = "gersemi",
+    ruff_format = "ruff",
+  }
+  local available, has_lsp = conform.list_formatters_to_run(0)
+  local can_continue = has_lsp or #available > 0
+  for _, name in ipairs(conform.list_formatters_for_buffer(0)) do
+    local key = name == "ruff_format" and "ruff" or name
+    local command = require("core.tools").ensure_executable(
+      key,
+      { commands[name] },
+      "Formatting",
+      can_continue
+    )
+    if command then
+      conform.formatters[name] = vim.tbl_extend("force", conform.formatters[name] or {}, {
+        command = command,
+      })
+    elseif not can_continue then
+      return
+    end
+  end
+  conform.format({ async = false })
 end, "format: buffer or selection")
 
 return M

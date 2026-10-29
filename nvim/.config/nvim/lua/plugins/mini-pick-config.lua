@@ -21,6 +21,9 @@ pick.registry.grep = function(local_opts)
 end
 
 pick.registry.grep_live = function(local_opts)
+  if not require("core.tools").ensure_executable(nil, { "rg", "git" }, "MiniPick live grep") then
+    return
+  end
   local opts = { source = { cwd = local_opts.cwd } }
   local_opts.cwd = nil
   return pick.builtin.grep_live(local_opts, opts)

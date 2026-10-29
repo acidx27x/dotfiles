@@ -29,9 +29,51 @@ treesitter.setup({
   install_dir = vim.fn.stdpath("data") .. "/site",
 })
 
+local function parser_tools()
+  local tools = require("core.tools")
+  local cli_ok = tools.ensure_executable(nil, { "tree-sitter" }, "Parser installation")
+  local tar_ok = tools.ensure_executable(nil, { "tar" }, "Parser installation")
+  local download_ok = tools.ensure_executable(nil, { "curl" }, "Parser installation")
+  local compiler_ok = tools.ensure_executable(nil, { "cc", "clang", "gcc" }, "Parser installation")
+  return cli_ok and tar_ok and download_ok and compiler_ok
+end
+
+local function complete_parsers(installed)
+  return function(arglead)
+    local available = require("nvim-treesitter.config")[installed and "get_installed" or "get_available"]()
+    return vim.tbl_filter(function(name)
+      return name:find(arglead, 1, true) ~= nil
+    end, available)
+  end
+end
+
 vim.api.nvim_create_user_command("TSInstallConfigured", function()
-  treesitter.install(parsers)
+  if parser_tools() then
+    treesitter.install(parsers)
+  end
 end, { desc = "Install the configured Tree-sitter parsers" })
+
+vim.api.nvim_create_user_command("TSInstall", function(args)
+  if parser_tools() then
+    require("nvim-treesitter.install").install(args.fargs, { force = args.bang, summary = true })
+  end
+end, { nargs = "+", bang = true, bar = true, complete = complete_parsers(false) })
+
+vim.api.nvim_create_user_command("TSInstallFromGrammar", function(args)
+  if parser_tools() then
+    require("nvim-treesitter.install").install(args.fargs, {
+      generate = true,
+      summary = true,
+      force = args.bang,
+    })
+  end
+end, { nargs = "+", bang = true, bar = true, complete = complete_parsers(false) })
+
+vim.api.nvim_create_user_command("TSUpdate", function(args)
+  if parser_tools() then
+    require("nvim-treesitter.install").update(args.fargs, { summary = true })
+  end
+end, { nargs = "*", bar = true, complete = complete_parsers(true) })
 
 local selections = {}
 

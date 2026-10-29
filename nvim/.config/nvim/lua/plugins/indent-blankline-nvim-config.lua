@@ -1,11 +1,30 @@
 require("ibl.highlights").setup()
-local whitespace_hl = require("indent-rainbowline").make_hl_groups({
-  colors = { 0xffaacc, 0x7366bd, 0xff79ff, 0x9b81ba },
-  color_transparency = nil,
-  hl = { "IblIndent", "Normal" },
-  prefix = "RainbowColor",
-  auto_setup = true,
-})
+local hooks = require("ibl.hooks")
+local colors = { 0xffaacc, 0x7366bd, 0xff79ff, 0x9b81ba }
+local whitespace_hl = {}
+for i = 1, #colors do
+  whitespace_hl[i] = "RainbowColor" .. i
+end
+
+local function setup_colors()
+  local indent = vim.api.nvim_get_hl(0, { name = "IblIndent", link = false })
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+  local fg = indent.fg or normal.fg
+  local bg = indent.bg or normal.bg or 0
+
+  for i, color in ipairs(colors) do
+    local mixed = 0
+    for shift = 16, 0, -8 do
+      local tint = math.floor(color / 2 ^ shift) % 256
+      local base = math.floor(bg / 2 ^ shift) % 256
+      mixed = mixed + math.floor(tint * 0.07 + base * 0.93) * 2 ^ shift
+    end
+    vim.api.nvim_set_hl(0, whitespace_hl[i], { fg = fg, bg = mixed })
+  end
+end
+
+setup_colors()
+hooks.register(hooks.type.HIGHLIGHT_SETUP, setup_colors)
 
 local is_mac = vim.uv.os_uname().sysname == "Darwin"
 local is_linux = vim.uv.os_uname().sysname == "Linux"

@@ -17,6 +17,10 @@ Then start Neovim. The first launch installs missing packages through `vim.pack`
 the package prompt. First install and updates require Git and network access. See the
 [plugin inventory](docs/plugins.md) for all packages and load groups.
 
+The tracked `nvim-pack-lock.json` is deployed with this package. If an older, unlinked copy already
+exists at `~/.config/nvim/nvim-pack-lock.json`, move it aside before restowing `nvim`. Stow can then
+link the current lockfile. Otherwise `vim.pack` may reinstall plugins removed from the package list.
+
 Install `tree-sitter-cli` 0.26.1 or newer through your system package manager before installing or
 updating Tree-sitter parsers. Confirm it is available with `tree-sitter --version`.
 
@@ -83,6 +87,18 @@ nvim --version
 nvim --headless '+lua print(vim.inspect(vim.pack.get()))' +qa
 nvim --startuptime /tmp/nvim-startup.log +qa
 ```
+
+These checks use the live installation. `vim.pack` can update `nvim-pack-lock.json` during startup
+when installed package directories differ from the spec; use a disposable XDG config/data copy for
+an audit that must leave the tracked lockfile untouched. See the [dated review](docs/review.md).
+
+External language servers, formatters, search tools, CodeLLDB, CTags, and parser build tools are
+checked when their features are first used. Missing required tools stop that action with one error;
+formatting and code-action previews warn once when their fallback can continue. Configure executable
+paths in `lua/local_paths.lua` when a tool is outside `PATH`. A valid override takes priority;
+otherwise the first executable candidate is used. For example, CTags tries `ctags-universal` then
+`ctags`. Blink, MiniPick, and Tree-sitter invoke fixed command names, so their checks use the names
+those plugins call. Parser installation requires `curl`.
 
 If startup fails, try `nvim --clean`, inspect `:messages`, and run `:checkhealth`. For a missing
 lazy-loaded feature, inspect `:verbose nmap <keys>` and confirm its package is in

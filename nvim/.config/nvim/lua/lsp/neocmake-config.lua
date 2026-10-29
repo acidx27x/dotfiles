@@ -20,7 +20,7 @@ vim.lsp.config[name] = {
   },
 }
 
-vim.lsp.enable(name)
+base.enable(name, { "cmake" })
 
 --[=====[ base .neocmakelint.toml
 line_max_words = 120

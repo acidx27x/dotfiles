@@ -23,7 +23,7 @@ vim.lsp.config[name] = {
   },
 }
 
-vim.lsp.enable(name)
+base.enable(name, { "c", "c.doxygen", "cpp", "cpp.doxygen", "objc", "objcpp", "cuda" })
 
 --[=====[ base .clangd
 CompileFlags:  # ignore some gcc unsupported flags
