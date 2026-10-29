@@ -104,7 +104,8 @@ The following packages need or benefit from `--no-folding`:
 - `codex`: Codex writes machine-local config, authentication, packages, logs, and other state. Use
   `setup/codex.sh`, which creates the directory and passes `--no-folding`.
 - `bash` and `zsh`: `conf.local.d/` and local shell files are intentionally untracked.
-- `nvim`: `lua/core/paths_override.lua` and `nvim-pack-lock.json` are machine-local.
+- `nvim`: `lua/core/paths_override.lua` is machine-local; the tracked
+  `nvim-pack-lock.json` is deployed so removed plugins stay removed on other machines.
 - `brew`: Homebrew writes `trust.json` and `trust.json.lock`. Its Stow-local ignore prevents
   generated copies already in the package from being linked back into the target directory.
 - `htop`: htop writes `htop_history`.
@@ -204,9 +205,10 @@ zsh
 
 The `stow` package deploys `stow/.stow-global-ignore` as `~/.stow-global-ignore`. It retains GNU
 Stow's built-in exclusions for version-control metadata, package documentation, editor backups,
-autosave files, and lock files, and adds `.DS_Store`. It also excludes `stow/profiles/`, which is
-wrapper metadata rather than home-directory configuration. Known machine-local files beside managed
-configuration, including Neovim's `nvim-pack-lock.json` and `paths_override.lua`, are also excluded.
+autosave files, and temporary lock files, and adds `.DS_Store`. It also excludes `stow/profiles/`,
+which is wrapper metadata rather than home-directory configuration. Known machine-local files
+beside managed configuration, including Neovim's `paths_override.lua`, are also excluded. The
+tracked `nvim-pack-lock.json` is linked by the `nvim` package.
 
 A package's `.stow-local-ignore` continues to take precedence for that package, as defined by GNU
 Stow. The existing `brew` and `wsl` local rules remain unchanged.

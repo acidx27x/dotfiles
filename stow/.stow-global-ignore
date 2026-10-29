@@ -27,5 +27,4 @@ _darcs
 
 # Machine-local generated data found beside managed configuration.
 ^/\.codex-test-data
-nvim-pack-lock\.json
 paths_override\.lua
