@@ -128,6 +128,7 @@ blink.setup({
       cmdline = {
         name = "CMD",
         module = "blink.cmp.sources.cmdline",
+        score_offset = 20,  -- To have cmdline completions over buffer first in cmdline.
       },
     },
   },
@@ -172,7 +173,7 @@ blink.setup({
             end,
             highlight = "BlinkCmpSource",
           },
-          kind_icon = { -- from doc/recipes.md
+          kind_icon = { -- From doc/recipes.md.
             text = function(ctx)
               if ctx.source_name == "CMD" then
                 return ctx.icon_gap
@@ -231,7 +232,10 @@ blink.setup({
         if type == "/" or type == "?" then
           return { "buffer" }
         end
-        if type == ":" or type == "@" then
+        if type == ":" then
+          return { "cmdline", "buffer" }
+        end
+        if type == "@" then
           return { "cmdline" }
         end
         return {}
