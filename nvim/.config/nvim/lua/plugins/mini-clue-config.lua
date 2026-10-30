@@ -1,6 +1,6 @@
 local clue = require("mini.clue")
 
-clue.setup({
+local config = {
   triggers = {
     { mode = { "n", "x" }, keys = "<Leader>" },
     { mode = "n", keys = "[" },
@@ -24,4 +24,12 @@ clue.setup({
     clue.gen_clues.z(),
   },
   window = { delay = 500 },
+}
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function()
+    clue.setup(config)
+  end,
+  desc = "Set up MiniClue after startup buffers load",
 })
