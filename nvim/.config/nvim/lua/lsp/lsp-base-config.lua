@@ -12,11 +12,8 @@ M.enable = function(name, filetypes)
   autocmd = vim.api.nvim_create_autocmd("FileType", {
     pattern = filetypes,
     callback = function()
-      local command = require("core.tools").ensure_executable(
-        name,
-        { commands[name] },
-        name .. " LSP"
-      )
+      local command =
+        require("core.tools").ensure_executable(name, { commands[name] }, name .. " LSP")
       if command then
         vim.lsp.config[name].cmd[1] = command
         vim.api.nvim_del_autocmd(autocmd)

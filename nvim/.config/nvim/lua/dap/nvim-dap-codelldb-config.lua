@@ -1,11 +1,8 @@
 local dap = require("dap")
 
 dap.adapters.codelldb = function(callback)
-  local command = require("core.tools").ensure_executable(
-    "codelldb",
-    { "codelldb" },
-    "Debug session"
-  )
+  local command =
+    require("core.tools").ensure_executable("codelldb", { "codelldb" }, "Debug session")
   if not command then
     return
   end

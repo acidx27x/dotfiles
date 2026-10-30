@@ -86,12 +86,8 @@ lazy.keymap({ "n", "v" }, "<leader>cf", "conform", "plugins.conform-nvim-config"
   local can_continue = has_lsp or #available > 0
   for _, name in ipairs(conform.list_formatters_for_buffer(0)) do
     local key = name == "ruff_format" and "ruff" or name
-    local command = require("core.tools").ensure_executable(
-      key,
-      { commands[name] },
-      "Formatting",
-      can_continue
-    )
+    local command =
+      require("core.tools").ensure_executable(key, { commands[name] }, "Formatting", can_continue)
     if command then
       conform.formatters[name] = vim.tbl_extend("force", conform.formatters[name] or {}, {
         command = command,

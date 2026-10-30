@@ -237,11 +237,8 @@ end, { desc = "editor: show window-local working directory" })
 
 -- Better ctags support
 vim.api.nvim_create_user_command("CTags", function(opts)
-  local executable = require("core.tools").ensure_executable(
-    "ctags",
-    { "ctags-universal", "ctags" },
-    "CTags"
-  )
+  local executable =
+    require("core.tools").ensure_executable("ctags", { "ctags-universal", "ctags" }, "CTags")
   if not executable then
     return
   end

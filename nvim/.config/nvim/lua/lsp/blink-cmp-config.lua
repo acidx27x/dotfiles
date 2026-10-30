@@ -33,7 +33,8 @@ local function get_omnifunc()
   local autoload = func:match("^(.*)#[^#]+$")
   if
     autoload
-    and #vim.api.nvim_get_runtime_file("autoload/" .. autoload:gsub("#", "/") .. ".vim", false) > 0
+    and #vim.api.nvim_get_runtime_file("autoload/" .. autoload:gsub("#", "/") .. ".vim", false)
+      > 0
   then
     return func
   end
@@ -129,7 +130,7 @@ blink.setup({
       cmdline = {
         name = "CMD",
         module = "blink.cmp.sources.cmdline",
-        score_offset = 20,  -- To have cmdline completions over buffer first in cmdline.
+        score_offset = 20, -- To have cmdline completions over buffer first in cmdline.
       },
     },
   },

@@ -40,7 +40,8 @@ end
 
 local function complete_parsers(installed)
   return function(arglead)
-    local available = require("nvim-treesitter.config")[installed and "get_installed" or "get_available"]()
+    local available =
+      require("nvim-treesitter.config")[installed and "get_installed" or "get_available"]()
     return vim.tbl_filter(function(name)
       return name:find(arglead, 1, true) ~= nil
     end, available)
