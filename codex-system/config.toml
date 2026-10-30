@@ -136,8 +136,8 @@ enabled = true
 mode = "limited"
 
 # Specific sites only settings.
-# [permissions.locked_folders_only.network.domains]
-# "registry.npmjs.org" = "allow"
+[permissions.locked_folders_only.network.domains]
+"registry.npmjs.org" = "allow"
 
 ###############################################################################
 # Shell environment hardening
@@ -261,4 +261,3 @@ terminal_title = [
   "thread-title",
   "task-progress",
 ]
-
