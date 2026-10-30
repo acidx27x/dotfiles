@@ -37,7 +37,6 @@ require("plugins.mini-bufremove-config")
 
 require("plugins.mini-trailspace-config")
 
-require("plugins.mini-clue-config")
 --
 
 -- utils group
