@@ -24,6 +24,7 @@ local function setup_colors()
 end
 
 setup_colors()
+-- IBL recreates highlights after colorscheme changes; rebuild the derived whitespace colors then.
 hooks.register(hooks.type.HIGHLIGHT_SETUP, setup_colors)
 
 local is_mac = vim.uv.os_uname().sysname == "Darwin"

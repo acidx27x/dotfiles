@@ -23,7 +23,7 @@ function M.setup()
     },
   })
 
-  -- WARN: idk if this plugins is stable, this may brake if api changes
+  -- FloatermClose reaches into Floaterm and Volt state; upstream internal changes may break it.
   vim.api.nvim_create_user_command("FloatermClose", function()
     require("volt.utils").close({
       bufs = { fterm_state.buf, fterm_state.sidebuf, fterm_state.barbuf },

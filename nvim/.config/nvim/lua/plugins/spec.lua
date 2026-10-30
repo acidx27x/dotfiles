@@ -103,6 +103,7 @@ function M.setup()
     desc = "Install or update Tree-sitter parsers after package changes",
   })
 
+  -- PackChanged can fire during vim.pack.add, before plugins.config defines the TS commands.
   vim.api.nvim_create_autocmd("VimEnter", {
     once = true,
     callback = function()
@@ -114,6 +115,7 @@ function M.setup()
   })
 
   vim.pack.add(eager)
+  -- Register optional packages now so startup mappings can load them on demand.
   vim.pack.add(optional, { load = function() end })
 end
 

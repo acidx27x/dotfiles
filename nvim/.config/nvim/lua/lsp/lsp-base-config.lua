@@ -104,6 +104,7 @@ M.lsp_keymaps = function(bufnr)
   keyn("gO", vim.lsp.buf.document_symbol, "LSP: document symbols (native key)")
   map({ "n", "v" }, "gra", vim.lsp.buf.code_action, "LSP: code action", { buf = bufnr })
 
+  -- LSP maps are buffer-local and may arrive after MiniClue's initial trigger scan.
   vim.api.nvim_buf_call(bufnr, function()
     require("mini.clue").ensure_buf_triggers()
   end)

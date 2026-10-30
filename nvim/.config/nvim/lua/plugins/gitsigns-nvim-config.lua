@@ -62,6 +62,7 @@ require("gitsigns").setup({
     keyn("<leader>gtw", git.toggle_word_diff, "git: toggle word diff")
     keyn("<leader>gtb", git.toggle_current_line_blame, "git: toggle blame inline")
 
+    -- Gitsigns attaches later, so refresh clues for its buffer-local maps.
     require("mini.clue").ensure_buf_triggers()
   end,
 })

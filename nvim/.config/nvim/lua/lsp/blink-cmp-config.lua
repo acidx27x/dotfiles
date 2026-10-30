@@ -7,6 +7,7 @@ local function path_icon(ctx)
 end
 
 local blink = require("blink.cmp")
+-- The native matcher may be missing from a fresh or mismatched Blink checkout.
 if not blink.build then
   vim.notify(
     'Run :lua vim.pack.update({"blink.cmp"}, {target="lockfile"}) and restart for Blink v2',

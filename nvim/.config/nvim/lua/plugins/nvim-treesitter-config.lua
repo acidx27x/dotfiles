@@ -145,6 +145,7 @@ vim.api.nvim_create_autocmd("FileType", {
     map("x", "grc", grow_selection, "Tree-sitter: grow scope selection", opts)
     map("x", "grm", shrink_selection, "Tree-sitter: shrink node selection", opts)
 
+    -- These buffer-local selection maps arrive after MiniClue's initial trigger scan.
     require("mini.clue").ensure_buf_triggers()
   end,
   desc = "Enable Tree-sitter features for configured filetypes",

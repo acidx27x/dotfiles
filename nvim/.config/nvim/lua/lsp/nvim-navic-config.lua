@@ -53,6 +53,7 @@ function M.get()
   return string.format(format, sign_pad, num_pad, loc)
 end
 
+-- The winbar statusline expression calls this global through v:lua for each window.
 _G.navic_winbar = M
 
 -- dont do vim.wo[winid] because will be ugly in split when buffer is not supported

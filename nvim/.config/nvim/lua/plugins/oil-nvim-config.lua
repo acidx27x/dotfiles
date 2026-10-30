@@ -46,6 +46,7 @@ function M.get()
   return string.format(format, sign_pad, num_pad, dir)
 end
 
+-- The winbar statusline expression calls this global through v:lua when Oil draws a window.
 _G.oil_winbar = M
 --
 
