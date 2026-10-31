@@ -1,10 +1,10 @@
-// INFO: mainly using <ctrl-k> for wor<k>space, <ctrl-l> for editor <l>ocal context
+// INFO: secondary-k for workspace, secondary-l for editor (Cmd on macOS, Ctrl elsewhere)
 // TODO toggle inline diagnostics
 [
   {
     "use_key_equivalents": true,
     "unbind": {
-      "ctrl-alt-,": "zed::OpenSettingsFile",
+      "secondary-alt-,": "zed::OpenSettingsFile",
       "alt-cmd-,": "zed::OpenSettingsFile",
       "tab": "menu::SelectNext",
       "shift-tab": "menu::SelectPrevious"
@@ -13,14 +13,14 @@
   {
     "context": "Welcome",
     "unbind": {
-      "ctrl-n": "workspace::NewFile"
+      "secondary-n": "workspace::NewFile"
     }
   },
   {
-    // move to top bc use ctrl-l as prefix a lot
+    // secondary-l is the editor prefix
     "context": "Editor",
     "unbind": {
-      "ctrl-l": "editor::SelectLine"
+      "secondary-l": "editor::SelectLine"
     }
   },
   // {
@@ -55,25 +55,27 @@
   {
     // remap unused/uncomfy mapping begin
     "context": "Workspace",
+    "use_key_equivalents": true,
     "unbind": {
-      "ctrl-k ctrl-s": "zed::OpenKeymap",
-      "ctrl-k ctrl-shift-s": "workspace::SaveWithoutFormat",
+      "secondary-k secondary-s": "zed::OpenKeymap",
+      "secondary-k secondary-shift-s": "workspace::SaveWithoutFormat",
       "cmd-k s": "workspace::SaveWithoutFormat",
-      "ctrl-k ctrl-t": "theme_selector::Toggle",
-      "ctrl-n": "workspace::NewFile"
+      "secondary-k secondary-t": "theme_selector::Toggle",
+      "secondary-n": "workspace::NewFile"
     },
     "bindings": {
-      "ctrl-k ctrl-k": "zed::OpenKeymap"
+      "secondary-k secondary-k": "zed::OpenKeymap"
     }
   },
   {
     "context": "!SettingsWindow",
+    "use_key_equivalents": true,
     "unbind": {
-      "ctrl-,": "zed::OpenSettings",
+      "secondary-,": "zed::OpenSettings",
       "cmd-,": "zed::OpenSettings"
     },
     "bindings": {
-      "ctrl-k ctrl-s": "zed::OpenSettings"
+      "secondary-k secondary-s": "zed::OpenSettings"
     }
   },
   {
@@ -92,7 +94,7 @@
     // toggle dock begin
     "context": "AgentPanel",
     "unbind": {
-      "ctrl-shift-e": "project_panel::ToggleFocus"
+      "secondary-shift-e": "project_panel::ToggleFocus"
     }
   },
   {
@@ -103,61 +105,65 @@
   {
     "context": "Editor",
     "unbind": {
-      "ctrl-k ctrl-d": [
+      "secondary-k secondary-d": [
         "editor::SelectNext",
         {
           "replace_newest": true
         }
       ],
-      "ctrl-k ctrl-l": "editor::ToggleFold",
-      "ctrl-k ctrl-c": [
+      "secondary-k secondary-l": "editor::ToggleFold",
+      "secondary-k secondary-c": [
         "editor::ToggleComments",
         {
           "advance_downwards": false
         }
-      ]
+      ],
+      "secondary-k secondary-h": "call_hierarchy::ShowIncomingCalls"
     }
   },
   {
     "context": "!Terminal",
     "unbind": {
-      "ctrl-shift-c": "collab_panel::ToggleFocus"
+      "secondary-shift-c": "collab_panel::ToggleFocus"
     }
   },
   {
     "context": "Workspace",
+    "use_key_equivalents": true,
     "unbind": {
-      "ctrl-shift-`": "workspace::NewTerminal",
+      "secondary-shift-`": "workspace::NewTerminal",
+      "ctrl-~": "workspace::NewTerminal",
       "ctrl-`": "terminal_panel::Toggle",
-      "ctrl-alt-j": "multi_workspace::ToggleWorkspaceSidebar",
-      "ctrl-shift-/": "agent::ToggleFocus",
-      "ctrl-shift-e": "project_panel::ToggleFocus",
-      "ctrl-shift-m": "diagnostics::Deploy",
-      "ctrl-shift-d": "debug_panel::ToggleFocus",
-      "ctrl-shift-b": "outline_panel::ToggleFocus",
+      "secondary-alt-j": "multi_workspace::ToggleWorkspaceSidebar",
+      "secondary-shift-/": "agent::ToggleFocus",
+      "secondary-?": "agent::ToggleFocus",
+      "secondary-shift-e": "project_panel::ToggleFocus",
+      "secondary-shift-m": "diagnostics::Deploy",
+      "secondary-shift-d": "debug_panel::ToggleFocus",
+      "secondary-shift-b": "outline_panel::ToggleFocus",
       "ctrl-shift-g": "git_panel::ToggleFocus",
-      "ctrl-k m": "language_selector::Toggle",
-      "ctrl-j": "workspace::ToggleBottomDock",
-      "ctrl-b": "workspace::ToggleLeftDock",
-      "ctrl-alt-b": "workspace::ToggleRightDock",
-      "ctrl-k ctrl-shift-t": "theme::ToggleMode"
+      "secondary-k m": "language_selector::Toggle",
+      "secondary-j": "workspace::ToggleBottomDock",
+      "secondary-b": "workspace::ToggleLeftDock",
+      "secondary-alt-b": "workspace::ToggleRightDock",
+      "secondary-k secondary-shift-t": "theme::ToggleMode"
     },
     "bindings": {
-      "ctrl-k ctrl-t": "terminal_panel::Toggle",
-      "ctrl-k ctrl-h": "multi_workspace::ToggleWorkspaceSidebar",
-      "ctrl-k ctrl-a": "agent::Toggle",
-      "ctrl-k ctrl-n": "project_panel::Toggle",
-      "ctrl-k ctrl-i": "diagnostics::Deploy",
-      "ctrl-k ctrl-d": "debug_panel::Toggle",
-      "ctrl-k ctrl-u": "outline_panel::Toggle",
-      "ctrl-k ctrl-g": "git_panel::Toggle",
-      "ctrl-k ctrl-l": "language_selector::Toggle",
-      "ctrl-k ctrl--": "workspace::ToggleBottomDock",
-      "ctrl-k ctrl-,": "workspace::ToggleLeftDock",
-      "ctrl-k ctrl-.": "workspace::ToggleRightDock",
-      "ctrl-k ctrl-e": "editor::ToggleFocus",
-      "ctrl-k ctrl-shift-t": "workspace::OpenInTerminal",
-      "ctrl-k ctrl-c": "collab_panel::Toggle"
+      "secondary-k secondary-t": "terminal_panel::Toggle",
+      "secondary-k secondary-h": "multi_workspace::ToggleWorkspaceSidebar",
+      "secondary-k secondary-a": "agent::Toggle",
+      "secondary-k secondary-n": "project_panel::Toggle",
+      "secondary-k secondary-i": "diagnostics::Deploy",
+      "secondary-k secondary-d": "debug_panel::Toggle",
+      "secondary-k secondary-u": "outline_panel::Toggle",
+      "secondary-k secondary-g": "git_panel::Toggle",
+      "secondary-k secondary-l": "language_selector::Toggle",
+      "secondary-k secondary--": "workspace::ToggleBottomDock",
+      "secondary-k secondary-,": "workspace::ToggleLeftDock",
+      "secondary-k secondary-.": "workspace::ToggleRightDock",
+      "secondary-k secondary-e": "editor::ToggleFocus",
+      "secondary-k secondary-shift-t": "workspace::OpenInTerminal",
+      "secondary-k secondary-c": "collab_panel::Toggle"
     }
   }, //  toggle dock end
   {
@@ -167,72 +173,79 @@
       // use same bindings for Format and FormatSelection
       // can`t place in one object due to json error begin
       "alt-shift-f": "editor::Format",
-      "ctrl-k ctrl-f": "editor::FormatSelections"
+      "secondary-k secondary-f": "editor::FormatSelections"
     },
     "bindings": {
-      "ctrl-l ctrl-f": "editor::Format"
+      "secondary-l secondary-f": "editor::Format"
     }
   },
   {
     "context": "Editor && selection",
     "bindings": {
-      "ctrl-l ctrl-f": "editor::FormatSelections"
+      "secondary-l secondary-f": "editor::FormatSelections"
     }
   },
   {
     "context": "Editor && vim_mode == visual",
     "bindings": {
-      "ctrl-l ctrl-f": "editor::FormatSelections"
+      "secondary-l secondary-f": "editor::FormatSelections"
     }
   },
   {
     "context": "!AcpThread > Editor && mode == full",
     "unbind": {
-      "ctrl-shift-e": "pane::RevealInProjectPanel"
+      "secondary-shift-e": "pane::RevealInProjectPanel"
     },
     "bindings": {
-      "ctrl-l ctrl-n": "pane::RevealInProjectPanel"
+      "secondary-l secondary-n": "pane::RevealInProjectPanel"
     }
   },
   {
     "context": "Editor",
     "unbind": {
-      "ctrl-k p": "workspace::CopyPath",
-      "ctrl-k r": "editor::RevealInFileManager",
-      "ctrl-k ctrl-b": "editor::BlameHover"
+      "secondary-k p": "workspace::CopyPath",
+      "secondary-k r": "editor::RevealInFileManager",
+      "secondary-k secondary-b": "editor::BlameHover"
     },
     "bindings": {
-      "ctrl-l ctrl-r": "editor::RevealInFileManager",
-      "ctrl-l ctrl-b": "editor::BlameHover"
+      "secondary-l secondary-r": "editor::RevealInFileManager",
+      "secondary-l secondary-b": "editor::BlameHover"
     }
   }, // editor end
   {
-    // remap/unmap unused toggle comments begin
     "context": "Editor",
     "unbind": {
-      "ctrl-/": [
+      "secondary-k p": "editor::CopyPath"
+    }
+  },
+  {
+    // remap/unmap unused toggle comments begin
+    "context": "Editor",
+    "use_key_equivalents": true,
+    "unbind": {
+      "secondary-/": [
         "editor::ToggleComments",
         {
           "advance_downwards": false
         }
       ],
-      "ctrl-k ctrl-c": [
+      "secondary-k secondary-c": [
         "editor::ToggleComments",
         {
           "advance_downwards": false
         }
       ],
       "alt-shift-a": "editor::ToggleBlockComments",
-      "ctrl-k ctrl-/": "editor::ToggleBlockComments"
+      "secondary-k secondary-/": "editor::ToggleBlockComments"
     },
     "bindings": {
-      "ctrl-l ctrl-c": [
+      "secondary-l secondary-c": [
         "editor::ToggleComments",
         {
           "advance_downwards": false
         }
       ],
-      "ctrl-l ctrl-shift-c": "editor::ToggleBlockComments"
+      "secondary-l secondary-shift-c": "editor::ToggleBlockComments"
     }
   }, // remap/unmap unused toggle comments end
   {
@@ -286,24 +299,26 @@
     }
   },
   {
-    // move lines with ctrl + alt + hjkl begin
+    // move lines with secondary + alt + hjkl begin
     "context": "Editor",
+    "use_key_equivalents": true,
     "unbind": {
       "alt-up": "editor::MoveLineUp",
       "alt-down": "editor::MoveLineDown"
     },
     "bindings": {
-      "ctrl-alt-j": "editor::MoveLineDown",
-      "ctrl-alt-k": "editor::MoveLineUp",
-      "ctrl-alt-h": "vim::Outdent",
-      "ctrl-alt-l": "vim::Indent"
+      "secondary-alt-j": "editor::MoveLineDown",
+      "secondary-alt-k": "editor::MoveLineUp",
+      "secondary-alt-h": "vim::Outdent",
+      "secondary-alt-l": "vim::Indent"
     }
   },
   {
     "context": "vim_mode == visual",
+    "use_key_equivalents": true,
     "bindings": {
-      "ctrl-alt-h": ["workspace::SendKeystrokes", "< g v"],
-      "ctrl-alt-l": ["workspace::SendKeystrokes", "> g v"]
+      "secondary-alt-h": ["workspace::SendKeystrokes", "< g v"],
+      "secondary-alt-l": ["workspace::SendKeystrokes", "> g v"]
     }
   },
   {
@@ -318,7 +333,7 @@
     "unbind": {
       "ctrl-j": "vim::Down"
     }
-  }, // move lines with ctrl + alt + hjkl end
+  }, // move lines with secondary + alt + hjkl end
   {
     // resize panes with alt + arrows begin
     "context": "Pane || Dock",
@@ -342,11 +357,12 @@
     // use alt + hjkl to focus in all the editor docks
     // (the terminal, project panel, assistant panel, ...) begin
     "context": "Workspace",
+    "use_key_equivalents": true,
     "unbind": {
-      "ctrl-k ctrl-up": "workspace::ActivatePaneUp",
-      "ctrl-k ctrl-down": "workspace::ActivatePaneDown",
-      "ctrl-k ctrl-left": "workspace::ActivatePaneLeft",
-      "ctrl-k ctrl-right": "workspace::ActivatePaneRight"
+      "secondary-k secondary-up": "workspace::ActivatePaneUp",
+      "secondary-k secondary-down": "workspace::ActivatePaneDown",
+      "secondary-k secondary-left": "workspace::ActivatePaneLeft",
+      "secondary-k secondary-right": "workspace::ActivatePaneRight"
     },
     "bindings": {
       "alt-k": "workspace::ActivatePaneUp",
@@ -386,31 +402,77 @@
   {
     // terminal begin
     "context": "Terminal",
+    "use_key_equivalents": true,
     "unbind": {
       "ctrl-shift-space": "terminal::ToggleViMode",
-      "ctrl-n": "workspace::NewTerminal"
+      "secondary-n": "workspace::NewTerminal",
+      "cmd-k": "terminal::Clear"
     },
     "bindings": {
-      "ctrl-t ctrl-m": "terminal::ToggleViMode",
-      "ctrl-k ctrl-n": "workspace::NewTerminal"
+      "secondary-k secondary-n": "workspace::NewTerminal"
     }
   }, // terminal end
+  {
+    "context": "os == macos > Terminal",
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-t ctrl-m": "terminal::ToggleViMode",
+      "cmd-shift-k": "terminal::Clear"
+    }
+  },
+  {
+    "context": "(os == linux || os == windows) > Terminal",
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-a": ["terminal::SendKeystroke", "ctrl-a"],
+      "ctrl-b": ["terminal::SendKeystroke", "ctrl-b"],
+      "ctrl-c": ["terminal::SendKeystroke", "ctrl-c"],
+      "ctrl-d": ["terminal::SendKeystroke", "ctrl-d"],
+      "ctrl-e": ["terminal::SendKeystroke", "ctrl-e"],
+      "ctrl-f": ["terminal::SendKeystroke", "ctrl-f"],
+      "ctrl-g": ["terminal::SendKeystroke", "ctrl-g"],
+      "ctrl-h": ["terminal::SendKeystroke", "ctrl-h"],
+      "ctrl-i": ["terminal::SendKeystroke", "ctrl-i"],
+      "ctrl-j": ["terminal::SendKeystroke", "ctrl-j"],
+      "ctrl-k": ["terminal::SendKeystroke", "ctrl-k"],
+      "ctrl-l": ["terminal::SendKeystroke", "ctrl-l"],
+      "ctrl-m": ["terminal::SendKeystroke", "ctrl-m"],
+      "ctrl-n": ["terminal::SendKeystroke", "ctrl-n"],
+      "ctrl-o": ["terminal::SendKeystroke", "ctrl-o"],
+      "ctrl-p": ["terminal::SendKeystroke", "ctrl-p"],
+      "ctrl-q": ["terminal::SendKeystroke", "ctrl-q"],
+      "ctrl-r": ["terminal::SendKeystroke", "ctrl-r"],
+      "ctrl-s": ["terminal::SendKeystroke", "ctrl-s"],
+      "ctrl-t": ["terminal::SendKeystroke", "ctrl-t"],
+      "ctrl-u": ["terminal::SendKeystroke", "ctrl-u"],
+      "ctrl-v": ["terminal::SendKeystroke", "ctrl-v"],
+      "ctrl-w": ["terminal::SendKeystroke", "ctrl-w"],
+      "ctrl-x": ["terminal::SendKeystroke", "ctrl-x"],
+      "ctrl-y": ["terminal::SendKeystroke", "ctrl-y"],
+      "ctrl-z": ["terminal::SendKeystroke", "ctrl-z"],
+      "secondary-k secondary-m": "terminal::ToggleViMode"
+    }
+  },
   {
     // project panel begin
     "context": "ProjectPanel",
     "unbind": {
       "alt-shift-c": "workspace::CopyPath",
-      "ctrl-k ctrl-shift-c": "workspace::CopyRelativePath"
+      "secondary-k secondary-shift-c": "workspace::CopyRelativePath",
+      "ctrl-alt-c": "project_panel::CopyPath",
+      "cmd-alt-c": "workspace::CopyPath",
+      "secondary-alt-shift-c": "workspace::CopyRelativePath"
     }
   },
   {
     "context": "ProjectPanel && not_editing",
+    "use_key_equivalents": true,
     "unbind": {
       "shift-5": "project_panel::NewFile",
       "d": "project_panel::NewDirectory",
       "x": "project_panel::RevealInFileManager",
       "s": "workspace::OpenWithSystem",
-      "ctrl-x": "project_panel::Cut",
+      "secondary-x": "project_panel::Cut",
       "space": "project_panel::Open",
       "p": "project_panel::Open",
       "t": "project_panel::OpenPermanent",
@@ -423,12 +485,10 @@
       "x": "project_panel::Cut",
       "y": "project_panel::Copy",
       "p": "project_panel::Paste",
-      "ctrl-r": "project_panel::RevealInFileManager",
-      "ctrl-s": "workspace::OpenWithSystem",
-      "ctrl-c": "workspace::CopyPath",
-      "ctrl-shift-c": "workspace::CopyRelativePath",
-      "ctrl-o": "project_panel::Open",
-      "ctrl-shift-o": "project_panel::OpenPermanent",
+      "secondary-r": "project_panel::RevealInFileManager",
+      "secondary-s": "workspace::OpenWithSystem",
+      "secondary-o": "project_panel::Open",
+      "secondary-shift-o": "project_panel::OpenPermanent",
       "h": "project_panel::OpenSplitHorizontal",
       "v": "project_panel::OpenSplitVertical"
     }
@@ -438,18 +498,24 @@
     "context": "OutlinePanel && not_editing",
     "unbind": {
       "alt-shift-c": "workspace::CopyPath",
-      "ctrl-alt-shift-c": "workspace::CopyRelativePath"
+      "secondary-alt-shift-c": "workspace::CopyRelativePath",
+      "ctrl-alt-c": "outline_panel::CopyPath",
+      "cmd-alt-c": "workspace::CopyPath"
     }
   }, // outline panel end
   {
     // pane begin
     "context": "Pane",
     "unbind": {
-      "ctrl-k shift-enter": "pane::TogglePinTab",
+      "secondary-k shift-enter": "pane::TogglePinTab",
       "alt-l": "search::ToggleSelection"
-    },
+    }
+  },
+  {
+    "context": "Pane && !Terminal",
+    "use_key_equivalents": true,
     "bindings": {
-      "ctrl-l ctrl-p": "pane::TogglePinTab"
+      "secondary-l secondary-p": "pane::TogglePinTab"
     }
   }, // pane end
   {
@@ -462,7 +528,7 @@
     }
   },
   {
-    "context": "Workspace",
+    "context": "Workspace && !Terminal && !ProjectPanel",
     "bindings": {
       "alt-d r": "debugger::Start",
       "alt-d shift-r": "debugger::RerunSession",
@@ -477,7 +543,7 @@
     }
   },
   {
-    "context": "Workspace && debugger_stopped",
+    "context": "Workspace && debugger_stopped && !Terminal && !ProjectPanel",
     "bindings": {
       "alt-d c": "debugger::Continue"
     }
@@ -494,13 +560,17 @@
           "reveal_target": "center"
         }
       ],
-      "ctrl-shift-r": [
+      "secondary-shift-r": [
         "task::Rerun",
         {
           "reevaluate_context": false
         }
-      ]
-    },
+      ],
+      "cmd-shift-r": "task::Spawn"
+    }
+  },
+  {
+    "context": "Workspace && !Terminal",
     "bindings": {
       "alt-t n": "task::Spawn",
       "alt-t r": "task::Rerun",
@@ -522,40 +592,29 @@
     // remap spoiled copy/paste keymaps begin
     "context": "Editor",
     "unbind": {
-      "ctrl-c": "editor::Copy",
       "ctrl-insert": "editor::Copy",
-      "ctrl-v": "editor::Paste",
       "shift-insert": "editor::Paste"
-    },
-    "bindings": {
-      "ctrl-shift-c": "editor::Copy",
-      "ctrl-shift-v": "editor::Paste"
-    }
-  },
-  {
-    "context": "Editor && extension == md",
-    "unbind": {
-      "ctrl-shift-v": "markdown::OpenPreview"
     }
   }, // remap spoiled copy/paste keymaps end
   {
     // TODO
     "context": "Editor",
     "unbind": {
-      "ctrl-k ctrl-i": "editor::Hover"
+      "secondary-k secondary-i": "editor::Hover"
     },
     "bindings": {
-      "ctrl-l ctrl-k": "editor::Hover"
+      "secondary-l secondary-k": "editor::Hover"
     }
   },
   {
     // bookmarks
     "context": "Editor",
+    "use_key_equivalents": true,
     "bindings": {
-      "ctrl-l ctrl-m": "editor::ToggleBookmark",
-      "ctrl-l ctrl-shift-m": "editor::ViewBookmarks",
-      "ctrl-.": "editor::GoToNextBookmark",
-      "ctrl-,": "editor::GoToPreviousBookmark"
+      "secondary-l secondary-m": "editor::ToggleBookmark",
+      "secondary-l secondary-shift-m": "editor::ViewBookmarks",
+      "secondary-.": "editor::GoToNextBookmark",
+      "secondary-,": "editor::GoToPreviousBookmark"
     }
   }
 ]
