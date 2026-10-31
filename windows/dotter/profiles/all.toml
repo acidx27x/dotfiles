@@ -8,6 +8,6 @@ packages = [
   "nvim",
   "starship",
   "wezterm",
-  # "zed",
+  "zed",
   "zellij",
 ]
