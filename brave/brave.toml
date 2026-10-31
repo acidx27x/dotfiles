@@ -8,17 +8,24 @@
 
 [settings]
 "bookmark_bar.show_on_all_tabs" = false
+"brave.ai_chat.show_toolbar_button" = false
+"brave.brave_search.show-ntp-chat" = false
+"brave.brave_vpn.show_button" = false
 "brave.containers.enabled" = true
 "brave.darker_mode" = true
 "brave.enable_window_closing_confirm" = true
 "brave.history.retention_days" = 180
 "brave.location_bar_is_wide" = false
 "brave.mru_cycling_enabled" = true
-"brave.new_tab_page.show_brave_news" = false
+"brave.new_tab_page.show_branded_background_image" = true
+"brave.new_tab_page.show_brave_news" = true
+"brave.new_tab_page.show_brave_vpn" = false
 "brave.new_tab_page.show_clock" = true
+"brave.new_tab_page.show_rewards" = false
 "brave.new_tab_page.show_together" = false
 "brave.new_tab_page.shows_options" = 1
 "brave.news.open-articles-in-new-tab" = true
+"brave.rewards.show_brave_rewards_button_in_location_bar" = false
 "brave.shields.advanced_view_enabled" = true
 "brave.sidebar.sidebar_items" = [
   { built_in_item_type = 1, type = 0 },
@@ -40,7 +47,7 @@
 "brave.tabs.vertical_tabs_on_right" = false
 "brave.tabs.vertical_tabs_show_scrollbar" = false
 "brave.today.opted_in" = true
-"brave.today.should_show_toolbar_button" = false
+"brave.today.should_show_toolbar_button" = true
 "brave.wallet.show_wallet_icon_on_toolbar" = false
 "brave.web_view_rounded_corners" = true
 "intl.accept_languages" = "en-US,ru"
