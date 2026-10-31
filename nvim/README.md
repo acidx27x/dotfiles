@@ -80,6 +80,36 @@ and parser commands manually:
 
 `:TSInstallConfigured` adds newly configured parsers, including CMake.
 
+## Formatting
+
+`<Space>cf` formats the current buffer or Visual selection. A manual save formats before writing by
+default; writes from auto-save.nvim do not trigger formatting. C/C++ prefers clangd's formatter and
+uses `clang-format` if clangd cannot format the buffer. Lua, CMake, and Python use `stylua`,
+`gersemi`, and `ruff format` respectively; other filetypes can use LSP formatting.
+
+To disable format-on-save or change a formatter for one project, create `.nvim.json` in its root.
+Settings are resolved for each buffer, so they do not affect other open projects:
+
+```json
+{
+  "formatting": {
+    "format_on_save": false,
+    "filetypes": {
+      "cpp": {
+        "formatters": ["clang-format"],
+        "lsp_format": "never"
+      }
+    }
+  }
+}
+```
+
+`format_on_save` defaults to `true`; disabling it leaves `<Space>cf` available. A filetype's
+`formatters` list replaces the global list. Set `lsp_format` to a Conform mode such as `never`,
+`fallback`, or `prefer` to control LSP use. Set `lsp_client` to an LSP name to restrict formatting
+to that client. Define additional external formatters and executable paths in
+`lua/plugins/conform-nvim-config.lua`; use `:ConformInfo` to inspect availability.
+
 Useful command-line checks:
 
 ```bash
@@ -92,13 +122,14 @@ These checks use the live installation. `vim.pack` can update `nvim-pack-lock.js
 when installed package directories differ from the spec; use a disposable XDG config/data copy for
 an audit that must leave the tracked lockfile untouched. See the [dated review](docs/review.md).
 
-External language servers, formatters, search tools, CodeLLDB, CTags, and parser build tools are
-checked when their features are first used. Missing required tools stop that action with one error;
-formatting and code-action previews warn once when their fallback can continue. Configure executable
-paths in `lua/local_paths.lua` when a tool is outside `PATH`. A valid override takes priority;
-otherwise the first executable candidate is used. For example, CTags tries `ctags-universal` then
-`ctags`. Blink, MiniPick, and Tree-sitter invoke fixed command names, so their checks use the names
-those plugins call. Parser installation requires `curl`.
+External language servers, search tools, CodeLLDB, CTags, and parser build tools are checked when
+their features are first used. Missing required tools stop that action with one error; code-action
+previews warn once when their fallback can continue. Conform checks formatter availability and can
+fall back to LSP formatting. Configure executable paths in `lua/local_paths.lua` when a tool is
+outside `PATH`. A valid override takes priority; otherwise the first executable candidate is used.
+For example, CTags tries `ctags-universal` then `ctags`. Blink, MiniPick, and Tree-sitter invoke
+fixed command names, so their checks use the names those plugins call. Parser installation requires
+`curl`.
 
 If startup fails, try `nvim --clean`, inspect `:messages`, and run `:checkhealth`. For a missing
 lazy-loaded feature, inspect `:verbose nmap <keys>` and confirm its package is in

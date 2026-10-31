@@ -62,6 +62,21 @@ function M.setup()
       vim.notify("disabled", vim.log.levels.INFO, { title = "auto-save" })
     end,
   })
+
+  vim.api.nvim_create_autocmd("User", {
+    group = augroup,
+    pattern = "AutoSaveWritePre",
+    callback = function(opts)
+      vim.b[opts.data.saved_buffer].autosave_writing = true
+    end,
+  })
+  vim.api.nvim_create_autocmd("User", {
+    group = augroup,
+    pattern = "AutoSaveWritePost",
+    callback = function(opts)
+      vim.b[opts.data.saved_buffer].autosave_writing = false
+    end,
+  })
 end
 
 lazy.keymap("n", "<leader>ast", "buffer_ui", "plugins.auto-save-nvim-config", function()

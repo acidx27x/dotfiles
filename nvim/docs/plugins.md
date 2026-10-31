@@ -2,7 +2,7 @@
 
 The inventory comes from [`lua/plugins/spec.lua`](../.config/nvim/lua/plugins/spec.lua) and
 [`nvim-pack-lock.json`](../.config/nvim/nvim-pack-lock.json). It currently contains 47 repositories:
-25 eager specs and 22 optional specs. “Eager” means registered with `vim.pack.add(eager)` at
+26 eager specs and 21 optional specs. “Eager” means registered with `vim.pack.add(eager)` at
 startup; “optional” means registered with a no-op load callback, then activated with `:packadd` by a
 lazy group. All revision IDs are in the lock file; branch/tag constraints are noted below. See
 [the dated review](review.md) for the local revision comparison and verification limits. Optional
@@ -16,6 +16,7 @@ proposed in this audit. A dependency library inherits the decision for the featu
 | --------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | [blink.cmp](https://github.com/Saghen/blink.cmp)                      | Completion UI and LSP completion capabilities              | `lua/lsp/blink-cmp-config.lua`             | Eager; tracks `main` (v2); uses the Rust matcher when available, builds it with Cargo when needed, and falls back to Lua; uses `blink.lib` and `mini.icons`.                      | Keep; completion capabilities are shared with LSP setup.                                                                                       |
 | [blink.lib](https://github.com/saghen/blink.lib)                      | Blink v2 runtime and build support                         | No separate setup module                   | Eager; loaded before `blink.cmp`.                                                                                                                                                 | **Keep:** required by Blink v2.                                                                                                                |
+| [conform.nvim](https://github.com/stevearc/conform.nvim)              | Formatter dispatch                                         | `lua/plugins/conform-nvim-config.lua`      | Eager; formats manual saves by default and exposes `<Space>cf`.                                                                                                                   | Keep; C/C++ prefers clangd with clang-format fallback and reads project overrides.                                                             |
 | [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)  | Ready-made snippets for Blink's built-in snippet source    | No separate setup module                   | Eager data package; Blink loads its snippets automatically.                                                                                                                       | Keep for snippet completion.                                                                                                                   |
 | [kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim)             | Colorscheme                                                | `lua/colorscheme/kanagawa-nvim-config.lua` | Eager so the selected theme is available during startup.                                                                                                                          | Keep.                                                                                                                                          |
 | [matchparen.nvim](https://github.com/monkoose/matchparen.nvim)        | Matching bracket highlighting                              | `lua/plugins/matchparen-nvim-config.lua`   | Eager setup.                                                                                                                                                                      | **Consider replacement:** built-in matching is simpler if the plugin’s highlight behavior is not needed.                                       |
@@ -46,7 +47,6 @@ proposed in this audit. A dependency library inherits the decision for the featu
 | ---------------------------------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [actions-preview.nvim](https://github.com/aznhe21/actions-preview.nvim)            | Code-action preview picker                  | `lua/lsp/actions-preview-nvim-config.lua`       | `lsp_actions`; first `<C-s>ca` on an attached LSP buffer                                 | **Keep:** preview picker adds context to code actions beyond native `gra`.                                                                        |
 | [auto-save.nvim](https://github.com/okuuva/auto-save.nvim)                         | Conditional automatic saving                | `lua/plugins/auto-save-nvim-config.lua`         | `buffer_ui`; first `BufReadPre` or `BufNewFile`; `<Space>ast` is a lazy fallback trigger | Keep if autosave behavior is wanted.                                                                                                              |
-| [conform.nvim](https://github.com/stevearc/conform.nvim)                           | Formatter dispatch                          | `lua/plugins/conform-nvim-config.lua`           | `conform`; `<Space>cf`                                                                   | **Keep:** external formatters with LSP fallback; Conform excludes the neocmake and ruff LSP clients for CMake and Python. Autoformat is disabled. |
 | [floaterm](https://github.com/nvzone/floaterm)                                     | Floating terminal UI                        | `lua/plugins/floaterm-config.lua`               | `floaterm`; `<Space>tf`                                                                  | **Consider replacement:** built-in `:terminal` covers basic terminal windows; keep Floaterm plus Volt for the floating sidebar and terminal list. |
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)                        | Git hunk signs and buffer actions           | `lua/plugins/gitsigns-nvim-config.lua`          | `buffer_ui`; first `BufReadPre` or `BufNewFile`                                          | **Keep:** git repository context required; buffer maps created on attach.                                                                         |
 | [goto-preview](https://github.com/rmagatti/goto-preview)                           | Floating LSP navigation previews            | `lua/lsp/goto-preview-config.lua`               | `lsp_preview`; `gp*` LSP mappings                                                        | **Keep:** depends on `logger.nvim`; loaded on first preview mapping.                                                                              |
@@ -85,9 +85,10 @@ do not support lazy loading. Parser installation and updates also need `tree-sit
 `tar`, `curl`, and a C compiler. Installed parsers must be updated with the plugin's queries. Oil is
 eager because it handles directory buffers; its [requirements](https://github.com/stevearc/oil.nvim)
 are Neovim 0.10+ and only an optional icon provider. Conform needs Neovim 0.10+; its configured
-formatters are `stylua`, `clang-format`, `gersemi`, and `ruff`, with LSP fallback. The `filter`
-fields in the CMake/Python filetype tables are supported Conform options and exclude the named LSP
-clients from that fallback. Automatic format on save is disabled.
+formatters are `stylua`, `clang-format`, `gersemi`, and `ruff`. C/C++ prefers clangd with
+`clang-format` fallback. CMake/Python exclude the neocmake and ruff LSP clients from fallback.
+Manual saves format by default; auto-save.nvim writes do not. Project-local `.nvim.json` settings
+are read by buffer path.
 
 The `buffer_ui` group loads on the first `BufReadPre` or `BufNewFile`, or on a relevant lazy
 mapping. Its packages load together, so invoking `<Space>ast` or `<Space>vw` also loads the other
@@ -119,8 +120,8 @@ Transitive relationships represented explicitly by groups include `volt` → Flo
 → Harpoon and Spectre, `logger.nvim` → goto-preview, and `nvim-nio`/`nvim-dap` → DAP UI. Blink uses
 `blink.lib`, `friendly-snippets`, and `mini.icons`; MiniPick uses MiniExtra. External binaries
 include language servers, formatters, ripgrep, sd, Tree-sitter CLI/parser downloads, and CodeLLDB.
-The config checks these executables on first use. Missing formatters retain Conform's LSP fallback;
-Actions Preview uses plain diffs without `diff-so-fancy`.
+The config checks non-formatter executables on first use. Missing formatters retain Conform's LSP
+fallback; Actions Preview uses plain diffs without `diff-so-fancy`.
 
 Neo-tree and `nui.nvim`, Vague, `nvim-web-devicons`, Hardtime, the forked MiniPick package, the
 commented trailing-whitespace plugin, and plain LLDB adapter configuration were removed. Oil,

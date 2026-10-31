@@ -7,6 +7,7 @@ local loaded_groups = {}
 local eager = {
   { src = "https://github.com/saghen/blink.lib" },
   { src = "https://github.com/Saghen/blink.cmp", version = "main" },
+  { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },
   { src = "https://github.com/rebelot/kanagawa.nvim" },
   { src = "https://github.com/monkoose/matchparen.nvim" },
@@ -35,7 +36,6 @@ local eager = {
 local optional = {
   { src = "https://github.com/aznhe21/actions-preview.nvim" },
   { src = "https://github.com/okuuva/auto-save.nvim" },
-  { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/nvzone/floaterm" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/rmagatti/goto-preview" },
@@ -66,7 +66,6 @@ M.groups = {
     "visimatch.nvim",
     "visual-whitespace.nvim",
   },
-  conform = { "conform.nvim" },
   dap = { "nvim-nio", "nvim-dap", "nvim-dap-ui", "nvim-dap-virtual-text" },
   floaterm = { "volt", "floaterm" },
   harpoon = { "plenary.nvim", "harpoon" },

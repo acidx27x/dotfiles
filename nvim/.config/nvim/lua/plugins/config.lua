@@ -45,7 +45,6 @@ require("plugins.matchparen-nvim-config")
 
 -- Register optional feature mappings now; their callbacks load and configure plugins on use.
 require("plugins.auto-save-nvim-config")
-require("plugins.conform-nvim-config")
 require("plugins.floaterm-config")
 require("plugins.harpoon-config")
 require("plugins.no-neck-pain-nvim-config")
@@ -53,6 +52,8 @@ require("plugins.nvim-spectre-config")
 require("plugins.snipe-nvim-config")
 require("plugins.visual-whitespace-nvim-config")
 require("dap.config")
+
+require("plugins.conform-nvim-config").setup()
 
 -- Load buffer UI before the first existing file is read, or when the first new file is made.
 vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
