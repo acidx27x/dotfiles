@@ -75,7 +75,7 @@
   "tab_size": 2,
   "colorize_brackets": true,
   "line_ending": "prefer_lf",
-  "soft_wrap": "editor_width",
+  "soft_wrap": "none",
   "preferred_line_length": 120,
   "vertical_scroll_margin": 5.0,
   "show_whitespaces": "boundary",
@@ -179,6 +179,8 @@
     "**/.svn",
     "**/.hg",
     "**/.jj",
+    "**/.sl",
+    "**/.repo",
     "**/CVS",
     "**/.DS_Store",
     "**/Thumbs.db",
@@ -434,6 +436,8 @@
   // languages
   "languages": {
     "Git Commit": {
+      "allow_rewrap": "in_comments",
+      "soft_wrap": "none",
       "wrap_guides": [50, 72],
       "preferred_line_length": 72
     },
