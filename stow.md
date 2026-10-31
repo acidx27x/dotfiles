@@ -96,6 +96,7 @@ The following packages need or benefit from `--no-folding`:
 | `bash`      | `~/.config/bash`      |
 | `zsh`       | `~/.config/zsh`       |
 | `nvim`      | `~/.config/nvim`      |
+| `zed`       | `~/.config/zed`       |
 | `brew`      | `~/.config/homebrew`  |
 | `htop`      | `~/.config/htop`      |
 | `atuin`     | `~/.atuin`            |
@@ -106,6 +107,8 @@ The following packages need or benefit from `--no-folding`:
 - `bash` and `zsh`: `conf.local.d/` and local shell files are intentionally untracked.
 - `nvim`: `lua/core/paths_override.lua` is machine-local; the tracked `nvim-pack-lock.json` is
   deployed so removed plugins stay removed on other machines.
+- `zed`: `settings.json` contains machine-local connections. Generate it before Stow deploy so
+  `--no-folding` links the file without linking the entire directory into the repository.
 - `brew`: Homebrew writes `trust.json` and `trust.json.lock`. Its Stow-local ignore prevents
   generated copies already in the package from being linked back into the target directory.
 - `htop`: htop writes `htop_history`.
@@ -115,7 +118,7 @@ The following packages need or benefit from `--no-folding`:
 For example:
 
 ```bash
-stow --no-folding --target="$HOME" bash zsh nvim brew htop atuin worktrunk
+stow --no-folding --target="$HOME" bash zsh nvim zed brew htop atuin worktrunk
 ```
 
 To convert packages that are already stowed with folded directory links, preview and then restow
@@ -123,9 +126,9 @@ them:
 
 ```bash
 stow --restow --simulate --verbose --no-folding --target="$HOME" \
-  bash zsh nvim brew htop atuin worktrunk
+  bash zsh nvim zed brew htop atuin worktrunk
 stow --restow --verbose --no-folding --target="$HOME" \
-  bash zsh nvim brew htop atuin worktrunk
+  bash zsh nvim zed brew htop atuin worktrunk
 ```
 
 Inspect the package directories before converting them. Any generated or machine-local files that

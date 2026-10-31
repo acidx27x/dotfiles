@@ -26,6 +26,9 @@ PowerShell formatting also requires PowerShell 7 and PSScriptAnalyzer 1.25.0 or 
 module from PowerShell with `Install-PSResource PSScriptAnalyzer -Scope CurrentUser`. The `zed/` and
 `ssh/` packages are temporarily excluded from dprint.
 
+See [zed.md](zed.md) for syncing shared Zed preferences while keeping SSH and WSL connections local
+to each machine.
+
 ## Linux and macOS Quick Start
 
 Install GNU Stow, then use `setup/stow.sh` from any working directory. Package directories keep the

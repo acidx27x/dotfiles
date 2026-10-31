@@ -1,10 +1,7 @@
 {
   // connections
-  // connections wsl
-  "wsl_connections": [],
   // connections ssh
   "read_ssh_config": true,
-  "ssh_connections": [],
   // connections proxy
   "proxy": "",
   // general
