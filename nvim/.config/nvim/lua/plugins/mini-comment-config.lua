@@ -5,10 +5,10 @@ require("mini.comment").setup({
   },
 
   mappings = {
-    comment = "<leader>cc",
-    comment_visual = "<leader>cc",
-    comment_line = "<leader>ccl",
+    comment = "gc",
+    comment_visual = "gc",
+    comment_line = "gcc",
 
-    textobject = "<leader>cc",
+    textobject = "gc",
   },
 })
