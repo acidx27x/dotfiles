@@ -1,6 +1,8 @@
 [settings]
 default_target_type = "symbolic"
 
+# Map configuration only; Markdown helpers are intentionally omitted.
+
 [git.files]
 "git/.gitconfig" = "~/.gitconfig"
 

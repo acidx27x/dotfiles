@@ -1,5 +1,6 @@
 \.git
 \.gitignore
 \.DS_Store
+^(?!AGENTS\.md$).*\.md$
 trust\.json
 trust\.json\.lock

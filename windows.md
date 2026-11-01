@@ -78,7 +78,8 @@ GNU Stow workflow. PowerShell 7 and Dotter 0.13.5 or newer are required. The wra
 repository from its own location, so commands work outside the repository and when its path contains
 spaces.
 
-`windows\dotter\global.toml` is the only source of file-to-target mappings:
+`windows\dotter\global.toml` is the only source of file-to-target mappings: Markdown helper files
+are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mapped as configuration.
 
 | Package    | Destination                           |
 | ---------- | ------------------------------------- |
