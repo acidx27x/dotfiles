@@ -2,14 +2,14 @@
 
 The inventory comes from [`lua/plugins/spec.lua`](../.config/nvim/lua/plugins/spec.lua) and
 [`nvim-pack-lock.json`](../.config/nvim/nvim-pack-lock.json). The specs contain 49 repositories: 28
-eager specs and 21 optional specs. The lockfile still records 47 revisions, pending installation of
-`mini.operators` and Leap. “Eager” means registered with `vim.pack.add(eager)` at startup;
-“optional” means registered with a no-op load callback, then activated with `:packadd` by a lazy
-group. Existing revision IDs are in the lock file; branch/tag constraints are noted below. See
-[the dated review](review.md) for the local revision comparison and verification limits. Optional
-config files that own global mappings register them at startup; their setup runs when the group is
-first loaded. The recommendation labels below describe the current workflow. A dependency library
-inherits the decision for the feature that uses it.
+eager specs and 21 optional specs. The lockfile records revisions for `mini.operators` and Leap.
+“Eager” means registered with `vim.pack.add(eager)` at startup; “optional” means registered with a
+no-op load callback, then activated with `:packadd` by a lazy group. Existing revision IDs are in
+the lock file; branch/tag constraints are noted below. See [the dated review](review.md) for the
+local revision comparison and verification limits. Optional config files that own global mappings
+register them at startup; their setup runs when the group is first loaded. The recommendation labels
+below describe the current workflow. A dependency library inherits the decision for the feature that
+uses it.
 
 ## Eager packages
 
@@ -36,7 +36,7 @@ inherits the decision for the feature that uses it.
 | [mini.surround](https://github.com/nvim-mini/mini.surround)           | Add, delete, replace, find, and highlight surroundings     | `lua/plugins/mini-surround-config.lua`     | Eager; customized `sa/sd/sr/sf/sF/sh`.                                                                                                                                            | Keep.                                                                                                                                          |
 | [mini.tabline](https://github.com/nvim-mini/mini.tabline)             | Buffer tabline                                             | `lua/plugins/mini-tabline-config.lua`      | Eager.                                                                                                                                                                            | Keep.                                                                                                                                          |
 | [mini.trailspace](https://github.com/nvim-mini/mini.trailspace)       | Detect and trim trailing whitespace                        | `lua/plugins/mini-trailspace-config.lua`   | Eager; `<Space>tw` trims trailing whitespace and final blank lines.                                                                                                               | Keep; replaces the commented third-party plugin.                                                                                               |
-| [leap.nvim](https://codeberg.org/andyg/leap.nvim)                     | Forward and backward on-screen jumps                       | `lua/plugins/leap-config.lua`              | Eager; `<Space>jf/jb` in Normal, Visual, and operator-pending modes.                                                                                                              | Keep.                                                                                                                                          |
+| [leap.nvim](https://codeberg.org/andyg/leap.nvim)                     | Forward and backward on-screen jumps                       | `lua/plugins/leap-config.lua`              | Eager; `Kf/Kb` two-character jumps, `f/F/t/T` one-character motions, and `;`/`,` repeats in Normal, Visual, and operator-pending modes. Kanagawa backdrop.                        | Keep.                                                                                                                                          |
 | [multinput.nvim](https://github.com/r0nsha/multinput.nvim)            | Enhanced `vim.ui.input` implementation                     | `lua/plugins/multinput-nvim-config.lua`    | Eager because it overrides global input UI.                                                                                                                                       | Keep if global input override remains desired.                                                                                                 |
 | [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)            | LSP server configurations                                  | `lua/lsp/*.lua`                            | Eager with server configs; server executables are external dependencies.                                                                                                          | Keep; track Neovim LSP API and upstream changes.                                                                                               |
 | [nvim-navic](https://github.com/SmiteshP/nvim-navic)                  | LSP document breadcrumb context                            | `lua/lsp/nvim-navic-config.lua`            | Eager; attached from LSP `on_attach`.                                                                                                                                             | Keep if breadcrumb UI is used.                                                                                                                 |

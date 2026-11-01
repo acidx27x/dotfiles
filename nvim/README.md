@@ -43,7 +43,8 @@ buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common m
 | `<Space>tf`                             | Toggle floating terminal                                          |
 | `]e` / `[e` / `]w` / `[w`               | Next / previous error or warning                                  |
 | `<Space>is` / `<Space>it`               | Convert line or selected lines to spaces / tabs                   |
-| `<Space>jf` / `<Space>jb`               | Leap forward / backward                                           |
+| `Kf` / `Kb`                             | Leap forward / backward (two-character target)                    |
+| `f/F/t/T` then `;` / `,`                | One-character Leap motion; repeat / reverse it                    |
 | `<Space>xe/xx/xm/xr/xs`                 | Evaluate / exchange / multiply / replace / sort text              |
 
 MiniClue shows descriptions while typing prefixes. `<Space>pk` opens the configured keymap picker.
