@@ -27,7 +27,11 @@ require("plugins.mini-hipatterns-config")
 
 require("plugins.mini-move-config")
 
+require("plugins.mini-operators-config")
+
 require("plugins.mini-surround-config")
+
+require("plugins.leap-config")
 
 require("plugins.mini-pairs-config")
 

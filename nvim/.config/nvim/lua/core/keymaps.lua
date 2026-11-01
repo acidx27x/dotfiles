@@ -153,6 +153,31 @@ end, "window: move floating window right")
 -- map("v", "<", "<gv", "edit: indent left and reselect")
 -- map("v", ">", ">gv", "edit: indent right and reselect")
 
+map(
+  "n",
+  "<leader>is",
+  ":setlocal expandtab<CR>:.retab -indentonly<CR>",
+  "indent: convert line to spaces"
+)
+map(
+  "n",
+  "<leader>it",
+  ":setlocal noexpandtab<CR>:.retab! -indentonly<CR>",
+  "indent: convert line to tabs"
+)
+map(
+  "x",
+  "<leader>is",
+  ":<C-u>setlocal expandtab | '<,'>retab -indentonly<CR>",
+  "indent: convert selected lines to spaces"
+)
+map(
+  "x",
+  "<leader>it",
+  ":<C-u>setlocal noexpandtab | '<,'>retab! -indentonly<CR>",
+  "indent: convert selected lines to tabs"
+)
+
 -- Quick config editing
 map("n", "<leader>rc", function()
   local path = vim.fn.stdpath("config") .. "/init.lua"

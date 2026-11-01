@@ -135,6 +135,8 @@ Source:
 | `<Space>eq` | Normal | Populate location list from diagnostics          | Custom diagnostic group.                                                             |
 | `<C-w>d`    | Normal | Open diagnostic float                            | Neovim's native mapping.                                                             |
 | `]d` / `[d` | Normal | Next / previous diagnostic                       | Calls `vim.diagnostic.jump`; may replace version/plugin-provided diagnostic motions. |
+| `]e` / `[e` | Normal | Next / previous error                            | Filters `vim.diagnostic.jump` to errors.                                             |
+| `]w` / `[w` | Normal | Next / previous warning                          | Filters `vim.diagnostic.jump` to warnings.                                           |
 
 `<C-w>` and `]`/`[` are MiniClue triggers. The custom diagnostic keys use `<Space>e` so `<C-w>d`
 remains a direct mapping.
@@ -144,15 +146,30 @@ remains a direct mapping.
 These are plugin-native maps created by each module setup. Source modules are named in the plugin
 inventory. MiniClue can display their descriptions where supplied.
 
-| Keys                         | Mode                                            | Action                                         | Notes                                                                                                                      |
-| ---------------------------- | ----------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `gc`                         | Normal / Visual / Operator-pending              | Comment operator or selected lines; textobject | `mini.comment`, using Neovim's standard comment key.                                                                       |
-| `gcc`                        | Normal                                          | Comment current line                           | `mini.comment`, using Neovim's standard line-comment key.                                                                  |
-| `<C-h/j/k/l>`                | Normal / Visual                                 | Move line or selection left/down/up/right      | `mini.move`; intentionally replaces default Ctrl-window movement in Normal mode. Use `<C-w>h/j/k/l` for window navigation. |
-| `S` / `J`                    | Normal                                          | Split / join current syntax-aware line         | `mini.splitjoin`; `toggle` mapping is disabled.                                                                            |
-| `sa` / `sd` / `sr`           | Normal / Visual / Operator-pending as supported | Add / delete / replace surrounding             | `mini.surround`; `l` and `n` select previous/next target.                                                                  |
-| `sf` / `sF` / `sh`           | Normal                                          | Find right / left / highlight surrounding      | `mini.surround`.                                                                                                           |
-| `(`, `[`, `{`, `)`, `]`, `}` | Insert                                          | Pair open/close behavior                       | `mini.pairs`; quotes `'`, `"`, and backtick are also customized for close-open behavior.                                   |
+| Keys                         | Mode                                            | Action                                          | Notes                                                                                                                                                   |
+| ---------------------------- | ----------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gc`                         | Normal / Visual / Operator-pending              | Comment operator or selected lines; textobject  | `mini.comment`, using Neovim's standard comment key.                                                                                                    |
+| `gcc`                        | Normal                                          | Comment current line                            | `mini.comment`, using Neovim's standard line-comment key.                                                                                               |
+| `<C-h/j/k/l>`                | Normal / Visual                                 | Move line or selection left/down/up/right       | `mini.move`; intentionally replaces default Ctrl-window movement in Normal mode. Use `<C-w>h/j/k/l` for window navigation.                              |
+| `S` / `J`                    | Normal                                          | Split / join current syntax-aware line          | `mini.splitjoin`; `toggle` mapping is disabled.                                                                                                         |
+| `sa` / `sd` / `sr`           | Normal / Visual / Operator-pending as supported | Add / delete / replace surrounding              | `mini.surround`; `l` and `n` select previous/next target.                                                                                               |
+| `sf` / `sF` / `sh`           | Normal                                          | Find right / left / highlight surrounding       | `mini.surround`.                                                                                                                                        |
+| `<Space>xe/xx/xm/xr/xs`      | Normal / Visual                                 | Evaluate / exchange / multiply / replace / sort | `mini.operators`; each key starts with Space. Repeat the last key in Normal mode for a line, or follow with a motion. Sort compares case insensitively. |
+| `(`, `[`, `{`, `)`, `]`, `}` | Insert                                          | Pair open/close behavior                        | `mini.pairs`; quotes `'`, `"`, and backtick are also customized for close-open behavior.                                                                |
+
+Use Visual Line mode with `<Space>xs` to sort selected lines. Other selection types use
+`mini.operators`' normal splitting behavior. The custom prefixes preserve LSP `gr…` and native `gx`.
+
+## Editing and jumping
+
+| Keys                      | Mode                             | Action                               |
+| ------------------------- | -------------------------------- | ------------------------------------ |
+| `<Space>is` / `<Space>it` | Normal, Visual                   | Convert indentation to spaces / tabs |
+| `<Space>jf` / `<Space>jb` | Normal, Visual, Operator-pending | Leap forward / backward              |
+
+Indent conversion changes the current line or all lines touched by a Visual selection, including
+Visual Block selections. It changes leading indentation only, then sets the buffer-local indentation
+style for subsequent edits. Leap uses its forward/backward `<Plug>` mappings.
 
 MiniTrailspace's `<Space>tw` is listed under feature mappings below. Most other Mini modules retain
 their normal built-in mappings unless explicitly listed above.

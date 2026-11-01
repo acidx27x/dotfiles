@@ -41,6 +41,10 @@ buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common m
 | `<C-s>h` / `<C-s>rn` / `<C-s>ca`        | LSP hover / rename / code action                                  |
 | `<Space>ha` / `<Space>ht`               | Harpoon add / menu                                                |
 | `<Space>tf`                             | Toggle floating terminal                                          |
+| `]e` / `[e` / `]w` / `[w`               | Next / previous error or warning                                  |
+| `<Space>is` / `<Space>it`               | Convert line or selected lines to spaces / tabs                   |
+| `<Space>jf` / `<Space>jb`               | Leap forward / backward                                           |
+| `<Space>xe/xx/xm/xr/xs`                 | Evaluate / exchange / multiply / replace / sort text              |
 
 MiniClue shows descriptions while typing prefixes. `<Space>pk` opens the configured keymap picker.
 For practical examples of quickfix, terminal windows, splits, buffers, and other built-in Vim tools,

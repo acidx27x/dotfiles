@@ -66,3 +66,15 @@ end, "diagnostic: jump next")
 map("n", "[d", function()
   vim.diagnostic.jump({ count = -1 })
 end, "diagnostic: jump prev")
+
+for _, item in ipairs({
+  { key = "e", severity = vim.diagnostic.severity.ERROR, label = "error" },
+  { key = "w", severity = vim.diagnostic.severity.WARN, label = "warning" },
+}) do
+  map("n", "]" .. item.key, function()
+    vim.diagnostic.jump({ count = 1, severity = item.severity })
+  end, "diagnostic: jump next " .. item.label)
+  map("n", "[" .. item.key, function()
+    vim.diagnostic.jump({ count = -1, severity = item.severity })
+  end, "diagnostic: jump prev " .. item.label)
+end

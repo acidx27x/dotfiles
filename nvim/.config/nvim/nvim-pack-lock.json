@@ -54,6 +54,10 @@
       "rev": "bb85e4bfc8d89b0e62c8fa53ccdd13d12e2f77b3",
       "src": "https://github.com/rebelot/kanagawa.nvim"
     },
+    "leap.nvim": {
+      "rev": "277e04fad21e3af05a55cc414757b09a704f2a92",
+      "src": "https://codeberg.org/andyg/leap.nvim"
+    },
     "logger.nvim": {
       "rev": "63dd10c9b9a159fd6cfe08435d9606384ff103c5",
       "src": "https://github.com/rmagatti/logger.nvim"
@@ -93,6 +97,10 @@
     "mini.move": {
       "rev": "5207c4de3d7db84aadedf72e4a27048d9e46ccf9",
       "src": "https://github.com/nvim-mini/mini.move"
+    },
+    "mini.operators": {
+      "rev": "9e844663fe217bae78e857b7dc59468d8ee6d425",
+      "src": "https://github.com/nvim-mini/mini.operators"
     },
     "mini.pairs": {
       "rev": "03eb1f0062a2cee5314d1ac3939246e4bb21352e",
@@ -143,7 +151,7 @@
       "src": "https://github.com/theHamsta/nvim-dap-virtual-text"
     },
     "nvim-lspconfig": {
-      "rev": "460bb34e7be114f1fda7815781696bc701e60f83",
+      "rev": "d8d2fda7aae57030452ce8cd6e770b1eb704514e",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-navic": {
@@ -163,7 +171,7 @@
       "src": "https://github.com/nvim-pack/nvim-spectre"
     },
     "nvim-treesitter": {
-      "rev": "a2f694478be07f89c2d03cc17858a8745a400c4b",
+      "rev": "a9c4e1457e2e59f1b82c8f78dcdb3b2517555200",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
