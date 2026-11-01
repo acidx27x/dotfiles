@@ -4,5 +4,6 @@ git:
       command: >-
         delta --no-gitconfig --tabs=2 --dark --paging=never --line-numbers --features=decorations --file-style=omit --commit-style=raw --commit-decoration-style="blue ol" --hunk-header-style="file line-number syntax" --hunk-header-file-style=red --hunk-header-decoration-style="blue box"
 gui:
+  language: en
   tabWidth: 2
   nerdFontsVersion: "3"
