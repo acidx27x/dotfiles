@@ -16,9 +16,14 @@ if not blink.build then
   return
 end
 if not blink.library_available() and vim.fn.executable("cargo") == 1 then
+  local cargo_target_dir = vim.env.CARGO_TARGET_DIR
+  if vim.fn.has("win32") == 1 then
+    vim.env.CARGO_TARGET_DIR = blink.get_repo_root() .. "/target"
+  end
   pcall(function()
     blink.build():pwait()
   end)
+  vim.env.CARGO_TARGET_DIR = cargo_target_dir
 end
 local use_rust = blink.library_available()
 
