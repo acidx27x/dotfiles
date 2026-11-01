@@ -248,8 +248,9 @@ PowerShell parity include custom fzf file/ripgrep and Git pickers, encoding conv
 terminal color diagnostics, and Zone.Identifier cleanup. WSL and Unix-specific helpers should only
 be ported when they have a native Windows use.
 
-The shared Starship configuration uses Bash for its custom Git provider and worktree modules on
-Unix, and PowerShell 7 on Windows. No separate generated Starship configuration is required.
+The shared Starship configuration uses `sh` for its custom Git provider and worktree modules on
+Unix and Git for Windows' `sh.exe` on Windows. No separate generated Starship configuration is
+required.
 
 The deployed files are symbolic links, not filesystem read-only files. If an application rewrites a
 linked configuration file, it changes the repository source and will appear in `git diff`.

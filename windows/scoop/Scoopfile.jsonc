@@ -22,6 +22,7 @@
   ],
   "apps": [
     // VCS
+    // Git also supplies sh.exe for Starship's Windows Git modules.
     { "Name": "git", "Source": "main", "Info": "" },
     { "Name": "git-lfs", "Source": "main", "Info": "" },
     { "Name": "delta", "Source": "main", "Info": "" },
