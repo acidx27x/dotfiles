@@ -81,19 +81,20 @@ spaces.
 `windows\dotter\global.toml` is the only source of file-to-target mappings: Markdown helper files
 are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mapped as configuration.
 
-| Package    | Destination                           |
-| ---------- | ------------------------------------- |
-| `git`      | `%USERPROFILE%\.gitconfig`            |
-| `nvim`     | `%LOCALAPPDATA%\nvim`                 |
-| `wezterm`  | `%USERPROFILE%\.config\wezterm`       |
-| `atuin`    | `%USERPROFILE%\.atuin`                |
-| `starship` | `%USERPROFILE%\.config\starship.toml` |
-| `bat`      | `%APPDATA%\bat\config`                |
-| `lazygit`  | `%LOCALAPPDATA%\lazygit\config.yml`   |
+| Package     | Destination                                                                 |
+| ----------- | --------------------------------------------------------------------------- |
+| `git`       | `%USERPROFILE%\.gitconfig`                                                  |
+| `nvim`      | `%LOCALAPPDATA%\nvim`                                                       |
+| `wezterm`   | `%USERPROFILE%\.config\wezterm`                                             |
+| `atuin`     | `%USERPROFILE%\.atuin`                                                      |
+| `starship`  | `%USERPROFILE%\.config\starship.toml`                                      |
+| `bat`       | `%APPDATA%\bat\config`                                                     |
+| `lazygit`   | `%LOCALAPPDATA%\lazygit\config.yml`                                        |
+| `powershell` | `%USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` |
 
 `windows\dotter\profiles\all.toml` is the default tracked profile. The optional `minimal` profile
-contains `git`, `nvim`, and `starship`. Profiles contain package names only and are validated
-against `global.toml` before Dotter runs.
+contains `git`, `nvim`, `powershell`, and `starship`. Profiles contain package names only and are
+validated against `global.toml` before Dotter runs.
 
 Dotter recursively expands the current Neovim directory mapping into file symlinks. Generated files
 such as `%LOCALAPPDATA%\nvim\nvim-pack-lock.json` and
@@ -222,14 +223,30 @@ visible to new processes.
 
 ### PowerShell Shell Integration
 
-The Dotter profile deploys the Atuin and Starship configuration, but it does not own your complete
-PowerShell profile. Add these lines to the PowerShell 7 profile reported by `$PROFILE` if they are
-not already present:
+The `powershell` Dotter package manages the standard PowerShell 7 CurrentUserCurrentHost profile and
+loads split configuration from `%USERPROFILE%\.config\powershell`. Deploy it with the default
+profile or select it directly:
 
 ```powershell
-atuin init powershell | Out-String | Invoke-Expression
-Invoke-Expression (&starship init powershell)
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Package powershell
 ```
+
+The profile initializes Scoop tools when available: Atuin, bat, eza, fzf, Starship, zoxide, and
+direnv. PSFzf adds Ctrl+T file selection and Alt+C directory selection; Atuin keeps Ctrl+R history
+search. Native PowerShell Tab completion remains active. The Scoopfile installs PSFzf from Extras.
+Local overrides can be placed in `%USERPROFILE%\.config\powershell\conf.local.d`.
+
+Atuin records new commands after the profile is loaded. To import existing PowerShell history once,
+run:
+
+```powershell
+atuin import powershell
+```
+
+The first pass includes basic aliases and shared tool integrations. Follow-up candidates for
+PowerShell parity include custom fzf file/ripgrep and Git pickers, encoding conversion helpers,
+terminal color diagnostics, and Zone.Identifier cleanup. WSL and Unix-specific helpers should only
+be ported when they have a native Windows use.
 
 The shared Starship configuration uses Bash for its custom Git provider and worktree modules on
 Unix, and PowerShell 7 on Windows. No separate generated Starship configuration is required.

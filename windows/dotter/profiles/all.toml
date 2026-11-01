@@ -6,6 +6,7 @@ packages = [
   "lazygit",
   "llvm",
   "nvim",
+  "powershell",
   "starship",
   "wezterm",
   "zed",

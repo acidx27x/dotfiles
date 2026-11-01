@@ -40,3 +40,7 @@ default_target_type = "symbolic"
 
 [zellij.files]
 "zellij/.config/zellij/config.kdl" = "${APPDATA}/Zellij/config.kdl"
+
+[powershell.files]
+"powershell/Documents/PowerShell/Microsoft.PowerShell_profile.ps1" = "~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1"
+"powershell/.config/powershell" = "~/.config/powershell"

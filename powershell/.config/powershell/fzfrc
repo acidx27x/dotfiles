@@ -1,0 +1,14 @@
+--height=~60%
+--layout=reverse
+--popup=center,90%,60%
+--border
+--info=inline
+--highlight-line
+--color=hl:#2dd4bf
+--prompt='∼ '
+--pointer='▶'
+--marker='✓'
+--preview-window=right,60%,border-left
+--bind=alt-w:toggle-preview-wrap
+--walker=file,dir,hidden
+--walker-skip=.git,node_modules

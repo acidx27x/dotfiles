@@ -36,6 +36,7 @@
 
     // Shell
     { "Name": "pwsh", "Source": "main", "Info": "" },
+    { "Name": "psfzf", "Source": "extras", "Info": "" },
     { "Name": "nu", "Source": "main", "Info": "" },
     { "Name": "shellcheck", "Source": "main", "Info": "" },
     { "Name": "shfmt", "Source": "main", "Info": "" },
