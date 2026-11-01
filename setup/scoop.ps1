@@ -175,11 +175,13 @@ function Main {
   }
 
   $dotfilesRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-  $scoopfile = Join-Path $dotfilesRoot 'windows\scoop\Scoopfile.json'
+  $scoopfile = Join-Path $dotfilesRoot 'windows\scoop\Scoopfile.jsonc'
   if (-not (Test-Path -LiteralPath $scoopfile -PathType Leaf)) {
     throw "Scoopfile is missing: $scoopfile"
   }
-  $manifest = Get-Content -LiteralPath $scoopfile -Raw | ConvertFrom-Json
+  $commentLine = '(?m)^[ \t]*//[^\r\n]*(?:\r?\n|$)'
+  $scoopJson = (Get-Content -LiteralPath $scoopfile -Raw) -replace $commentLine, ''
+  $manifest = $scoopJson | ConvertFrom-Json
   if (@($manifest.buckets).Count -eq 0 -or @($manifest.apps).Count -eq 0) {
     throw "Scoopfile must declare at least one bucket and one app: $scoopfile"
   }
@@ -272,6 +274,7 @@ function Main {
   }
 
   $installerFile = $null
+  $importFile = $null
   try {
     if (-not $scoopExists) {
       $installerName = "scoop-install-$([Guid]::NewGuid().ToString('N')).ps1"
@@ -301,9 +304,15 @@ function Main {
     Invoke-Scoop -Command $scoopCommand -Arguments @('update')
 
     Write-Info 'Installing packages from the repository Scoopfile.'
-    Invoke-Scoop -Command $scoopCommand -Arguments @('import', $scoopfile)
+    $importName = "scoop-import-$([Guid]::NewGuid().ToString('N')).json"
+    $importFile = Join-Path ([System.IO.Path]::GetTempPath()) $importName
+    [System.IO.File]::WriteAllText($importFile, $scoopJson, (New-Object System.Text.UTF8Encoding($false)))
+    Invoke-Scoop -Command $scoopCommand -Arguments @('import', $importFile)
   }
   finally {
+    if ($importFile -and (Test-Path -LiteralPath $importFile)) {
+      Remove-Item -LiteralPath $importFile -Force
+    }
     if ($installerFile -and (Test-Path -LiteralPath $installerFile)) {
       Remove-Item -LiteralPath $installerFile -Force
     }

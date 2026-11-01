@@ -21,17 +21,30 @@
     }
   ],
   "apps": [
+    // VCS
     { "Name": "git", "Source": "main", "Info": "" },
     { "Name": "git-lfs", "Source": "main", "Info": "" },
     { "Name": "delta", "Source": "main", "Info": "" },
     { "Name": "dotter", "Source": "main", "Info": "" },
+    { "Name": "lazygit", "Source": "extras", "Info": "" },
+
     { "Name": "neovim", "Source": "main", "Info": "" },
+
+    // Python
     { "Name": "python", "Source": "main", "Info": "" },
+    { "Name": "uv", "Source": "main", "Info": "" },
+
+    // Shell
     { "Name": "pwsh", "Source": "main", "Info": "" },
     { "Name": "nu", "Source": "main", "Info": "" },
     { "Name": "shellcheck", "Source": "main", "Info": "" },
     { "Name": "shfmt", "Source": "main", "Info": "" },
+
+    // C/C++ tools
     { "Name": "tree-sitter", "Source": "main", "Info": "" },
+    { "Name": "llvm", "Source": "main", "Info": "" },
+
+    // Must-have tools
     { "Name": "atuin", "Source": "main", "Info": "" },
     { "Name": "bat", "Source": "main", "Info": "" },
     { "Name": "direnv", "Source": "main", "Info": "" },
@@ -43,11 +56,34 @@
     { "Name": "starship", "Source": "main", "Info": "" },
     { "Name": "yazi", "Source": "main", "Info": "" },
     { "Name": "zoxide", "Source": "main", "Info": "" },
+
+    // Utils
     { "Name": "btop", "Source": "main", "Info": "" },
     { "Name": "curl", "Source": "main", "Info": "" },
     { "Name": "wget", "Source": "main", "Info": "" },
-    { "Name": "lazygit", "Source": "extras", "Info": "" },
+
+    // Windows utilities
+    { "Name": "7zip", "Source": "main", "Info": "" },
+    { "Name": "nssm", "Source": "main", "Info": "" },
+    { "Name": "bulk-crap-uninstaller", "Source": "extras", "Info": "" },
+    { "Name": "crystaldiskinfo", "Source": "extras", "Info": "" },
+    { "Name": "crystaldiskmark", "Source": "extras", "Info": "" },
+    { "Name": "ddu", "Source": "extras", "Info": "" },
+    { "Name": "fancontrol", "Source": "extras", "Info": "" },
+    { "Name": "hwinfo", "Source": "extras", "Info": "" },
+    { "Name": "nilesoft-shell", "Source": "extras", "Info": "" },
+    { "Name": "powertoys", "Source": "extras", "Info": "" },
+    { "Name": "simplewall", "Source": "extras", "Info": "" },
+    { "Name": "soundswitch", "Source": "extras", "Info": "" },
+    { "Name": "sysinternals", "Source": "extras", "Info": "" },
+    { "Name": "winscp", "Source": "extras", "Info": "" },
+
+    // Desktop apps
+    { "Name": "karing", "Source": "extras", "Info": "" },
     { "Name": "wezterm-nightly", "Source": "versions", "Info": "" },
+
+    // Fonts
+    { "Name": "FiraCode", "Source": "nerd-fonts", "Info": "" },
     { "Name": "FiraCode-NF", "Source": "nerd-fonts", "Info": "" }
   ]
 }

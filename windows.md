@@ -47,12 +47,12 @@ updated environment.
 
 ## Package Bundle
 
-`windows\scoop\Scoopfile.json` is the Windows equivalent of the repository's Brewfile. It is a
-native Scoop import file that records buckets and desired packages without pinning versions. The
-bootstrap imports it automatically; it can also be applied directly:
+`windows\scoop\Scoopfile.jsonc` is the Windows equivalent of the repository's Brewfile. It records
+buckets and desired packages without pinning versions, with comments grouping the apps. The
+bootstrap removes comment lines before importing it:
 
 ```powershell
-scoop import .\windows\scoop\Scoopfile.json
+.\setup\scoop.ps1
 ```
 
 Add or remove entries in the `apps` array to change the desired package list. Keep `Name`, `Source`,
@@ -65,7 +65,7 @@ temporary file and compare it manually:
 ```powershell
 $generated = Join-Path $env:TEMP 'Scoopfile.generated.json'
 scoop export --config | Set-Content -Encoding utf8 $generated
-git diff --no-index .\windows\scoop\Scoopfile.json $generated
+git diff --no-index .\windows\scoop\Scoopfile.jsonc $generated
 ```
 
 The generated export contains installed versions and update metadata. Treat it as a snapshot for
