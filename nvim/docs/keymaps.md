@@ -146,8 +146,8 @@ inventory. MiniClue can display their descriptions where supplied.
 
 | Keys                         | Mode                                            | Action                                         | Notes                                                                                                                      |
 | ---------------------------- | ----------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `<Space>cc`                  | Normal / Visual / Operator-pending              | Comment operator or selected lines; textobject | `mini.comment`.                                                                                                            |
-| `<Space>ccl`                 | Normal                                          | Comment current line                           | `mini.comment`.                                                                                                            |
+| `gc`                         | Normal / Visual / Operator-pending              | Comment operator or selected lines; textobject | `mini.comment`, using Neovim's standard comment key.                                                                       |
+| `gcc`                        | Normal                                          | Comment current line                           | `mini.comment`, using Neovim's standard line-comment key.                                                                  |
 | `<C-h/j/k/l>`                | Normal / Visual                                 | Move line or selection left/down/up/right      | `mini.move`; intentionally replaces default Ctrl-window movement in Normal mode. Use `<C-w>h/j/k/l` for window navigation. |
 | `S` / `J`                    | Normal                                          | Split / join current syntax-aware line         | `mini.splitjoin`; `toggle` mapping is disabled.                                                                            |
 | `sa` / `sd` / `sr`           | Normal / Visual / Operator-pending as supported | Add / delete / replace surrounding             | `mini.surround`; `l` and `n` select previous/next target.                                                                  |
@@ -231,8 +231,8 @@ cancels; `D` closes; `<C-s>` / `<C-h>` open in vertical/horizontal splits. Hint 
 
 - Search motions `n/N` and page motions `<C-d>/<C-u>` are intentional behavior-preserving overrides
   that add centering.
-- `gc` keeps Neovim's comment operator and `gr{char}` keeps virtual replacement in LSP buffers.
-  References use `grr`; declaration uses `<C-s>dc`.
+- `mini.comment` uses Neovim's standard `gc`/`gcc` comment keys; `gr{char}` keeps virtual
+  replacement in LSP buffers. References use `grr`; declaration uses `<C-s>dc`.
 - MiniMove intentionally claims `<C-h/j/k/l>` in Normal and Visual modes. This means Normal-mode
   `<C-w>` remains available for built-in window operations and is the recommended route.
 - `<C-w>d` keeps Neovim's diagnostic float. The custom diagnostic actions use `<Space>e`.
