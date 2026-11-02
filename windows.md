@@ -90,6 +90,7 @@ are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mappe
 | `starship`  | `%USERPROFILE%\.config\starship.toml`                                      |
 | `bat`       | `%APPDATA%\bat\config`                                                     |
 | `lazygit`   | `%LOCALAPPDATA%\lazygit\config.yml`                                        |
+| `zellij`    | `%APPDATA%\Zellij\config\config.kdl` and `config\layouts`                 |
 | `powershell` | `%USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` |
 
 `windows\dotter\profiles\all.toml` is the default tracked profile. The optional `minimal` profile

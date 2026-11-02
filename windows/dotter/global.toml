@@ -39,7 +39,8 @@ default_target_type = "symbolic"
 "llvm/.config/clangd/config.yaml" = "${LOCALAPPDATA}/clangd/config.yaml"
 
 [zellij.files]
-"zellij/.config/zellij/config.kdl" = "${APPDATA}/Zellij/config.kdl"
+"zellij/.config/zellij/config.kdl" = "${APPDATA}/Zellij/config/config.kdl"
+"zellij/.config/zellij/layouts" = "${APPDATA}/Zellij/config/layouts"
 
 [powershell.files]
 "powershell/Documents/PowerShell/Microsoft.PowerShell_profile.ps1" = "~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1"
