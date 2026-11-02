@@ -235,6 +235,8 @@ pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Package powershell
 The profile initializes Scoop tools when available: Atuin, bat, eza, fzf, Starship, zoxide, and
 direnv. PSFzf adds Ctrl+T file selection and Alt+C directory selection; Atuin keeps Ctrl+R history
 search. Native PowerShell Tab completion remains active. The Scoopfile installs PSFzf from Extras.
+Use Ctrl+X Ctrl+F to run `ffd` for file and directory actions, or Ctrl+X Ctrl+G to run `frg` for
+interactive ripgrep search and actions. `ffd` uses Ctrl+S to switch between files and directories.
 Local overrides can be placed in `%USERPROFILE%\.config\powershell\conf.local.d`.
 
 Atuin records new commands after the profile is loaded. To import existing PowerShell history once,
@@ -245,7 +247,7 @@ atuin import powershell
 ```
 
 The first pass includes basic aliases and shared tool integrations. Follow-up candidates for
-PowerShell parity include custom fzf file/ripgrep and Git pickers, encoding conversion helpers,
+PowerShell parity include Git pickers, encoding conversion helpers,
 terminal color diagnostics, and Zone.Identifier cleanup. WSL and Unix-specific helpers should only
 be ported when they have a native Windows use.
 
