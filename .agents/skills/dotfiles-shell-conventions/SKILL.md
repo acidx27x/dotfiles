@@ -1,26 +1,27 @@
 ---
 name: dotfiles-shell-conventions
 description: >-
-  Apply this repository's conventions when adding, editing, reviewing, or refactoring Bash
-  or Zsh startup files, helpers, functions, and conf.d modules, or when changing Stow package
-  layouts. Use for Bash/Zsh parity, shell-native idioms, fzf integration, line wrapping,
-  diagnostics, optional commands, Stow folding decisions, and validation. Do not use for
-  unrelated languages or one-off shell commands outside this repository.
+  Apply this repository's conventions when adding, editing, reviewing, or refactoring Bash,
+  Zsh, or PowerShell startup files, helpers, functions, and conf.d modules, or when changing
+  shell package layouts. Use for shared behavior, shell-native idioms, fzf integration,
+  diagnostics, optional commands, deployment layout, and validation. Do not use for unrelated
+  languages or one-off shell commands outside this repository.
 ---
 
-# Dotfiles shell and Stow conventions
+# Dotfiles shell conventions
 
 Keep changes small, behavior-driven, and native to the target shell. Do not copy an implementation
-verbatim between Bash and Zsh when either shell has a clearer native form.
+verbatim between shells when a shell has a clearer native form. PowerShell currently ports only a
+subset of Bash and Zsh features; do not assume full parity is required.
 
 ## Workflow
 
-1. Read the target file and the corresponding file for the other shell, when one exists.
+1. Read the target file and corresponding files in other shells when the feature exists there.
 2. Identify shared behavior, shell-specific behavior, compatibility limits, and local style.
 3. Make the minimum change needed and preserve unrelated working-tree modifications.
-4. Validate syntax, diagnostics, generated command strings, and Bash/Zsh behavioral parity.
+4. Validate syntax, diagnostics, generated command strings, and behavior across affected shells.
 
-## Stow package layout
+## Package deployment layout
 
 - When adding, removing, or relocating machine-local or application-generated files under a Stow
   target, determine whether the target directory must remain a real directory instead of a folded
@@ -30,27 +31,36 @@ verbatim between Bash and Zsh when either shell has a clearer native form.
   applicable command examples in `stow.md`. Keep setup scripts that invoke Stow consistent with that
   documentation.
 - Do not require `--no-folding` merely because a package contains static tracked configuration.
+- PowerShell is deployed through the Windows Dotter package mapping in `windows/dotter/global.toml`.
+  Keep its profile link and `.config/powershell` mapping consistent with `windows.md`.
 
 ## Shared conventions
 
-- Keep paired Bash and Zsh features behaviorally aligned, including arguments, output, return codes,
-  optional dependencies, key bindings, and failure behavior.
-- Implement each side using its own shell conventions. Share behavior, not syntax.
-- Preserve lexical loading through `conf.d` and machine-local overrides through `conf.local.d`.
+- Keep features implemented in multiple shells behaviorally aligned where their platforms allow,
+  including arguments, output, optional dependencies, key bindings, and failure behavior.
+- Implement each shell using its own conventions. Share behavior, not syntax.
+- Preserve lexical loading through `conf.d` and machine-local overrides through `conf.local.d`;
+  PowerShell loads only `*.ps1` files from those directories during interactive startup.
 - Start configuration modules with their installed path and a concise purpose comment.
-- Reuse project helpers such as `has-cmd`, `shell-init`, `source-if-exists`, `source-first`,
-  `source-conf-dirs`, and `path-prepend` after the file that defines them has been loaded.
-- Guard optional programs. Use return status 127 for a missing required command, 2 for invalid
-  usage, and 1 for other failures when the surrounding code follows that scheme.
-- Propagate selection cancellation and command failures with `|| return` where appropriate.
-- Quote command arguments and add `--` before user-controlled paths when the command supports it.
+- Reuse Bash/Zsh helpers such as `has-cmd`, `shell-init`, `source-if-exists`, `source-first`,
+  `source-conf-dirs`, and `path-prepend`, or PowerShell's `Test-Command` and `Get-ConfigScripts`,
+  after the defining file has been loaded.
+- Guard optional programs.
 - Require explicit confirmation before destructive operations.
-- Update `functions-help` or `utils-help` when adding or removing user-facing helpers.
-- Preserve XDG paths and existing local environment-loading behavior.
+- Keep `functions-help` or `utils-help` accurate when adding or removing user-facing helpers.
+- Preserve each shell's existing environment paths and local override behavior.
 - Keep platform-specific function modules separate and source them only when the platform is
   detected, so unsupported helpers do not enter other shell environments.
 - Derive names in diagnostics from shell metadata instead of repeating function or source-file names
   as string literals.
+
+## Bash and Zsh shared conventions
+
+- Keep return codes aligned for paired helpers: 127 for a missing required command, 2 for invalid
+  usage, and 1 for other failures when the surrounding code follows that scheme.
+- Propagate selection cancellation and command failures with `|| return` where appropriate.
+- Quote command arguments and add `--` before user-controlled paths when the command supports it.
+- Preserve XDG paths and existing local environment-loading behavior.
 
 ## Bash conventions
 
@@ -82,6 +92,20 @@ verbatim between Bash and Zsh when either shell has a clearer native form.
   `command rm`, `command mv`, or `command cat`.
 - Prefer native command, function, alias, and builtin maps over emulating Bash discovery mechanisms.
 
+## PowerShell conventions
+
+- Target PowerShell 7. The standard `Microsoft.PowerShell_profile.ps1` dot-sources
+  `~/.config/powershell/profile.ps1`, which loads `utils.ps1`, `env.ps1`, and `functions.ps1` before
+  interactive `conf.d` and `conf.local.d` modules.
+- Use PowerShell commands and automatic variables rather than translating Bash/Zsh syntax. Use
+  `$PSScriptRoot` for paths relative to a script and `Join-Path` for path construction.
+- Use `Test-Command` for optional executables and check module availability before importing
+  optional modules. Preserve native PowerShell completion and the existing PSFzf/Atuin key bindings.
+- Forward function arguments with `@args` where the existing wrapper accepts arbitrary arguments.
+  Use `-LiteralPath` for user-controlled filesystem paths when the command supports it.
+- Keep Windows-specific environment paths and hooks in PowerShell modules. Port Unix/WSL helpers
+  only when the requested feature has a native Windows use.
+
 ## Formatting
 
 - Treat 100 columns as a soft limit. Split commands one option or argument per line when it improves
@@ -89,6 +113,8 @@ verbatim between Bash and Zsh when either shell has a clearer native form.
 - Wrap Bash diagnostics by combining explicit `printf` format arguments when necessary.
 - Wrap Zsh plain messages using `print` arguments or safe continuations rather than copying Bash
   formatting code.
+- Follow the repository's PowerShell formatter settings in `.dprint-powershell.ps1` and
+  `.PSScriptAnalyzerSettings.psd1` when formatting PowerShell files.
 - Do not insert whitespace or newlines into fzf actions, reload expressions, environment variables,
   or other protocol-like strings unless the consumer expects them.
 - Test the exact rendered value whenever wrapping a generated command or exported option string.
@@ -99,6 +125,8 @@ verbatim between Bash and Zsh when either shell has a clearer native form.
 - Run targeted ShellCheck checks on modified Bash files when ShellCheck is available. Distinguish
   intentional existing warnings about dynamic sources and exports from new warnings.
 - Run `zsh -n` on every modified Zsh file when Zsh is available; report when it is skipped.
+- Parse modified PowerShell files with PowerShell 7 and check formatting through the configured
+  dprint PowerShell formatter when its dependencies are available; report unavailable checks.
 - Run `git diff --check` and scan modified text for lines longer than 100 columns.
 - Exercise optional-command branches and compare generated strings when changing shell
   initialization, fzf previews, bindings, or reload actions.
