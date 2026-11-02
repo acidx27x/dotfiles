@@ -21,6 +21,8 @@
     }
   ],
   "apps": [
+    { "Name": "neovim", "Source": "main", "Info": "" },
+
     // VCS
     // Git also supplies sh.exe for Starship's Windows Git modules.
     { "Name": "git", "Source": "main", "Info": "" },
@@ -29,12 +31,6 @@
     { "Name": "dotter", "Source": "main", "Info": "" },
     { "Name": "lazygit", "Source": "extras", "Info": "" },
 
-    { "Name": "neovim", "Source": "main", "Info": "" },
-
-    // Python
-    { "Name": "python", "Source": "main", "Info": "" },
-    { "Name": "uv", "Source": "main", "Info": "" },
-
     // Shell
     { "Name": "pwsh", "Source": "main", "Info": "" },
     { "Name": "psfzf", "Source": "extras", "Info": "" },
@@ -42,14 +38,11 @@
     { "Name": "shellcheck", "Source": "main", "Info": "" },
     { "Name": "shfmt", "Source": "main", "Info": "" },
 
-    // C/C++ tools
-    { "Name": "tree-sitter", "Source": "main", "Info": "" },
-    { "Name": "llvm", "Source": "main", "Info": "" },
-
     // Must-have tools
     { "Name": "atuin", "Source": "main", "Info": "" },
     { "Name": "bat", "Source": "main", "Info": "" },
     { "Name": "direnv", "Source": "main", "Info": "" },
+    { "Name": "dprint", "Source": "main", "Info": "" },
     { "Name": "eza", "Source": "main", "Info": "" },
     { "Name": "fd", "Source": "main", "Info": "" },
     { "Name": "fzf", "Source": "main", "Info": "" },
@@ -59,10 +52,34 @@
     { "Name": "yazi", "Source": "main", "Info": "" },
     { "Name": "zoxide", "Source": "main", "Info": "" },
 
+    // Terminal mux
+    { "Name": "zellij", "Source": "main", "Info": "" },
+
+    // C/C++ tools
+    { "Name": "ccache", "Source": "main", "Info": "" },
+    { "Name": "clangd", "Source": "main", "Info": "" },
+    { "Name": "cmake", "Source": "main", "Info": "" },
+    { "Name": "gersemi", "Source": "extras", "Info": "" },
+    { "Name": "llvm", "Source": "main", "Info": "" },
+    { "Name": "mold", "Source": "main", "Info": "" },
+    { "Name": "ninja", "Source": "main", "Info": "" },
+
+    // Python
+    { "Name": "python", "Source": "main", "Info": "" },
+    { "Name": "uv", "Source": "main", "Info": "" },
+
+    // AI
+    { "Name": "codex", "Source": "main", "Info": "" },
+
+    // Fonts
+    { "Name": "FiraCode", "Source": "nerd-fonts", "Info": "" },
+    { "Name": "FiraCode-NF", "Source": "nerd-fonts", "Info": "" },
+
     // Utils
     { "Name": "btop", "Source": "main", "Info": "" },
     { "Name": "curl", "Source": "main", "Info": "" },
     { "Name": "wget", "Source": "main", "Info": "" },
+    { "Name": "tree-sitter", "Source": "main", "Info": "" },
 
     // Windows utilities
     { "Name": "7zip", "Source": "main", "Info": "" },
@@ -82,10 +99,6 @@
 
     // Desktop apps
     { "Name": "karing", "Source": "extras", "Info": "" },
-    { "Name": "wezterm-nightly", "Source": "versions", "Info": "" },
-
-    // Fonts
-    { "Name": "FiraCode", "Source": "nerd-fonts", "Info": "" },
-    { "Name": "FiraCode-NF", "Source": "nerd-fonts", "Info": "" }
+    { "Name": "wezterm-nightly", "Source": "versions", "Info": "" }
   ]
 }
