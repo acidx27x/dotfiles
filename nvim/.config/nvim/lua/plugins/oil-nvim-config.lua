@@ -53,52 +53,12 @@ _G.oil_winbar = M
 require("oil").setup({
   default_file_explorer = true,
 
-  use_default_keymaps = false,
+  use_default_keymaps = true,
   keymaps = {
-    ["<leader>o?"] = { "actions.show_help", mode = "n", desc = "Oil: show help" },
-    -- use :q to exit as close may duplicate parent buffer
-    -- ["<C-c>"]      = { "actions.close",     mode = "n", desc = "Oil: close", },
+    ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Scroll preview down" },
+    ["<C-b>"] = { "actions.preview_scroll_up", mode = "n", desc = "Scroll preview up" },
 
-    ["<CR>"] = { "actions.select", mode = "n", desc = "Oil: select" },
-    ["<C-s>"] = {
-      "actions.select",
-      mode = "n",
-      opts = { vertical = true },
-      desc = "Oil: select in vertical",
-    },
-    ["<C-h>"] = {
-      "actions.select",
-      mode = "n",
-      opts = { horizontal = true },
-      desc = "Oil: select in horizontal",
-    },
-    ["<C-t>"] = {
-      "actions.select",
-      mode = "n",
-      opts = { tab = true },
-      desc = "Oil: select in tab",
-    },
-    ["<C-p>"] = { "actions.preview", mode = "n", desc = "Oil: toggle preview" },
-    ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Oil: scroll preview down" },
-    ["<C-b>"] = { "actions.preview_scroll_up", mode = "n", desc = "Oil: scroll preview up" },
-
-    ["<leader>or"] = { "actions.refresh", mode = "n", desc = "Oil: refresh" },
-
-    ["<leader>ob"] = { "actions.open_cwd", mode = "n", desc = "Oil: open cwd" },
-    ["<leader>o-"] = { "actions.parent", mode = "n", desc = "Oil: open parent" },
-    ["<leader>o."] = { "actions.cd", mode = "n", desc = "Oil: cd" },
-    ["<leader>o,"] = {
-      "actions.cd",
-      opts = { scope = "win" },
-      mode = "n",
-      desc = "Oil: cd (window)",
-    },
-    ["<leader>ox"] = { "actions.open_external", mode = "n", desc = "Oil: open external" },
-    ["<leader>os"] = { "actions.change_sort", mode = "n", desc = "Oil: change sort" },
-
-    ["<leader>oth"] = { "actions.toggle_hidden", mode = "n", desc = "Oil: toggle hidden" },
-    ["<leader>ott"] = { "actions.toggle_trash", mode = "n", desc = "Oil: toggle trash" },
-    ["<leader>otc"] = {
+    ["gc"] = {
       callback = function()
         column_detail = not column_detail
         if column_detail then
@@ -108,7 +68,7 @@ require("oil").setup({
         end
       end,
       mode = "n",
-      desc = "Oil: toggle column detail",
+      desc = "Toggle column detail",
     },
   },
 
@@ -118,7 +78,7 @@ require("oil").setup({
 
   delete_to_trash = true,
 
-  lsp_file_methods = { enabled = false },
+  lsp_file_methods = { enabled = true },
 
   win_options = {
     winbar = "%{%v:lua.oil_winbar.get()%}",
@@ -163,7 +123,7 @@ require("oil").setup({
 
 local map = require("core.keymap")
 
-map("n", "<leader>oT", ":tabnew | Oil<CR>", "Oil: open in tab")
+map("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")
 map("n", "<leader>of", ":Oil --float<CR>", "Oil: open in float")
 map("n", "<leader>ov", ":vnew | Oil<CR>", "Oil: open in split vertically")
 map("n", "<leader>oh", ":new | Oil<CR>", "Oil: open in split horizontally")
