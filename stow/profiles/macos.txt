@@ -5,6 +5,7 @@ btop
 codex
 curl
 git
+glow
 htop
 lazygit
 llvm

@@ -1,0 +1,20 @@
+# Markdown appearance
+style: "dark"
+
+# Mouse-wheel scrolling in interactive mode
+mouse: true
+
+# Both false to control via cli
+pager: false
+tui: false
+
+width: 100
+
+# Show hidden and ignored files
+all: true
+
+# Display line numbers in TUI
+showLineNumbers: false
+
+# Preserve Markdown source line breaks
+preserveNewLines: false

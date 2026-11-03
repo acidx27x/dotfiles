@@ -8,6 +8,7 @@ codex
 curl
 gcc
 git
+glow
 htop
 lazygit
 llvm
