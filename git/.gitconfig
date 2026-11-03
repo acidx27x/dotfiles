@@ -52,22 +52,36 @@
 
 [delta]
   tabs = 2
-  dark     = true
-  navigate = true  # use n and N to move between diff sections
-  side-by-side = true
+  dark = true
+  true-color = always
+  navigate = true
+  ; side-by-side = true ; do not use by default for lazygit
   line-numbers = true
   features = decorations
+
+  syntax-theme = gruvbox-dark
+  inspect-raw-lines = false
+
+  line-numbers-plus-style = "#98BB6C"
+  line-numbers-minus-style = "#E46876"
+  line-numbers-zero-style = "#727169"
+
+  plus-style = "syntax #293D32"
+  minus-style = "syntax #392B30"
 
 [delta "interactive"]
   keep-plus-minus-markers = true
 
 [delta "decorations"]
   file-style = omit
-  commit-style            = raw
-  commit-decoration-style = blue ol
-  hunk-header-style            = file line-number syntax
-  hunk-header-file-style       = red
-  hunk-header-decoration-style = blue box
+
+  commit-style = raw
+  commit-decoration-style = "#85A0C7 ol"
+
+  hunk-header-style = file line-number syntax
+  hunk-header-file-style = "#85A0C7"
+  hunk-header-decoration-style = "#76946A box"
+  hunk-header-line-number-style = "#E6C384"
 
 
 [merge]
@@ -110,6 +124,8 @@
 
 
 [alias]
+  ds = -c delta.side-by-side=true diff
+
   amend      = commit --amend --no-edit
   amend-edit = commit --amend
   fixup      = commit --fixup

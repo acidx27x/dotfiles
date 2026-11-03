@@ -1,9 +1,123 @@
+
+notARepository: prompt
+promptToReturnFromSubprocess: true
+
+os:
+  editPreset: nvim
+
 git:
+  log:
+    order: topo-order
+    showGraph: when-maximised
+    showWholeGraph: false
+
   diffRenderers:
-    - colorArg: always
-      command: >-
-        delta --no-gitconfig --tabs=2 --dark --paging=never --line-numbers --features=decorations --file-style=omit --commit-style=raw --commit-decoration-style="blue ol" --hunk-header-style="file line-number syntax" --hunk-header-file-style=red --hunk-header-decoration-style="blue box"
+    - name: Delta
+      colorArg: never
+      command: delta --paging=never
+
+    - name: Side-by-side
+      colorArg: never
+      command: delta --paging=never --side-by-side
+
 gui:
   language: en
-  tabWidth: 2
   nerdFontsVersion: "3"
+  tabWidth: 2
+  scrollOffMargin: 5
+
+  filterMode: fuzzy
+
+  expandFocusedSidePanel: true
+  expandedSidePanelWeight: 2
+  showNumstatInFilesView: true
+  showDivergenceFromBaseBranch: arrowAndNumber
+  switchTabsWithPanelJumpKeys: true
+
+  animateExplosion: true
+  spinner:
+    frames:
+      - '◐'
+      - '◓'
+      - '◑'
+      - '◒'
+    rate: 120
+
+  border: rounded
+  colorScheme: dark
+  darkTheme:
+    defaultFgColor: ['#DCD7BA']
+    activeBorderColor: ['#98BB6C', bold]
+    inactiveBorderColor: ['#6F806E']
+    searchingActiveBorderColor: ['#E6C384', bold]
+    optionsTextColor: ['#C0A36E']
+
+    selectedLineFgColor: [bold]
+    selectedLineBgColor: ['#4e657c']
+    inactiveViewSelectedLineBgColor: ['#3D322B']
+
+    unstagedChangesColor: ['#E46876']
+
+    cherryPickedCommitFgColor: ['#1F1F28']
+    cherryPickedCommitBgColor: ['#98BB6C']
+
+    markedBaseCommitFgColor: ['#1F1F28']
+    markedBaseCommitBgColor: ['#E6C384']
+
+keybinding:
+  universal:
+    gotoTop: 'g'
+    gotoBottom: 'G'
+    undo: 'u'
+
+    prevPage: '<ctrl+u>'
+    nextPage: '<ctrl+d>'
+
+    scrollUpMain:
+      - '<pgup>'
+      - 'K'
+      - '<ctrl+b>'
+
+    scrollDownMain:
+      - '<pgdown>'
+      - 'J'
+      - '<ctrl+f>'
+
+customCommands:
+  - key: '<ctrl+n>'
+    context: localBranches
+    description: create prefixed branch
+    prompts:
+      - type: menu
+        title: branch type
+        key: Type
+        options:
+          - value: feat
+          - value: fix
+          - value: chore
+      - type: input
+        title: branch name
+        key: Name
+    command: >-
+      git checkout -b
+      {{printf "%s/%s" .Form.Type .Form.Name | quote}}
+
+  - key: '<alt+c>'
+    context: files
+    description: conventional commit
+    prompts:
+      - type: menu
+        title: commit type
+        key: Type
+        options:
+          - value: feat
+          - value: fix
+          - value: docs
+          - value: refactor
+          - value: chore
+      - type: input
+        title: commit subject
+        key: Subject
+    command: >-
+      git commit -m
+      {{printf "%s: %s" .Form.Type .Form.Subject | quote}}
