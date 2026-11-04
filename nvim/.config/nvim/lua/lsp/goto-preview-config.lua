@@ -5,7 +5,7 @@ require("goto-preview").setup({
   focus_on_open = true,
 
   references = {
-    provider = "mini_pick",
+    provider = "fzf_lua",
   },
 
   vim_ui_input = false,

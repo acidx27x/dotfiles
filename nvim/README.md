@@ -22,7 +22,8 @@ exists at `~/.config/nvim/nvim-pack-lock.json`, move it aside before restowing `
 link the current lockfile. Otherwise `vim.pack` may reinstall plugins removed from the package list.
 
 Install `tree-sitter-cli` 0.26.1 or newer through your system package manager before installing or
-updating Tree-sitter parsers. Confirm it is available with `tree-sitter --version`.
+updating Tree-sitter parsers. Confirm it is available with `tree-sitter --version`. Install `fzf`
+and `rg` for the picker mappings; fzf-lua uses them for its UI and live grep.
 
 ## Find a mapping
 
@@ -31,7 +32,7 @@ buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common m
 
 | Keys                                    | Action                                                            |
 | --------------------------------------- | ----------------------------------------------------------------- |
-| `<Space>pf` / `<Space>pg`               | Find files / live grep with MiniPick                              |
+| `<Space>pf` / `<Space>pg`               | Find files / live grep with fzf-lua                               |
 | `<Space>pb`                             | Pick a buffer                                                     |
 | `<Space>bd` / `<Space>bn` / `<Space>bp` | Delete / next / previous buffer                                   |
 | `<Space>bb` / `]b` / `[b`               | Alternate / next / previous buffer                                |
@@ -92,19 +93,13 @@ default; writes from auto-save.nvim do not trigger formatting. C/C++ prefers cla
 uses `clang-format` if clangd cannot format the buffer. Lua, CMake, and Python use `stylua`,
 `gersemi`, and `ruff format` respectively; other filetypes can use LSP formatting.
 
-To disable format-on-save or change a formatter for one project, create `.nvim.json` in its root.
-Settings are resolved for each buffer, so they do not affect other open projects:
+To disable format-on-save for one project, create `.nvim.json` in its root. Settings are resolved
+for each buffer, so they do not affect other open projects:
 
 ```json
 {
   "formatting": {
-    "format_on_save": false,
-    "filetypes": {
-      "cpp": {
-        "formatters": ["clang-format"],
-        "lsp_format": "never"
-      }
-    }
+    "format_on_save": false
   }
 }
 ```
@@ -132,7 +127,7 @@ their features are first used. Missing required tools stop that action with one 
 previews warn once when their fallback can continue. Conform checks formatter availability and can
 fall back to LSP formatting. Configure executable paths in `lua/local_paths.lua` when a tool is
 outside `PATH`. A valid override takes priority; otherwise the first executable candidate is used.
-For example, CTags tries `ctags-universal` then `ctags`. Blink, MiniPick, and Tree-sitter invoke
+For example, CTags tries `ctags-universal` then `ctags`. Blink, fzf-lua, and Tree-sitter invoke
 fixed command names, so their checks use the names those plugins call. Parser installation requires
 `curl`.
 

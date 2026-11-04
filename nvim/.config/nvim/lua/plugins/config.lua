@@ -4,6 +4,7 @@ require("plugins.nvim-notify-config") -- vim.notify
 require("plugins.multinput-nvim-config") -- vim.ui.input
 
 require("plugins.icons-config")
+require("plugins.fzf-lua-config") -- also overrides vim.ui.select
 --
 
 -- ts group, lots of pluggins use it
@@ -15,8 +16,6 @@ require("plugins.oil-nvim-config")
 --
 
 -- mini.nvim group
-require("plugins.mini-pick-config") -- WARN: also overrides builtin vim.ui.select
-
 require("plugins.mini-statusline-config")
 
 require("plugins.mini-tabline-config")

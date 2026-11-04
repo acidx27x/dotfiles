@@ -76,9 +76,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Auto-close terminal when process exits
 vim.api.nvim_create_autocmd("TermClose", {
   group = augroup,
-  callback = function()
-    if vim.v.event.status == 0 then
-      vim.api.nvim_buf_delete(0, {})
+  callback = function(args)
+    if vim.v.event.status == 0 and vim.bo[args.buf].filetype ~= "fzf" then
+      vim.api.nvim_buf_delete(args.buf, {})
     end
   end,
   desc = "TermClose: close terminal buffer if process exits",

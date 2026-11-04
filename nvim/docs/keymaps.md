@@ -14,7 +14,7 @@ pick keymaps or `:verbose map {keys}` to identify the active owner.
 
 | Keys                                                  | Mode               | Action                                                        |
 | ----------------------------------------------------- | ------------------ | ------------------------------------------------------------- |
-| `<Space>pf` / `<Space>pg`                             | Normal             | Find files / live grep (MiniPick)                             |
+| `<Space>pf` / `<Space>pg`                             | Normal             | Find files / live grep (fzf-lua)                              |
 | `<Space>pb` / `<Space>pd`                             | Normal             | Pick buffers / diagnostics                                    |
 | `<Space>pr` / `<Space>ph`                             | Normal             | Resume picker / search help                                   |
 | `<Space>bd` / `<Space>bn` / `<Space>bp`               | Normal             | Delete / next / previous buffer                               |
@@ -182,18 +182,35 @@ area using the Kanagawa `Comment` highlight.
 MiniTrailspace's `<Space>tw` is listed under feature mappings below. Most other Mini modules retain
 their normal built-in mappings unless explicitly listed above.
 
-## MiniPick mappings
+## fzf-lua mappings
 
-Defined globally in `lua/plugins/mini-pick-config.lua`; MiniPick is eagerly configured and overrides
+Defined globally in `lua/plugins/fzf-lua-config.lua`; fzf-lua is eagerly configured and overrides
 `vim.ui.select`.
 
 | Keys                                                      | Picker action                                                           |
 | --------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `<Space>pr` / `<Space>pf` / `<Space>pg`                   | Resume / files / live grep                                              |
-| `<Space>pb` / `<Space>pd` / `<Space>ps`                   | Buffers / diagnostics / history                                         |
+| `<Space>pb` / `<Space>pd` / `<Space>ps`                   | Buffers / workspace diagnostics / command history                       |
 | `<Space>pp` / `<Space>pk` / `<Space>p"` / `<Space>ph`     | Hipatterns / keymaps / registers / help                                 |
 | `<Space>plc` / `<Space>pld` / `<Space>pls`                | LSP declarations / definitions / document symbols                       |
 | `<Space>pli` / `<Space>plr` / `<Space>plt` / `<Space>plS` | LSP implementations / references / type definitions / workspace symbols |
+
+`<Space>pp` lists matches from enabled Hipatterns buffers, including unsaved and unnamed buffers.
+Each row shows its highlighter, buffer, line, column, and text. The preview reads the loaded buffer;
+Enter jumps to the match. File and live grep pickers accept `cwd` to search another directory. Both
+include hidden paths by default while respecting ignore rules.
+
+`<Space>pf` fuzzy-matches file paths. `<Space>pg` searches file contents with ripgrep patterns. Use
+`:FzfLua grep_project` to fuzzy-filter project lines by their content; this scans every line first
+and can be slower in large projects.
+
+Inside an fzf-lua picker, `<F1>` shows the full key help. Common defaults are `<CR>` to open a
+selection, `<Esc>` to close, `<F2>` for fullscreen, `<F3>` to wrap the preview, and `<F4>` to toggle
+the preview. `<A-/>`, `<A-z>`, `<A-w>`, and `<A-p>` provide the same four actions without function
+keys. The fzf prompt uses a nonblinking bar cursor, as do other Neovim terminal buffers. `<C-f>` /
+`<C-b>` scroll the preview down / up by a page. File and grep pickers use `<A-h>` to toggle hidden
+files, `<A-i>` to toggle ignore rules, and `<A-f>` to follow symlinks. File results can open in a
+split with `<C-s>`, a vertical split with `<C-v>`, or a tab with `<C-t>`.
 
 ## Feature and lazy-loaded mappings
 
@@ -277,4 +294,4 @@ cancels; `D` closes; `<C-s>` / `<C-h>` open in vertical/horizontal splits. Hint 
 Global keymaps can be inspected with `:verbose nmap {keys}`, `:verbose vmap {keys}`, or
 `:<mode>map {prefix}`. LSP, Gitsigns, and Tree-sitter mappings do not exist until their buffer
 events occur. After attaching a server or opening a configured filetype, inspect the buffer-local
-map with the same `:verbose` command. `<Space>pk` exposes configured mappings through MiniPick.
+map with the same `:verbose` command. `<Space>pk` exposes configured mappings through fzf-lua.

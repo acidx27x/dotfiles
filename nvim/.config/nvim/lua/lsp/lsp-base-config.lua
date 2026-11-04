@@ -93,7 +93,7 @@ M.lsp_keymaps = function(bufnr)
   --
 
   -- Keep Neovim's readable default LSP keys available beside the custom groups.
-  keyn("K", vim.lsp.buf.hover, "LSP: hover")
+  keyn("<C-s>h", vim.lsp.buf.hover, "LSP: hover")  -- use 'K' for 'leap' plugin
   keyn("gri", vim.lsp.buf.implementation, "LSP: implementation (native key)")
   keyn("grn", vim.lsp.buf.rename, "LSP: rename (native key)")
   keyn("grr", vim.lsp.buf.references, "LSP: references (native key)")

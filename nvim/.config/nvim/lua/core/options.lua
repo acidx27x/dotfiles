@@ -23,6 +23,8 @@ vim.opt.incsearch = true
 -- Visual settings
 vim.opt.termguicolors = true
 vim.opt.winborder = "rounded"
+vim.opt.guicursor:remove("t:block-blinkon500-blinkoff500-TermCursor")
+vim.opt.guicursor:append("t:ver25-blinkon0-TermCursor")
 --vim.opt.pumborder     = "bold"
 vim.opt.signcolumn = "yes:2"
 vim.opt.colorcolumn = "120"

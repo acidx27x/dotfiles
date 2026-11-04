@@ -9,7 +9,7 @@
       "src": "https://github.com/okuuva/auto-save.nvim"
     },
     "blink.cmp": {
-      "rev": "f91645b69f0e856a391ba4bb17fab029cfe1f6a7",
+      "rev": "06097529cf6d3618546436f9a6bd5beaed979aef",
       "src": "https://github.com/Saghen/blink.cmp",
       "version": "'main'"
     },
@@ -29,8 +29,12 @@
       "rev": "b2ea5c41a150ba72fb656eedb4ed0a86d138d945",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
+    "fzf-lua": {
+      "rev": "07fce8ac8dffba4e11f1cbe5490d730a2cc5ec7a",
+      "src": "https://github.com/ibhagwan/fzf-lua"
+    },
     "gitsigns.nvim": {
-      "rev": "1e9d0fbfe7ff848bc402d2c2e2854fb4eff2dce7",
+      "rev": "4bcd99167c265f135886b282baad77afe06206b2",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "goto-preview": {
@@ -83,7 +87,7 @@
       "src": "https://github.com/nvim-mini/mini.comment"
     },
     "mini.extra": {
-      "rev": "6cbc59d875a9768819091d0a56223205022cbe72",
+      "rev": "1bce4ba33fdabb3c003cbb2170b68a3b09222360",
       "src": "https://github.com/nvim-mini/mini.extra"
     },
     "mini.hipatterns": {
@@ -135,7 +139,7 @@
       "src": "https://github.com/r0nsha/multinput.nvim"
     },
     "no-neck-pain.nvim": {
-      "rev": "ed63925a065cddc73afd51c5d486f7956385a21f",
+      "rev": "83ed5249cfdfc5790ab2c05f96038eeca7dd9451",
       "src": "https://github.com/shortcuts/no-neck-pain.nvim"
     },
     "nvim-dap": {
@@ -151,7 +155,7 @@
       "src": "https://github.com/theHamsta/nvim-dap-virtual-text"
     },
     "nvim-lspconfig": {
-      "rev": "d8d2fda7aae57030452ce8cd6e770b1eb704514e",
+      "rev": "cc404d425c7752f56b8eaa269107be44d888ea51",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-navic": {
@@ -171,7 +175,7 @@
       "src": "https://github.com/nvim-pack/nvim-spectre"
     },
     "nvim-treesitter": {
-      "rev": "0195cd62fa89950f34c0e0d648ea7897ab85d4d3",
+      "rev": "610734c5d3e59761d5f79318d120633374537fa5",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },

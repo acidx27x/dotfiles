@@ -7,10 +7,10 @@ key. Type commands beginning with `:` in Normal mode; press `<Esc>` to leave Ins
 ## Quickfix: work through matches across files
 
 Quickfix is a list of file locations shared across the editor. Searches, compiler errors, and
-plugins can fill it. For example, from the project directory:
+plugins can fill it. Replace `{pattern}` and `{files}` with a search pattern and file glob:
 
 ```vim
-:vimgrep /TODO/j **/*.lua
+:vimgrep /{pattern}/j {files}
 :copen
 ```
 
@@ -40,9 +40,9 @@ changed files. To act on each quickfix entry instead, use `:cdo`.
 ### Location lists
 
 A location list belongs to one window, which is useful when each split needs its own results.
-`<Space>eq` fills the current window's location list with diagnostics. `:lvimgrep /TODO/j **/*.lua`
-fills it from a search. Use `:lopen`, `:lnext`, `:lprev`, and `:lclose` as the location-list
-counterparts of the quickfix commands.
+`<Space>eq` fills the current window's location list with diagnostics.
+`:lvimgrep /{pattern}/j {files}` fills it from a search. Use `:lopen`, `:lnext`, `:lprev`, and
+`:lclose` as the location-list counterparts of the quickfix commands.
 
 ## Terminal windows
 
@@ -91,11 +91,11 @@ below and vertical splits to the right.
 | `*` / `#`               | Search forward / backward for the word under the cursor.    |
 | `n` / `N`               | Repeat the search in the same / opposite direction.         |
 | `<Space>nh`             | Clear search highlighting.                                  |
-| `<Space>pg`             | Live grep across project files with MiniPick.               |
+| `<Space>pg`             | Live grep across project files with fzf-lua.                |
 | `:%s/old/new/gc`        | Confirm each replacement in the current buffer.             |
 | `:g/pattern/d`          | Delete every line matching a pattern in the current buffer. |
 
-Use quickfix above when you need a persistent, navigable list of matches across files. MiniPick is
+Use quickfix above when you need a persistent, navigable list of matches across files. fzf-lua is
 useful for jumping to one result quickly.
 
 ## Marks, registers, macros, and folds
@@ -105,7 +105,7 @@ useful for jumping to one result quickly.
 | `ma` then `'a` or `` `a `` | Set mark `a`, then return to its line or exact position.    |
 | `<C-o>` / `<C-i>`          | Move backward / forward through the jump list.              |
 | `"ayy` then `"ap`          | Yank a line into register `a`, then paste it.               |
-| `<Space>p"`                | Browse registers with MiniPick.                             |
+| `<Space>p"`                | Browse registers with fzf-lua.                              |
 | `qa` ... `q`, then `@a`    | Record keystrokes in macro register `a`, stop, then replay. |
 | `@@`                       | Replay the last macro.                                      |
 | `za` / `zM` / `zR`         | Toggle one fold / close all / open all folds.               |
