@@ -21,3 +21,4 @@ ll() { command eza -lhag "${EZA_DEFAULT_OPTS[@]}" "$@"; }
 ldr() { command eza -lhD "${EZA_DEFAULT_OPTS[@]}" "$@"; }
 lt() { command eza -T "${EZA_DEFAULT_OPTS[@]}" "$@"; }
 llt() { command eza -lagT "${EZA_DEFAULT_OPTS[@]}" "$@"; }
+alias tree='lt'

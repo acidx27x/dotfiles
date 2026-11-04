@@ -22,3 +22,4 @@ function ll { eza -lhag @ezaOptions @args }
 function ldr { eza -lhD @ezaOptions @args }
 function lt { eza -T @ezaOptions @args }
 function llt { eza -lagT @ezaOptions @args }
+Set-Alias tree lt
