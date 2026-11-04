@@ -137,7 +137,42 @@ mode = "limited"
 
 # Specific sites only settings.
 [permissions.locked_folders_only.network.domains]
+# GitHub repositories, API, source files, archives, and releases.
+"github.com" = "allow"
+"api.github.com" = "allow"
+"raw.githubusercontent.com" = "allow"
+"codeload.github.com" = "allow"
+"objects.githubusercontent.com" = "allow"
+"release-assets.githubusercontent.com" = "allow"
+"ghcr.io" = "allow"
+"pkg-containers.githubusercontent.com" = "allow"
+
+# GitLab repositories and container registry.
+"gitlab.com" = "allow"
+"registry.gitlab.com" = "allow"
+
+# Package managers.
 "registry.npmjs.org" = "allow"
+"pypi.org" = "allow"
+"files.pythonhosted.org" = "allow"
+"crates.io" = "allow"
+"static.crates.io" = "allow"
+"index.crates.io" = "allow"
+"proxy.golang.org" = "allow"
+"sum.golang.org" = "allow"
+"formulae.brew.sh" = "allow"
+"get.scoop.sh" = "allow"
+
+# Other Git hosts.
+"codeberg.org" = "allow"
+"git.sr.ht" = "allow"
+"bitbucket.org" = "allow"
+"api.bitbucket.org" = "allow"
+
+# Upstream source archives.
+"git.kernel.org" = "allow"
+"cdn.kernel.org" = "allow"
+"ftp.gnu.org" = "allow"
 
 ###############################################################################
 # Shell environment hardening
