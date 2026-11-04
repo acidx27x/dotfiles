@@ -25,6 +25,22 @@ Run `sync` again after pulling changes to `settings.shared.json`. It replaces on
 section and keeps the LOCAL section, including connections saved by Zed. Each machine needs its own
 checkout for its local file to stay separate.
 
+## Project overrides
+
+Put project-specific settings in that project's `.zed/settings.json`. Global search excludes
+Git-ignored files by default; add only the ignored paths needed in a project:
+
+```jsonc
+{
+  "file_scan_inclusions": ["generated/schemas/**", "..."]
+}
+```
+
+`"..."` appends to the inherited list instead of replacing it. The same applies to
+`file_scan_exclusions`, which takes precedence over inclusions. To include all ignored files for one
+project, set `search.include_ignored` to `true` and `file_finder.include_ignored` to `"all"` there;
+these values override the shared defaults for that project.
+
 ## Promote a setting changed in Zed
 
 Zed edits the active `settings.json`. If it changes a setting in the SHARED section, promote that

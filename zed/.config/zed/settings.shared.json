@@ -89,7 +89,7 @@
   },
   // editor format
   "formatter": "language_server",
-  "format_on_save": "on",
+  "format_on_save": "modifications",
   "use_on_type_format": false,
   // editor gutter
   "gutter": {
@@ -194,14 +194,14 @@
     "button": false,
     "whole_word": false,
     "search_on_type": false,
-    "include_ignored": true,
+    "include_ignored": false,
     "center_on_match": true
   },
   "use_smartcase_search": true,
   "seed_search_query_from_cursor": "selection",
   // search and files finder
   "file_finder": {
-    "include_ignored": "all",
+    "include_ignored": "smart",
     "modal_max_width": "medium"
   },
   // window and layout
@@ -342,17 +342,11 @@
         "create_directory": {
           "default": "allow"
         },
-        "save_file": {
-          "default": "allow"
-        },
         "fetch": {
-          "default": "confirm"
+          "default": "allow"
         },
         "search_web": {
           "default": "allow"
-        },
-        "restore_file_from_disk": {
-          "default": "confirm"
         }
       }
     }
