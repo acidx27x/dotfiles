@@ -28,10 +28,14 @@ gui:
 
   filterMode: fuzzy
 
+  sidePanelWidth: 0.3
+  mainPanelSplitMode: flexible
   expandFocusedSidePanel: true
   expandedSidePanelWeight: 2
+
   showNumstatInFilesView: true
   showDivergenceFromBaseBranch: arrowAndNumber
+
   switchTabsWithPanelJumpKeys: true
 
   animateExplosion: true
