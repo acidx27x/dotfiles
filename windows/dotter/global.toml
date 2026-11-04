@@ -22,6 +22,10 @@ default_target_type = "symbolic"
 [bat.files]
 "bat/.config/bat/config" = "${APPDATA}/bat/config"
 
+[broot.files]
+"broot/.config/broot/conf.hjson" = "${APPDATA}/dystroy/broot/config/conf.hjson"
+"broot/.config/broot/skins/iceberg-dark.hjson" = "${APPDATA}/dystroy/broot/config/skins/iceberg-dark.hjson"
+
 [lazygit.files]
 "lazygit/.config/lazygit/config.yml" = "${LOCALAPPDATA}/lazygit/config.yml"
 

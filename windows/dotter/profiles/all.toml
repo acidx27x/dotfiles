@@ -1,6 +1,7 @@
 packages = [
   "atuin",
   "bat",
+  "broot",
   "codex",
   "git",
   "lazygit",

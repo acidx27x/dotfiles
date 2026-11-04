@@ -2,6 +2,7 @@ atuin
 bat
 brew
 btop
+broot
 codex
 curl
 git

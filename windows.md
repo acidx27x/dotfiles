@@ -81,17 +81,18 @@ spaces.
 `windows\dotter\global.toml` is the only source of file-to-target mappings: Markdown helper files
 are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mapped as configuration.
 
-| Package     | Destination                                                                 |
-| ----------- | --------------------------------------------------------------------------- |
-| `git`       | `%USERPROFILE%\.gitconfig`                                                  |
-| `nvim`      | `%LOCALAPPDATA%\nvim`                                                       |
-| `wezterm`   | `%USERPROFILE%\.config\wezterm`                                             |
-| `atuin`     | `%USERPROFILE%\.atuin`                                                      |
-| `starship`  | `%USERPROFILE%\.config\starship.toml`                                      |
-| `bat`       | `%APPDATA%\bat\config`                                                     |
-| `lazygit`   | `%LOCALAPPDATA%\lazygit\config.yml`                                        |
-| `zellij`    | `%APPDATA%\Zellij\config\config.kdl` and `config\layouts`                 |
-| `powershell` | `%USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` |
+| Package      | Destination                                                                 |
+| ------------ | --------------------------------------------------------------------------- |
+| `git`        | `%USERPROFILE%\.gitconfig`                                                  |
+| `nvim`       | `%LOCALAPPDATA%\nvim`                                                       |
+| `wezterm`    | `%USERPROFILE%\.config\wezterm`                                             |
+| `atuin`      | `%USERPROFILE%\.atuin`                                                      |
+| `starship`   | `%USERPROFILE%\.config\starship.toml`                                       |
+| `bat`        | `%APPDATA%\bat\config`                                                      |
+| `broot`      | `%APPDATA%\dystroy\broot\config` (`conf.hjson`, `skins\iceberg-dark.hjson`) |
+| `lazygit`    | `%LOCALAPPDATA%\lazygit\config.yml`                                         |
+| `zellij`     | `%APPDATA%\Zellij\config\config.kdl` and `config\layouts`                   |
+| `powershell` | `%USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`       |
 
 `windows\dotter\profiles\all.toml` is the default tracked profile. The optional `minimal` profile
 contains `git`, `nvim`, `powershell`, and `starship`. Profiles contain package names only and are
@@ -232,12 +233,12 @@ profile or select it directly:
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Package powershell
 ```
 
-The profile initializes Scoop tools when available: Atuin, bat, eza, fzf, Starship, zoxide, and
-direnv. PSFzf adds Ctrl+T file selection and Alt+C directory selection; Atuin keeps Ctrl+R history
-search. Native PowerShell Tab completion remains active. The Scoopfile installs PSFzf from Extras.
-Use Ctrl+X Ctrl+F to run `ffd` for file and directory actions, or Ctrl+X Ctrl+G to run `frg` for
-interactive ripgrep search and actions. `ffd` uses Ctrl+S to switch between files and directories.
-Local overrides can be placed in `%USERPROFILE%\.config\powershell\conf.local.d`.
+The profile initializes Scoop tools when available: Atuin, bat, Broot, eza, fzf, Starship, zoxide,
+and direnv. PSFzf adds Ctrl+T file selection and Alt+C directory selection; Atuin keeps Ctrl+R
+history search. Native PowerShell Tab completion remains active. The Scoopfile installs PSFzf from
+Extras. Use Ctrl+X Ctrl+F to run `ffd` for file and directory actions, or Ctrl+X Ctrl+G to run `frg`
+for interactive ripgrep search and actions. `ffd` uses Ctrl+S to switch between files and
+directories. Local overrides can be placed in `%USERPROFILE%\.config\powershell\conf.local.d`.
 
 Atuin records new commands after the profile is loaded. To import existing PowerShell history once,
 run:

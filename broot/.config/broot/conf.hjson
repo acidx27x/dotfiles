@@ -1,0 +1,18 @@
+default_flags: -g
+modal: true
+initial_mode: command
+
+imports: [
+    skins/iceberg-dark.hjson
+]
+
+verbs: [
+    {
+        invocation: edit
+        key: enter
+        shortcut: e
+        apply_to: text_file
+        external: "$EDITOR +{line} {file}"
+        leave_broot: false
+    }
+]

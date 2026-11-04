@@ -4,6 +4,7 @@ bat
 brush
 brew
 btop
+broot
 codex
 curl
 gcc
