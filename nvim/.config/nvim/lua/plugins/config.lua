@@ -13,6 +13,7 @@ require("plugins.nvim-treesitter-config")
 
 -- file explorer group
 require("plugins.oil-nvim-config")
+require("plugins.mini-files-config")
 --
 
 -- mini.nvim group

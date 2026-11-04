@@ -15,6 +15,7 @@ local eager = {
   { src = "https://github.com/nvim-mini/mini.bufremove" },
   { src = "https://github.com/nvim-mini/mini.clue" },
   { src = "https://github.com/nvim-mini/mini.comment" },
+  { src = "https://github.com/nvim-mini/mini.files" },
   { src = "https://github.com/nvim-mini/mini.hipatterns" },
   { src = "https://github.com/nvim-mini/mini.icons" },
   { src = "https://github.com/nvim-mini/mini.move" },

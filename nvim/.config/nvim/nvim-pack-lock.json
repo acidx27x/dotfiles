@@ -74,6 +74,10 @@
       "rev": "3aa39b795c6dc54dbeaf2863aa91215850c4c8e0",
       "src": "https://github.com/nvim-mini/mini.comment"
     },
+    "mini.files": {
+      "rev": "6ac1d7f5c9e6a196c75cf6f1ea8055cef4ac9bbf",
+      "src": "https://github.com/nvim-mini/mini.files"
+    },
     "mini.hipatterns": {
       "rev": "247c0173579a29af60f25f00671a75c57090be9c",
       "src": "https://github.com/nvim-mini/mini.hipatterns"
