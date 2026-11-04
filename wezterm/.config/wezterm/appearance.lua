@@ -27,7 +27,7 @@ function module.apply_to_config(config, platform)
     },
   })
 
-  config.font_size = 16
+  config.font_size = 14
 
   -- Keep this at the font's natural metrics initially.
   config.line_height = 1.0
