@@ -16,6 +16,10 @@ if [[ -n ${NO_COLOR:-} || ${TERM:-} == dumb ]]; then
   return 0
 fi
 
+# Advertise true color without replacing terminal-provided values.
+[[ -n ${COLORTERM:-} ]] || export COLORTERM=truecolor
+[[ -n ${TERM:-} ]] || export TERM=xterm-256color
+
 # Generic convention used by several BSD-style utilities. This enables color
 # support without forcing escape sequences into pipes.
 export CLICOLOR="${CLICOLOR:-1}"
@@ -219,6 +223,8 @@ color-status() {
   local alias_definition
   local command_name
 
+  printf 'TERM=%s\n' "${TERM:-<not set>}"
+  printf 'COLORTERM=%s\n' "${COLORTERM:-<not set>}"
   printf 'VIVID_THEME=%s\n' "$VIVID_THEME"
   if [[ -n ${LS_COLORS:-} ]]; then
     printf 'LS_COLORS=set (%d bytes)\n' "${#LS_COLORS}"

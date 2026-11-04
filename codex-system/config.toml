@@ -155,6 +155,8 @@ include_only = [
   "USERNAME",
   "SHELL",
   "TERM",
+  "COLORTERM",
+  "NO_COLOR",
   "TMPDIR",
   "TEMP",
   "TMP",

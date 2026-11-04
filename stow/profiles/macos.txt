@@ -13,6 +13,7 @@ nvim
 ssh
 starship
 stow
+tmux
 wezterm
 wget
 worktrunk
