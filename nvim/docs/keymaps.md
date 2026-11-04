@@ -58,6 +58,7 @@ Source: [`lua/core/keymaps.lua`](../.config/nvim/lua/core/keymaps.lua). Core map
 | `<Space>fp`                              | Normal            | Copy current full file path to `+` register              | Requires a functioning clipboard provider.                                                           |
 | `<Space>tt` / `<Space>tv` / `<Space>th`  | Normal            | Open terminal in tab / vertical split / horizontal split | User utilities.                                                                                      |
 | `<Space>cd`                              | Normal            | Set window-local cwd to current buffer directory         | User utility; warns for invalid directory.                                                           |
+| `<Space>fu`                              | Normal            | Convert buffer line endings to Unix                      | Removes trailing CR characters and sets `fileformat=unix`; save to write the file.                   |
 
 The `alt_modifier` is chosen from `vim.uv.os_uname().sysname`: macOS gets `<M-...>`, other systems
 get `<A-...>`. The config intentionally does not register both aliases because the user observed
@@ -164,6 +165,7 @@ Use Visual Line mode with `<Space>xs` to sort selected lines. Other selection ty
 | Keys                      | Mode                             | Action                                   |
 | ------------------------- | -------------------------------- | ---------------------------------------- |
 | `<Space>is` / `<Space>it` | Normal, Visual                   | Convert indentation to spaces / tabs     |
+| `<Space>fu`               | Visual                           | Remove trailing CR from selected lines   |
 | `Kf` / `Kb`               | Normal, Visual, Operator-pending | Leap forward / backward (two characters) |
 | `f/F/t/T`                 | Normal, Visual, Operator-pending | Leap one-character find / till motions   |
 | `;` / `,`                 | Normal, Visual, Operator-pending | Repeat / reverse last one-character find |
@@ -177,6 +179,9 @@ direction, and `,` searches in the opposite direction, even after a `Kf/Kb` jump
 the visible window edge. Two-character Leap searches require a target label after the two
 characters, even for a single match, because automatic jumping is disabled. Leap dims the search
 area using the Kanagawa `Comment` highlight.
+
+Visual `<Space>fu` only affects lines containing a literal trailing CR. Files read with DOS format
+have a buffer-wide `fileformat` setting, so use Normal `<Space>fu` to convert those files.
 
 MiniTrailspace's `<Space>tw` is listed under feature mappings below. Most other Mini modules retain
 their normal built-in mappings unless explicitly listed above.

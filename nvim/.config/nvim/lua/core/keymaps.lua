@@ -178,6 +178,9 @@ map(
   "indent: convert selected lines to tabs"
 )
 
+map("n", "<leader>fu", ":%s/\\r$//e<CR>:setlocal ff=unix<CR>", "file: convert line endings to Unix")
+map("x", "<leader>fu", ":s/\\r$//e<CR>", "file: remove CR from selected lines")
+
 -- Quick config editing
 map("n", "<leader>rc", function()
   local path = vim.fn.stdpath("config") .. "/init.lua"
