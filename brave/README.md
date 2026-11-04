@@ -82,3 +82,76 @@ shortcuts; an empty table clears previously managed shortcuts in `dotbrave`.
 Run `dotbrave` directly after installing Brave and Fira Code on a machine. Do not add this TOML to
 the global Stow or Dotter profiles: those tools create file links and do not apply Brave
 preferences. The `brave/` directory is excluded from the Stow package list for that reason.
+
+## Everyday tips
+
+### Search bangs and operators
+
+With Brave Search as the default search engine, type a **bang** in the address bar to search another
+site directly. Bangs also work on [Brave Search](https://search.brave.com/help/bangs) itself.
+
+| Example               | Searches       |
+| --------------------- | -------------- |
+| `!gh dotbrave`        | GitHub         |
+| `!so bash arrays`     | Stack Overflow |
+| `!w Fira Code`        | Wikipedia      |
+| `!yt zellij tutorial` | YouTube        |
+| `!g brave shortcuts`  | Google         |
+
+Browse the [bang directory](https://search.brave.com/bangs) for more. For a focused Brave Search
+query, try `site:brave.com vertical tabs`, `filetype:pdf keyboard shortcuts`, or quotes around an
+exact phrase; see the [search operator reference](https://search.brave.com/help/operators).
+
+For a site you search often, add a **site-search shortcut** under **Settings → Search engine →
+Manage search engines**. Give it a keyword such as `:docs` and a search URL with `%s` where the
+query goes; then type the keyword, press Space or Tab, and enter your query. See
+[Brave's site-search guide](https://support.brave.app/hc/en-us/articles/360017479752-How-do-I-set-my-default-search-engine).
+
+For research, use [Brave Search Goggles](https://search.brave.com/help/goggles) to apply a community
+ranking filter or write your own rules for which sources appear higher in results. Open **Goggles**
+from a Brave Search results page to explore available filters.
+
+### Handy keyboard shortcuts
+
+| Action                        | Windows / Linux  | macOS                  |
+| ----------------------------- | ---------------- | ---------------------- |
+| Focus the address bar         | `Ctrl+L`         | `⌘+L`                  |
+| Reopen the last closed tab    | `Ctrl+Shift+T`   | `⌘+Shift+T`            |
+| Move to the next tab          | `Ctrl+Tab`       | `⌘+Option+Right Arrow` |
+| Move to the previous tab      | `Ctrl+Shift+Tab` | `⌘+Option+Left Arrow`  |
+| Find text on the current page | `Ctrl+F`         | `⌘+F`                  |
+| Bookmark the current page     | `Ctrl+D`         | `⌘+D`                  |
+| Bookmark all open tabs        | `Ctrl+Shift+D`   | `⌘+Shift+D`            |
+
+See
+[Brave's full shortcut list](https://support.brave.app/hc/en-us/articles/360032272171-What-keyboard-shortcuts-can-I-use-in-Brave).
+Customize bindings at `brave://settings/system/shortcuts` if one conflicts with another app.
+
+### Tab and session tools
+
+- **Vertical tabs:** This config enables them and starts with the tab panel collapsed. Hover over
+  the panel to see tab titles; use the Minimize Tabs button to collapse it again. See
+  [Brave's vertical tabs guide](https://brave.com/whats-new/hide-vertical-tabs/).
+- **Tab search:** Use the tab search button to find an open tab by title when the vertical list gets
+  long. This config pins the button to the tab strip.
+- **Tab groups:** Right-click a tab to add it to a named, color-coded group; collapse groups to keep
+  a large vertical tab list manageable. To save a research session as bookmarks, use the **Bookmark
+  all open tabs** shortcut above, which creates a folder. See
+  [Brave's vertical tabs guide](https://brave.com/blog/vertical-tabs/).
+- **Split View:** Right-click a tab and choose **New Split View** to put two tabs side by side, for
+  example documentation next to a working page. Drag the divider to resize them. See
+  [Brave's Split View guide](https://support.brave.app/hc/en-us/articles/35087087593997-How-do-I-use-Split-view-in-Brave).
+- **Containers:** Right-click a tab, then choose **Open in Container** to use separate site sessions
+  in one window, such as work and personal accounts. Manage containers under **Settings → Content →
+  Containers**. See
+  [Brave's Containers guide](https://support.brave.app/hc/en-us/articles/39077103885325-How-do-I-use-Containers-in-Brave).
+
+### Reading and web apps
+
+- **Speedreader:** On a supported article, click the reader icon in the address bar for a simpler
+  layout. Its controls can make this the default for that site. See
+  [Brave's Speedreader guide](https://support.brave.app/hc/en-us/articles/360045031392-What-is-Speedreader).
+- **Web apps:** Use the Install icon in the address bar on a supported site to give it a separate
+  app window and launcher shortcut. Manage installed sites at `brave://apps`. These windows are not
+  always-on-top floating tabs. See
+  [Brave's web app guide](https://support.brave.app/hc/en-us/articles/39077114659597-How-do-I-install-and-use-Web-Apps-in-Brave).
