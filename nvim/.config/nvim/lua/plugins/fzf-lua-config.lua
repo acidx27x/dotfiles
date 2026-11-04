@@ -1,7 +1,7 @@
 local fzf = require("fzf-lua")
 
 fzf.setup({
-  ui_select = true,
+  ui_select = {},
   file_icons = "mini",
   winopts = {
     height = 0.8,

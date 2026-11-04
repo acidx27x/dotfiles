@@ -68,7 +68,7 @@ vim.api.nvim_create_autocmd("DirChanged", {
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup,
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
   desc = "TextYankPost: highlight on yank",
 })

@@ -50,10 +50,6 @@
       "rev": "f1e186e44d3b7f9ae918008e2c28ce37c6023d2d",
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
-    "indent-rainbowline.nvim": {
-      "rev": "572e8157de85d7af3f0085b5c74c059518900649",
-      "src": "https://github.com/TheGLander/indent-rainbowline.nvim"
-    },
     "kanagawa.nvim": {
       "rev": "bb85e4bfc8d89b0e62c8fa53ccdd13d12e2f77b3",
       "src": "https://github.com/rebelot/kanagawa.nvim"
@@ -65,10 +61,6 @@
     "logger.nvim": {
       "rev": "63dd10c9b9a159fd6cfe08435d9606384ff103c5",
       "src": "https://github.com/rmagatti/logger.nvim"
-    },
-    "lspkind.nvim": {
-      "rev": "c7274c48137396526b59d86232eabcdc7fed8a32",
-      "src": "https://github.com/onsails/lspkind.nvim"
     },
     "matchparen.nvim": {
       "rev": "87df7d1459c3376aaf5a67d116f0b293cc65ad13",
@@ -85,10 +77,6 @@
     "mini.comment": {
       "rev": "3aa39b795c6dc54dbeaf2863aa91215850c4c8e0",
       "src": "https://github.com/nvim-mini/mini.comment"
-    },
-    "mini.extra": {
-      "rev": "1bce4ba33fdabb3c003cbb2170b68a3b09222360",
-      "src": "https://github.com/nvim-mini/mini.extra"
     },
     "mini.hipatterns": {
       "rev": "247c0173579a29af60f25f00671a75c57090be9c",
@@ -109,10 +97,6 @@
     "mini.pairs": {
       "rev": "03eb1f0062a2cee5314d1ac3939246e4bb21352e",
       "src": "https://github.com/nvim-mini/mini.pairs"
-    },
-    "mini.pick": {
-      "rev": "32ead2c8016a68487de87f23d604135843b0196d",
-      "src": "https://github.com/nvim-mini/mini.pick"
     },
     "mini.splitjoin": {
       "rev": "de43d1ace70185b2d1da97781586ffba9fbb0338",
