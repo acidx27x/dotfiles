@@ -59,6 +59,8 @@ Source: [`lua/core/keymaps.lua`](../.config/nvim/lua/core/keymaps.lua). Core map
 | `<Space>tt` / `<Space>tv` / `<Space>th`  | Normal            | Open terminal in tab / vertical split / horizontal split | User utilities.                                                                                      |
 | `<Space>cd`                              | Normal            | Set window-local cwd to current buffer directory         | User utility; warns for invalid directory.                                                           |
 | `<Space>fu`                              | Normal            | Convert buffer line endings to Unix                      | Removes trailing CR characters and sets `fileformat=unix`; save to write the file.                   |
+| `<Space>fe`                              | Normal            | Pick Save/Reopen with Encoding, then an encoding         | Save writes the file; Reopen prompts before discarding unsaved edits.                                |
+| `<Space>fl`                              | Normal            | Pick LF or CRLF and save the file                        | Normalizes mixed line endings before writing.                                                        |
 
 The `alt_modifier` is chosen from `vim.uv.os_uname().sysname`: macOS gets `<M-...>`, other systems
 get `<A-...>`. The config intentionally does not register both aliases because the user observed
@@ -182,6 +184,12 @@ area using the Kanagawa `Comment` highlight.
 
 Visual `<Space>fu` only affects lines containing a literal trailing CR. Files read with DOS format
 have a buffer-wide `fileformat` setting, so use Normal `<Space>fu` to convert those files.
+
+`<Space>fe` uses `vim.ui.select`, which this config displays through fzf-lua. The encoding picker
+offers UTF-8, UTF-8 with BOM, US-ASCII, Latin-1, Windows-1251, and an input for other encoding
+names. Reopen reads the file again using the selected encoding. If the buffer has unsaved changes,
+choose Save, Discard, or Cancel before reopening. `<Space>fl` changes the whole file's line endings
+and writes it.
 
 MiniTrailspace's `<Space>tw` is listed under feature mappings below. Most other Mini modules retain
 their normal built-in mappings unless explicitly listed above.

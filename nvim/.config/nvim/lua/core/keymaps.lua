@@ -181,6 +181,100 @@ map(
 map("n", "<leader>fu", ":%s/\\r$//e<CR>:setlocal ff=unix<CR>", "file: convert line endings to Unix")
 map("x", "<leader>fu", ":s/\\r$//e<CR>", "file: remove CR from selected lines")
 
+local encodings = {
+  { label = "UTF-8", value = "utf-8" },
+  { label = "UTF-8 with BOM", value = "utf-8", bomb = true },
+  { label = "US-ASCII", value = "ascii" },
+  { label = "Western (Latin-1)", value = "latin1" },
+  { label = "Cyrillic (Windows-1251)", value = "cp1251" },
+  { label = "Other..." },
+}
+
+local function pick_encoding(action, bufnr)
+  vim.ui.select(encodings, {
+    prompt = action .. ":",
+    format_item = function(item)
+      return item.label
+    end,
+  }, function(item)
+    if not item then
+      return
+    end
+
+    local function apply(encoding, bomb)
+      if not encoding or not encoding:match("^[%w_-]+$") then
+        vim.notify("Enter a valid encoding name", vim.log.levels.WARN)
+        return
+      end
+
+      vim.api.nvim_buf_call(bufnr, function()
+        if action == "Save with Encoding" then
+          vim.bo.fileencoding = encoding
+          vim.bo.bomb = bomb or false
+          vim.cmd.write()
+        else
+          local force = false
+          if vim.bo.modified then
+            local choice =
+              vim.fn.confirm("Unsaved changes before reopening:", "&Save\n&Discard\n&Cancel", 3)
+            if choice == 1 then
+              vim.cmd.write()
+            elseif choice == 2 then
+              force = true
+            else
+              return
+            end
+          end
+          vim.cmd((force and "edit! ++enc=" or "edit ++enc=") .. encoding)
+          -- EditorConfig may reset fileencoding after the read.
+          local modified = vim.bo.modified
+          vim.bo.fileencoding = encoding
+          if not modified then
+            vim.bo.modified = false
+          end
+        end
+      end)
+    end
+
+    if item.value then
+      apply(item.value, item.bomb)
+    else
+      vim.ui.input({ prompt = "Encoding: " }, function(value)
+        if value ~= nil then
+          apply(value)
+        end
+      end)
+    end
+  end)
+end
+
+map("n", "<leader>fe", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.ui.select(
+    { "Save with Encoding", "Reopen with Encoding" },
+    { prompt = "Encoding:" },
+    function(action)
+      if action then
+        pick_encoding(action, bufnr)
+      end
+    end
+  )
+end, "file: choose encoding action")
+
+map("n", "<leader>fl", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.ui.select({ "LF", "CRLF" }, { prompt = "Line endings:" }, function(choice)
+    if not choice then
+      return
+    end
+    vim.api.nvim_buf_call(bufnr, function()
+      vim.cmd([[%s/\r$//e]])
+      vim.bo.fileformat = choice == "LF" and "unix" or "dos"
+      vim.cmd.write()
+    end)
+  end)
+end, "file: choose line endings")
+
 -- Quick config editing
 map("n", "<leader>rc", function()
   local path = vim.fn.stdpath("config") .. "/init.lua"
