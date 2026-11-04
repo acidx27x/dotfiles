@@ -48,7 +48,6 @@ require("plugins.matchparen-nvim-config")
 
 -- Register optional feature mappings now; their callbacks load and configure plugins on use.
 require("plugins.auto-save-nvim-config")
-require("plugins.floaterm-config")
 require("plugins.harpoon-config")
 require("plugins.no-neck-pain-nvim-config")
 require("plugins.nvim-spectre-config")

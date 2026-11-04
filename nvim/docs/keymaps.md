@@ -24,7 +24,6 @@ pick keymaps or `:verbose map {keys}` to identify the active owner.
 | `<Space>ha` / `<Space>ht` / `<Space>hn` / `<Space>hp` | Normal, lazy       | Harpoon add / menu / next / previous                          |
 | `<Space>sv` / `<Space>sh`                             | Normal             | Open vertical / horizontal split                              |
 | `<Space>sf` / `<Space>st`                             | Normal             | Toggle float/split / move window to a tab                     |
-| `<Space>tf`                                           | Normal, lazy       | Toggle floating terminal                                      |
 | `<Space>tw`                                           | Normal             | Trim trailing whitespace and final blank lines                |
 
 ## Core mappings
@@ -214,23 +213,22 @@ split with `<C-s>`, a vertical split with `<C-v>`, or a tab with `<C-t>`.
 
 ## Feature and lazy-loaded mappings
 
-| Keys                                                  | Mode                      | Action                                                | Owner and loading                                                                         |
-| ----------------------------------------------------- | ------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `<Space>nd`                                           | Normal, Visual            | Dismiss notifications                                 | nvim-notify; eager.                                                                       |
-| `<Space>cf`                                           | Normal, Visual            | Format buffer or selection                            | Conform; available even when project format-on-save is disabled.                          |
-| `<Space>ast`                                          | Normal                    | Toggle auto-save                                      | Buffer UI group; also loads when the first file is read or created.                       |
-| `<Space>tf`                                           | Normal                    | Toggle floating terminal                              | Floaterm + Volt lazy group. In sidebar buffer: `q` toggles closed and `<Esc>` is a no-op. |
-| `<Space>ha` / `<Space>ht` / `<Space>hn` / `<Space>hp` | Normal                    | Harpoon add / menu / next / previous                  | Harpoon2 lazy group.                                                                      |
-| `<C-s>` / `<C-h>` / `<C-t>`                           | Normal, Harpoon menu only | Open selected item vertically / horizontally / in tab | Buffer-local Harpoon UI maps.                                                             |
-| `<Space>np`                                           | Normal                    | Toggle centered layout                                | No-Neck-Pain lazy group.                                                                  |
-| `<Space>sn`                                           | Normal                    | Open Snipe buffer menu                                | Snipe lazy group.                                                                         |
-| `<Space>S`                                            | Normal / Visual           | Toggle Spectre / search visual selection              | Spectre lazy group.                                                                       |
-| `<Space>db` / `<Space>dB`                             | Normal                    | Toggle breakpoint / set conditional breakpoint        | DAP lazy group.                                                                           |
-| `<Space>dc` / `<Space>ds` / `<Space>dn` / `<Space>do` | Normal                    | Continue / step into / step over / step out           | DAP lazy group.                                                                           |
-| `<Space>dR` / `<Space>dt` / `<Space>d?`               | Normal                    | Restart / toggle REPL / evaluate expression           | DAP lazy group.                                                                           |
-| `<Space>tw`                                           | Normal                    | Trim trailing whitespace and final blank lines        | MiniTrailspace eager.                                                                     |
-| `<Space>vw`                                           | Normal, Visual            | Toggle visible whitespace rendering                   | Visual Whitespace; loads on first file event or mapping use.                              |
-| `<Space>oT` / `<Space>of` / `<Space>ov` / `<Space>oh` | Normal                    | Open Oil in tab / float / vertical / horizontal split | Oil; eager.                                                                               |
+| Keys                                                  | Mode                      | Action                                                | Owner and loading                                                   |
+| ----------------------------------------------------- | ------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------- |
+| `<Space>nd`                                           | Normal, Visual            | Dismiss notifications                                 | nvim-notify; eager.                                                 |
+| `<Space>cf`                                           | Normal, Visual            | Format buffer or selection                            | Conform; available even when project format-on-save is disabled.    |
+| `<Space>ast`                                          | Normal                    | Toggle auto-save                                      | Buffer UI group; also loads when the first file is read or created. |
+| `<Space>ha` / `<Space>ht` / `<Space>hn` / `<Space>hp` | Normal                    | Harpoon add / menu / next / previous                  | Harpoon2 lazy group.                                                |
+| `<C-s>` / `<C-h>` / `<C-t>`                           | Normal, Harpoon menu only | Open selected item vertically / horizontally / in tab | Buffer-local Harpoon UI maps.                                       |
+| `<Space>np`                                           | Normal                    | Toggle centered layout                                | No-Neck-Pain lazy group.                                            |
+| `<Space>sn`                                           | Normal                    | Open Snipe buffer menu                                | Snipe lazy group.                                                   |
+| `<Space>S`                                            | Normal / Visual           | Toggle Spectre / search visual selection              | Spectre lazy group.                                                 |
+| `<Space>db` / `<Space>dB`                             | Normal                    | Toggle breakpoint / set conditional breakpoint        | DAP lazy group.                                                     |
+| `<Space>dc` / `<Space>ds` / `<Space>dn` / `<Space>do` | Normal                    | Continue / step into / step over / step out           | DAP lazy group.                                                     |
+| `<Space>dR` / `<Space>dt` / `<Space>d?`               | Normal                    | Restart / toggle REPL / evaluate expression           | DAP lazy group.                                                     |
+| `<Space>tw`                                           | Normal                    | Trim trailing whitespace and final blank lines        | MiniTrailspace eager.                                               |
+| `<Space>vw`                                           | Normal, Visual            | Toggle visible whitespace rendering                   | Visual Whitespace; loads on first file event or mapping use.        |
+| `<Space>oT` / `<Space>of` / `<Space>ov` / `<Space>oh` | Normal                    | Open Oil in tab / float / vertical / horizontal split | Oil; eager.                                                         |
 
 ### Oil buffer mappings
 

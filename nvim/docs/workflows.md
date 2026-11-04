@@ -46,19 +46,17 @@ A location list belongs to one window, which is useful when each split needs its
 
 ## Terminal windows
 
-| Keys or command                     | Result                                   |
-| ----------------------------------- | ---------------------------------------- |
-| `<Space>th` / `:new \| terminal`    | Open a terminal in a horizontal split.   |
-| `<Space>tv` / `:vnew \| terminal`   | Open one in a vertical split.            |
-| `<Space>tt` / `:tabnew \| terminal` | Open one in a new tab.                   |
-| `<Space>tf`                         | Toggle the configured floating terminal. |
-| `:terminal`                         | Open a terminal in the current window.   |
+| Keys or command                     | Result                                 |
+| ----------------------------------- | -------------------------------------- |
+| `<Space>th` / `:new \| terminal`    | Open a terminal in a horizontal split. |
+| `<Space>tv` / `:vnew \| terminal`   | Open one in a vertical split.          |
+| `<Space>tt` / `:tabnew \| terminal` | Open one in a new tab.                 |
+| `:terminal`                         | Open a terminal in the current window. |
 
 Inside a terminal, type directly to the shell. Press `<C-\><C-n>` to enter Terminal-Normal mode; you
 can then scroll or use Normal-mode commands such as `<C-w>h/j/k/l` to change windows. Press `i` to
 send keys to the terminal again. From Terminal-Normal mode, `:close` closes its window. Exiting the
-shell successfully deletes its terminal buffer in this config. The floating terminal's sidebar also
-uses `q` to toggle it while the sidebar is in Normal mode.
+shell successfully deletes its terminal buffer in this config.
 
 ## Windows, buffers, and tabs
 

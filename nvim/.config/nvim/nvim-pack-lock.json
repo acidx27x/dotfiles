@@ -21,10 +21,6 @@
       "rev": "016802de402556da54c36bd7359b441266b01cdd",
       "src": "https://github.com/stevearc/conform.nvim"
     },
-    "floaterm": {
-      "rev": "4f24e90f1281d6a848c96adb6501573c8e0e406b",
-      "src": "https://github.com/nvzone/floaterm"
-    },
     "friendly-snippets": {
       "rev": "b2ea5c41a150ba72fb656eedb4ed0a86d138d945",
       "src": "https://github.com/rafamadriz/friendly-snippets"
@@ -190,10 +186,6 @@
     "visual-whitespace.nvim": {
       "rev": "d1f8889dd09ca9b07bc3b7af7cd5d1bfb5a7ea71",
       "src": "https://github.com/mcauley-penney/visual-whitespace.nvim"
-    },
-    "volt": {
-      "rev": "4351c5cd790a0d39491c4d5c75dd62d7db3d3414",
-      "src": "https://github.com/nvzone/volt"
     }
   }
 }

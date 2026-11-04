@@ -41,7 +41,7 @@ buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common m
 | `gd` / `grr` / `gi` / `gy` / `<C-s>dc`  | LSP definition / references / implementation / type / declaration |
 | `<C-s>h` / `<C-s>rn` / `<C-s>ca`        | LSP hover / rename / code action                                  |
 | `<Space>ha` / `<Space>ht`               | Harpoon add / menu                                                |
-| `<Space>tf`                             | Toggle floating terminal                                          |
+| `<Space>tt/tv/th`                       | Terminal in a tab / vertical split / horizontal split             |
 | `]e` / `[e` / `]w` / `[w`               | Next / previous error or warning                                  |
 | `<Space>is` / `<Space>it`               | Convert line or selected lines to spaces / tabs                   |
 | `Kf` / `Kb`                             | Leap forward / backward (two-character target)                    |

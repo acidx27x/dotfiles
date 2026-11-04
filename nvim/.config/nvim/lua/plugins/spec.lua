@@ -37,7 +37,6 @@ local eager = {
 local optional = {
   { src = "https://github.com/aznhe21/actions-preview.nvim" },
   { src = "https://github.com/okuuva/auto-save.nvim" },
-  { src = "https://github.com/nvzone/floaterm" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/rmagatti/goto-preview" },
   { src = "https://github.com/ThePrimeagen/harpoon", version = "harpoon2" },
@@ -55,7 +54,6 @@ local optional = {
   { src = "https://github.com/wurli/visimatch.nvim" },
   { src = "https://github.com/mcauley-penney/visual-whitespace.nvim" },
   { src = "https://github.com/shortcuts/no-neck-pain.nvim" },
-  { src = "https://github.com/nvzone/volt" },
 }
 
 M.groups = {
@@ -68,7 +66,6 @@ M.groups = {
     "visual-whitespace.nvim",
   },
   dap = { "nvim-nio", "nvim-dap", "nvim-dap-ui", "nvim-dap-virtual-text" },
-  floaterm = { "volt", "floaterm" },
   harpoon = { "plenary.nvim", "harpoon" },
   lsp_actions = { "actions-preview.nvim" },
   lsp_preview = { "logger.nvim", "goto-preview" },
