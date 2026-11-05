@@ -9,6 +9,7 @@ map({ "n", "v" }, "<Space>", "<Nop>", "leader prefix")
 
 -- Normal mode mappings
 map("n", "<leader>nh", ":nohlsearch<CR>", "hlsearch: clear")
+map("n", "<leader>vc", ":setlocal cursorcolumn!<CR>", "view: toggle cursor column")
 
 -- Center screen when jumping
 map("n", "n", "nzzzv", "search: next result (centered)")
