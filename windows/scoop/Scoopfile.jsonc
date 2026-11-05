@@ -42,6 +42,7 @@
     { "Name": "atuin", "Source": "main", "Info": "" },
     { "Name": "bat", "Source": "main", "Info": "" },
     { "Name": "broot", "Source": "main", "Info": "" },
+    { "Name": "chafa", "Source": "main", "Info": "" },
     { "Name": "direnv", "Source": "main", "Info": "" },
     { "Name": "dprint", "Source": "main", "Info": "" },
     { "Name": "eza", "Source": "main", "Info": "" },

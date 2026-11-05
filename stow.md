@@ -306,8 +306,7 @@ Declare those separately before treating them as portable bootstrap dependencies
 Codex uses two separate configuration layers in this repository:
 
 - `codex-system/config.toml` is the portable base installed at `/etc/codex/config.toml`.
-- `codex/` contains files that are safe to Stow into `~/.codex`, including the `zed-acp` named
-  profile.
+- `codex/` contains files that are safe to Stow into `~/.codex`, including the global `AGENTS.md`.
 
 On Windows, the same portable base is installed at `%ProgramData%\OpenAI\Codex\config.toml` with
 `setup/codex.ps1`; see `windows.md` for the Windows workflow. The writable user config remains
@@ -337,14 +336,7 @@ Codex merges configuration in this order, from highest to lowest precedence:
 5. `/etc/codex/config.toml`
 6. Built-in defaults
 
-Run the repository's workspace-oriented named profile explicitly with:
-
-```bash
-codex --profile zed-acp
-```
-
-Zed remains configured through its registry-managed `codex-acp` settings. Its `mode = "auto"` and
-reasoning setting do not automatically select the `zed-acp` Codex CLI profile.
+Zed remains configured through its registry-managed `codex-acp` settings.
 
 The script is for clean setup, not migration. It stops instead of replacing an existing `~/.codex`
 symlink, an unrelated `/etc/codex/config.toml`, or conflicting Stow targets. Resolve those
