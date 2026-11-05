@@ -38,59 +38,20 @@ fzf.setup({
   },
 })
 
-local function hipatterns()
-  local hip = require("mini.hipatterns")
-  local matches, entries = {}, {}
-
-  for _, bufnr in ipairs(hip.get_enabled_buffers()) do
-    if vim.api.nvim_buf_is_loaded(bufnr) then
-      local name = vim.api.nvim_buf_get_name(bufnr)
-      name = name == "" and "[No Name]" or vim.fn.fnamemodify(name, ":~:.")
-      for _, match in ipairs(hip.get_matches(bufnr)) do
-        local line = vim.api.nvim_buf_get_lines(bufnr, match.lnum - 1, match.lnum, false)[1] or ""
-        matches[#matches + 1] = match
-        entries[#entries + 1] = string.format(
-          "%d\t%s  %s:%d:%d  %s",
-          #matches,
-          match.highlighter,
-          name,
-          match.lnum,
-          match.col,
-          line:gsub("%s+$", "")
-        )
-      end
-    end
+local function project_markers()
+  local rg = require("core.tools").ensure_executable("rg", { "rg" }, "Project marker search")
+  if not rg then
+    return
   end
-
-  local previewer = require("fzf-lua.previewer.builtin").buffer_or_file:extend()
-  function previewer:parse_entry(entry)
-    local match = matches[tonumber(entry:match("^(%d+)\t"))]
-    if not match then
-      return {}
-    end
-    return {
-      bufnr = match.bufnr,
-      path = vim.api.nvim_buf_get_name(match.bufnr),
-      line = match.lnum,
-      col = match.col,
-      tick = vim.b[match.bufnr].changedtick,
-    }
-  end
-
-  fzf.fzf_exec(entries, {
-    prompt = "Hipatterns> ",
-    previewer = previewer,
-    fzf_opts = { ["--delimiter"] = "\t", ["--with-nth"] = "2.." },
-    actions = {
-      ["enter"] = function(selected)
-        local match = matches[tonumber(selected[1]:match("^(%d+)\t"))]
-        if not match or not vim.api.nvim_buf_is_valid(match.bufnr) then
-          return
-        end
-        vim.api.nvim_set_current_buf(match.bufnr)
-        vim.api.nvim_win_set_cursor(0, { match.lnum, match.col - 1 })
-      end,
-    },
+  fzf.grep({
+    prompt = "Markers> ",
+    cwd = vim.fn.getcwd(),
+    regex = [[\b(FIXME|ERROR|HACK|WARN|TODO|NOTE|HINT|INFO)\b]],
+    cmd = vim.fn.shellescape(rg)
+      .. " --glob "
+      .. vim.fn.shellescape("!.git")
+      .. " "
+      .. fzf.config.globals.grep.rg_opts,
   })
 end
 
@@ -102,7 +63,7 @@ map("n", "<leader>pg", fzf.live_grep, "Pick: find inside files with grep live")
 map("n", "<leader>pb", fzf.buffers, "Pick: find buffers")
 map("n", "<leader>pd", fzf.diagnostics_workspace, "Pick: find diagnostic")
 map("n", "<leader>ps", fzf.command_history, "Pick: find command history")
-map("n", "<leader>pp", hipatterns, "Pick: find hipatterns")
+map("n", "<leader>pp", project_markers, "Pick: find project TODO markers")
 map("n", "<leader>pk", fzf.keymaps, "Pick: find keymaps")
 map("n", '<leader>p"', fzf.registers, "Pick: find registers")
 map("n", "<leader>ph", fzf.helptags, "Pick: find help")

@@ -15,7 +15,7 @@ From the dotfiles repository root:
 
 Then start Neovim. The first launch installs missing packages through `vim.pack`; review and confirm
 the package prompt. First install and updates require Git and network access. See the
-[plugin inventory](docs/plugins.md) for all packages and load groups.
+[plugin inventory](docs/plugins.md) for all 46 repositories (28 eager, 18 optional) and load groups.
 
 The tracked `nvim-pack-lock.json` is deployed with this package. If an older, unlinked copy already
 exists at `~/.config/nvim/nvim-pack-lock.json`, move it aside before restowing `nvim`. Stow can then
@@ -48,6 +48,17 @@ buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common m
 | `f/F/t/T` then `;` / `,`                | One-character Leap motion; repeat / reverse it                    |
 | `<Space>xe/xx/xm/xr/xs`                 | Evaluate / exchange / multiply / replace / sort text              |
 
+`<Space>S` toggles grug-far; Visual `<Space>S` prefills the selected text. Its ripgrep engine
+searches case insensitively from the invocation's cwd and honors the `rg` executable override.
+`<C-s>ca` uses fzf-lua's built-in code-action diff preview. MiniNotify initializes before feature
+modules, wraps messages within 80 columns, and enables built-in LSP progress with upstream defaults.
+Use `<Space>nd` to dismiss notifications and `:lua MiniNotify.show_history()` to read history.
+
+`<Space>pp` searches saved project files for standalone `TODO`, `FIXME`, `ERROR`, `HACK`, `WARN`,
+`NOTE`, `HINT`, and `INFO` markers with fzf-lua and ripgrep. Hidden files are included while ignore
+rules and `.git` exclusion apply. Unsaved and unnamed buffers are excluded. MiniHipatterns keeps its
+in-buffer marker and hex-color highlighting. See the [workflow guide](docs/workflows.md).
+
 MiniClue shows descriptions while typing prefixes. `<Space>pk` opens the configured keymap picker.
 For practical examples of quickfix, terminal windows, splits, buffers, and other built-in Vim tools,
 see the [workflow guide](docs/workflows.md).
@@ -73,6 +84,10 @@ Use Neovim's native package API; no external plugin manager is used:
 :lua vim.pack.update({"nvim-treesitter"})
 :lua vim.pack.update({"blink.cmp"}, {target="lockfile"})
 ```
+
+To remove a plugin, remove its specification and configuration, restart Neovim, then run
+`:lua vim.pack.del({"plugin-name"})` with its exact managed name. This removes both its installed
+directory and lockfile entry. Removing only the specification does not uninstall the package.
 
 The package hook runs `:TSUpdate` after updating `nvim-treesitter`. You can also run these checks
 and parser commands manually:
@@ -123,13 +138,12 @@ when installed package directories differ from the spec; use a disposable XDG co
 an audit that must leave the tracked lockfile untouched. See the [dated review](docs/review.md).
 
 External language servers, search tools, CodeLLDB, CTags, and parser build tools are checked when
-their features are first used. Missing required tools stop that action with one error; code-action
-previews warn once when their fallback can continue. Conform checks formatter availability and can
-fall back to LSP formatting. Configure executable paths in `lua/local_paths.lua` when a tool is
-outside `PATH`. A valid override takes priority; otherwise the first executable candidate is used.
-For example, CTags tries `ctags-universal` then `ctags`. Blink, fzf-lua, and Tree-sitter invoke
-fixed command names, so their checks use the names those plugins call. Parser installation requires
-`curl`.
+their features are first used. Missing required tools stop that action with one error. Conform
+checks formatter availability and can fall back to LSP formatting. Configure executable paths in
+`lua/local_paths.lua` when a tool is outside `PATH`. A valid override takes priority; otherwise the
+first executable candidate is used. For example, CTags tries `ctags-universal` then `ctags`. Blink,
+fzf-lua, and Tree-sitter invoke fixed command names, so their checks use the names those plugins
+call. Parser installation requires `curl`.
 
 If startup fails, try `nvim --clean`, inspect `:messages`, and run `:checkhealth`. For a missing
 lazy-loaded feature, inspect `:verbose nmap <keys>` and confirm its package is in

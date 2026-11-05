@@ -1,5 +1,5 @@
 -- builtin override and common group
-require("plugins.nvim-notify-config") -- vim.notify
+require("plugins.mini-notify-config") -- vim.notify
 
 require("plugins.multinput-nvim-config") -- vim.ui.input
 
@@ -51,7 +51,7 @@ require("plugins.matchparen-nvim-config")
 require("plugins.auto-save-nvim-config")
 require("plugins.harpoon-config")
 require("plugins.no-neck-pain-nvim-config")
-require("plugins.nvim-spectre-config")
+require("plugins.grug-far-nvim-config")
 require("plugins.snipe-nvim-config")
 require("plugins.visual-whitespace-nvim-config")
 require("dap.config")

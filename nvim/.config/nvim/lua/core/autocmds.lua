@@ -8,19 +8,9 @@ vim.api.nvim_create_autocmd("BufWritePre", {
       return
     end
 
-    local line_count = vim.api.nvim_buf_line_count(args.buf)
-    local last_line = line_count
-    while last_line > 1 do
-      local line = vim.api.nvim_buf_get_lines(args.buf, last_line - 1, last_line, false)[1]
-      if line:match("%S") then
-        break
-      end
-      last_line = last_line - 1
-    end
-
-    if last_line < line_count then
-      vim.api.nvim_buf_set_lines(args.buf, last_line, -1, false, {})
-    end
+    vim.api.nvim_buf_call(args.buf, function()
+      MiniTrailspace.trim_last_lines()
+    end)
     vim.bo[args.buf].fixendofline = true
     vim.bo[args.buf].endofline = true
   end,

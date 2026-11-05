@@ -56,14 +56,7 @@ M.lsp_keymaps = function(bufnr)
   keyn("<C-s>oc", vim.lsp.buf.outgoing_calls, "LSP: outgoing calls")
   keyn("<C-s>th", vim.lsp.buf.typehierarchy, "LSP: typehierarchy")
   map({ "v", "n" }, "<C-s>ca", function()
-    local command = require("core.tools").ensure_executable(
-      "diff-so-fancy",
-      { "diff-so-fancy" },
-      "Code action preview",
-      true
-    )
-    require("plugins.lazy").load("lsp_actions", "lsp.actions-preview-nvim-config", command)
-    require("actions-preview").code_actions()
+    require("fzf-lua").lsp_code_actions({ previewer = "codeaction" })
   end, "LSP: code action (with picker preview)", { buf = bufnr })
 
   keyn("<C-s>ds", vim.lsp.buf.document_symbol, "LSP: document symbol")
@@ -73,7 +66,6 @@ M.lsp_keymaps = function(bufnr)
 
   keyn("<C-s>ws", vim.lsp.buf.workspace_symbol, "LSP: workspace symbol")
   keyn("<C-s>wd", vim.lsp.buf.workspace_diagnostics, "LSP: workspace diagnostics")
-  -- TODO vim.lsp.buf.selection_range
 
   keyn("<C-s>l", function()
     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
@@ -93,7 +85,7 @@ M.lsp_keymaps = function(bufnr)
   --
 
   -- Keep Neovim's readable default LSP keys available beside the custom groups.
-  keyn("<C-s>h", vim.lsp.buf.hover, "LSP: hover")  -- use 'K' for 'leap' plugin
+  keyn("<C-s>h", vim.lsp.buf.hover, "LSP: hover") -- use 'K' for 'leap' plugin
   keyn("gri", vim.lsp.buf.implementation, "LSP: implementation (native key)")
   keyn("grn", vim.lsp.buf.rename, "LSP: rename (native key)")
   keyn("grr", vim.lsp.buf.references, "LSP: references (native key)")

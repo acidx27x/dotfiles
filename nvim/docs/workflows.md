@@ -78,8 +78,10 @@ a second window does not create a second copy of the file.
 | List tabs / go to next or previous tab                 | `:tabs` / `gt` or `gT`                                |
 
 `<Space>sf` opens a float over the base window if the current tab has only one normal window.
-`<Space>st` then opens the current buffer in a new tab. This config places new horizontal splits
-below and vertical splits to the right.
+`<Space>st` then opens the current buffer in a new tab. `:BTab {number}` (or `:btab`) opens that
+exact existing buffer with native `:tab sbuffer`, including unnamed, modified, and terminal buffers.
+Completion offers valid numeric IDs; invalid IDs do not create a tab. This config places new
+horizontal splits below and vertical splits to the right.
 
 ## Search and edit
 
@@ -95,6 +97,48 @@ below and vertical splits to the right.
 
 Use quickfix above when you need a persistent, navigable list of matches across files. fzf-lua is
 useful for jumping to one result quickly.
+
+### Project TODO markers
+
+`<Space>pp` opens fzf-lua's grep picker for standalone uppercase `TODO`, `FIXME`, `ERROR`, `HACK`,
+`WARN`, `NOTE`, `HINT`, and `INFO` markers below the current window's cwd. A colon is optional:
+`TODO` and `TODO:` both match, while `TODO_WORD` does not. Type in the picker to fuzzy-filter the
+results, preview files, and press Enter to jump to a match. `<Space>pr` resumes the picker.
+
+The search uses a fixed ripgrep regex in `fzf-lua-config.lua`, honors the `rg` executable override,
+includes hidden files, respects ignore files, and excludes `.git`. It searches saved disk contents;
+save a buffer first to include its latest edits. `<Space>pg` remains the general live project
+search. MiniHipatterns still highlights markers and hex colors in buffers; its configuration does
+not control project search. No custom file scanner or temporary buffers are used.
+
+### Search and replace
+
+Normal `<Space>S` toggles grug-far; Visual `<Space>S` prefills the selection. Searches start in the
+invocation's window-local cwd, use ripgrep with `--ignore-case`, and honor the `rg` override in
+`lua/local_paths.lua`. Use the Files Filter and Paths fields to limit the search, review the diff,
+then invoke grug-far's Replace action. `sd` is no longer required. Harpoon still requires Plenary.
+
+### Notifications, selection, saves, and tags
+
+MiniNotify uses native formatting and durations, wraps messages within 80 columns, and enables
+built-in LSP progress with upstream progress formatting and completion duration. `<Space>nd` clears
+active notifications. `:lua MiniNotify.show_history()` opens history; `MiniNotify.get_all()` returns
+it for scripting. Progress tasks and ordinary notifications can appear together.
+
+`gnn` starts native node selection. Visual `grn` and `grc` grow to a parent; `grm` shrinks to a
+child. Counts are supported. Without a Tree-sitter parser, native selection falls back to LSP
+selection ranges. Normal `grn` remains LSP rename. `<C-s>ca` in Normal or Visual mode opens
+fzf-lua's built-in code-action diff preview; Enter applies the selected action. Native `gra` remains
+available.
+
+Manual saves and autosaves trim final blank lines with MiniTrailspace and retain a final newline.
+This cleanup preserves interior whitespace and skips binary and special buffers. Manual saves still
+follow the Conform formatting policy; autosaves do not trigger formatting.
+
+`:CTags lang=C++ [exclude=generated]` runs manually and asynchronously using `vim.system`. It keeps
+`.tags` in the invocation's cwd, even if you change directories before completion, and reports the
+exit result with captured stdout and stderr. Default exclusions remain `build`, `dist`, and `run`.
+The `ctags` executable override takes priority over `ctags-universal` and `ctags` on `PATH`.
 
 ## Marks, registers, macros, and folds
 

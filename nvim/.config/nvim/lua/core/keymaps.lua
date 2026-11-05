@@ -295,22 +295,25 @@ map("n", "<leader>th", ":new | terminal<CR>", "terminal: open in split horizonta
 
 -- Open buffer in tab with number
 vim.api.nvim_create_user_command("BTab", function(opts)
-  local bufnum = tonumber(opts.args)
-  if not bufnum then
-    print("Usage: :BTab <buffer-number>")
+  local bufnum = opts.args:match("^%d+$") and tonumber(opts.args)
+  if not bufnum or bufnum < 1 or not vim.tbl_contains(vim.api.nvim_list_bufs(), bufnum) then
+    vim.notify("BTab: enter an existing positive buffer number", vim.log.levels.ERROR)
     return
   end
 
-  local bufname = vim.fn.bufname(bufnum)
-  if bufname == "" then
-    print("Invalid buffer number: " .. bufnum)
-    return
-  end
-
-  vim.cmd("tabedit " .. vim.fn.fnameescape(bufname))
+  vim.cmd("tab sbuffer " .. bufnum)
 end, {
   nargs = 1,
-  complete = "buffer",
+  complete = function(arglead)
+    local buffers = {}
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      local id = tostring(buf)
+      if id:sub(1, #arglead) == arglead then
+        buffers[#buffers + 1] = id
+      end
+    end
+    return buffers
+  end,
   desc = "cmdline: open buffer by number in a tab",
 })
 vim.cmd("cabbrev btab BTab")
@@ -398,56 +401,22 @@ vim.api.nvim_create_user_command("CTags", function(opts)
 
   table.insert(cmd, ".") -- better set dir in the end
 
-  -- Run asynchronously
-  vim.fn.jobstart(cmd, {
-    stdout_buffered = true,
-    stderr_buffered = true,
-    on_stdout = function(_, data)
-      if not data then
-        return
+  local cwd = vim.fn.getcwd()
+  vim.system(cmd, { cwd = cwd, text = true }, function(result)
+    vim.schedule(function()
+      local message = result.code == 0
+          and ("tags generated successfully to '" .. vim.fs.joinpath(cwd, tagfile) .. "'")
+        or ("CTags command failed (exit " .. result.code .. ")")
+      for _, output in ipairs({ result.stdout or "", result.stderr or "" }) do
+        if vim.trim(output) ~= "" then
+          message = message .. "\n" .. vim.trim(output)
+        end
       end
-      local lines = vim.tbl_filter(function(line)
-        return line ~= nil and line ~= ""
-      end, data)
-      if #lines > 0 then
-        vim.notify(
-          table.concat(lines, "\n"),
-          vim.log.levels.INFO,
-          { title = "User Keymaps", timeout = 1000 }
-        )
-      end
-    end,
-    on_stderr = function(_, data)
-      if not data then
-        return
-      end
-      local lines = vim.tbl_filter(function(line)
-        return line ~= nil and line ~= ""
-      end, data)
-      if #lines > 0 then
-        vim.notify(
-          table.concat(lines, "\n"),
-          vim.log.levels.INFO,
-          { title = "User Keymaps", timeout = 1000 }
-        )
-      end
-    end,
-    on_exit = function(_, code)
-      if code == 0 then
-        vim.notify(
-          "tags generated successfully to '" .. tagfile .. "' file",
-          vim.log.levels.INFO,
-          { title = "User Keymaps", timeout = 1000 }
-        )
-      else
-        vim.notify(
-          "CTags command failed",
-          vim.log.levels.ERROR,
-          { title = "User Keymaps", timeout = 1000 }
-        )
-      end
-    end,
-  })
+      vim.notify(message, result.code == 0 and vim.log.levels.INFO or vim.log.levels.ERROR, {
+        title = "User Keymaps",
+      })
+    end)
+  end)
 end, {
   nargs = "*",
   complete = function(_, _, _)

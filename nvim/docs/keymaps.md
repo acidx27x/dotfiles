@@ -70,7 +70,7 @@ different Alt/Meta behavior on macOS and Linux.
 
 | Command / abbreviation          | Action                                        | Source             |
 | ------------------------------- | --------------------------------------------- | ------------------ |
-| `:BTab {buffer-number}`         | Open a named buffer in a new tab              | `core/keymaps.lua` |
+| `:BTab {buffer-number}`         | Open an existing buffer by ID in a new tab    | `core/keymaps.lua` |
 | `:btab`                         | Command-line abbreviation for `:BTab`         | `core/keymaps.lua` |
 | `:Cwd` / `:Twd` / `:Lwd`        | Print global / tab / window cwd               | `core/keymaps.lua` |
 | `:CTags lang=... [exclude=...]` | Run configured Universal Ctags asynchronously | `core/keymaps.lua` |
@@ -82,26 +82,26 @@ Registered buffer-locally in
 readable keys are retained alongside Neovim's documented/default-style LSP mappings. This means
 related operations can have more than one intentional spelling.
 
-| Keys                                          | Mode           | Action                                                                    | Relationship                                                                                                          |
-| --------------------------------------------- | -------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `gd`                                          | Normal         | Go to definition                                                          | Custom short alias; common built-in/Neovim LSP key.                                                                   |
-| `gy`                                          | Normal         | Go to type definition                                                     | Custom readable alias; `grt` is retained too.                                                                         |
-| `gi`                                          | Normal         | Go to implementation                                                      | Custom short alias; `gri` retained too.                                                                               |
-| `gpd` / `gpy` / `gpc` / `gpr` / `gpi`         | Normal         | Preview definition / type / declaration / references / implementation     | First use loads goto-preview and logger; buffer-local.                                                                |
-| `gpq`                                         | Normal         | Close preview windows                                                     | Loads goto-preview on first use.                                                                                      |
-| `<C-s>h` / `<C-s>s`                           | Normal         | Hover / signature help                                                    | Human-readable LSP group.                                                                                             |
-| `<C-s>rn`                                     | Normal         | Rename symbol                                                             | Human-readable LSP group; `grn` retained too.                                                                         |
-| `<C-s>ic` / `<C-s>oc`                         | Normal         | Incoming / outgoing calls                                                 | Human-readable LSP group.                                                                                             |
-| `<C-s>th`                                     | Normal         | Type hierarchy                                                            | Human-readable LSP group.                                                                                             |
-| `<C-s>ca`                                     | Normal, Visual | Code action with preview picker                                           | First use loads actions-preview; intentionally takes precedence over the normal LSP code-action mapping for this key. |
-| `<C-s>ds` / `<C-s>dh` / `<C-s>dc` / `<C-s>cr` | Normal         | Document symbols / highlight / declaration / clear references             | Human-readable LSP group.                                                                                             |
-| `<C-s>ws` / `<C-s>wd`                         | Normal         | Workspace symbols / diagnostics                                           | Human-readable LSP group.                                                                                             |
-| `<C-s>l`                                      | Normal         | Toggle inlay hints for current buffer                                     | Passes `{ bufnr = 0 }`; its map description now reflects buffer scope.                                                |
-| `<C-s>L`                                      | Normal         | Toggle inlay hints globally                                               | Calls `is_enabled()` / `enable()` without a buffer filter.                                                            |
-| `<C-s>u` / `<C-s>U`                           | Normal         | Toggle symbol-usage display for current buffer / globally                 | First use loads symbol-usage plugin.                                                                                  |
-| `K`                                           | Normal         | Hover                                                                     | Reinstates Neovim's familiar LSP hover mapping.                                                                       |
-| `gri` / `grn` / `grr` / `grt` / `gO`          | Normal         | Implementation / rename / references / type definition / document symbols | Neovim-style LSP map aliases deliberately retained.                                                                   |
-| `gra`                                         | Normal, Visual | Code action                                                               | Retained LSP-native spelling.                                                                                         |
+| Keys                                          | Mode           | Action                                                                    | Relationship                                                                    |
+| --------------------------------------------- | -------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `gd`                                          | Normal         | Go to definition                                                          | Custom short alias; common built-in/Neovim LSP key.                             |
+| `gy`                                          | Normal         | Go to type definition                                                     | Custom readable alias; `grt` is retained too.                                   |
+| `gi`                                          | Normal         | Go to implementation                                                      | Custom short alias; `gri` retained too.                                         |
+| `gpd` / `gpy` / `gpc` / `gpr` / `gpi`         | Normal         | Preview definition / type / declaration / references / implementation     | First use loads goto-preview and logger; buffer-local.                          |
+| `gpq`                                         | Normal         | Close preview windows                                                     | Loads goto-preview on first use.                                                |
+| `<C-s>h` / `<C-s>s`                           | Normal         | Hover / signature help                                                    | Human-readable LSP group.                                                       |
+| `<C-s>rn`                                     | Normal         | Rename symbol                                                             | Human-readable LSP group; `grn` retained too.                                   |
+| `<C-s>ic` / `<C-s>oc`                         | Normal         | Incoming / outgoing calls                                                 | Human-readable LSP group.                                                       |
+| `<C-s>th`                                     | Normal         | Type hierarchy                                                            | Human-readable LSP group.                                                       |
+| `<C-s>ca`                                     | Normal, Visual | Code action with preview picker                                           | fzf-lua built-in code-action diff preview; supports cursor and selected ranges. |
+| `<C-s>ds` / `<C-s>dh` / `<C-s>dc` / `<C-s>cr` | Normal         | Document symbols / highlight / declaration / clear references             | Human-readable LSP group.                                                       |
+| `<C-s>ws` / `<C-s>wd`                         | Normal         | Workspace symbols / diagnostics                                           | Human-readable LSP group.                                                       |
+| `<C-s>l`                                      | Normal         | Toggle inlay hints for current buffer                                     | Passes `{ bufnr = 0 }`; its map description now reflects buffer scope.          |
+| `<C-s>L`                                      | Normal         | Toggle inlay hints globally                                               | Calls `is_enabled()` / `enable()` without a buffer filter.                      |
+| `<C-s>u` / `<C-s>U`                           | Normal         | Toggle symbol-usage display for current buffer / globally                 | First use loads symbol-usage plugin.                                            |
+| `K`                                           | Normal         | Hover                                                                     | Reinstates Neovim's familiar LSP hover mapping.                                 |
+| `gri` / `grn` / `grr` / `grt` / `gO`          | Normal         | Implementation / rename / references / type definition / document symbols | Neovim-style LSP map aliases deliberately retained.                             |
+| `gra`                                         | Normal, Visual | Code action                                                               | Retained LSP-native spelling.                                                   |
 
 Dynamic LSP maps are created when a server attaches, not at startup. `<C-s>l` toggles current-buffer
 hints; `<C-s>L` toggles hints globally.
@@ -203,14 +203,18 @@ Defined globally in `lua/plugins/fzf-lua-config.lua`; fzf-lua is eagerly configu
 | --------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `<Space>pr` / `<Space>pf` / `<Space>pg`                   | Resume / files / live grep                                              |
 | `<Space>pb` / `<Space>pd` / `<Space>ps`                   | Buffers / workspace diagnostics / command history                       |
-| `<Space>pp` / `<Space>pk` / `<Space>p"` / `<Space>ph`     | Hipatterns / keymaps / registers / help                                 |
+| `<Space>pp` / `<Space>pk` / `<Space>p"` / `<Space>ph`     | Project TODO markers / keymaps / registers / help                       |
 | `<Space>plc` / `<Space>pld` / `<Space>pls`                | LSP declarations / definitions / document symbols                       |
 | `<Space>pli` / `<Space>plr` / `<Space>plt` / `<Space>plS` | LSP implementations / references / type definitions / workspace symbols |
 
-`<Space>pp` lists matches from enabled Hipatterns buffers, including unsaved and unnamed buffers.
-Each row shows its highlighter, buffer, line, column, and text. The preview reads the loaded buffer;
-Enter jumps to the match. File and live grep pickers accept `cwd` to search another directory. Both
-include hidden paths by default while respecting ignore rules.
+`<Space>pp` uses fzf-lua's grep picker to find standalone uppercase `TODO`, `FIXME`, `ERROR`,
+`HACK`, `WARN`, `NOTE`, `HINT`, and `INFO` markers in saved files below the invocation's
+window-local cwd. Colons are optional, and embedded names such as `TODO_WORD` do not match. Hidden
+files are included, ignore files are respected, and `.git` is excluded. Unsaved and unnamed buffers
+are excluded. Preview and Enter use fzf-lua's standard file navigation. This search has a fixed
+ripgrep regex and is independent of MiniHipatterns highlighting. File and live grep pickers accept
+`cwd` to search another directory. Both include hidden paths by default while respecting ignore
+rules.
 
 `<Space>pf` fuzzy-matches file paths. `<Space>pg` searches file contents with ripgrep patterns. Use
 `:FzfLua grep_project` to fuzzy-filter project lines by their content; this scans every line first
@@ -228,14 +232,14 @@ split with `<C-s>`, a vertical split with `<C-v>`, or a tab with `<C-t>`.
 
 | Keys                                                  | Mode                      | Action                                                | Owner and loading                                                   |
 | ----------------------------------------------------- | ------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------- |
-| `<Space>nd`                                           | Normal, Visual            | Dismiss notifications                                 | nvim-notify; eager.                                                 |
+| `<Space>nd`                                           | Normal, Visual            | Dismiss notifications                                 | MiniNotify; eager; LSP progress enabled.                            |
 | `<Space>cf`                                           | Normal, Visual            | Format buffer or selection                            | Conform; available even when project format-on-save is disabled.    |
 | `<Space>ast`                                          | Normal                    | Toggle auto-save                                      | Buffer UI group; also loads when the first file is read or created. |
 | `<Space>ha` / `<Space>ht` / `<Space>hn` / `<Space>hp` | Normal                    | Harpoon add / menu / next / previous                  | Harpoon2 lazy group.                                                |
 | `<C-s>` / `<C-h>` / `<C-t>`                           | Normal, Harpoon menu only | Open selected item vertically / horizontally / in tab | Buffer-local Harpoon UI maps.                                       |
 | `<Space>np`                                           | Normal                    | Toggle centered layout                                | No-Neck-Pain lazy group.                                            |
 | `<Space>sn`                                           | Normal                    | Open Snipe buffer menu                                | Snipe lazy group.                                                   |
-| `<Space>S`                                            | Normal / Visual           | Toggle Spectre / search visual selection              | Spectre lazy group.                                                 |
+| `<Space>S`                                            | Normal / Visual           | Toggle grug-far / prefill visual selection            | grug-far lazy group; ripgrep engine, ignore case.                   |
 | `<Space>db` / `<Space>dB`                             | Normal                    | Toggle breakpoint / set conditional breakpoint        | DAP lazy group.                                                     |
 | `<Space>dc` / `<Space>ds` / `<Space>dn` / `<Space>do` | Normal                    | Continue / step into / step over / step out           | DAP lazy group.                                                     |
 | `<Space>dR` / `<Space>dt` / `<Space>d?`               | Normal                    | Restart / toggle REPL / evaluate expression           | DAP lazy group.                                                     |
@@ -267,18 +271,18 @@ cancels; `D` closes; `<C-s>` / `<C-h>` open in vertical/horizontal splits. Hint 
 
 ## Buffer-local Git and Tree-sitter mappings
 
-| Keys                        | Mode                                    | Action                                           | Activation / conflict notes                                                                                                                                     |
-| --------------------------- | --------------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `]c` / `[c`                 | Normal, Git buffer                      | Next / previous Git hunk                         | Gitsigns on attach; falls through to built-in diff motion when `vim.wo.diff`.                                                                                   |
-| `<Space>gs` / `<Space>gr`   | Normal, Visual, Git buffer              | Stage / reset hunk                               | Buffer-local Gitsigns maps.                                                                                                                                     |
-| `<Space>gS` / `<Space>gR`   | Normal, Git buffer                      | Stage / reset whole buffer                       | Gitsigns on attach.                                                                                                                                             |
-| `<Space>gp` / `<Space>gi`   | Normal, Git buffer                      | Preview hunk / inline preview                    | Gitsigns on attach.                                                                                                                                             |
-| `<Space>gb` / `<Space>gB`   | Normal, Git buffer                      | Blame current line with full info / blame buffer | Gitsigns on attach.                                                                                                                                             |
-| `<Space>gd` / `<Space>gD`   | Normal, Git buffer                      | Diff current buffer / diff against `~`           | Gitsigns on attach.                                                                                                                                             |
-| `<Space>gq` / `<Space>gQ`   | Normal, Git buffer                      | Add current buffer / all buffers to quickfix     | Gitsigns on attach.                                                                                                                                             |
-| `<Space>gtw` / `<Space>gtb` | Normal, Git buffer                      | Toggle word diff / current-line blame            | Gitsigns on attach.                                                                                                                                             |
-| `gnn`                       | Normal, configured Tree-sitter filetype | Start node selection                             | Tree-sitter maps created on configured filetype.                                                                                                                |
-| `grn` / `grc` / `grm`       | Visual, configured Tree-sitter filetype | Grow node / grow scope / shrink node selection   | `grn` also matches Neovim's Normal-mode LSP rename only by mode distinction; no same-mode collision. `grc` implementation currently grows to parent like `grn`. |
+| Keys                        | Mode                       | Action                                           | Activation / conflict notes                                                          |
+| --------------------------- | -------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `]c` / `[c`                 | Normal, Git buffer         | Next / previous Git hunk                         | Gitsigns on attach; falls through to built-in diff motion when `vim.wo.diff`.        |
+| `<Space>gs` / `<Space>gr`   | Normal, Visual, Git buffer | Stage / reset hunk                               | Buffer-local Gitsigns maps.                                                          |
+| `<Space>gS` / `<Space>gR`   | Normal, Git buffer         | Stage / reset whole buffer                       | Gitsigns on attach.                                                                  |
+| `<Space>gp` / `<Space>gi`   | Normal, Git buffer         | Preview hunk / inline preview                    | Gitsigns on attach.                                                                  |
+| `<Space>gb` / `<Space>gB`   | Normal, Git buffer         | Blame current line with full info / blame buffer | Gitsigns on attach.                                                                  |
+| `<Space>gd` / `<Space>gD`   | Normal, Git buffer         | Diff current buffer / diff against `~`           | Gitsigns on attach.                                                                  |
+| `<Space>gq` / `<Space>gQ`   | Normal, Git buffer         | Add current buffer / all buffers to quickfix     | Gitsigns on attach.                                                                  |
+| `<Space>gtw` / `<Space>gtb` | Normal, Git buffer         | Toggle word diff / current-line blame            | Gitsigns on attach.                                                                  |
+| `gnn`                       | Normal                     | Start node selection                             | Native parent selection; counts supported; LSP fallback without a parser.            |
+| `grn` / `grc` / `grm`       | Visual                     | Grow to parent / parent alias / shrink to child  | Native selection with counts and LSP fallback; Normal-mode `grn` remains LSP rename. |
 
 ## Explicit overrides and known ambiguities
 
@@ -306,3 +310,7 @@ Global keymaps can be inspected with `:verbose nmap {keys}`, `:verbose vmap {key
 `:<mode>map {prefix}`. LSP, Gitsigns, and Tree-sitter mappings do not exist until their buffer
 events occur. After attaching a server or opening a configured filetype, inspect the buffer-local
 map with the same `:verbose` command. `<Space>pk` exposes configured mappings through fzf-lua.
+
+Notification history is available with `:lua MiniNotify.show_history()` or
+`:lua vim.print(MiniNotify.get_all())`. `<Space>nd` clears active notifications while preserving
+history. Built-in LSP-progress notifications use upstream formatting and completion expiry.

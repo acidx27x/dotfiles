@@ -30,13 +30,12 @@ local eager = {
   { src = "https://codeberg.org/andyg/leap.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/SmiteshP/nvim-navic" },
-  { src = "https://github.com/rcarriga/nvim-notify" },
+  { src = "https://github.com/nvim-mini/mini.notify" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
   { src = "https://github.com/stevearc/oil.nvim" },
 }
 
 local optional = {
-  { src = "https://github.com/aznhe21/actions-preview.nvim" },
   { src = "https://github.com/okuuva/auto-save.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/rmagatti/goto-preview" },
@@ -48,7 +47,7 @@ local optional = {
   { src = "https://github.com/theHamsta/nvim-dap-virtual-text" },
   { src = "https://github.com/nvim-neotest/nvim-nio" },
   { src = "https://github.com/nvim-lua/plenary.nvim" },
-  { src = "https://github.com/nvim-pack/nvim-spectre" },
+  { src = "https://github.com/MagicDuck/grug-far.nvim" },
   { src = "https://github.com/m4xshen/smartcolumn.nvim" },
   { src = "https://github.com/leath-dub/snipe.nvim" },
   { src = "https://github.com/Wansmer/symbol-usage.nvim" },
@@ -68,11 +67,10 @@ M.groups = {
   },
   dap = { "nvim-nio", "nvim-dap", "nvim-dap-ui", "nvim-dap-virtual-text" },
   harpoon = { "plenary.nvim", "harpoon" },
-  lsp_actions = { "actions-preview.nvim" },
   lsp_preview = { "logger.nvim", "goto-preview" },
   no_neck_pain = { "no-neck-pain.nvim" },
   snipe = { "snipe.nvim" },
-  spectre = { "plenary.nvim", "nvim-spectre" },
+  grug_far = { "grug-far.nvim" },
   symbol_usage = { "symbol-usage.nvim" },
 }
 

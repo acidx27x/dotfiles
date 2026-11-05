@@ -76,57 +76,25 @@ vim.api.nvim_create_user_command("TSUpdate", function(args)
   end
 end, { nargs = "*", bar = true, complete = complete_parsers(true) })
 
-local selections = {}
-
-local function select_node(node)
-  if not node then
-    return
-  end
-
-  local start_row, start_col, end_row, end_col = node:range()
-  if end_col == 0 and end_row > start_row then
-    end_row = end_row - 1
-    end_col = #vim.api.nvim_buf_get_lines(0, end_row, end_row + 1, true)[1]
+-- Mirror native an/in's parser check so the aliases retain LSP fallback too.
+local function select_node(target)
+  if vim.treesitter.get_parser(0, nil, { error = false }) then
+    vim.treesitter.select(target, vim.v.count1)
   else
-    end_col = math.max(end_col - 1, start_col)
+    vim.lsp.buf.selection_range(target == "parent" and vim.v.count1 or -vim.v.count1)
   end
-
-  vim.api.nvim_win_set_cursor(0, { start_row + 1, start_col })
-  vim.cmd.normal({ "v", bang = true })
-  vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col })
-end
-
-local function start_selection()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local node = vim.treesitter.get_node({ bufnr = bufnr })
-  selections[bufnr] = node and { node } or nil
-  select_node(node)
 end
 
 local function grow_selection()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local stack = selections[bufnr]
-  if not stack or #stack == 0 then
-    start_selection()
-    return
-  end
-
-  local parent = stack[#stack]:parent()
-  if parent then
-    table.insert(stack, parent)
-    select_node(parent)
-  end
+  select_node("parent")
 end
 
-local function shrink_selection()
-  local stack = selections[vim.api.nvim_get_current_buf()]
-  if not stack or #stack <= 1 then
-    return
-  end
-
-  table.remove(stack)
-  select_node(stack[#stack])
-end
+map("n", "gnn", grow_selection, "selection: start node selection")
+map("x", "grn", grow_selection, "selection: grow to parent")
+map("x", "grc", grow_selection, "selection: grow to parent (alias)")
+map("x", "grm", function()
+  select_node("child")
+end, "selection: shrink to child")
 
 local group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
@@ -139,15 +107,6 @@ vim.api.nvim_create_autocmd("FileType", {
 
     vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-
-    local opts = { buf = args.buf, silent = true }
-    map("n", "gnn", start_selection, "Tree-sitter: start node selection", opts)
-    map("x", "grn", grow_selection, "Tree-sitter: grow node selection", opts)
-    map("x", "grc", grow_selection, "Tree-sitter: grow scope selection", opts)
-    map("x", "grm", shrink_selection, "Tree-sitter: shrink node selection", opts)
-
-    -- These buffer-local selection maps arrive after MiniClue's initial trigger scan.
-    require("mini.clue").ensure_buf_triggers()
   end,
   desc = "Enable Tree-sitter features for configured filetypes",
 })

@@ -1,15 +1,11 @@
 {
   "plugins": {
-    "actions-preview.nvim": {
-      "rev": "0ac9c2aa3cfc8c885321c0862b50b6b1c3392405",
-      "src": "https://github.com/aznhe21/actions-preview.nvim"
-    },
     "auto-save.nvim": {
       "rev": "141e5b4cb5df51e659fc039e25d227360f4dffcd",
       "src": "https://github.com/okuuva/auto-save.nvim"
     },
     "blink.cmp": {
-      "rev": "06097529cf6d3618546436f9a6bd5beaed979aef",
+      "rev": "7b31e1b6497be70f620bbad83a789929248697ac",
       "src": "https://github.com/Saghen/blink.cmp",
       "version": "'main'"
     },
@@ -26,16 +22,20 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "07fce8ac8dffba4e11f1cbe5490d730a2cc5ec7a",
+      "rev": "11357ee24a9f092b1db503237eb57e2a11e48434",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "4bcd99167c265f135886b282baad77afe06206b2",
+      "rev": "ef707fb93301a9b856f36eae4c8f56f5b988a794",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "goto-preview": {
       "rev": "d2d6923c9b9e0e43f0b9b566f261a8b1ae016540",
       "src": "https://github.com/rmagatti/goto-preview"
+    },
+    "grug-far.nvim": {
+      "rev": "91b7e58b6ffc6ddad5acb7a7c1df21257724449e",
+      "src": "https://github.com/MagicDuck/grug-far.nvim"
     },
     "harpoon": {
       "rev": "87b1a3506211538f460786c23f98ec63ad9af4e5",
@@ -89,6 +89,10 @@
     "mini.move": {
       "rev": "5207c4de3d7db84aadedf72e4a27048d9e46ccf9",
       "src": "https://github.com/nvim-mini/mini.move"
+    },
+    "mini.notify": {
+      "rev": "04dae72c012de9db45c4250645170f78f826731e",
+      "src": "https://github.com/nvim-mini/mini.notify"
     },
     "mini.operators": {
       "rev": "9e844663fe217bae78e857b7dc59468d8ee6d425",
@@ -149,14 +153,6 @@
     "nvim-nio": {
       "rev": "edcc181a875301dd21840189aa2f2f9ad69fc172",
       "src": "https://github.com/nvim-neotest/nvim-nio"
-    },
-    "nvim-notify": {
-      "rev": "8701bece920b38ea289b457f902e2ad184131a5d",
-      "src": "https://github.com/rcarriga/nvim-notify"
-    },
-    "nvim-spectre": {
-      "rev": "72f56f7585903cd7bf92c665351aa585e150af0f",
-      "src": "https://github.com/nvim-pack/nvim-spectre"
     },
     "nvim-treesitter": {
       "rev": "610734c5d3e59761d5f79318d120633374537fa5",

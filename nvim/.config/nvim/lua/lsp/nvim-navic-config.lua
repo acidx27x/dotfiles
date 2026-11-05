@@ -18,26 +18,7 @@ function M.get()
     return ""
   end
 
-  local signcol_setting = vim.wo.signcolumn
-  local sign_width = 0
-  if signcol_setting == "yes" then
-    sign_width = 2
-  elseif signcol_setting:match("^yes:(%d)$") then
-    sign_width = tonumber(signcol_setting:match("^yes:(%d)$"))
-  elseif signcol_setting:match("%d") then
-    sign_width = tonumber(signcol_setting)
-  end
-
-  local total_off = wininfo.textoff or 0
-  local num_width = total_off - sign_width
-  if num_width < 0 then
-    num_width = 0
-  end
-
-  local sign_pad = string.rep(" ", sign_width)
-  local num_pad = string.rep(" ", num_width)
-
-  local format = ""
+  local padding = string.rep(" ", wininfo.textoff or 0)
 
   local loc = ""
   if require("nvim-navic").is_available() then
@@ -45,12 +26,10 @@ function M.get()
     if vim.trim(loc) == "" then
       loc = "(global scope)"
     end
-    format = "%%#SignColumn#%s%%#LineNr#%s%%#NavicText#%s%%*"
+    return string.format("%%#LineNr#%s%%#NavicText#%s%%*", padding, loc)
   else
-    format = "%%#SignColumn#%s%%#LineNr#%s%%#LineNr#%s"
+    return "%#LineNr#" .. padding .. "%*"
   end
-
-  return string.format(format, sign_pad, num_pad, loc)
 end
 
 -- The winbar statusline expression calls this global through v:lua for each window.

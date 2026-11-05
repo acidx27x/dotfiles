@@ -1,5 +1,12 @@
 # Neovim stability review (2026-10-29)
 
+This is a historical review. The [maintenance audit status](maintenance-audit.md) records the
+2026-11-05 implementation: 46 repositories, grug-far, MiniNotify with LSP progress enabled, fzf-lua
+code-action previews, native selection, fzf-lua project TODO-marker search, and subsequent
+Floaterm/Volt installed-package cleanup. The 2026-11-06 cleanup also removed seven stale packages;
+the spec, lockfile, and installed store now match 46 names. Package counts and replaced-plugin
+references below describe the earlier checkout.
+
 ## Verdict and scope
 
 **Usable on this Linux installation, with a qualified stability verdict.** Neovim 0.12.6 starts, the
