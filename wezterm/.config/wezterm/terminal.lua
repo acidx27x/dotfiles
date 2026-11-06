@@ -5,6 +5,9 @@ function module.apply_to_config(config, platform, settings)
   -- Don't switch to TERM=wezterm until wezterm terminfo exists everywhere.
   config.term = "xterm-256color"
 
+  -- Preserve modified Enter keys for applications that request the Kitty protocol.
+  config.enable_kitty_keyboard = true
+
   config.scrollback_lines = 10000
 
   config.default_cursor_style = "SteadyBlock"
