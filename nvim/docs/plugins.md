@@ -3,8 +3,8 @@
 The inventory comes from [`lua/plugins/spec.lua`](../.config/nvim/lua/plugins/spec.lua) and
 [`nvim-pack-lock.json`](../.config/nvim/nvim-pack-lock.json). The specs contain 46 repositories: 28
 eager specs and 18 optional specs. The lockfile records revisions for `mini.operators` and Leap. The
-lockfile and installed package store now match all 46 configured names. Floaterm, Volt, and the
-seven stale packages from earlier replacements were removed through `vim.pack.del()`; see the
+lockfile and installed package store now match all 46 configured names. The 15 stale packages from
+earlier removals and replacements were removed through `vim.pack.del()` on macOS; see the
 [maintenance status](maintenance-audit.md#unused-package-cleanup--2026-11-06). Terminal mappings use
 built-in `:terminal` windows. “Eager” means registered with `vim.pack.add(eager)` at startup;
 “optional” means registered with a no-op load callback, then activated with `:packadd` by a lazy

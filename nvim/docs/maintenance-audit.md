@@ -91,6 +91,19 @@ remain unverified.
 
 ### Unused-package cleanup — 2026-11-06
 
+On the macOS installation, removed 15 stale packages with `vim.pack.del()`: `actions-preview.nvim`,
+`floaterm`, `hardtime.nvim`, `indent-rainbowline.nvim`, `lspkind.nvim`, `mini.extra`,
+`mini.indentscope`, `mini.pick`, `neo-tree.nvim`, `nui.nvim`, `nvim-notify`, `nvim-spectre`,
+`nvim-web-devicons`, `vague.nvim`, and `volt`. All were already absent from the configuration and
+had no remaining configured consumers. Neovim 0.12.6 ran the removal in a fresh session with the
+repository config path and `/Users/acidx27x/.local/share/nvim` as the data path; the deployed
+lockfile links to the repository lockfile. The spec, lockfile, and installed directories now agree
+on 46 names. An exact before/after comparison confirmed every retained lock entry was unchanged,
+including pre-existing revision changes and branch constraints. No executable configuration changed;
+validation used inventory and lockfile comparisons without startup or health checks.
+
+The earlier Linux cleanup and validation are recorded below.
+
 Removed `actions-preview.nvim`, `indent-rainbowline.nvim`, `lspkind.nvim`, `mini.extra`,
 `mini.pick`, `nvim-notify`, and `nvim-spectre` with the native `vim.pack.del()` API, following
 [Neovim's removal sequence](https://neovim.io/doc/user/pack/#vim.pack-examples). Their
