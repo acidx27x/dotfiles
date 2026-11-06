@@ -158,11 +158,28 @@ before checking Dotter, environment variables, or machine state.
 Edits to linked configuration files take effect immediately. Rerun `Restow` when mappings or the
 selected package contents change. Repeated deployments are idempotent.
 
+If a deployed link or its target directory was manually deleted, both `Deploy` and `Restow`
+recreate the missing links from the repository without a force option:
+
+```powershell
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Restow -Package codex -WhatIf
+pwsh -NoProfile -File .\setup\dotter.ps1 -Action Restow -Package codex
+```
+
+The source files must still exist. If a real file or a different symlink occupies a destination,
+the operation stops without overwriting it; move that conflicting item aside and retry. Undeploy
+also succeeds when a cached link has already been deleted.
+
 ### Active State and Reconciliation
 
-Dotter uses one cache for the full deployed configuration, so the wrapper reconciles a complete
-desired package set for every operation. Machine-local data is stored under
-`%LOCALAPPDATA%\dotfiles\dotter`:
+The wrapper keeps one shared cache, but each operation gives Dotter a temporary cache containing
+only the requested packages. Deploy and Restow refresh those packages; Undeploy removes their
+cached links, including links whose sources or configured destinations have changed. Unrelated
+packages keep their existing links and cache entries, even when they have pending changes.
+`-Replace` also includes packages being removed, and `-All` includes every active package. The
+preview lists the packages the operation can change.
+
+Machine-local data is stored under `%LOCALAPPDATA%\dotfiles\dotter`:
 
 | Path                      | Purpose                                                           |
 | ------------------------- | ----------------------------------------------------------------- |
@@ -173,10 +190,19 @@ The wrapper fingerprints the cache file and recursively stored cache data after 
 operation. A later run stops if the cache no longer matches the saved fingerprint. A named mutex
 also prevents two wrapper processes from reconciling the same machine state concurrently.
 
-Each real operation runs Dotter's dry-run before applying changes and again afterward. State is
-saved only when the second preview reports no remaining work. A failed preview, deployment, or
-convergence check does not update active state. `-WhatIf` does not create persistent state, links,
-cache data, or environment variables.
+Each real operation runs Dotter's dry-run before applying changes and again afterward. The wrapper
+merges the temporary cache back and saves state only when the second preview reports no remaining
+work. Failed previews, deployments, and convergence checks leave the shared cache and active state
+unchanged. If saving state fails, the wrapper restores the previous cache and any environment value
+it changed. An interrupted operation can leave some requested links changed; retry the same command
+after resolving the failure. A process termination during the cache/state commit still requires
+restoring matching cache and state if the fingerprint check fails. `-WhatIf` does not create
+persistent state, links, cache data, or environment variables. Existing version 2 state needs no
+migration.
+
+Scoped deployment supports this repository's symbolic mappings with sources under each package's
+own directory. It rejects templates, dependencies, and other unsupported mapping forms instead of
+expanding an operation beyond its requested packages. Default Dotter hooks are disabled.
 
 Do not edit the machine-local files to select packages; use the wrapper. They are deliberately
 outside Git and must not be committed.
@@ -188,10 +214,11 @@ from the repository as usual.
 ### Symlink Prerequisite
 
 Run deployment from a non-elevated PowerShell session with Windows Developer Mode enabled, or with
-equivalent permission to create symbolic links. `-WhatIf` returns before permission tests, so
-preview works without Developer Mode or elevation. Before applying previewed link additions, a real
-operation tests both file and directory symlink capability. Failures retain the original Windows
-exception as the inner error for diagnosis. The wrapper never falls back to copying.
+equivalent permission to create symbolic links. A deploy preview rejects Dotter's copy fallback if
+symlink permission is unavailable. Before applying Deploy or Restow, a real operation also tests
+both file and directory symlink capability. Failures retain the original Windows exception as the
+inner error for diagnosis. Undeploy uses cached links and needs no symlink creation permission. The
+wrapper never falls back to copying.
 
 After the Scoop bootstrap has completed, close that terminal and open PowerShell 7 so `dotter` and
 `pwsh` are on `PATH`. Preview the complete deployment first:
@@ -270,11 +297,14 @@ Run the isolated Windows suite after changing the wrapper or Dotter mappings:
 pwsh -NoProfile -File .\setup\tests\dotter.Tests.ps1
 ```
 
-The suite uses a unique temporary target path containing spaces. It covers malformed selections,
-dry-run immutability, single and repeated deploys, duplicate names, profile validation, selective
-removal, restow, replacement, conflict rejection, failed-state preservation, cache fingerprinting,
-state validation, execution locking, orphaned-cache rejection, and explicit remove-all. It does not
-change the normal Dotter state or `BAT_CONFIG_PATH`.
+The suite uses unique temporary targets and a disposable repository whose paths contain spaces. It
+covers malformed selections and profiles, dry-run immutability, package isolation with unrelated
+pending changes, restoring deleted links and target directories, missing-source removal, restow,
+replacement, conflict rejection, deployment and
+convergence failures, state-save rollback and retry, cache fingerprinting, state validation,
+execution locking, orphaned-cache rejection, and explicit remove-all. Bat ownership, conflicts, and
+environment rollback use a fake user environment store; real Dotter operations still run against
+temporary links. The suite does not change the normal Dotter state or user `BAT_CONFIG_PATH`.
 
 For release validation, also run the default profile preview in a non-Developer-Mode session,
 exercise Bat deployment/removal on a disposable Windows user, and test a real clone whose repository

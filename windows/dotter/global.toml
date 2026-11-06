@@ -34,7 +34,6 @@ default_target_type = "symbolic"
 
 [codex.files]
 "codex/.codex/AGENTS.md" = "~/.codex/AGENTS.md"
-"codex/.codex/zed-acp.config.toml" = "~/.codex/zed-acp.config.toml"
 
 [llvm.files]
 "llvm/.clang-format" = "~/.clang-format"

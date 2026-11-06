@@ -7,7 +7,8 @@ param(
 
   [string[]] $Package,
 
-  [string] $Profile,
+  [Alias('Profile')]
+  [string] $SelectedProfile,
 
   [switch] $Replace,
 
@@ -20,7 +21,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $script:PackageSpecified = $PSBoundParameters.ContainsKey('Package')
-$script:ProfileSpecified = $PSBoundParameters.ContainsKey('Profile')
+$script:ProfileSpecified = $PSBoundParameters.ContainsKey('SelectedProfile')
 
 function Write-Info {
   param([Parameter(Mandatory)][string] $Message)
@@ -38,7 +39,7 @@ Usage:
 Options:
   --help, -Help, -h           Show this help and exit without reading machine state.
   -Action <action>            Deploy (default), Undeploy, or Restow.
-  -Package <name[,name...]>   Select one or more package names.
+  -Package <name[,name...]>   Change only these packages.
   -Profile <name>             Select a tracked Dotter profile.
   -Replace                    Replace the complete selection during Deploy.
   -All                        Remove the complete selection during Undeploy.
@@ -99,18 +100,40 @@ function Get-GlobalPackageNames {
   $seen = [System.Collections.Generic.HashSet[string]]::new(
     [StringComparer]::OrdinalIgnoreCase
   )
+  $section = ''
+  $symbolicDefault = $false
 
   foreach ($line in Get-Content -LiteralPath $Path) {
-    if ($line -notmatch '^\s*\[(?<section>[^]]+)\]\s*(?:#.*)?$') {
+    if ($line -match '^\s*(?:#.*)?$') {
       continue
+    }
+    if ($line -notmatch '^\s*\[(?<section>[^]]+)\]\s*(?:#.*)?$') {
+      if ($section -eq 'settings' -and
+        $line -match '^\s*default_target_type\s*=\s*"symbolic"\s*(?:#.*)?$') {
+        $symbolicDefault = $true
+        continue
+      }
+      # Scope cache entries by the first source directory. Keep this invariant explicit.
+      if ($section -match '^(?<package>[A-Za-z0-9_.-]+)\.files$') {
+        $owner = $Matches.package
+        $tomlString = '(?:"(?:[^"\\]|\\.)*"|''[^'']*'')'
+        if ($line -match "^\s*(?<source>$tomlString)\s*=\s*$tomlString\s*(?:#.*)?$") {
+          $source = $Matches.source.Substring(1, $Matches.source.Length - 2)
+          if ($source.StartsWith("$owner/", [StringComparison]::OrdinalIgnoreCase) -and
+            $source -notmatch '(?:/|\\)\.\.(?:/|\\|$)') {
+            continue
+          }
+        }
+      }
+      throw "Unsupported scoped Dotter mapping in '$Path': $line"
     }
 
     $section = $Matches.section
-    if ($section -notmatch '^(?<package>[A-Za-z0-9_.-]+)\.files$') {
-      if ($section -match '\.files$') {
-        throw "Unsupported Dotter package section '[$section]' in '$Path'."
-      }
+    if ($section -eq 'settings') {
       continue
+    }
+    if ($section -notmatch '^(?<package>[A-Za-z0-9_.-]+)\.files$') {
+      throw "Unsupported Dotter package section '[$section]' in '$Path'."
     }
 
     $name = $Matches.package
@@ -122,6 +145,9 @@ function Get-GlobalPackageNames {
 
   if ($names.Count -eq 0) {
     throw "No Dotter packages were found in '$Path'."
+  }
+  if (-not $symbolicDefault) {
+    throw 'Scoped Dotter deployment requires default_target_type = "symbolic".'
   }
 
   return $names.ToArray()
@@ -173,25 +199,19 @@ function Read-ProfilePackages {
   )
 
   $content = (Get-Content -LiteralPath $Path -Raw) -replace '(?m)#.*$', ''
-  $packageList = [regex]::Match($content, '(?ms)^\s*packages\s*=\s*\[(?<body>.*?)\]\s*$')
+  $packageList = [regex]::Match($content, '(?s)\A\s*packages\s*=\s*\[(?<body>.*?)\]\s*\z')
   if (-not $packageList.Success) {
     throw "Profile '$Path' must contain only a packages array."
   }
 
   $body = $packageList.Groups['body'].Value
-  $matches = [regex]::Matches(
-    $body,
-    '(?<value>"[A-Za-z0-9_.-]+"|''[A-Za-z0-9_.-]+'')'
-  )
-  $unparsed = $body
-  foreach ($match in $matches) {
-    $unparsed = $unparsed.Replace($match.Value, '')
+  $namePattern = '(?:"[A-Za-z0-9_.-]+"|''[A-Za-z0-9_.-]+'')'
+  if ($body -notmatch "\A\s*(?:$namePattern(?:\s*,\s*$namePattern)*\s*,?)?\s*\z") {
+    throw "Profile '$Path' contains an invalid package array."
   }
-  if (($unparsed -replace '[\s,]', '').Length -ne 0) {
-    throw "Profile '$Path' contains unsupported content. Use package names only."
-  }
+  $packageMatches = [regex]::Matches($body, $namePattern)
 
-  $names = @($matches | ForEach-Object {
+  $names = @($packageMatches | ForEach-Object {
       $_.Value.Substring(1, $_.Value.Length - 2)
     })
   return Resolve-PackageNames `
@@ -250,6 +270,43 @@ function New-LocalConfigContent {
   return ($lines -join [Environment]::NewLine) + [Environment]::NewLine
 }
 
+function Read-SymbolicCache {
+  param(
+    [Parameter(Mandatory)][string] $Path,
+    [Parameter(Mandatory)][AllowEmptyCollection()][string[]] $ActivePackages
+  )
+
+  $entries = [System.Collections.Generic.List[object]]::new()
+  $section = ''
+  foreach ($line in Get-Content -LiteralPath $Path) {
+    if ($line -match '^\s*(?:#.*)?$') {
+      continue
+    }
+    if ($line -match '^\[(symlinks|templates)\]$') {
+      $section = $Matches[1]
+      continue
+    }
+    if ($section -ne 'symlinks' -or
+      $line -notmatch '^["''](?<package>[A-Za-z0-9_.-]+)[/\\]') {
+      throw "Unsupported Dotter cache entry in '$Path'. Only package-owned symlinks are supported."
+    }
+    $owner = $Matches.package
+    if ($ActivePackages -notcontains $owner) {
+      throw "Dotter cache contains an entry for inactive package '$owner'."
+    }
+    # Preserve Dotter's TOML quoting, including Windows separators, without reserializing paths.
+    $entries.Add([pscustomobject]@{ Package = $owner; Line = $line })
+  }
+  return $entries.ToArray()
+}
+
+function New-SymbolicCacheContent {
+  param([Parameter(Mandatory)][AllowEmptyCollection()][object[]] $Entries)
+
+  $lines = @('[symlinks]') + @($Entries | ForEach-Object { $_.Line }) + @('', '[templates]', '')
+  return $lines -join "`n"
+}
+
 function Get-CacheFingerprint {
   param(
     [Parameter(Mandatory)][string] $CacheFile,
@@ -291,6 +348,16 @@ function Get-CacheFingerprint {
 
   $payload = [Text.Encoding]::UTF8.GetBytes($entries -join "`n")
   return Get-Sha256Hex -Bytes $payload
+}
+
+function Get-UserBatConfig {
+  return [Environment]::GetEnvironmentVariable('BAT_CONFIG_PATH', 'User')
+}
+
+function Set-UserBatConfig {
+  param([AllowNull()][AllowEmptyString()][string] $Value)
+
+  [Environment]::SetEnvironmentVariable('BAT_CONFIG_PATH', $Value, 'User')
 }
 
 function Read-ActiveState {
@@ -377,7 +444,7 @@ function Save-ActiveState {
       $content,
       [Text.UTF8Encoding]::new($false)
     )
-    Move-Item -LiteralPath $temporaryPath -Destination $Path -Force
+    Move-Item -LiteralPath $temporaryPath -Destination $Path -Force -Confirm:$false
   }
   finally {
     if ([System.IO.File]::Exists($temporaryPath)) {
@@ -442,6 +509,7 @@ function Invoke-Dotter {
     [Parameter(Mandatory)][string] $Command,
     [Parameter(Mandatory)][string[]] $CommonArguments,
     [Parameter(Mandatory)][string] $DisplayOperation,
+    [ValidateSet('deploy', 'undeploy')][string] $NativeAction = 'deploy',
     [switch] $DryRun,
     [switch] $QuietOutput
   )
@@ -453,8 +521,13 @@ function Invoke-Dotter {
   else {
     $arguments += '--noconfirm'
   }
-  $arguments += 'deploy'
+  $arguments += $NativeAction
 
+  # Dotter 0.13.5 unconditionally removes this path before probing Windows symlink support.
+  if ($NativeAction -eq 'deploy' -and
+    $null -ne (Get-Item -LiteralPath 'DOTTER_SYMLINK_TEST' -Force -ErrorAction SilentlyContinue)) {
+    throw 'Dotter symlink probe path already exists: DOTTER_SYMLINK_TEST. Move it before retrying.'
+  }
   $global:LASTEXITCODE = 0
   $nativeOutput = @(& $Command @arguments 2>&1)
   $exitCode = $LASTEXITCODE
@@ -482,8 +555,14 @@ function Assert-NoSkippedTargets {
     [Parameter(Mandatory)][string] $Phase
   )
 
-  if ($Result.Text -match '(?i)\bskipping\b|target (?:file|directory) already exists') {
+  $warningLine = '(?im)^\[\s*(?:WARN|ERROR)\s*\].*'
+  $skipPattern = "$warningLine\bSkipping\.?\s*$|" +
+  "$warningLine\btarget (?:file|directory) already exists"
+  if ($Result.Text -match $skipPattern) {
     throw "Dotter $Phase found a conflicting target and refused to replace it."
+  }
+  if ($Result.Text -match '(?im)copying instead of symlinking|^\[.*\]\s+\[[+~-]\]\s+template\b') {
+    throw "Dotter $Phase would copy files. Symbolic links are required; enable Developer Mode."
   }
 }
 
@@ -494,20 +573,22 @@ function Assert-SymbolicLinksAvailable {
   $linkKind = 'file'
 
   try {
-    New-Item -ItemType Directory -Path $testDirectory | Out-Null
+    New-Item -ItemType Directory -Path $testDirectory -Confirm:$false | Out-Null
     $sourceFile = Join-Path $testDirectory 'source.txt'
-    New-Item -ItemType File -Path $sourceFile | Out-Null
+    New-Item -ItemType File -Path $sourceFile -Confirm:$false | Out-Null
     New-Item `
       -ItemType SymbolicLink `
       -Path (Join-Path $testDirectory 'file-link.txt') `
+      -Confirm:$false `
       -Target $sourceFile | Out-Null
 
     $linkKind = 'directory'
     $sourceDirectory = Join-Path $testDirectory 'source-directory'
-    New-Item -ItemType Directory -Path $sourceDirectory | Out-Null
+    New-Item -ItemType Directory -Path $sourceDirectory -Confirm:$false | Out-Null
     New-Item `
       -ItemType SymbolicLink `
       -Path (Join-Path $testDirectory 'directory-link') `
+      -Confirm:$false `
       -Target $sourceDirectory | Out-Null
   }
   catch {
@@ -621,7 +702,7 @@ function Main {
     -PackageSpecified $packageSpecified `
     -PackageNames $Package `
     -ProfileSpecified $profileSpecified `
-    -ProfileName $Profile `
+    -ProfileName $SelectedProfile `
     -ReplaceSelection $Replace `
     -RemoveAll $All
 
@@ -641,7 +722,7 @@ function Main {
           -Names @($Package))
     }
     else {
-      $profileName = if ($profileSpecified) { $Profile } else { 'all' }
+      $profileName = if ($profileSpecified) { $SelectedProfile } else { 'all' }
       $selectedPackages = @(Resolve-ProfilePackages `
           -Name $profileName `
           -DotterConfigRoot $dotterConfigRoot `
@@ -654,6 +735,7 @@ function Main {
   $cacheFile = Join-Path $stateRoot 'cache.toml'
   $cacheDirectory = Join-Path $stateRoot 'cache'
   $mutex = Enter-DotterMutex -StateRoot $stateRoot
+  $temporaryRoot = $null
 
   try {
     $dotterCommand = Get-DotterCommand
@@ -681,6 +763,10 @@ function Main {
       $currentPackages = @()
       $batConfigPathManaged = $false
     }
+    $cacheEntries = @()
+    if (Test-Path -LiteralPath $cacheFile -PathType Leaf) {
+      $cacheEntries = @(Read-SymbolicCache -Path $cacheFile -ActivePackages $currentPackages)
+    }
 
     $desiredPackages = @(Get-DesiredPackages `
         -KnownPackages $knownPackages `
@@ -690,34 +776,64 @@ function Main {
         -ReplaceSelection $Replace `
         -RemoveAll $All)
 
+    $scopePackages = @($selectedPackages)
+    if ($Replace -or $All) {
+      $scopePackages = @($knownPackages | Where-Object {
+          $_ -in $currentPackages -or $_ -in $selectedPackages
+        })
+    }
+    $scopedEntries = @($cacheEntries | Where-Object { $_.Package -in $scopePackages })
+    $preservedEntries = @($cacheEntries | Where-Object { $_.Package -notin $scopePackages })
+    $operationPackages = @($selectedPackages)
+    if ($Action -eq 'Undeploy') {
+      $operationPackages = @()
+    }
+    $nativeAction = if ($Action -eq 'Undeploy') { 'undeploy' } else { 'deploy' }
+
     $batConfigPath = Join-Path $env:APPDATA 'bat\config'
-    $userBatConfig = [Environment]::GetEnvironmentVariable('BAT_CONFIG_PATH', 'User')
+    $batAffected = $scopePackages -contains 'bat'
+    $userBatConfig = if ($batAffected) {
+      Get-UserBatConfig
+    }
+    else { $null }
     $batSelected = $desiredPackages -contains 'bat'
-    if ($batSelected -and $userBatConfig -and
+    if ($batAffected -and $batSelected -and $userBatConfig -and
       -not (Test-SamePath -Left $userBatConfig -Right $batConfigPath)) {
       throw "User BAT_CONFIG_PATH already points to '$userBatConfig', not '$batConfigPath'."
     }
 
-    $temporaryConfig = Join-Path (
+    $temporaryRoot = Join-Path (
       [System.IO.Path]::GetTempPath()
-    ) "dotter-local-$([Guid]::NewGuid().ToString('N')).toml"
+    ) "dotter-operation-$([Guid]::NewGuid().ToString('N'))"
+    [System.IO.Directory]::CreateDirectory($temporaryRoot) | Out-Null
+    $temporaryConfig = Join-Path $temporaryRoot 'local.toml'
+    $temporaryCache = Join-Path $temporaryRoot 'cache.toml'
     [System.IO.File]::WriteAllText(
       $temporaryConfig,
-      (New-LocalConfigContent -Packages $desiredPackages),
+      (New-LocalConfigContent -Packages @($operationPackages)),
+      [Text.UTF8Encoding]::new($false)
+    )
+    [System.IO.File]::WriteAllText(
+      $temporaryCache,
+      (New-SymbolicCacheContent -Entries $scopedEntries),
       [Text.UTF8Encoding]::new($false)
     )
 
     $commonArguments = @(
       '--global-config', $globalConfig,
       '--local-config', $temporaryConfig,
-      '--cache-file', $cacheFile,
-      '--cache-directory', $cacheDirectory
+      '--cache-file', $temporaryCache,
+      '--cache-directory', (Join-Path $temporaryRoot 'cache'),
+      '--pre-deploy', (Join-Path $temporaryRoot 'no-hook'),
+      '--post-deploy', (Join-Path $temporaryRoot 'no-hook'),
+      '--pre-undeploy', (Join-Path $temporaryRoot 'no-hook'),
+      '--post-undeploy', (Join-Path $temporaryRoot 'no-hook')
     )
 
     Push-Location $dotfilesRoot
     try {
-      $displayPackages = if ($desiredPackages.Count) {
-        $desiredPackages -join ', '
+      $displayPackages = if ($scopePackages.Count) {
+        $scopePackages -join ', '
       }
       else {
         '(none)'
@@ -727,14 +843,15 @@ function Main {
         -Command $dotterCommand `
         -CommonArguments $commonArguments `
         -DisplayOperation $Action `
+        -NativeAction $nativeAction `
         -DryRun
       Assert-NoSkippedTargets -Result $preview -Phase 'preview'
 
       if ($WhatIfPreference) {
-        if ($batSelected -and -not $userBatConfig) {
+        if ($batAffected -and $batSelected -and -not $userBatConfig) {
           Write-Info "Would set user BAT_CONFIG_PATH to '$batConfigPath'."
         }
-        elseif (-not $batSelected -and $batConfigPathManaged -and
+        elseif ($batAffected -and -not $batSelected -and $batConfigPathManaged -and
           $userBatConfig -and
           (Test-SamePath -Left $userBatConfig -Right $batConfigPath)) {
           Write-Info "Would remove managed user BAT_CONFIG_PATH '$userBatConfig'."
@@ -747,22 +864,24 @@ function Main {
         return
       }
 
-      if ($preview.Text -match '(?m)\[\+\]\s+symlink') {
+      if ($nativeAction -eq 'deploy' -and $operationPackages.Count) {
         Assert-SymbolicLinksAvailable
       }
 
-      New-Item -ItemType Directory -Path $stateRoot -Force | Out-Null
+      New-Item -ItemType Directory -Path $stateRoot -Force -Confirm:$false | Out-Null
       Write-Info "Running Dotter $($Action.ToLowerInvariant())."
       $deployment = Invoke-Dotter `
         -Command $dotterCommand `
         -CommonArguments $commonArguments `
-        -DisplayOperation $Action
+        -DisplayOperation $Action `
+        -NativeAction $nativeAction
       Assert-NoSkippedTargets -Result $deployment -Phase $Action.ToLowerInvariant()
 
       $verification = Invoke-Dotter `
         -Command $dotterCommand `
         -CommonArguments $commonArguments `
         -DisplayOperation 'verification' `
+        -NativeAction $nativeAction `
         -DryRun `
         -QuietOutput
       if ($verification.Output.Count -ne 0) {
@@ -772,32 +891,45 @@ function Main {
         throw 'Dotter did not converge; active state was not saved.'
       }
 
-      $newFingerprint = Get-CacheFingerprint `
-        -CacheFile $cacheFile `
-        -CacheDirectory $cacheDirectory
+      $resultEntries = @(Read-SymbolicCache `
+          -Path $temporaryCache `
+          -ActivePackages @($operationPackages))
       $originalUserBatConfig = $userBatConfig
       $environmentChanged = $false
+      $cacheCommitted = $false
+      $stagedCacheFile = "$cacheFile.$([Guid]::NewGuid().ToString('N')).tmp"
+      $previousCache = if (Test-Path -LiteralPath $cacheFile -PathType Leaf) {
+        [System.IO.File]::ReadAllBytes($cacheFile)
+      }
+      else { $null }
       try {
-        if ($batSelected -and -not $userBatConfig) {
-          [Environment]::SetEnvironmentVariable(
-            'BAT_CONFIG_PATH',
-            $batConfigPath,
-            'User'
-          )
+        if ($batAffected -and $batSelected -and -not $userBatConfig) {
+          Set-UserBatConfig -Value $batConfigPath
           $batConfigPathManaged = $true
           $environmentChanged = $true
           Write-Info "Set user BAT_CONFIG_PATH to '$batConfigPath'."
         }
-        elseif (-not $batSelected) {
+        elseif ($batAffected -and -not $batSelected) {
           if ($batConfigPathManaged -and $userBatConfig -and
             (Test-SamePath -Left $userBatConfig -Right $batConfigPath)) {
-            [Environment]::SetEnvironmentVariable('BAT_CONFIG_PATH', $null, 'User')
+            Set-UserBatConfig -Value $null
             $environmentChanged = $true
             Write-Info 'Removed the managed user BAT_CONFIG_PATH.'
           }
           $batConfigPathManaged = $false
         }
 
+        [System.IO.File]::WriteAllText(
+          $temporaryCache,
+          (New-SymbolicCacheContent -Entries @($preservedEntries + $resultEntries)),
+          [Text.UTF8Encoding]::new($false)
+        )
+        Copy-Item -LiteralPath $temporaryCache -Destination $stagedCacheFile -Confirm:$false
+        Move-Item -LiteralPath $stagedCacheFile -Destination $cacheFile -Force -Confirm:$false
+        $cacheCommitted = $true
+        $newFingerprint = Get-CacheFingerprint `
+          -CacheFile $cacheFile `
+          -CacheDirectory $cacheDirectory
         Save-ActiveState `
           -Path $stateFile `
           -Packages $desiredPackages `
@@ -805,13 +937,22 @@ function Main {
           -CacheFingerprint $newFingerprint
       }
       catch {
+        if ($cacheCommitted) {
+          try {
+            if ($null -ne $previousCache) {
+              [System.IO.File]::WriteAllBytes($cacheFile, $previousCache)
+            }
+            else {
+              [System.IO.File]::Delete($cacheFile)
+            }
+          }
+          catch {
+            Write-Warning 'Could not restore the Dotter cache after state-save failure.'
+          }
+        }
         if ($environmentChanged) {
           try {
-            [Environment]::SetEnvironmentVariable(
-              'BAT_CONFIG_PATH',
-              $originalUserBatConfig,
-              'User'
-            )
+            Set-UserBatConfig -Value $originalUserBatConfig
           }
           catch {
             Write-Warning 'Could not restore BAT_CONFIG_PATH after state-save failure.'
@@ -819,20 +960,32 @@ function Main {
         }
         throw
       }
+      finally {
+        if ([System.IO.File]::Exists($stagedCacheFile)) {
+          [System.IO.File]::Delete($stagedCacheFile)
+        }
+      }
     }
     finally {
       Pop-Location
-      if ([System.IO.File]::Exists($temporaryConfig)) {
-        [System.IO.File]::Delete($temporaryConfig)
-      }
     }
   }
   finally {
-    $mutex.ReleaseMutex()
-    $mutex.Dispose()
+    try {
+      if ($temporaryRoot -and [System.IO.Directory]::Exists($temporaryRoot)) {
+        [System.IO.Directory]::Delete($temporaryRoot, $true)
+      }
+    }
+    finally {
+      $mutex.ReleaseMutex()
+      $mutex.Dispose()
+    }
   }
 
-  Write-Info 'Deployment state saved. Reopen the terminal after BAT_CONFIG_PATH changes.'
+  Write-Info 'Deployment state saved.'
+  if ($environmentChanged) {
+    Write-Info 'Reopen the terminal to pick up the BAT_CONFIG_PATH change.'
+  }
 }
 
 Main
