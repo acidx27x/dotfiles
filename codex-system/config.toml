@@ -91,6 +91,11 @@ sandbox = "elevated"
 "~/.codex/packages/app-server-daemon" = "read"
 "~/.codex" = "read"
 
+# SSH settings and trusted host keys; private keys stay outside this grant.
+"~/.ssh/config" = "read"
+"~/.ssh/config.d" = "read"
+"~/.ssh/known_hosts" = "read"
+
 # User specific common paths.
 "~/.local" = "read"
 "/opt/rust" = "read"
@@ -140,9 +145,13 @@ glob_scan_max_depth = 3
 [permissions.locked_folders_only.network]
 enabled = true
 
-# Keep limited even if you later enable network in another profile.
+# Proxy mode; domain rules below still apply when the network proxy is active.
 # Options: "limited", "full".
-mode = "limited"
+mode = "full"
+
+# Expose SOCKS5 for SSH ProxyCommand clients; SSH does not use HTTP_PROXY.
+enable_socks5 = true
+socks_url = "http://127.0.0.1:8081"
 
 # Specific sites only settings.
 [permissions.locked_folders_only.network.domains]
@@ -154,6 +163,8 @@ mode = "limited"
 
 # GitHub repositories, API, source files, archives, and releases.
 "github.com" = "allow"
+# Alternate SSH endpoint on port 443.
+"ssh.github.com" = "allow"
 "api.github.com" = "allow"
 "raw.githubusercontent.com" = "allow"
 "codeload.github.com" = "allow"
@@ -164,6 +175,7 @@ mode = "limited"
 
 # GitLab repositories and container registry.
 "gitlab.com" = "allow"
+"altssh.gitlab.com" = "allow"
 "registry.gitlab.com" = "allow"
 
 # Package managers.
@@ -182,6 +194,7 @@ mode = "limited"
 "codeberg.org" = "allow"
 "git.sr.ht" = "allow"
 "bitbucket.org" = "allow"
+"altssh.bitbucket.org" = "allow"
 "api.bitbucket.org" = "allow"
 
 # Upstream source archives.
@@ -194,40 +207,14 @@ mode = "limited"
 ###############################################################################
 [shell_environment_policy]
 # Options: "all", "core", "none".
+# Inherit all variables except those matched by the explicit filters below.
 inherit = "all"
 
-# Do not keep variables containing KEY/SECRET/TOKEN before filters run.
-ignore_default_excludes = false
+# Use only the explicit exclusions below instead of built-in secret-name exclusions.
+ignore_default_excludes = true
 
 [shell_environment_policy.filters]
-# Whitelist only safe/common environment variables.
-# Add language/tool variables only when something breaks.
-"PATH" = "include"
-"HOME" = "include"
-"USER" = "include"
-"USERNAME" = "include"
-"SHELL" = "include"
-"TERM" = "include"
-"COLORTERM" = "include"
-"NO_COLOR" = "include"
-"TMPDIR" = "include"
-"TEMP" = "include"
-"TMP" = "include"
-"LANG" = "include"
-"LC_*" = "include"
-"PWD" = "include"
-"NODE_ENV" = "include"
-"PYTHONPATH" = "include"
-"VIRTUAL_ENV" = "include"
-"CONDA_PREFIX" = "include"
-"JAVA_HOME" = "include"
-"GOMODCACHE" = "include"
-"GOPATH" = "include"
-"CARGO_HOME" = "include"
-"RUSTUP_HOME" = "include"
-"CODEX_LOCKED_FOLDERS_ONLY_PERMISSIONS" = "include"
-
-# Explicitly remove sensitive variables before applying the allowlist.
+# Case-insensitive exclusions; variables with other names pass through.
 "*KEY*" = "exclude"
 "*SECRET*" = "exclude"
 "*TOKEN*" = "exclude"
@@ -237,6 +224,9 @@ ignore_default_excludes = false
 
 [shell_environment_policy.set]
 CODEX_LOCKED_FOLDERS_ONLY_PERMISSIONS = "1"
+# Route Git's SSH transport through the domain-filtered SOCKS5 listener.
+# Requires connect on PATH (bundled with Git for Windows; connect-proxy on Linux).
+GIT_SSH_COMMAND = 'ssh -o "ProxyCommand=connect -5 -S 127.0.0.1:8081 %h %p"'
 
 ###############################################################################
 # Official documentation MCP server
