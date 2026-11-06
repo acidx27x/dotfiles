@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Keep Zed's machine-local connections separate from shared settings."""
+"""Keep Zed's machine-local connections, proxy, and ACP settings separate."""
 
 import argparse
 import hashlib
@@ -24,16 +24,25 @@ ACTIVE_PATTERN = re.compile(
     + r"\}\n\Z",
     re.DOTALL,
 )
-DEFAULT_LOCAL = '  "wsl_connections": [],\n  "ssh_connections": [],\n'
-CONNECTION_SETTING = re.compile(r'^\s*"(?:ssh_connections|wsl_connections)"\s*:', re.MULTILINE)
+DEFAULT_LOCAL = (
+    '  "wsl_connections": [],\n'
+    '  "ssh_connections": [],\n'
+    '  "proxy": "",\n'
+    '  "agent_servers": {},\n'
+)
+LOCAL_SETTING = re.compile(
+    r'^\s*"(?:ssh_connections|wsl_connections|proxy|agent_servers)"\s*:', re.MULTILINE
+)
 
 
 def body(content: str) -> str:
     if not content.startswith("{\n") or not content.endswith("}\n"):
         raise ValueError("Shared settings must start with '{' and end with '}' on their own lines")
     result = content[2:-2]
-    if CONNECTION_SETTING.search(result):
-        raise ValueError("Move SSH and WSL connection arrays to the LOCAL section")
+    if LOCAL_SETTING.search(result):
+        raise ValueError(
+            "Move SSH/WSL connections, proxy, and agent_servers to the LOCAL section"
+        )
     return result
 
 
@@ -72,6 +81,8 @@ def sync():
         if digest(match["shared"]) != match["hash"]:
             raise ValueError("Zed changed the shared section; run 'promote' before 'sync'")
         local = match["local"]
+    if not re.search(r'^\s*"agent_servers"\s*:', local, re.MULTILINE):
+        local += '  "agent_servers": {},\n'
     content = render(local, shared)
     if not ACTIVE.exists() or ACTIVE.read_text(encoding="utf-8") != content:
         ACTIVE.write_text(content, encoding="utf-8")

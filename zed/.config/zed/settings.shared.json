@@ -2,8 +2,6 @@
   // connections
   // connections ssh
   "read_ssh_config": true,
-  // connections proxy
-  "proxy": "",
   // general
   // general telemetry
   "telemetry": {
