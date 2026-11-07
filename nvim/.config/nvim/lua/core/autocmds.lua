@@ -67,6 +67,10 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.api.nvim_create_autocmd("TermClose", {
   group = augroup,
   callback = function(args)
+    if not vim.api.nvim_buf_is_valid(args.buf) then
+      return
+    end
+
     if vim.v.event.status == 0 and vim.bo[args.buf].filetype ~= "fzf" then
       vim.api.nvim_buf_delete(args.buf, {})
     end
