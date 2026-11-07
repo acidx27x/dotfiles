@@ -103,6 +103,10 @@ _blerc_vi_load_hook() {
   ble-bind -m vi_imap -f C-c discard-line
   ble-bind -m vi_nmap -f C-c discard-line
 
+  # Browse history directly, including when the current command spans lines.
+  ble-bind -m vi_nmap -f C-p vi-command/history-prev
+  ble-bind -m vi_nmap -f C-n vi-command/history-next
+
   # Navigate logical lines first; the native widgets fall back to history at
   # the top and bottom of the current input.
   ble-bind -m vi_nmap -f up vi-command/backward-line
@@ -115,3 +119,13 @@ _blerc_vi_load_hook() {
 }
 
 blehook/eval-after-load keymap_vi _blerc_vi_load_hook
+
+# Use Ctrl-H/J/K/L for movement only while selecting a completion.
+_blerc_complete_load_hook() {
+  ble-bind -m menu_complete -f C-h menu/backward-column
+  ble-bind -m menu_complete -f C-j menu/forward-line
+  ble-bind -m menu_complete -f C-k menu/backward-line
+  ble-bind -m menu_complete -f C-l menu/forward-column
+}
+
+blehook/eval-after-load complete _blerc_complete_load_hook

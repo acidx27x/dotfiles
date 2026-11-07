@@ -3,6 +3,21 @@
 
 bindkey ' ' magic-space
 
+# Use Ctrl-H/J/K/L for movement only while selecting a completion.
+bindkey -M menuselect '^H' backward-char
+bindkey -M menuselect '^J' down-line-or-history
+bindkey -M menuselect '^K' up-line-or-history
+bindkey -M menuselect '^L' forward-char
+
+# Browse history directly, including when the current command spans lines.
+zvm_bindkey viins '^P' up-history
+zvm_bindkey viins '^N' down-history
+
+# Move and delete words without leaving insert mode.
+zvm_bindkey viins '^[b' backward-word
+zvm_bindkey viins '^[f' emacs-forward-word
+zvm_bindkey viins '^[d' kill-word
+
 # zvm edit buffer workaround
 autoload -Uz edit-command-line
 zle -N edit-command-line
@@ -45,6 +60,10 @@ fi
 
 # Normal mode — after lazy bindings zsh-vi-mode
 _zvm_my_lazy_bindings() {
+  emulate -L zsh
+
+  zvm_bindkey vicmd '^P' up-history
+  zvm_bindkey vicmd '^N' down-history
   zvm_bindkey vicmd '^X^E' _my_edit_command_line
   (($+functions[ffd])) && zvm_bindkey vicmd '^X^F' _my_ffd
   (($+functions[frg])) && zvm_bindkey vicmd '^X^G' _my_frg

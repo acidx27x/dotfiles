@@ -21,6 +21,10 @@ TAB: menu-complete
 # Shift-Tab cycles backwards.
 "\e[Z": menu-complete-backward
 
+# Browse history without leaving insert mode.
+"\C-p": previous-history
+"\C-n": next-history
+
 # Edit the complete command, including multiple lines, in $VISUAL or $EDITOR.
 "\C-x\C-e": edit-and-execute-command
 
@@ -28,6 +32,9 @@ TAB: menu-complete
 "\e[B": history-search-forward
 
 set keymap vi-command
+
+"\C-p": previous-history
+"\C-n": next-history
 
 "\C-x\C-e": edit-and-execute-command
 $endif
