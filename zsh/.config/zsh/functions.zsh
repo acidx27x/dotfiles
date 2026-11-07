@@ -47,6 +47,7 @@ functions-help() {
     homebrew-path-prepend 'Prepend Homebrew bin directories to PATH.' \
     homebrew-path-remove 'Remove Homebrew directories from PATH.' \
     homebrew-tool-path-prepend 'Prepend Homebrew formula bin directories to PATH.' \
+    karing-proxy-enable 'Enable the native Karing HTTP, HTTPS, and SOCKS proxy.' \
     l 'List entries with eza in long form.' \
     ldr 'List directories with eza in long form.' \
     ll 'List all entries with eza in long form.' \
@@ -54,7 +55,8 @@ functions-help() {
     ls 'List one entry per line with eza.' \
     lt 'Show entries as an eza tree.' \
     print-xdg-paths 'Print the resolved XDG paths.' \
-    proxy-disable 'Disable the managed HTTP proxy variables.' \
+    proxy-disable 'Disable the managed HTTP, HTTPS, and SOCKS proxy variables.' \
+    proxy-enable 'Replace proxy endpoints using explicit URLs and an optional bypass list.' \
     proxy-status 'Print common proxy variables.' \
     rm-zone-id 'Delete Windows Zone.Identifier metadata files.' \
     stellar-help 'Show Stellar installation and theme instructions.' \
@@ -62,7 +64,7 @@ functions-help() {
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
     wsl-is-wsl 'Check whether the current system is WSL. (wsl functions are loaded only under wsl)' \
-    wsl-karing-proxy-enable 'Overwrite HTTP variables for karing network.' \
+    wsl-karing-proxy-enable 'Enable the Windows Karing network-sharing proxy.' \
     wsl-windows-drive-is-mounted 'Check whether a Windows drive is mounted.' \
     wsl-windows-drive-is-unmounted 'Check whether a Windows drive is unmounted.' \
     wsl-windows-drive-mount 'Mount one or more Windows drives.' \
@@ -381,14 +383,90 @@ proxy-status() {
   done
 }
 
-# Disable the HTTP proxy variables managed by this configuration.
+# Replace proxy endpoints, preserving bypass lists unless explicitly supplied.
+#
+# Usage:
+#   proxy-enable --http http://127.0.0.1:7890 --https http://127.0.0.1:7890
+#   proxy-enable --socks socks5h://127.0.0.1:7891 --no-proxy 'localhost,127.0.0.1,::1'
+# Omitted endpoints are unset. At least one endpoint is required.
+proxy-enable() {
+  emulate -L zsh
+
+  local http_url='' https_url='' socks_url='' bypass=''
+  local bypass_supplied=0
+  local previous
+
+  while (($# >= 2)); do
+    if [[ $2 == --* || (-z $2 && $1 != --no-proxy) ]]; then
+      break
+    fi
+
+    case $1 in
+      --http) http_url=$2 ;;
+      --https) https_url=$2 ;;
+      --socks) socks_url=$2 ;;
+      --no-proxy)
+        bypass=$2
+        bypass_supplied=1
+        ;;
+      *) break ;;
+    esac
+
+    shift 2
+  done
+
+  if (($#)) || [[ -z $http_url && -z $https_url && -z $socks_url ]]; then
+    print -u2 -- "Usage: $funcstack[1]" \
+      '[--http URL] [--https URL] [--socks URL] [--no-proxy LIST]'
+    return 2
+  fi
+
+  previous=$(proxy-status) || return
+  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
+
+  if [[ -n $http_url ]]; then
+    typeset -gx http_proxy="$http_url" HTTP_PROXY="$http_url"
+  fi
+  if [[ -n $https_url ]]; then
+    typeset -gx https_proxy="$https_url" HTTPS_PROXY="$https_url"
+  fi
+  if [[ -n $socks_url ]]; then
+    typeset -gx all_proxy="$socks_url" ALL_PROXY="$socks_url"
+  fi
+  if ((bypass_supplied)); then
+    typeset -gx no_proxy="$bypass" NO_PROXY="$bypass"
+  fi
+
+  print -r -- 'Proxy enabled.'
+  print -r -- 'Previous proxy settings:'
+  print -r -- "$previous"
+  print -r -- 'Current proxy settings:'
+  proxy-status
+}
+
+# Enable the local mixed-protocol listener used by native Karing installations.
+karing-proxy-enable() {
+  emulate -L zsh
+
+  (($# == 0)) || {
+    print -u2 -- "Usage: $funcstack[1]"
+    return 2
+  }
+
+  proxy-enable \
+    --http http://127.0.0.1:3067 \
+    --https http://127.0.0.1:3067 \
+    --socks socks5h://127.0.0.1:3067
+}
+
+# Disable the HTTP, HTTPS, and SOCKS proxy variables managed by this configuration.
 proxy-disable() {
   emulate -L zsh
 
   local previous
 
   previous=$(proxy-status) || return
-  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
+  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
 
   print -r -- 'Proxy disabled.'
   print -r -- 'Previous proxy settings:'

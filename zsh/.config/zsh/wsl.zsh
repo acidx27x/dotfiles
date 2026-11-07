@@ -170,7 +170,6 @@ wsl-karing-proxy-enable() {
   local mounted_by_us=0
   local host_ip=''
   local karing_running=''
-  local previous
   local result=0
 
   if ! wsl-is-wsl; then
@@ -245,16 +244,8 @@ wsl-karing-proxy-enable() {
 
   ((result == 0)) || return $result
 
-  previous=$(proxy-status) || return
-
-  export http_proxy="http://${host_ip}:4067"
-  export https_proxy="$http_proxy"
-  export HTTP_PROXY="$http_proxy"
-  export HTTPS_PROXY="$http_proxy"
-
-  print -r -- 'Proxy enabled from Karing.'
-  print -r -- 'Previous proxy settings:'
-  print -r -- "$previous"
-  print -r -- 'Current proxy settings:'
-  proxy-status
+  proxy-enable \
+    --http "http://${host_ip}:4067" \
+    --https "http://${host_ip}:4067" \
+    --socks "socks5h://${host_ip}:4067"
 }
