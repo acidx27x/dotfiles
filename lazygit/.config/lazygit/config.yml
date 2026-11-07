@@ -1,4 +1,3 @@
-
 notARepository: prompt
 promptToReturnFromSubprocess: true
 
@@ -41,54 +40,52 @@ gui:
   animateExplosion: true
   spinner:
     frames:
-      - '◐'
-      - '◓'
-      - '◑'
-      - '◒'
+      - "◐"
+      - "◓"
+      - "◑"
+      - "◒"
     rate: 120
 
   border: rounded
   colorScheme: dark
   darkTheme:
-    defaultFgColor: ['#DCD7BA']
-    activeBorderColor: ['#98BB6C', bold]
-    inactiveBorderColor: ['#6F806E']
-    searchingActiveBorderColor: ['#E6C384', bold]
-    optionsTextColor: ['#C0A36E']
+    defaultFgColor: ["#DCD7BA"]
+    activeBorderColor: ["#98BB6C", bold]
+    inactiveBorderColor: ["#6F806E"]
+    searchingActiveBorderColor: ["#E6C384", bold]
+    optionsTextColor: ["#C0A36E"]
 
     selectedLineFgColor: [bold]
-    selectedLineBgColor: ['#4e657c']
-    inactiveViewSelectedLineBgColor: ['#3D322B']
+    selectedLineBgColor: ["#4e657c"]
+    inactiveViewSelectedLineBgColor: ["#3D322B"]
 
-    unstagedChangesColor: ['#E46876']
+    unstagedChangesColor: ["#E46876"]
 
-    cherryPickedCommitFgColor: ['#1F1F28']
-    cherryPickedCommitBgColor: ['#98BB6C']
+    cherryPickedCommitFgColor: ["#1F1F28"]
+    cherryPickedCommitBgColor: ["#98BB6C"]
 
-    markedBaseCommitFgColor: ['#1F1F28']
-    markedBaseCommitBgColor: ['#E6C384']
+    markedBaseCommitFgColor: ["#1F1F28"]
+    markedBaseCommitBgColor: ["#E6C384"]
 
 keybinding:
   universal:
-    gotoTop: 'g'
-    gotoBottom: 'G'
-    undo: 'u'
+    gotoTop: "g"
+    gotoBottom: "G"
+    undo: "u"
 
-    prevPage: '<ctrl+u>'
-    nextPage: '<ctrl+d>'
+    prevPage: "<ctrl+u>"
+    nextPage: "<ctrl+d>"
 
     scrollUpMain:
-      - '<pgup>'
-      - 'K'
-      - '<ctrl+b>'
+      - "<pgup>"
+      - "K"
 
     scrollDownMain:
-      - '<pgdown>'
-      - 'J'
-      - '<ctrl+f>'
+      - "<pgdown>"
+      - "J"
 
 customCommands:
-  - key: '<ctrl+n>'
+  - key: "<ctrl+n>"
     context: localBranches
     description: create prefixed branch
     prompts:
@@ -106,7 +103,7 @@ customCommands:
       git checkout -b
       {{printf "%s/%s" .Form.Type .Form.Name | quote}}
 
-  - key: '<alt+c>'
+  - key: "<alt+c>"
     context: files
     description: conventional commit
     prompts:

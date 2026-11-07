@@ -12,8 +12,8 @@
 --preview-window=right,60%,border-left
 --bind='alt-w:toggle-preview-wrap'
 --bind='alt-p:toggle-preview'
---bind='alt-k:preview-up'
---bind='alt-j:preview-down'
+--bind='ctrl-b:preview-page-up'
+--bind='ctrl-f:preview-page-down'
 --bind='ctrl-u:half-page-up'
 --bind='ctrl-d:half-page-down'
 --with-shell='bash -c'

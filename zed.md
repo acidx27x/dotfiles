@@ -27,8 +27,8 @@ Each machine needs its own checkout for its local file to stay separate.
 
 `sync` seeds an empty `agent_servers` object in LOCAL if it is missing, so Zed can save ACP model,
 reasoning, mode, and other per-agent choices there. Keep the entire object local. The separate
-`agent` UI and tool preferences remain shared. If `agent_servers` already appears in SHARED, move
-it to LOCAL before syncing.
+`agent` UI and tool preferences remain shared. If `agent_servers` already appears in SHARED, move it
+to LOCAL before syncing.
 
 ## Project overrides
 

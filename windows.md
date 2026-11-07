@@ -158,26 +158,26 @@ before checking Dotter, environment variables, or machine state.
 Edits to linked configuration files take effect immediately. Rerun `Restow` when mappings or the
 selected package contents change. Repeated deployments are idempotent.
 
-If a deployed link or its target directory was manually deleted, both `Deploy` and `Restow`
-recreate the missing links from the repository without a force option:
+If a deployed link or its target directory was manually deleted, both `Deploy` and `Restow` recreate
+the missing links from the repository without a force option:
 
 ```powershell
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Restow -Package codex -WhatIf
 pwsh -NoProfile -File .\setup\dotter.ps1 -Action Restow -Package codex
 ```
 
-The source files must still exist. If a real file or a different symlink occupies a destination,
-the operation stops without overwriting it; move that conflicting item aside and retry. Undeploy
-also succeeds when a cached link has already been deleted.
+The source files must still exist. If a real file or a different symlink occupies a destination, the
+operation stops without overwriting it; move that conflicting item aside and retry. Undeploy also
+succeeds when a cached link has already been deleted.
 
 ### Active State and Reconciliation
 
 The wrapper keeps one shared cache, but each operation gives Dotter a temporary cache containing
-only the requested packages. Deploy and Restow refresh those packages; Undeploy removes their
-cached links, including links whose sources or configured destinations have changed. Unrelated
-packages keep their existing links and cache entries, even when they have pending changes.
-`-Replace` also includes packages being removed, and `-All` includes every active package. The
-preview lists the packages the operation can change.
+only the requested packages. Deploy and Restow refresh those packages; Undeploy removes their cached
+links, including links whose sources or configured destinations have changed. Unrelated packages
+keep their existing links and cache entries, even when they have pending changes. `-Replace` also
+includes packages being removed, and `-All` includes every active package. The preview lists the
+packages the operation can change.
 
 Machine-local data is stored under `%LOCALAPPDATA%\dotfiles\dotter`:
 
@@ -200,8 +200,8 @@ restoring matching cache and state if the fingerprint check fails. `-WhatIf` doe
 persistent state, links, cache data, or environment variables. Existing version 2 state needs no
 migration.
 
-Scoped deployment supports this repository's symbolic mappings with sources under each package's
-own directory. It rejects templates, dependencies, and other unsupported mapping forms instead of
+Scoped deployment supports this repository's symbolic mappings with sources under each package's own
+directory. It rejects templates, dependencies, and other unsupported mapping forms instead of
 expanding an operation beyond its requested packages. Default Dotter hooks are disabled.
 
 Do not edit the machine-local files to select packages; use the wrapper. They are deliberately
@@ -275,13 +275,12 @@ atuin import powershell
 ```
 
 The first pass includes basic aliases and shared tool integrations. Follow-up candidates for
-PowerShell parity include Git pickers, encoding conversion helpers,
-terminal color diagnostics, and Zone.Identifier cleanup. WSL and Unix-specific helpers should only
-be ported when they have a native Windows use.
+PowerShell parity include Git pickers, encoding conversion helpers, terminal color diagnostics, and
+Zone.Identifier cleanup. WSL and Unix-specific helpers should only be ported when they have a native
+Windows use.
 
-The shared Starship configuration uses `sh` for its custom Git provider and worktree modules on
-Unix and Git for Windows' `sh.exe` on Windows. No separate generated Starship configuration is
-required.
+The shared Starship configuration uses `sh` for its custom Git provider and worktree modules on Unix
+and Git for Windows' `sh.exe` on Windows. No separate generated Starship configuration is required.
 
 The deployed files are symbolic links, not filesystem read-only files. If an application rewrites a
 linked configuration file, it changes the repository source and will appear in `git diff`.
@@ -300,11 +299,11 @@ pwsh -NoProfile -File .\setup\tests\dotter.Tests.ps1
 The suite uses unique temporary targets and a disposable repository whose paths contain spaces. It
 covers malformed selections and profiles, dry-run immutability, package isolation with unrelated
 pending changes, restoring deleted links and target directories, missing-source removal, restow,
-replacement, conflict rejection, deployment and
-convergence failures, state-save rollback and retry, cache fingerprinting, state validation,
-execution locking, orphaned-cache rejection, and explicit remove-all. Bat ownership, conflicts, and
-environment rollback use a fake user environment store; real Dotter operations still run against
-temporary links. The suite does not change the normal Dotter state or user `BAT_CONFIG_PATH`.
+replacement, conflict rejection, deployment and convergence failures, state-save rollback and retry,
+cache fingerprinting, state validation, execution locking, orphaned-cache rejection, and explicit
+remove-all. Bat ownership, conflicts, and environment rollback use a fake user environment store;
+real Dotter operations still run against temporary links. The suite does not change the normal
+Dotter state or user `BAT_CONFIG_PATH`.
 
 For release validation, also run the default profile preview in a non-Developer-Mode session,
 exercise Bat deployment/removal on a disposable Windows user, and test a real clone whose repository
