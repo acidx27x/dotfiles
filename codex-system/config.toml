@@ -304,9 +304,10 @@ terminal_title = [
   "task-progress",
 ]
 
-[tui.keymap.composer]
-submit = ["ctrl-enter", "cmd-enter"]
-queue = []
+# Not working under wezterm under WSL.
+# [tui.keymap.composer]
+# submit = ["ctrl-enter", "cmd-enter"]
+# queue = []
 
 [tui.presets.1]
 label = "Review changes"
