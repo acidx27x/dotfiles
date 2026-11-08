@@ -5,10 +5,10 @@ local clever = require("leap.user").with_traversal_keys
 leap.opts.safe_labels = ""
 
 local clever_s = clever("f", "b")
-map({ "n", "x", "o" }, "Kf", function()
+map({ "n", "x", "o" }, ">", function()
   leap.leap({ opts = clever_s })
 end, "jump: leap forward")
-map({ "n", "x", "o" }, "Kb", function()
+map({ "n", "x", "o" }, "<", function()
   leap.leap({ backward = true, opts = clever_s })
 end, "jump: leap backward")
 

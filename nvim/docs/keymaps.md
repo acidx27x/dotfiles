@@ -169,19 +169,19 @@ Use Visual Line mode with `<Space>xs` to sort selected lines. Other selection ty
 | ------------------------- | -------------------------------- | ---------------------------------------- |
 | `<Space>is` / `<Space>it` | Normal, Visual                   | Convert indentation to spaces / tabs     |
 | `<Space>fu`               | Visual                           | Remove trailing CR from selected lines   |
-| `Kf` / `Kb`               | Normal, Visual, Operator-pending | Leap forward / backward (two characters) |
+| `>` / `<`                 | Normal, Visual, Operator-pending | Leap forward / backward (two characters) |
 | `f/F/t/T`                 | Normal, Visual, Operator-pending | Leap one-character find / till motions   |
 | `;` / `,`                 | Normal, Visual, Operator-pending | Repeat / reverse last one-character find |
 
 Indent conversion changes the current line or all lines touched by a Visual selection, including
 Visual Block selections. It changes leading indentation only, then sets the buffer-local indentation
-style for subsequent edits. `Kf` and `Kb` use `f` / `b` to move between Leap matches after a search;
-`s…` remains available for `mini.surround`. Leap's `f/F/t/T` search one character within the visible
-window; `t/T` land beside the match. `;` repeats the last one-character search in the same
-direction, and `,` searches in the opposite direction, even after a `Kf/Kb` jump. Repeats stop at
-the visible window edge. Two-character Leap searches require a target label after the two
-characters, even for a single match, because automatic jumping is disabled. Leap dims the search
-area using the Kanagawa `Comment` highlight.
+style for subsequent edits. `>` and `<` replace the built-in indent keys and use `f` / `b` to move
+between Leap matches after a search; `s…` remains available for `mini.surround`. Leap's `f/F/t/T`
+search one character within the visible window; `t/T` land beside the match. `;` repeats the last
+one-character search in the same direction, and `,` searches in the opposite direction, even after a
+`>`/`<` jump. Repeats stop at the visible window edge. Two-character Leap searches require a target
+label after the two characters, even for a single match, because automatic jumping is disabled. Leap
+dims the search area using the Kanagawa `Comment` highlight.
 
 Visual `<Space>fu` only affects lines containing a literal trailing CR. Files read with DOS format
 have a buffer-wide `fileformat` setting, so use Normal `<Space>fu` to convert those files.

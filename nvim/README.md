@@ -44,7 +44,7 @@ buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common m
 | `<Space>tt/tv/th`                       | Terminal in a tab / vertical split / horizontal split             |
 | `]e` / `[e` / `]w` / `[w`               | Next / previous error or warning                                  |
 | `<Space>is` / `<Space>it`               | Convert line or selected lines to spaces / tabs                   |
-| `Kf` / `Kb`                             | Leap forward / backward (two-character target)                    |
+| `>` / `<`                               | Leap forward / backward (two-character target)                    |
 | `f/F/t/T` then `;` / `,`                | One-character Leap motion; repeat / reverse it                    |
 | `<Space>xe/xx/xm/xr/xs`                 | Evaluate / exchange / multiply / replace / sort text              |
 
