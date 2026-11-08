@@ -43,6 +43,9 @@ if (($baseContent -split '\r?\n') -notcontains $managedMarker) {
   throw "Portable base config is missing its managed marker: $baseConfig"
 }
 
+# Native Windows rejects Unix absolute filesystem paths, even for unused grants.
+$baseContent = $baseContent -replace '(?m)^"/[^"]+" = "read"\r?\n', ''
+
 if (Test-Path -LiteralPath $systemConfigDirectory) {
   $directory = Get-Item -LiteralPath $systemConfigDirectory -Force
   if (-not $directory.PSIsContainer -or $directory.LinkType) {
