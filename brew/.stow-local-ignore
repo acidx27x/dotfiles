@@ -1,6 +1,7 @@
 \.git
 \.gitignore
 \.DS_Store
+^/\.local/share/containers(?:/|$)
 ^(?!AGENTS\.md$).*\.md$
 trust\.json
 trust\.json\.lock

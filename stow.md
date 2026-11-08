@@ -236,7 +236,10 @@ autosave files, and temporary lock files, and adds `.DS_Store`. Markdown helper 
 while the managed `codex/.codex/AGENTS.md` remains linked. It also excludes `stow/profiles/`, which
 is wrapper metadata rather than home-directory configuration. Known machine-local files beside
 managed configuration, including Neovim's `paths_override.lua`, are also excluded. The tracked
-`nvim-pack-lock.json` is linked by the `nvim` package.
+`nvim-pack-lock.json` is linked by the `nvim` package. The global ignore file also skips
+`~/.local/share/containers`, which may contain unreadable Podman overlay directories during restow
+or undeploy. The `brew` package repeats that exclusion in its local ignore file, which takes
+precedence over the global one.
 
 A package's `.stow-local-ignore` continues to take precedence for that package, as defined by GNU
 Stow. The `brew` and `wsl` local rules also exclude Markdown helpers.

@@ -358,6 +358,20 @@ for action in restow undeploy; do
   done
 done
 
+new_fixture
+cp -- "$SOURCE_ROOT/brew/.stow-local-ignore" "$FIXTURE_ROOT/beta/.stow-local-ignore"
+run_wrapper deploy --package alpha,beta
+mkdir -p "$TARGET_HOME/.local/share/containers/storage/overlay/work/work"
+chmod 000 "$TARGET_HOME/.local/share/containers/storage/overlay/work/work"
+for package in alpha beta; do
+  run_wrapper restow --package "$package" --dry-run
+  run_wrapper undeploy --package "$package" --dry-run
+done
+assert_symlink_to "$FIXTURE_ROOT/alpha/.config/alpha/config" \
+  "$TARGET_HOME/.config/alpha/config"
+assert_symlink_to "$FIXTURE_ROOT/beta/.config/beta/config" \
+  "$TARGET_HOME/.config/beta/config"
+
 for action in deploy restow undeploy; do
   for conflict in file relative-link absolute-link live-link mismatched-link; do
     new_fixture
