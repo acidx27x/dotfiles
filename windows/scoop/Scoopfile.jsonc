@@ -21,7 +21,7 @@
     }
   ],
   "apps": [
-    { "Name": "neovim", "Source": "main", "Info": "" },
+    { "Name": "neovim-nightly", "Source": "versions", "Info": "" },
 
     // VCS
     // Git also supplies sh.exe for Starship's Windows Git modules.

@@ -10,7 +10,7 @@ function module.apply_to_config(config, platform, settings)
 
   config.scrollback_lines = 10000
 
-  config.default_cursor_style = "SteadyBlock"
+  config.default_cursor_style = "SteadyBar"
 
   config.audible_bell = "Disabled"
 

@@ -3,11 +3,12 @@ tap "jurplel/tap", trusted: true if OS.mac?   # macos instant-space-switcher
 tap "okeanos/tap", trusted: true if OS.linux? # linux ble.sh
 tap "pwndbg/tap",  trusted: true if OS.mac?   # pwndbg-gdb/-lldb
 tap "raine/workmux", trusted: true
+tap "wezterm/wezterm-linuxbrew", trusted: true if OS.linux?
 #
 
 brew "hello"
 
-brew "neovim"
+brew "neovim", args: ["HEAD"]
 
 # VCS
 brew "git"
@@ -62,6 +63,8 @@ brew "zoxide"
 #
 
 # Terminal mux
+brew "wezterm", args: ["HEAD"] if OS.linux?
+cask "wezterm@nightly" if OS.mac?
 brew "herdr"
 brew "tmux"
 brew "zellij"
