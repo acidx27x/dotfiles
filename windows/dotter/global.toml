@@ -6,6 +6,10 @@ default_target_type = "symbolic"
 [git.files]
 "git/.gitconfig" = "~/.gitconfig"
 
+[ssh.files]
+"ssh/.ssh/config" = "~/.ssh/config"
+"ssh/.ssh/config.d/linux.conf" = "~/.ssh/config.d/linux.conf"
+
 [nvim.files]
 "nvim/.config/nvim" = "${LOCALAPPDATA}/nvim"
 

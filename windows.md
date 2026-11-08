@@ -84,6 +84,7 @@ are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mappe
 | Package      | Destination                                                                 |
 | ------------ | --------------------------------------------------------------------------- |
 | `git`        | `%USERPROFILE%\.gitconfig`                                                  |
+| `ssh`        | `%USERPROFILE%\.ssh\config` and `.ssh\config.d\linux.conf`                  |
 | `nvim`       | `%LOCALAPPDATA%\nvim`                                                       |
 | `wezterm`    | `%USERPROFILE%\.config\wezterm`                                             |
 | `atuin`      | `%USERPROFILE%\.atuin`                                                      |
