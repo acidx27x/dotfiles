@@ -9,6 +9,39 @@ bindkey -M menuselect '^J' down-line-or-history
 bindkey -M menuselect '^K' up-line-or-history
 bindkey -M menuselect '^L' forward-char
 
+# Keep unfinished commands in one editable buffer instead of opening PS2.
+_zvm_accept_line() {
+  emulate -L zsh -o extended_glob
+
+  local command_text=$PREBUFFER$BUFFER
+  local -i complete=0
+
+  # Compile the input without executing it; unfinished commands have no body.
+  if [[ $command_text != (|*[^\\])(\\\\)#\\ ]]; then
+    { functions[_zvm_parse_command]=$command_text; } 2>/dev/null
+    if (($+functions[_zvm_parse_command])); then
+      unfunction _zvm_parse_command
+      # A bare for-header or unfinished heredoc also accepts this suffix.
+      { functions[_zvm_parse_command]=$command_text$'\ndo\ndone'; } 2>/dev/null
+      (($+functions[_zvm_parse_command])) || complete=1
+    fi
+  fi
+  if (($+functions[_zvm_parse_command])); then
+    unfunction _zvm_parse_command
+  fi
+
+  if ((complete)); then
+    zle accept-line
+  else
+    zle self-insert-unmeta
+  fi
+}
+
+# Let the native widgets handle suggestion and highlighting updates.
+zle -N ._zvm_accept_line _zvm_accept_line
+zvm_bindkey viins '^M' ._zvm_accept_line
+zvm_bindkey viins '^J' ._zvm_accept_line
+
 # Browse history directly, including when the current command spans lines.
 zvm_bindkey viins '^P' up-history
 zvm_bindkey viins '^N' down-history
@@ -62,6 +95,8 @@ fi
 _zvm_my_lazy_bindings() {
   emulate -L zsh
 
+  zvm_bindkey vicmd '^M' ._zvm_accept_line
+  zvm_bindkey vicmd '^J' ._zvm_accept_line
   zvm_bindkey vicmd '^P' up-history
   zvm_bindkey vicmd '^N' down-history
   zvm_bindkey vicmd '^X^E' _my_edit_command_line
