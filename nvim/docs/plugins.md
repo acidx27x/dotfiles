@@ -83,6 +83,8 @@ be built with Cargo; this config selects Lua matching if the native library is u
 `friendly-snippets` is snippet data for Blink; `mini.icons` supplies completion-kind, file, and
 directory icons. fzf-lua uses `fzf` for its picker UI and `rg` for live grep. Its file picker
 includes hidden files by default; live grep includes hidden files while respecting ignore rules.
+fzf-lua uses MiniIcons on Unix; Windows pickers disable file icons to avoid the observed startup
+delay, while retaining previews.
 
 Tree-sitter is correctly eager: its
 [current main-branch instructions](https://github.com/nvim-treesitter/nvim-treesitter/blob/main/README.md)

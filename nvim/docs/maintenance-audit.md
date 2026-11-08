@@ -1,5 +1,25 @@
 # Neovim maintenance and custom-code audit
 
+## Windows fzf-lua colors and picker delay — 2026-11-09
+
+Set `fzf_opts["--color"] = "dark"` to preserve the preferred Unix fzf palette on both platforms,
+replacing the initial theme-derived color setting. No plugin revisions changed. Lua syntax and
+whitespace checks pass; scoped formatting could not finish because the npm registry connection
+through the proxy timed out. Visual verification and plugin health checks remain unavailable: the
+accessible Windows package store has no fzf-lua, and fetching the locked source for isolated
+execution failed.
+
+The reported delay occurs on every file-picker opening. In the affected Windows session,
+`multiprocess = false` and `previewer = false` each leave the delay unchanged, while a two-item
+`fzf_exec` picker without a preview opens immediately. Disabling file icons makes the file picker
+open almost immediately with previews enabled. fzf-lua file icons are now disabled on Windows; Unix
+retains MiniIcons. Preview and multiprocessing defaults are unchanged. This works around the
+icon-processing delay; the exact upstream defect remains unidentified. The affected user session
+verified the icon-free file picker, while other picker types remain unverified. The
+platform-dependent icon setting belongs under `setup.defaults.file_icons`; a top-level `file_icons`
+setting does not override this revision's provider defaults. The initial top-level placement was
+corrected after the normal file mapping still displayed icons.
+
 ## Nightly selection and multicursors — 2026-11-08
 
 Homebrew now selects Neovim HEAD and Scoop selects `versions/neovim-nightly`. The installed stable

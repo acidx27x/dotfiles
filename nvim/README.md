@@ -50,6 +50,11 @@ Install `tree-sitter-cli` 0.26.1 or newer through your system package manager be
 updating Tree-sitter parsers. Confirm it is available with `tree-sitter --version`. Install `fzf`
 and `rg` for the picker mappings; fzf-lua uses them for its UI and live grep.
 
+fzf-lua explicitly uses fzf's dark palette on Windows and Unix, retaining the blue prompt, pink
+pointer, and dark selection background of the Unix picker. File icons are disabled in Windows
+pickers to avoid slow icon processing; Unix pickers use MiniIcons. File previews remain enabled on
+both platforms.
+
 ## Find a mapping
 
 The [keymap reference](docs/keymaps.md) is the complete searchable list, including LSP,

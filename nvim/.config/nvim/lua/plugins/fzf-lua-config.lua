@@ -2,7 +2,14 @@ local fzf = require("fzf-lua")
 
 fzf.setup({
   ui_select = {},
-  file_icons = "mini",
+  defaults = {
+    -- Icon processing delays Windows pickers; keep MiniIcons on Unix.
+    file_icons = vim.fn.has("win32") == 0 and "mini" or false,
+  },
+  -- Preserve the Unix fzf palette instead of Windows' terminal-dependent fallback.
+  fzf_opts = {
+    ["--color"] = "dark",
+  },
   winopts = {
     height = 0.8,
     width = 0.8,
