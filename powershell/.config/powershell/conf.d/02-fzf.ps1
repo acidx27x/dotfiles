@@ -39,14 +39,16 @@ function _fzf_open_path {
       if (Test-Path -LiteralPath $Path -PathType Leaf) {
         $fullPath = (Resolve-Path -LiteralPath $Path).Path
         Set-Location -LiteralPath ([System.IO.Path]::GetDirectoryName($fullPath))
-      } else {
+      }
+      else {
         Set-Location -LiteralPath $Path
       }
     }
     'nvim' {
       if ($Line -match '^\d+$' -and (Test-Path -LiteralPath $Path -PathType Leaf)) {
         nvim "+$Line" -- $Path
-      } else {
+      }
+      else {
         nvim -- $Path
       }
     }
@@ -71,19 +73,22 @@ function ffd {
   # Reload from fzf so cancelling a large fd listing cannot break a PowerShell pipe.
   $initial = 'start:reload:fd --type file ' + $fdOptions
   $toggle = 'ctrl-s:transform:if "%FZF_PROMPT%"=="Files> " ' +
-    '(echo ^change-prompt^(Directories^> ^)^+^reload^(fd --type directory ' + $fdOptions + '^)) ' +
-    'else (echo ^change-prompt^(Files^> ^)^+^reload^(fd --type file ' + $fdOptions + '^))'
+  '(echo ^change-prompt^(Directories^> ^)^+^reload^(fd --type directory ' + $fdOptions + '^)) ' +
+  'else (echo ^change-prompt^(Files^> ^)^+^reload^(fd --type file ' + $fdOptions + '^))'
 
   if ((Test-Command bat) -and (Test-Command eza)) {
     $preview = 'if "%FZF_PROMPT%"=="Files> " (bat --color=always --style=plain -- {}) ' +
-      'else (eza --tree --color=always --icons=always -- {})'
-  } elseif (Test-Command bat) {
+    'else (eza --tree --color=always --icons=always -- {})'
+  }
+  elseif (Test-Command bat) {
     $preview = 'if "%FZF_PROMPT%"=="Files> " (bat --color=always --style=plain -- {}) ' +
-      'else (dir {})'
-  } elseif (Test-Command eza) {
+    'else (dir {})'
+  }
+  elseif (Test-Command eza) {
     $preview = 'if "%FZF_PROMPT%"=="Files> " (type {}) ' +
-      'else (eza --tree --color=always --icons=always -- {})'
-  } else {
+    'else (eza --tree --color=always --icons=always -- {})'
+  }
+  else {
     $preview = 'if "%FZF_PROMPT%"=="Files> " (type {}) else (dir {})'
   }
 
@@ -98,7 +103,8 @@ function ffd {
     $path = fzf @fzfOptions --prompt 'Files> ' --header-first `
       --header 'CTRL-S: Switch between Files/Directories' `
       --bind $initial --bind $toggle --preview $preview
-  } finally {
+  }
+  finally {
     $env:SHELL = $previousShell
   }
   if ($LASTEXITCODE -eq 0 -and $path) { _fzf_open_path $path }
@@ -112,9 +118,9 @@ function frg {
 
   $query = $args -join ' '
   $rg = 'rg --column --line-number --no-heading --with-filename --color=always ' +
-    "--colors path:none --smart-case --hidden --no-messages " +
-    '--glob "!**/.git/**" --glob "!**/node_modules/**" ' +
-    '--field-match-separator=\t --'
+  "--colors path:none --smart-case --hidden --no-messages " +
+  '--glob "!**/.git/**" --glob "!**/node_modules/**" ' +
+  '--field-match-separator=\t --'
   $options = @(
     '--ansi', '--disabled', '--delimiter=\t', '--with-nth=1,2,4..',
     '--query', $query, '--prompt', 'rg> ', '--header-first',
@@ -136,7 +142,8 @@ function frg {
   $env:SHELL = $null
   try {
     $match = fzf @options
-  } finally {
+  }
+  finally {
     $env:SHELL = $previousShell
   }
   if ($LASTEXITCODE -ne 0 -or -not $match) { return }

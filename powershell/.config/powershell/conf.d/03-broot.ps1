@@ -11,7 +11,8 @@ if (Test-Command broot) {
 
       $command = Get-Content -LiteralPath $cmdFile.FullName -Raw
       if ($command) { Invoke-Expression $command }
-    } finally {
+    }
+    finally {
       Remove-Item -LiteralPath $cmdFile.FullName -Force
     }
   }

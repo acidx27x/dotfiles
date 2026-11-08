@@ -7,42 +7,42 @@
     'PSAlignAssignmentStatement'
     'PSUseCorrectCasing'
   )
-  Rules = @{
-    PSPlaceOpenBrace = @{
-      Enable = $true
-      OnSameLine = $true
-      NewLineAfter = $true
+  Rules        = @{
+    PSPlaceOpenBrace           = @{
+      Enable             = $true
+      OnSameLine         = $true
+      NewLineAfter       = $true
       IgnoreOneLineBlock = $true
     }
-    PSPlaceCloseBrace = @{
-      Enable = $true
-      NewLineAfter = $true
+    PSPlaceCloseBrace          = @{
+      Enable             = $true
+      NewLineAfter       = $true
       IgnoreOneLineBlock = $true
-      NoEmptyLineBefore = $false
+      NoEmptyLineBefore  = $false
     }
     PSUseConsistentIndentation = @{
-      Enable = $true
-      Kind = 'space'
+      Enable              = $true
+      Kind                = 'space'
       PipelineIndentation = 'IncreaseIndentationForFirstPipeline'
-      IndentationSize = 2
+      IndentationSize     = 2
     }
-    PSUseConsistentWhitespace = @{
-      Enable = $true
-      CheckInnerBrace = $true
-      CheckOpenBrace = $true
-      CheckOpenParen = $true
-      CheckOperator = $true
-      CheckPipe = $true
-      CheckPipeForRedundantWhitespace = $false
-      CheckSeparator = $true
-      CheckParameter = $false
+    PSUseConsistentWhitespace  = @{
+      Enable                                  = $true
+      CheckInnerBrace                         = $true
+      CheckOpenBrace                          = $true
+      CheckOpenParen                          = $true
+      CheckOperator                           = $true
+      CheckPipe                               = $true
+      CheckPipeForRedundantWhitespace         = $false
+      CheckSeparator                          = $true
+      CheckParameter                          = $false
       IgnoreAssignmentOperatorInsideHashTable = $true
     }
     PSAlignAssignmentStatement = @{
-      Enable = $true
+      Enable         = $true
       CheckHashtable = $true
     }
-    PSUseCorrectCasing = @{
+    PSUseCorrectCasing         = @{
       Enable = $true
     }
   }

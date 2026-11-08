@@ -275,6 +275,35 @@ run:
 atuin import powershell
 ```
 
+Native proxy helpers update the current process environment, inherited by child processes, and
+refresh .NET's default proxy for new HTTP clients in the current PowerShell session:
+
+```powershell
+proxy-enable -Http 'http://127.0.0.1:7890' -Https 'http://127.0.0.1:7890' `
+  -Socks 'socks5h://127.0.0.1:7891' -NoProxy 'localhost,127.0.0.1,::1'
+proxy-enable -Https 'http://proxy.example:8080' # Removes HTTP/SOCKS; preserves bypasses.
+karing-proxy-enable # Native Karing on port 3067; preserves bypasses.
+proxy-status # Displays eight variables with URL credentials redacted.
+proxy-disable # Removes endpoints; preserves bypasses.
+```
+
+`Invoke-RestMethod` and `Invoke-WebRequest` use this .NET default unless overridden by `-Proxy`,
+`-NoProxy`, or existing web-session settings. No `$PSDefaultParameterValues` entries are added.
+Existing HTTP clients and reused web sessions may retain their previous proxy configuration. Disable
+selects direct connections for new .NET clients, without changing Windows proxy settings. The .NET
+bypass list supports exact hostnames/IP addresses and leading-dot domain suffixes; leading-dot
+entries match the domain itself and its subdomains. SOCKS uses `socks5` internally for .NET, while
+the environment keeps the supplied `socks5h` URL. Invalid endpoint strings remain in the environment
+and are parsed only when a .NET request uses them.
+
+Enable replaces all endpoints; omitted protocols are removed. Omitting `-NoProxy` preserves existing
+bypass values; supplying it replaces both variants. `-NoProxy ''` clears bypasses: PowerShell
+7.0–7.4 removes the variables, while 7.5+ retains empty values. See Microsoft's
+[environment-variable documentation](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables).
+On Windows, uppercase and lowercase names refer to the same variable, so paired status entries show
+the same value. Case-sensitive platforms keep them separate. Status uses `<unset>` for missing
+variables and a blank value for empty variables.
+
 The first pass includes basic aliases and shared tool integrations. Follow-up candidates for
 PowerShell parity include Git pickers, encoding conversion helpers, terminal color diagnostics, and
 Zone.Identifier cleanup. WSL and Unix-specific helpers should only be ported when they have a native
