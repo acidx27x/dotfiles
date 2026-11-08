@@ -238,6 +238,9 @@ url = "https://developers.openai.com/mcp"
 # Feature flags
 ###############################################################################
 [features]
+# The newer windows MXC sandbox avoids the legacy administrator-approved setup.
+prefer_mxc = true
+
 # Speed up repeated commands by snapshotting shell environment.
 shell_snapshot = true
 
