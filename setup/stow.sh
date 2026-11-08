@@ -10,6 +10,7 @@ PLATFORM=""
 DOTFILES_ROOT=""
 TARGET_HOME=""
 STOW_BIN=""
+PERL_BIN=""
 PACKAGE_GROUPS=()
 PROFILE=""
 PROFILE_SPECIFIED=false
@@ -224,6 +225,8 @@ resolve_package_group() {
   local group="$1"
   local candidate
 
+  [[ "$group" != *, ]] || die_usage 'Package lists cannot contain empty names.'
+
   while :; do
     case "$group" in
       *,*)
@@ -340,7 +343,76 @@ run_stow() {
   # The explicit deployment target remains TARGET_HOME.
   if (
     cd -- /
-    HOME="$DOTFILES_ROOT/stow" "$STOW_BIN" "${command_args[@]}"
+    HOME="$DOTFILES_ROOT/stow" "$PERL_BIN" - "$STOW_BIN" "${command_args[@]}" <<'STOW_PERL'
+# Reuse the installed Stow planner, restricting link ownership to this operation.
+use strict;
+use warnings;
+
+{
+  package Dotfiles::Stow;
+  our @ISA = ('Stow');
+
+  sub link_owner {
+    my ($self, $target) = @_;
+    my ($source, $root, $owner) =
+      $self->find_stowed_path($target, $self->read_a_link($target));
+    return '' unless $root eq $self->{stow_path};
+    return '' unless $source eq Stow::Util::join_paths($root, $owner, $target);
+    return $owner;
+  }
+
+  sub unstow_link_node {
+    my ($self, $package, $source, $target) = @_;
+    return unless $self->link_owner($target) eq $package;
+    $self->SUPER::unstow_link_node($package, $source, $target);
+  }
+
+  sub stow_node {
+    my ($self, $root, $package, $source, $target) = @_;
+    if ($self->is_a_link($target)) {
+      my $owner = $self->link_owner($target);
+      unless ($self->{operation_packages}{$owner}) {
+        $self->conflict('stow', $package,
+          "existing target is not owned by a selected package: $target");
+        return;
+      }
+    }
+    $self->SUPER::stow_node($root, $package, $source, $target);
+  }
+}
+
+# The CLI is importable (also used by Stow's own tests) and supplies its library
+# paths and option/ignore handling. Do not fall back to the unscoped planner.
+my $stow_cli = shift @ARGV;
+require $stow_cli;
+my ($options, $remove, $install) = main::process_options();
+
+# Target traversal finds links beneath source directories which no longer exist.
+# The ownership checks above prevent legacy traversal from removing other links.
+my $stow = Dotfiles::Stow->new(%$options, compat => 1);
+$stow->{operation_packages} = { map { $_ => 1 } (@$remove, @$install) };
+$stow->plan_unstow(@$remove);
+$stow->plan_stow(@$install);
+
+my %conflicts = $stow->get_conflicts();
+if (%conflicts) {
+  for my $action (sort keys %conflicts) {
+    for my $package (sort keys %{ $conflicts{$action} }) {
+      warn "WARNING! ${action}ing $package would cause conflicts:\n";
+      warn "  * $_\n" for sort @{ $conflicts{$action}{$package} };
+    }
+  }
+  warn "All operations aborted.\n";
+  exit 1;
+}
+
+if ($options->{simulate}) {
+  warn "WARNING: in simulation mode so not modifying filesystem.\n";
+}
+else {
+  $stow->process_tasks();
+}
+STOW_PERL
   ); then
     return
   else
@@ -372,6 +444,10 @@ main() {
 
   if ! STOW_BIN="$(command -v stow)"; then
     printf '[ERROR] Required command not found: stow\n' >&2
+    exit 127
+  fi
+  if ! PERL_BIN="$(command -v perl)"; then
+    printf '[ERROR] Required command not found: perl\n' >&2
     exit 127
   fi
 

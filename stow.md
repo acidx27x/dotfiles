@@ -59,6 +59,12 @@ does not run. `--dry-run` stops after the simulation and creates no links, state
 The wrapper never passes `--adopt` or `--override`, and it isolates Stow from user `.stowrc` options
 so those settings cannot weaken conflict handling.
 
+The wrapper embeds a Perl adapter that uses the installed GNU Stow CLI and library. The adapter
+scopes Stow's link planning to the selected packages, including dangling links in shared
+directories. It uses the same planning rules for preflight and apply. A later filesystem failure
+during apply can leave earlier changes in place; the wrapper reports failure but does not roll back
+those changes.
+
 ### Deploy Packages
 
 Deploy is additive: packages not named by the command remain linked.
@@ -158,12 +164,15 @@ platform's default profile:
 
 Use either `--package` or `--profile`, not both. `--package` may be repeated and accepts
 comma-separated names; `--profile` selects exactly one profile. Duplicate package names are removed
-before Stow runs. Profile contents are validated exactly like command-line package names.
+before Stow runs. Profile contents are validated exactly like command-line package names. Empty
+names, including a trailing comma such as `--package nvim,`, are rejected.
 
 ### Remove or Refresh Packages
 
 Undeploy removes only the selected package links and leaves unrelated packages in place. Complete
-removal requires the explicit `--all` option.
+removal requires the explicit `--all` option. If a destination was replaced with a regular file or a
+foreign symlink, undeploy preserves it and can still succeed. Deploy and restow report a conflict at
+that destination.
 
 ```bash
 ./setup/stow.sh undeploy --package nvim
@@ -177,6 +186,16 @@ deleting files inside a package:
 ```bash
 ./setup/stow.sh restow --package nvim
 ```
+
+Removal planning scans the target tree without following directory symlinks, so restow and undeploy
+also remove old links beneath source subdirectories that were deleted or renamed. Only relative
+links into the affected package at the corresponding source path are owned by the wrapper. Foreign
+links and links belonging to unselected packages are preserved, including dangling ones. If deploy
+or restow would need to replace or unfold an unselected package's link, preflight reports a
+conflict; select that package too when its conversion is intended.
+
+The package directory itself must still exist. If it has already been removed, restore it before
+undeploying. `--all` and `--replace` operate only on currently recognized packages.
 
 ### Replace the Complete Selection
 
@@ -374,7 +393,7 @@ Stow commands first, then close the current terminal and open a new one once.
 
 ## Regression Tests
 
-Run the isolated Linux suite with GNU Stow and ripgrep installed:
+Run the isolated suite with GNU Stow, Perl, and ripgrep installed:
 
 ```bash
 ./setup/tests/stow.Tests.sh
@@ -382,13 +401,14 @@ Run the isolated Linux suite with GNU Stow and ripgrep installed:
 
 The suite uses a disposable home and repository path containing spaces. It covers malformed
 selections, additive and repeated deployment, profiles and duplicate package names, selective
-removal, restow, replacement, remove-all, ignore rules, conflicts, unsafe user `.stowrc` options,
-and dry-run behavior.
+removal, stale-link cleanup after source directory changes, shared-directory isolation, destination
+restoration, folded-directory conversion, replacement, remove-all, ignore rules, conflicts, unsafe
+user `.stowrc` options, dry-run snapshots, and engine failures including partial application.
 
-Run syntax and integration checks separately on macOS because the test suite intentionally uses the
-detected platform's default profile:
+The suite mocks platform detection to test both default-profile branches consistently on the current
+host. This does not verify native behavior on another platform or Bash version. Syntax checks can
+also be run separately:
 
 ```bash
 bash -n ./setup/stow.sh ./setup/tests/stow.Tests.sh
-./setup/stow.sh deploy --profile macos --dry-run
 ```
