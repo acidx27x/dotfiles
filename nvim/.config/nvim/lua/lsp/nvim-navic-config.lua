@@ -28,7 +28,7 @@ function M.get()
     end
     return string.format("%%#LineNr#%s%%#NavicText#%s%%*", padding, loc)
   else
-    return "%#LineNr#" .. padding .. "%*"
+    return string.format("%%#LineNr#%s%%#NavicText#(symbol context unavailable)%%*", padding)
   end
 end
 
