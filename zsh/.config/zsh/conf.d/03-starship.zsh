@@ -1,26 +1,6 @@
 # ~/.config/zsh/conf.d/03-starship.zsh
 # starship prompt with a native Zsh fallback
 
-# Show Stellar installation and theme instructions.
-stellar-help() {
-  printf 'Stellar manages remote Starship themes.\n\n'
-
-  if has-cmd stellar; then
-    printf 'Status: installed (%s)\n' "$(command -v stellar)"
-  else
-    printf 'Status: not installed\n\n'
-    printf 'Install:\n'
-    printf '  %s\n' \
-      'curl -fsSL https://raw.githubusercontent.com/a3chron/stellar/main/install.sh | bash'
-  fi
-
-  printf '\nApply theme:\n'
-  printf '  stellar apply a3chron/ctp-green\n'
-  printf '\nConfiguration:\n'
-  printf '  Stellar caches the remote theme and manages\n'
-  printf '  ~/.config/starship.toml as a symlink.\n'
-}
-
 # export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 
 _starship_initialized=0
@@ -45,11 +25,6 @@ if ((! _starship_initialized)); then
 
   PROMPT='${debian_chroot:+($debian_chroot)}%F{green}%n@%m%f:%F{blue}%~%f${vcs_info_msg_0_} %# '
   RPROMPT='%(?..%F{red}%?%f )%D{%H:%M}'
-fi
-
-if ! has-cmd stellar; then
-  print -u2 -- \
-    "INFO, ${${(%):-%x}:t}: stellar is not installed; run \`stellar-help\` for setup."
 fi
 
 unset _starship_initialized

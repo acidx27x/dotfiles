@@ -10,7 +10,9 @@ glow
 htop
 lazygit
 llvm
+mise
 nvim
+pyroclear
 ssh
 starship
 stow

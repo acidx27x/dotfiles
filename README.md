@@ -56,6 +56,9 @@ simulation. Application installation remains separate in scripts such as `setup/
 `setup/rust.sh`, and `setup/codex.sh`. See [stow.md](stow.md) for package validation, profiles,
 conflict handling, and tests.
 
+See [extra tools with mise](mise/README.md) for installing, updating, and removing Pokémon
+colorscripts and pyroclear.
+
 ## Windows Quick Start
 
 Bootstrap applications as described in [windows.md](windows.md), then preview and deploy one or more

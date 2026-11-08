@@ -59,7 +59,6 @@ functions-help() {
     proxy-enable 'Replace proxy endpoints using explicit URLs and an optional bypass list.' \
     proxy-status 'Print common proxy variables.' \
     rm-zone-id 'Delete Windows Zone.Identifier metadata files.' \
-    stellar-help 'Show Stellar installation and theme instructions.' \
     to-us-ascii 'Transliterate text files to US-ASCII.' \
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \

@@ -22,6 +22,7 @@ brew "worktrunk"
 
 # Shell
 brew "brush"
+brew "mise"
 brew "nushell"
 brew "shellcheck"
 brew "shfmt"

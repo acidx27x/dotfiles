@@ -1,0 +1,14 @@
+[tools]
+"cargo:pyroclear" = "latest"
+
+# Original Python implementation, including its sprite files.
+[tools."http:pokemon-colorscripts"]
+version = "5802ff67520be2ff6117a0abc78a08501f6252ad"
+url = "https://gitlab.com/phoneybadger/pokemon-colorscripts/-/archive/{{ version }}/pokemon-colorscripts-{{ version }}.tar.gz"
+checksum = "sha256:21164283452cab384c1c0512787947cfb3732f358aec09466c1819a6e70a946b"
+strip_components = 1
+bin_path = "bin"
+postinstall = '''
+mkdir -p "$MISE_TOOL_INSTALL_PATH/bin"
+ln -s ../pokemon-colorscripts.py "$MISE_TOOL_INSTALL_PATH/bin/pokemon-colorscripts"
+'''

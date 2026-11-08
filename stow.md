@@ -104,6 +104,7 @@ The following packages need or benefit from `--no-folding`:
 | `nvim`      | `~/.config/nvim`      |
 | `zed`       | `~/.config/zed`       |
 | `brew`      | `~/.config/homebrew`  |
+| `mise`      | `~/.config/mise`      |
 | `htop`      | `~/.config/htop`      |
 | `atuin`     | `~/.atuin`            |
 | `broot`     | `~/.config/broot`     |
@@ -119,6 +120,7 @@ The following packages need or benefit from `--no-folding`:
   repository.
 - `brew`: Homebrew writes `trust.json` and `trust.json.lock`. Its Stow-local ignore prevents
   generated copies already in the package from being linked back into the target directory.
+- `mise`: Keep local overrides and generated lockfiles beside the linked config, outside the repo.
 - `htop`: htop writes `htop_history`.
 - `atuin`: Atuin keeps config, databases, keys, sessions, logs, and other state together.
 - `broot`: Broot may create its own configuration and launcher files beside the managed config.
@@ -127,7 +129,7 @@ The following packages need or benefit from `--no-folding`:
 For example:
 
 ```bash
-stow --no-folding --target="$HOME" bash zsh nvim zed brew htop atuin broot worktrunk
+stow --no-folding --target="$HOME" bash zsh nvim zed brew mise htop atuin broot worktrunk
 ```
 
 To convert packages that are already stowed with folded directory links, preview and then restow
@@ -135,9 +137,9 @@ them:
 
 ```bash
 stow --restow --simulate --verbose --no-folding --target="$HOME" \
-  bash zsh nvim zed brew htop atuin broot worktrunk
+  bash zsh nvim zed brew mise htop atuin broot worktrunk
 stow --restow --verbose --no-folding --target="$HOME" \
-  bash zsh nvim zed brew htop atuin broot worktrunk
+  bash zsh nvim zed brew mise htop atuin broot worktrunk
 ```
 
 Inspect the package directories before converting them. Any generated or machine-local files that

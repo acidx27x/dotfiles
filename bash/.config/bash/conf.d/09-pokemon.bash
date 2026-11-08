@@ -1,5 +1,5 @@
 # ~/.config/zsh/conf.d/09-pokemon.bash
-# git clone https://gitlab.com/phoneybadger/pokemon-colorscripts.git
+# Installation: dotfiles/mise/README.md
 
 if ! has-cmd pokemon-colorscripts; then
   return 0
