@@ -337,6 +337,12 @@ only updates an existing file carrying this repository's managed marker. It neve
 changes the user config, where Codex can continue writing trusted projects, model migrations,
 notices, and other machine-local settings.
 
+For Windows, the installer omits Unix absolute read paths and adds `":root" = "read"` to the
+filesystem profile because the elevated sandbox requires broad read access. Workspace write limits
+and explicit deny rules still apply. The sensitive-file deny globs cover workspace roots; files
+outside those roots may be readable, including credentials and private documents. Linux and macOS
+retain the base config's restricted read access.
+
 Normal users can read the installed file but cannot modify it under the default `ProgramData`
 permissions. Run the script elevated again after changing the tracked base. Do not use
 `%USERPROFILE%\.codex\managed_config.toml`; current Codex versions use the `ProgramData` config for

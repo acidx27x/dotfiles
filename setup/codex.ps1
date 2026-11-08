@@ -46,6 +46,12 @@ if (($baseContent -split '\r?\n') -notcontains $managedMarker) {
 # Native Windows rejects Unix absolute filesystem paths, even for unused grants.
 $baseContent = $baseContent -replace '(?m)^"/[^"]+" = "read"\r?\n', ''
 
+# The elevated Windows sandbox requires broad reads; write and deny rules still apply.
+$baseContent = $baseContent.Replace(
+  '[permissions.locked_folders_only.filesystem]',
+  "[permissions.locked_folders_only.filesystem]`n" + '":root" = "read"'
+)
+
 if (Test-Path -LiteralPath $systemConfigDirectory) {
   $directory = Get-Item -LiteralPath $systemConfigDirectory -Force
   if (-not $directory.PSIsContainer -or $directory.LinkType) {
