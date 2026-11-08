@@ -11,6 +11,14 @@ map({ "n", "v" }, "<Space>", "<Nop>", "leader prefix")
 map("n", "<leader>nh", ":nohlsearch<CR>", "hlsearch: clear")
 map("n", "<leader>vc", ":setlocal cursorcolumn!<CR>", "view: toggle cursor column")
 
+-- MiniMove uses <C-l>, so keep multicursor clearing on a separate key.
+if vim.fn.has("nvim-0.13") == 1 then
+  map("n", "<leader>mc", function()
+    local namespace = vim.api.nvim_create_namespace("nvim.multicursor")
+    vim.api.nvim_buf_clear_namespace(0, namespace, 0, -1)
+  end, "multicursor: clear")
+end
+
 -- Center screen when jumping
 map("n", "n", "nzzzv", "search: next result (centered)")
 map("n", "N", "Nzzzv", "search: previous result (centered)")
@@ -30,8 +38,6 @@ map("n", "<leader>bd", function()
 end, "buffer: delete and preserve layout")
 map("n", "<leader>bn", ":bnext<CR>", "buffer: next")
 map("n", "<leader>bp", ":bprevious<CR>", "buffer: previous")
-map("n", "]b", ":bnext<CR>", "buffer: next")
-map("n", "[b", ":bprevious<CR>", "buffer: previous")
 map("n", "<leader>bb", "<C-^>", "buffer: alternate")
 
 -- Better window navigation

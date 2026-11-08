@@ -42,7 +42,6 @@ Source: [`lua/core/keymaps.lua`](../.config/nvim/lua/core/keymaps.lua). Core map
 | `<Space>d`, `<Space>o`, `<Space>p`       | Normal, Visual    | No-op prefix guards                                      | Intentionally stop a bare prefix from falling through.                                               |
 | `<Space>bd`                              | Normal            | `MiniBufremove.delete(0, false)`                         | Uses MiniBufremove; preserves layout.                                                                |
 | `<Space>bn` / `<Space>bp`                | Normal            | Next / previous buffer                                   | User aliases for `:bnext`/`:bprevious`.                                                              |
-| `]b` / `[b`                              | Normal            | Next / previous buffer                                   | Bracket-style aliases for `:bnext`/`:bprevious`.                                                     |
 | `<Space>bb`                              | Normal            | Switch to alternate buffer                               | Uses Neovim's `<C-^>` motion.                                                                        |
 | `<Space>q` / `<Space>Q`                  | Normal            | Close current window / quit                              | `<Space>q` may fail if it is the last window; use `<Space>Q` to quit.                                |
 | `<A-h/j/k/l>`                            | Normal, non-macOS | Focus left / down / up / right window                    | Selected instead of Meta spelling on Linux/other OS.                                                 |
@@ -75,6 +74,54 @@ different Alt/Meta behavior on macOS and Linux.
 | `:btab`                         | Command-line abbreviation for `:BTab`         | `core/keymaps.lua` |
 | `:Cwd` / `:Twd` / `:Lwd`        | Print global / tab / window cwd               | `core/keymaps.lua` |
 | `:CTags lang=... [exclude=...]` | Run configured Universal Ctags asynchronously | `core/keymaps.lua` |
+
+## Bracket navigation
+
+Source:
+[`lua/plugins/mini-bracketed-config.lua`](../.config/nvim/lua/plugins/mini-bracketed-config.lua).
+MiniBracketed loads eagerly. Lowercase suffixes go backward/forward; uppercase suffixes go to the
+first/last target. Counts are supported, and navigation wraps by default.
+
+| Previous / next | First / last | Mode                             | Target                                                |
+| --------------- | ------------ | -------------------------------- | ----------------------------------------------------- |
+| `[b` / `]b`     | `[B` / `]B`  | Normal                           | Listed buffer                                         |
+| `[d` / `]d`     | `[D` / `]D`  | Normal, Visual, Operator-pending | Diagnostic                                            |
+| `[q` / `]q`     | `[Q` / `]Q`  | Normal                           | Quickfix entry                                        |
+| `[l` / `]l`     | `[L` / `]L`  | Normal                           | Location-list entry                                   |
+| `[/` / `]/`     | —            | Normal, Visual, Operator-pending | Comment block                                         |
+| `[x` / `]x`     | `[X` / `]X`  | Normal, Visual, Operator-pending | Merge-conflict marker                                 |
+| `[f` / `]f`     | `[F` / `]F`  | Normal                           | File in the current file's directory                  |
+| `[j` / `]j`     | `[J` / `]J`  | Normal, Visual, Operator-pending | Jumplist position within the current buffer           |
+| `[m` / `]m`     | `[M` / `]M`  | Normal, Neovim 0.13+             | Extra multicursor                                     |
+| `[o` / `]o`     | `[O` / `]O`  | Normal                           | Previously visited file                               |
+| `[y` / `]y`     | `[Y` / `]Y`  | Normal                           | Yank-history entry replacing the latest pasted region |
+
+Comment navigation recognizes linewise comments using `commentstring`. The `/` suffix replaces
+native C-style comment motions and provides only previous/next mappings. Gitsigns keeps `[c` / `]c`;
+`[e` / `]e` and `[w` / `]w` still filter diagnostics to errors and warnings. MiniBracketed's window,
+Tree-sitter, indent, and undo targets are disabled, preserving native tag and include-search keys
+and ordinary `u` / `<C-r>`. On Neovim 0.13+, `[m` / `]m` replace native method-navigation keys with
+multicursor navigation. `<Space>bn` / `<Space>bp` remain buffer aliases.
+
+Use `[y` / `]y` immediately after pasting to cycle the replacement text through yank history.
+
+## Native multicursors (Neovim 0.13+)
+
+| Keys         | Mode           | Action                                                                 |
+| ------------ | -------------- | ---------------------------------------------------------------------- |
+| `Q`          | Normal         | Toggle an extra cursor at the current position; disables follow mode   |
+| `Q`          | Visual         | Add cursors on selected lines; enables follow mode                     |
+| `q=`         | Normal         | Toggle follow mode so relative motions move every cursor               |
+| `zq{motion}` | Normal, Visual | Place cursors at repeated motion targets; Visual mode limits the range |
+| `<Space>mc`  | Normal         | Clear extra cursors in the current buffer                              |
+| `gQ`         | Normal         | Restore the previous cursor session                                    |
+| `[m` / `]m`  | Normal         | Previous / next extra cursor through MiniBracketed                     |
+| `[M` / `]M`  | Normal         | First / last extra cursor through MiniBracketed                        |
+
+`Q`, `q=`, `zq`, and `gQ` are native keys. `<Space>mc` is registered only on Neovim 0.13 or newer
+and clears the native cursor namespace directly. It avoids the native `<C-l>` clear binding, which
+MiniMove replaces with line/selection movement. `<Space>mf` still toggles MiniFiles. In 0.13, `Q`
+replaces the older last-recorded-macro replay behavior; explicit `@{register}` remains available.
 
 ## LSP mappings
 
@@ -130,16 +177,16 @@ Insert-mode ghost text appears while typing and clears when the cursor moves wit
 Source:
 [`lua/lsp/diagnostic-default-config.lua`](../.config/nvim/lua/lsp/diagnostic-default-config.lua).
 
-| Keys        | Mode   | Action                                           | Overrides / conflicts                                                                |
-| ----------- | ------ | ------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `<Space>ed` | Normal | Toggle diagnostics globally                      | Custom diagnostic group.                                                             |
-| `<Space>et` | Normal | Toggle diagnostic virtual text for current line  | Custom diagnostic group.                                                             |
-| `<Space>el` | Normal | Toggle diagnostic virtual lines for current line | Custom diagnostic group.                                                             |
-| `<Space>eq` | Normal | Populate location list from diagnostics          | Custom diagnostic group.                                                             |
-| `<C-w>d`    | Normal | Open diagnostic float                            | Neovim's native mapping.                                                             |
-| `]d` / `[d` | Normal | Next / previous diagnostic                       | Calls `vim.diagnostic.jump`; may replace version/plugin-provided diagnostic motions. |
-| `]e` / `[e` | Normal | Next / previous error                            | Filters `vim.diagnostic.jump` to errors.                                             |
-| `]w` / `[w` | Normal | Next / previous warning                          | Filters `vim.diagnostic.jump` to warnings.                                           |
+| Keys        | Mode   | Action                                           | Overrides / conflicts                                    |
+| ----------- | ------ | ------------------------------------------------ | -------------------------------------------------------- |
+| `<Space>ed` | Normal | Toggle diagnostics globally                      | Custom diagnostic group.                                 |
+| `<Space>et` | Normal | Toggle diagnostic virtual text for current line  | Custom diagnostic group.                                 |
+| `<Space>el` | Normal | Toggle diagnostic virtual lines for current line | Custom diagnostic group.                                 |
+| `<Space>eq` | Normal | Populate location list from diagnostics          | Custom diagnostic group.                                 |
+| `<C-w>d`    | Normal | Open diagnostic float                            | Neovim's native mapping.                                 |
+| `]d` / `[d` | Normal | Next / previous diagnostic                       | MiniBracketed; counts and first/last variants supported. |
+| `]e` / `[e` | Normal | Next / previous error                            | Filters `vim.diagnostic.jump` to errors.                 |
+| `]w` / `[w` | Normal | Next / previous warning                          | Filters `vim.diagnostic.jump` to warnings.               |
 
 `<C-w>` and `]`/`[` are MiniClue triggers. The custom diagnostic keys use `<Space>e` so `<C-w>d`
 remains a direct mapping.

@@ -62,6 +62,10 @@
       "rev": "87df7d1459c3376aaf5a67d116f0b293cc65ad13",
       "src": "https://github.com/monkoose/matchparen.nvim"
     },
+    "mini.bracketed": {
+      "rev": "2757ab8b893f08a5f2a6f0fb8a56acd581a19d00",
+      "src": "https://github.com/nvim-mini/mini.bracketed"
+    },
     "mini.bufremove": {
       "rev": "6e9c563cb71a8e4d57c4fb4089eb90a3bf3e8851",
       "src": "https://github.com/nvim-mini/mini.bufremove"

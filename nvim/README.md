@@ -1,10 +1,35 @@
 # Neovim
 
-This package deploys `.config/nvim` to Neovim's standard config directory. It targets Neovim 0.12 or
-newer and uses built-in `vim.pack` for plugin installation, updates, and package registration.
-Selected optional plugins load on first relevant event or mapping.
+This package deploys `.config/nvim` to Neovim's standard config directory. The package lists select
+Neovim nightly (the 0.13 development line); core setup remains compatible with Neovim 0.12 or newer.
+It uses built-in `vim.pack` for plugin installation, updates, and package registration. Selected
+optional plugins load on first relevant event or mapping.
 
 ## Setup
+
+The Homebrew Brewfile uses `brew "neovim", args: ["HEAD"]`, which builds the development branch from
+source. Scoop uses `versions/neovim-nightly`; the `versions` bucket is already declared. Existing
+stable installations need a one-time switch before normal package updates:
+
+```bash
+# Homebrew: replace an existing stable installation.
+brew uninstall neovim
+brew install --HEAD neovim
+# Later development updates:
+brew upgrade --fetch-HEAD neovim
+```
+
+```powershell
+# Scoop: replace an existing stable installation.
+scoop uninstall neovim
+scoop bucket add versions
+scoop install versions/neovim-nightly
+# Later nightly updates:
+scoop update neovim-nightly
+```
+
+Check `nvim --version` after switching. Nightly features and APIs can change between builds. See the
+[upstream 0.13 development notes](https://neovim.io/doc/user/news/).
 
 From the dotfiles repository root:
 
@@ -15,7 +40,7 @@ From the dotfiles repository root:
 
 Then start Neovim. The first launch installs missing packages through `vim.pack`; review and confirm
 the package prompt. First install and updates require Git and network access. See the
-[plugin inventory](docs/plugins.md) for all 46 repositories (28 eager, 18 optional) and load groups.
+[plugin inventory](docs/plugins.md) for all 47 repositories (29 eager, 18 optional) and load groups.
 
 The tracked `nvim-pack-lock.json` is deployed with this package. If an older, unlinked copy already
 exists at `~/.config/nvim/nvim-pack-lock.json`, move it aside before restowing `nvim`. Stow can then
@@ -58,6 +83,11 @@ Use `<Space>nd` to dismiss notifications and `:lua MiniNotify.show_history()` to
 `NOTE`, `HINT`, and `INFO` markers with fzf-lua and ripgrep. Hidden files are included while ignore
 rules and `.git` exclusion apply. Unsaved and unnamed buffers are excluded. MiniHipatterns keeps its
 in-buffer marker and hex-color highlighting. See the [workflow guide](docs/workflows.md).
+
+MiniBracketed owns buffer, diagnostic, quickfix, and location-list bracket navigation. It also
+provides `[/` / `]/` for comment blocks and `[x` / `]x`, `[f` / `]f`, `[j` / `]j`, `[o` / `]o`, and
+`[y` / `]y` for conflicts, files, jumps, old files, and yank history. See the
+[bracket navigation reference](docs/keymaps.md#bracket-navigation).
 
 MiniClue shows descriptions while typing prefixes. `<Space>pk` opens the configured keymap picker.
 For practical examples of quickfix, terminal windows, splits, buffers, and other built-in Vim tools,

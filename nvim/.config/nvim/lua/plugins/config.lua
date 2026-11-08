@@ -17,6 +17,8 @@ require("plugins.mini-files-config")
 --
 
 -- mini.nvim group
+require("plugins.mini-bracketed-config")
+
 require("plugins.mini-statusline-config")
 
 require("plugins.mini-tabline-config")

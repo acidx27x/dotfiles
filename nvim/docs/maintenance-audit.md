@@ -1,5 +1,39 @@
 # Neovim maintenance and custom-code audit
 
+## Nightly selection and multicursors — 2026-11-08
+
+Homebrew now selects Neovim HEAD and Scoop selects `versions/neovim-nightly`. The installed stable
+binary is not changed by editing these lists. MiniBracketed's default multicursor navigation is
+enabled on Neovim 0.13+ (`[m` / `]m`, `[M` / `]M`), replacing native method-navigation keys. Native
+`Q`, `q=`, `zq`, and `gQ` provide cursor placement, follow mode, and restoration. A version-gated
+`<Space>mc` clears the native cursor namespace because MiniMove owns `<C-l>`. No package revisions
+are changed. The earlier bracket audit below records the previous mapping choice.
+
+Validated with a temporary official macOS ARM64 nightly, `v0.13.0-dev-2052+gc868e1ab3d`, and the
+installed `v0.12.6`, using disposable XDG config/data/state/cache directories. Native cursor
+placement, MiniBracketed navigation, editing at both cursors, follow-mode toggling, clearing through
+`<Space>mc`, and restoring with `gQ` passed. MiniMove, warning keys, and comment navigation coexist;
+the stable version skips the unsupported clear mapping. Completed `vim.pack` health reports pass
+before and after; all plugin lock entries remain unchanged. Brewfile Ruby syntax, Scoop JSON/bucket
+selection, scoped formatting, and whitespace checks pass. Live package-manager migration and Windows
+execution were not run. Full-config startup retains the earlier fzf-lua socket verification limit.
+
+## Bracket navigation — 2026-11-08
+
+Added MiniBracketed as an eager package, bringing the spec and lockfile to **47 repositories: 29
+eager and 18 optional**, including 16 Mini modules. It replaces explicit buffer and diagnostic
+bracket mappings and owns quickfix/location-list navigation. Comments use `[/` / `]/`; conflict,
+file, jump, old-file, and yank-history navigation use the default suffixes. Window, Tree-sitter,
+indent, multicursor, and undo targets are disabled to preserve existing keys. Gitsigns hunks and
+severity-specific diagnostic mappings are retained. All previous lock entries are unchanged. The
+package was staged in a disposable installation; the live installation receives it on startup.
+
+Validation uses the locked package in disposable XDG directories: native package registration, all
+configured target mappings, comment/conflict/buffer/diagnostic/quickfix/location motions, severity
+filters, retained native keys, and Gitsigns/MiniClue coexistence. Package health checks run before
+and after the change. Full-config startup remains limited by the previously observed fzf-lua
+local-socket restriction; the focused checks load the affected modules directly.
+
 ## Implementation status — 2026-11-06
 
 The requested migration is implemented. The current spec contains **46 repositories: 28 eager and 18

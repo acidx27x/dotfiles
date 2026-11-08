@@ -60,13 +60,6 @@ end, "diagnostic: show virtual lines for current line (global)")
 
 map("n", "<leader>eq", vim.diagnostic.setloclist, "diagnostic: setloclist")
 
-map("n", "]d", function()
-  vim.diagnostic.jump({ count = 1 })
-end, "diagnostic: jump next")
-map("n", "[d", function()
-  vim.diagnostic.jump({ count = -1 })
-end, "diagnostic: jump prev")
-
 for _, item in ipairs({
   { key = "e", severity = vim.diagnostic.severity.ERROR, label = "error" },
   { key = "w", severity = vim.diagnostic.severity.WARN, label = "warning" },

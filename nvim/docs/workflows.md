@@ -24,6 +24,9 @@ an entry to jump to it. Use these commands from any Normal-mode window:
 | `:copen` / `:cclose`  | Show / hide the list without clearing it.      |
 | `:colder` / `:cnewer` | Switch between earlier / later quickfix lists. |
 
+MiniBracketed provides `[q` / `]q` for previous/next entries and `[Q` / `]Q` for first/last. Counts
+are supported and navigation wraps at the ends.
+
 In a Git file, `<Space>gq` fills quickfix with changes for the current buffer; `<Space>gQ` uses all
 buffers. Run `:copen` to inspect the result. `:make` also fills quickfix when the project's
 `makeprg` and `errorformat` are suitable.
@@ -42,7 +45,8 @@ changed files. To act on each quickfix entry instead, use `:cdo`.
 A location list belongs to one window, which is useful when each split needs its own results.
 `<Space>eq` fills the current window's location list with diagnostics.
 `:lvimgrep /{pattern}/j {files}` fills it from a search. Use `:lopen`, `:lnext`, `:lprev`, and
-`:lclose` as the location-list counterparts of the quickfix commands.
+`:lclose` as the location-list counterparts of the quickfix commands. MiniBracketed provides `[l` /
+`]l` and `[L` / `]L` for previous/next and first/last entries.
 
 ## Terminal windows
 
@@ -155,3 +159,13 @@ The `ctags` executable override takes priority over `ctags-universal` and `ctags
 Folds start open in this config. Tree-sitter or an attached LSP supplies fold ranges for supported
 files. MiniClue shows hints for marks, registers, `<C-w>`, and `z` sequences. Use `:help quickfix`,
 `:help terminal`, or `:help windows` for the built-in details.
+
+## Native multicursor editing (Neovim 0.13+)
+
+For selected lines, use `V` and a motion to select them, then press `Q`. Add text with `I` or `A`,
+or use a text edit such as `ciwreplacement<Esc>`; the action applies at every cursor. `q=` toggles
+whether relative motions move all cursors. Clear the session with `<Space>mc`; `gQ` restores it.
+
+To choose positions individually, press `Q` at each position. To select all occurrences of the word
+under the cursor, use `zq*`; `gv` then selects the match at every cursor. `[m` / `]m` navigate the
+extra cursors in place of the native method-navigation keys. MiniMove retains `<C-h/j/k/l>`.

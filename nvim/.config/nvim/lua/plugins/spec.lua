@@ -12,6 +12,7 @@ local eager = {
   { src = "https://github.com/rafamadriz/friendly-snippets" },
   { src = "https://github.com/rebelot/kanagawa.nvim" },
   { src = "https://github.com/monkoose/matchparen.nvim" },
+  { src = "https://github.com/nvim-mini/mini.bracketed" },
   { src = "https://github.com/nvim-mini/mini.bufremove" },
   { src = "https://github.com/nvim-mini/mini.clue" },
   { src = "https://github.com/nvim-mini/mini.comment" },
