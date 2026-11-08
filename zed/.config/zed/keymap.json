@@ -303,18 +303,15 @@
     }
   },
   {
-    // Vim exchange.
-    "context": "vim_mode == visual",
+    // Multiline find/till and Sneak jumps; preserve text-object keys such as af and i<.
+    "context": "Editor && !menu && (vim_mode == normal || vim_mode == visual || (vim_mode == operator && vim_operator != a && vim_operator != i))",
     "bindings": {
-      "shift-x": "vim::Exchange"
-    }
-  },
-  {
-    // Vim sneak.
-    "context": "vim_mode == normal || vim_mode == visual",
-    "bindings": {
-      "shift-z f": "vim::PushSneak",
-      "shift-z b": "vim::PushSneakBackward"
+      "f": ["vim::PushFindForward", { "before": false, "multiline": true }],
+      "shift-f": ["vim::PushFindBackward", { "after": false, "multiline": true }],
+      "t": ["vim::PushFindForward", { "before": true, "multiline": true }],
+      "shift-t": ["vim::PushFindBackward", { "after": true, "multiline": true }],
+      ">": "vim::PushSneak",
+      "<": "vim::PushSneakBackward"
     }
   },
   {
@@ -344,8 +341,14 @@
     "context": "vim_mode == visual",
     "use_key_equivalents": true,
     "bindings": {
-      "secondary-alt-h": ["workspace::SendKeystrokes", "< g v"],
-      "secondary-alt-l": ["workspace::SendKeystrokes", "> g v"]
+      "secondary-alt-h": [
+        "action::Sequence",
+        ["vim::Outdent", ["workspace::SendKeystrokes", "g v"]]
+      ],
+      "secondary-alt-l": [
+        "action::Sequence",
+        ["vim::Indent", ["workspace::SendKeystrokes", "g v"]]
+      ]
     }
   },
   {
@@ -728,6 +731,15 @@
       "space p b": "tab_switcher::OpenInActivePane",
       "space p d": "diagnostics::Deploy",
       "space p r": "workspace::ReopenLastPicker",
+      "space p p": [
+        "pane::DeploySearch",
+        {
+          "query": "\\b(FIXME|ERROR|HACK|WARN|TODO|NOTE|HINT|INFO)\\b",
+          "regex": true,
+          "case_sensitive": true,
+          "include_ignored": false
+        }
+      ],
       "space p k": "zed::OpenKeymap",
       "space p h": "zed::OpenDocs",
       "space p \"": "vim::ToggleRegistersView",
@@ -741,10 +753,14 @@
       "space p l shift-s": "project_symbols::Toggle",
       // Formatting and diagnostics.
       "space c f": "editor::Format",
+      "space i s": "editor::ConvertIndentationToSpaces",
+      "space i t": "editor::ConvertIndentationToTabs",
       "space e t": "editor::ToggleInlineDiagnostics",
       "space e q": "diagnostics::DeployCurrentFile",
       // Paths, settings, terminal, and workspace utilities.
       "space f p": "workspace::CopyPath",
+      "space f l": "line_ending_selector::Toggle",
+      "space f e": "encoding_selector::Toggle",
       "space r c": "zed::OpenSettingsFile",
       "space t f": "terminal_panel::Toggle",
       "space t t": "workspace::NewCenterTerminal",
@@ -757,17 +773,22 @@
       "space h p": "editor::GoToPreviousBookmark",
       // Project panel and replacement search.
       "space o f": "project_panel::ToggleFocus",
+      "space m f": "project_panel::ToggleFocus",
       "space shift-s": ["pane::DeploySearch", { "replace_enabled": true }],
       // Git staging, diffs, and blame.
       "space g s": "git::ToggleStaged",
       "space g r": "git::Restore",
       "space g shift-s": "git::StageFile",
+      "space g shift-u": "git::UnstageFile",
       "space g shift-r": "git::RestoreFile",
       "space g p": "editor::ToggleSelectedDiffHunks",
+      "space g shift-p": "editor::ToggleSelectedDiffHunks",
       "space g b": "editor::BlameHover",
       "space g shift-b": "git::Blame",
       "space g d": "git::OpenFileDiff",
-      "space g t b": "editor::ToggleGitBlameInline",
+      "space g i b": "editor::ToggleGitBlameInline",
+      "space g t": "git_panel::ToggleFocus",
+      "space g shift-t": "git::ViewUncommittedChanges",
       // Debugger controls.
       "space d b": "editor::ToggleBreakpoint",
       "space d c": "debugger::Continue",
@@ -804,6 +825,7 @@
       "ctrl-s l": "editor::ToggleInlayHints",
       // Syntax selection and surround edits.
       "g n n": "editor::SelectLargerSyntaxNode",
+      "space x x": "vim::Exchange",
       "s a": ["vim::PushAddSurrounds", {}],
       "s d": "vim::PushDeleteSurrounds",
       "s r": ["vim::PushChangeSurrounds", {}]
@@ -815,6 +837,9 @@
     "bindings": {
       // Format the selection and search for replacements.
       "space c f": "editor::FormatSelections",
+      "space i s": "editor::ConvertIndentationToSpaces",
+      "space i t": "editor::ConvertIndentationToTabs",
+      "space x x": "vim::Exchange",
       "space shift-s": ["pane::DeploySearch", { "replace_enabled": true }],
       // Stage or restore selected Git hunks.
       "space g s": "git::ToggleStaged",

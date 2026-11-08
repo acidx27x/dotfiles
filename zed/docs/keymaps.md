@@ -3,7 +3,8 @@
 This is the migration reference for [Neovim's complete keymap](../../nvim/docs/keymaps.md) and
 [Zed's keymap](../.config/zed/keymap.json). It reflects what the Neovim Lua modules and their
 plugins do, not just the labels shown by which-key. Zed Vim mode must be enabled for the Neovim
-aliases. Their editor bindings apply only in Normal or Visual mode. The editor and panel shortcuts
+aliases. Leader aliases apply in Normal or Visual mode; find/till and Sneak also support pending
+operators while preserving text-object keys. The editor and panel shortcuts
 below use their stated contexts, while terminal input and completion menus keep their existing
 handling.
 
@@ -32,17 +33,43 @@ Zed key sequences separate strokes with spaces: Neovim `<Space>pld` becomes `spa
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `<Space>bd/bn/bp/bb`                                | Close active item in all panes, next/previous tab, alternate file                                                       | Zed tabs and Neovim buffers have different lifetimes; `bd` closes the item in every pane. `]b` and `[b` are already Zed Vim tab navigation.                                         |
 | `<Space>q/Q`                                        | Close active tab; quit Zed                                                                                              | Neovim's `q` closes a window and `Q` quits Neovim. Zed does not expose the same window/buffer model.                                                                                |
-| `<Space>pf/pg/pb/pd/pr/pk/p\"/ph`                   | File finder, project search, all-tab switcher, diagnostics, last picker, keymap, registers, Zed website                 | MiniPick's previews, history, and help picker differ from these Zed views. `ph` opens Zed's documentation website.                                                                  |
-| `<Space>plc/pld/pls/pli/plr/plt/plS`                | Declaration, definition, outline, implementation, references, type definition, project symbols                          | MiniPick lists locations first; the Zed navigation actions may jump directly or open a result view.                                                                                 |
+| `<Space>pf/pg/pb/pd/pr/pk/p\"/ph`                   | File finder, project search, all-tab switcher, diagnostics, last picker, keymap, registers, Zed website                 | fzf-lua's previews, history, and help picker differ from these Zed views. `ph` opens Zed's documentation website.                                                                  |
+| `<Space>plc/pld/pls/pli/plr/plt/plS`                | Declaration, definition, outline, implementation, references, type definition, project symbols                          | fzf-lua lists locations first; the Zed navigation actions may jump directly or open a result view.                                                                                 |
 | `<Space>rc`                                         | Open Zed's settings file                                                                                                | Opens the active editor's configuration rather than Neovim's `init.lua`.                                                                                                            |
-| `<Space>tt/tf`                                      | Center terminal / terminal panel                                                                                        | Zed's center terminal is a tab; its panel is docked rather than Floaterm's float.                                                                                                   |
+| `<Space>tt`, Zed-only `<Space>tf`                   | Center terminal / terminal panel                                                                                        | `tt` opens a center terminal tab. The retained `tf` alias toggles Zed's docked terminal panel; Neovim no longer maps `tf`.                                                          |
 | `<Space>et/eq`, `<C-w>d`                            | Toggle inline diagnostics, current-file diagnostics view, show or advance diagnostic                                    | Zed's inline toggle is not limited to the current line; its diagnostics view is not Neovim's location list; `Ctrl-W d` is not a diagnostic float.                                   |
-| `<Space>S`                                          | Project search with replacement enabled                                                                                 | Spectre's UI and visual-selection behavior differ.                                                                                                                                  |
+| `<Space>S`                                          | Project search with replacement enabled                                                                                 | grug-far's UI and visual-selection behavior differ.                                                                                                                                  |
 | `<Space>of`                                         | Focus the project panel                                                                                                 | Oil is an editable directory buffer, while the Zed project panel is a file tree. Split/float variants are left alone.                                                               |
-| `<Space>gs/gr/gS/gR/gp/gb/gB/gd/gtb`                | Toggle stage, restore hunk, stage file, restore file, show hunk diff, blame hover, file blame, file diff, inline blame  | `gs` toggles staged state rather than only staging. `gp` expands a diff hunk rather than opening Gitsigns' preview. `gr` and `gR` discard changes, as their Neovim counterparts do. |
+| `<Space>gs/gr/gS/gR/gp/gb/gB/gd/gib`                | Toggle stage, restore hunk, stage file, restore file, show hunk diff, blame hover, file blame, file diff, inline blame  | `gs` toggles staging. `gp` expands a diff hunk rather than opening Gitsigns' preview. `gr` and `gR` discard changes, as their Neovim counterparts do. The old `gtb` chord is removed to free `gt`. |
 | `<Space>dc/dt`                                      | Continue debugger / focus debugger console                                                                              | `dc` needs an existing stopped session; start a new session with Zed's existing `Alt-D r`. The console is not nvim-dap's REPL.                                                      |
 | `gpd/gpy/gpc/gpr/gpi`                               | Split navigation or reference results                                                                                   | goto-preview's floating preview and `gpq` close operation have no Zed equivalent. The split actions open real tabs/panes.                                                           |
-| `<C-s>h/s/rn/ic/oc/ca/ds/dc/ws/wd/l` in Normal mode | Hover, signature, rename, call hierarchy, code actions, outline, declaration, project symbols, diagnostics, inlay hints | `ca` has no actions-preview diff picker; `ds` opens the outline; `l` toggles editor inlay hints. Insert-mode `Ctrl-S` remains Zed's signature-help key.                             |
+| `<C-s>h/s/rn/ic/oc/ca/ds/dc/ws/wd/l` in Normal mode | Hover, signature, rename, call hierarchy, code actions, outline, declaration, project symbols, diagnostics, inlay hints | `ca` has no fzf-lua code-action diff picker; `ds` opens the outline; `l` toggles editor inlay hints. Insert-mode `Ctrl-S` remains Zed's signature-help key.                             |
+
+## Recent Neovim additions
+
+| Keys | Mode | Zed action / behavior |
+| ---- | ---- | --------------------- |
+| `f/F/t/T` | Normal, Visual, Operator-pending | Multiline find/till using `vim::PushFindForward` / `vim::PushFindBackward`; `;` and `,` keep Zed's repeat behavior. |
+| `>` / `<` | Normal, Visual, Operator-pending | `vim::PushSneak` / `vim::PushSneakBackward`, replacing the custom `Zf` / `Zb` chords. |
+| `<Space>xx` | Normal, Visual | `vim::Exchange`: choose a motion/text object in Normal mode or exchange the Visual selection. Replaces the custom Visual `X` alias; native exchange keys remain available. |
+| `<Space>is` / `<Space>it` | Normal, Visual | Convert indentation on the current or selected lines to spaces / tabs. |
+| `<Space>fl` | Normal | `line_ending_selector::Toggle`: choose LF/CRLF and save. |
+| `<Space>fe` | Normal | `encoding_selector::Toggle`: reload a saved file with the chosen encoding. This does not reproduce Neovim's Save with Encoding workflow; remote-server files are unsupported. |
+| `<Space>pp` | Normal | Open project search with the standalone uppercase marker regex for FIXME, ERROR, HACK, WARN, TODO, NOTE, HINT, and INFO; ignored files stay excluded. Press Enter to run the search. |
+| `<Space>mf` | Normal | Focus the project panel as a MiniFiles substitute; editable directory columns are unavailable. |
+| `<Space>gU` | Normal | `git::UnstageFile`: unstage the whole current file. |
+| `<Space>gP` | Normal | Expand/collapse selected diff hunks, the same approximation used by `<Space>gp`. |
+| `<Space>gt` / `<Space>gT` | Normal | Focus the Git panel / open uncommitted changes across the project. These approximate Gitsigns' plain/unified changes trees. |
+
+Sneak is a two-character jump without Leap's target labels. Multiline find/till searches are Zed's
+native motions, so their range and matching behavior can differ from Leap. Text objects such as
+`af`, `it`, and `i<` retain Zed's defaults. The existing `secondary-alt-h/l` indentation shortcuts
+use direct Vim actions; in Visual mode they reselect with `gv` without invoking the new jump keys.
+
+Only exchange is added from MiniOperators. Its evaluate, multiply, replace, and sort prefixes are
+left unmapped; the existing editor-prefix line-sort shortcut remains available. MiniBracketed is
+not copied: Zed keeps its bracket keys, including `[x`/`]x` for syntax selection and `[m`/`]m` for
+method navigation.
 
 ## Editor and panel shortcuts
 
@@ -92,7 +119,7 @@ selected completion item, so it is not used as a substitute.
   movement, `<Space>cd` window-local cwd, terminal split variants, and custom `:BTab`, `:Cwd`,
   `:Twd`, `:Lwd`, and `:CTags` commands need behavior outside a Zed keymap.
 - MiniSplitjoin's syntax-aware `S/J`, MiniPairs' Insert-mode pairing rules, MiniSurround's
-  `sf/sF/sh` target search, MiniPick's history and Hipatterns pickers, auto-save toggle,
+  `sf/sF/sh` target search, fzf-lua's command-history picker, auto-save toggle,
   MiniTrailspace trim, Visual Whitespace toggle, and Snipe's tagged menu have no equivalent keymap
   action. Existing Zed editing remains available.
 - LSP type hierarchy, document highlight/clear references, global inlay-hint and symbol-usage
@@ -106,4 +133,4 @@ The action names and keymap contexts above were checked against Zed's
 [key binding guide](https://zed.dev/docs/key-bindings),
 [action list](https://zed.dev/docs/all-actions), and
 [default Vim keymap](https://github.com/zed-industries/zed/blob/main/assets/keymaps/vim.json).
-Runtime behavior still needs a check inside Zed, which is not installed in this workspace.
+Syntax and binding structure are checked locally. Runtime behavior still needs a check inside Zed.
