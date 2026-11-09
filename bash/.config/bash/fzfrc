@@ -1,4 +1,5 @@
---height=~60%
+--height=65%
+--min-height=10
 --layout=reverse
 --scroll-off=5
 --popup=center,90%,60%
@@ -9,11 +10,11 @@
 --prompt='∼ '
 --pointer='▶'
 --marker='✓'
---preview-window=up,50%,border-bottom
+--preview-window=up,60%,border-bottom
 --bind='alt-w:toggle-preview-wrap'
 --bind='alt-l:toggle-wrap'
 --bind='alt-p:toggle-preview'
---bind='alt-o:change-preview-window(right,60%,border-left|up,50%,border-bottom)'
+--bind='alt-o:change-preview-window(right,60%,border-left|up,60%,border-bottom)'
 --bind='ctrl-b:preview-page-up'
 --bind='ctrl-f:preview-page-down'
 --bind='ctrl-u:half-page-up'

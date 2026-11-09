@@ -100,15 +100,11 @@ function Find-FzfPath {
     $preview = 'if "%FZF_PROMPT%"=="Files> " (type {}) else (dir {})'
   }
 
-  $fzfOptions = @()
-  # The initial reload starts empty, so adaptive height would stay too short.
-  if (-not $env:TMUX -and -not $env:ZELLIJ) { $fzfOptions += '--height=60%' }
-
   $previousShell = $env:SHELL
   # Unset SHELL so fzf uses cmd.exe for the reload and preview commands above.
   $env:SHELL = $null
   try {
-    $path = fzf @fzfOptions --prompt 'Files> ' --header-first `
+    $path = fzf --prompt 'Files> ' --header-first `
       --header 'CTRL-S: Switch between Files/Directories' `
       --bind $initial --bind $toggle --preview $preview
   }
@@ -138,8 +134,6 @@ function Find-FzfContent {
     '--bind', "change:reload:if defined FZF_QUERY ($rg {q} || cd .) else (cd .)",
     '--bind', "start:reload:if defined FZF_QUERY ($rg {q} || cd .) else (cd .)"
   )
-  # Ripgrep reload also starts empty, so use a fixed height without a popup.
-  if (-not $env:TMUX -and -not $env:ZELLIJ) { $options += '--height=60%' }
   if (Test-Command bat) {
     $options += @(
       '--preview-label', 'Preview',

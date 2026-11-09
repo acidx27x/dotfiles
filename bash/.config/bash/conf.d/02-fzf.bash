@@ -369,13 +369,6 @@ _fzf_get_path_using_rg() {
     --bind "change:reload:sleep 0.1; [[ -n {q} ]] && $rg_command {q} || true"
   )
 
-  # Keep the global popup configuration inside tmux/Zellij. Outside a
-  # multiplexer, override the global adaptive --height=~60% with a fixed
-  # height because reload-driven rg input starts nearly empty.
-  if [[ -z "${TMUX:-}" && -z "${ZELLIJ:-}" ]]; then
-    fzf_options+=(--height=60%)
-  fi
-
   if [[ -n "$_fzf_bat_command" ]]; then
     fzf_options+=(
       --preview-label 'Preview'
