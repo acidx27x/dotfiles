@@ -6,6 +6,9 @@ $configRoot = Join-Path $env:USERPROFILE '.config\powershell'
 . (Join-Path $configRoot 'utils.ps1')
 . (Join-Path $configRoot 'env.ps1')
 . (Join-Path $configRoot 'functions.ps1')
+if ($IsWindows) {
+  . (Join-Path $configRoot 'wsl.ps1')
+}
 
 if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
   if (-not $env:NO_COLOR -and $env:TERM -ne 'dumb') {
