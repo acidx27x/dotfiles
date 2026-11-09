@@ -9,7 +9,8 @@ function Get-ShellFunction {
   Get-Command -CommandType Function |
     Where-Object {
       $_.Source -eq '' -and $_.Name -notlike '_*' -and
-      $_.Name -notin 'Invoke-FzfPathAction', 'Invoke-FzfKeyBinding'
+      $_.Name -notin 'Invoke-FzfPathAction', 'Invoke-FzfKeyBinding',
+      'Get-WslAddress', 'Set-WslTcpForward', 'Set-WslInboundRule'
     } |
     Sort-Object -Property Name |
     Select-Object -Property Name, Definition
