@@ -32,6 +32,14 @@ elif has-cmd batcat; then
   _fzf_bat_command=batcat
 fi
 
+if [[ -n "$_fzf_bat_command" ]]; then
+  _fzf_default_preview="[[ -f {} ]] && $_fzf_bat_command --color=always -n --line-range :500 -- {}"
+else
+  _fzf_default_preview='[[ -f {} ]] && head -n 500 < {}'
+fi
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }--preview '$_fzf_default_preview'"
+unset _fzf_default_preview
+
 if has-cmd eza; then
   _fzf_eza_command=eza
 fi

@@ -7,10 +7,18 @@ if (-not (Test-Command fzf)) {
   return
 }
 
+$preview = if (Test-Command bat) {
+  'if exist {} (bat --color=always -n --line-range :500 -- {})'
+}
+else {
+  'if exist {} (type {})'
+}
+$env:FZF_DEFAULT_OPTS = "$env:FZF_DEFAULT_OPTS --preview '$preview'".Trim()
+
 if (Get-Module -ListAvailable -Name PSFzf) {
   Import-Module PSReadLine -ErrorAction SilentlyContinue
   Import-Module PSFzf
-  Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordSetLocation 'Alt+c'
+  Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+x,Ctrl+t' -PSReadlineChordSetLocation 'Alt+c'
 }
 
 function Invoke-FzfPathAction {
