@@ -7,6 +7,7 @@ tap "wezterm/wezterm-linuxbrew", trusted: true if OS.linux?
 #
 
 brew "hello"
+brew "bbrew"
 
 brew "neovim", args: ["HEAD"]
 
@@ -33,6 +34,7 @@ brew "bash-completion@2"     if OS.linux?
 brew "blesh", args: ["HEAD"] if OS.linux?
 brew "bash-preexec"          if OS.linux?
 # Mac
+brew "coreutils"               if OS.mac?
 brew "zsh"                     if OS.mac?
 brew "zsh-autocomplete"        if OS.mac?
 brew "zsh-autosuggestions"     if OS.mac?
@@ -66,6 +68,7 @@ brew "zoxide"
 brew "wezterm", args: ["HEAD"] if OS.linux?
 cask "wezterm@nightly" if OS.mac?
 brew "herdr"
+brew "sesh"
 brew "tmux"
 brew "zellij"
 #
@@ -106,6 +109,7 @@ cask "font-fira-code-nerd-font"
 #
 
 # Utils
+brew "ast-grep"
 brew "btop"
 brew "curl"
 brew "glow"

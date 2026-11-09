@@ -78,6 +78,7 @@
     { "Name": "FiraCode-NF", "Source": "nerd-fonts", "Info": "" },
 
     // Utils
+    { "Name": "ast-grep", "Source": "main", "Info": "" },
     { "Name": "btop", "Source": "main", "Info": "" },
     { "Name": "curl", "Source": "main", "Info": "" },
     { "Name": "wget", "Source": "main", "Info": "" },
