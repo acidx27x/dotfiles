@@ -43,11 +43,12 @@ subset of Bash and Zsh features; do not assume full parity is required.
   PowerShell loads only `*.ps1` files from those directories during interactive startup.
 - Start configuration modules with their installed path and a concise purpose comment.
 - Reuse Bash/Zsh helpers such as `has-cmd`, `shell-init`, `source-if-exists`, `source-first`,
-  `source-conf-dirs`, and `path-prepend`, or PowerShell's `Test-Command` and `Get-ConfigScripts`,
+  `source-conf-dirs`, and `path-prepend`, or PowerShell's `Test-Command` and `Get-ConfigScript`,
   after the defining file has been loaded.
 - Guard optional programs.
 - Require explicit confirmation before destructive operations.
-- Keep `functions-help` or `utils-help` accurate when adding or removing user-facing helpers.
+- Keep Bash/Zsh `functions-help` or `utils-help`, and PowerShell `Get-ShellFunction`, accurate when
+  adding or removing user-facing helpers. Keep internal helpers out of user-facing catalogs.
 - Preserve each shell's existing environment paths and local override behavior.
 - Keep platform-specific function modules separate and source them only when the platform is
   detected, so unsupported helpers do not enter other shell environments.
@@ -97,8 +98,22 @@ subset of Bash and Zsh features; do not assume full parity is required.
 - Target PowerShell 7. The standard `Microsoft.PowerShell_profile.ps1` dot-sources
   `~/.config/powershell/profile.ps1`, which loads `utils.ps1`, `env.ps1`, and `functions.ps1` before
   interactive `conf.d` and `conf.local.d` modules.
+- Name functions with approved verbs (`Get-Verb`) and singular, descriptive nouns in PascalCase,
+  including internal helpers: `Enable-Proxy`, `Get-ConfigScript`, `Invoke-FzfPathAction`.
+- Preserve existing short interactive commands as aliases to native function names, using
+  `Set-Alias -Name ... -Value ...`. Use full command and parameter names in scripts and key
+  bindings.
+  When renaming, update callers, diagnostics, catalogs, and `windows.md` examples together.
+- Expose helper options as typed PascalCase parameters with descriptive names, such as `HttpProxy`,
+  `BypassList`, `Query`, and `LineNumber`. Keep local variables in camelCase. Preserve native tool
+  flags when forwarding arguments or constructing external commands.
+- Use `param()` and parameter attributes for binding and validation rather than parsing shell-style
+  options manually. Use `[CmdletBinding(PositionalBinding = $false)]` for helpers with named-only
+  options; retain positional arguments where they are part of the interactive interface.
 - Use PowerShell commands and automatic variables rather than translating Bash/Zsh syntax. Use
   `$PSScriptRoot` for paths relative to a script and `Join-Path` for path construction.
+- Derive function names in diagnostics from `$MyInvocation.MyCommand.Name`. Prefer splatting for
+  long PowerShell invocations over backtick continuations.
 - Use `Test-Command` for optional executables and check module availability before importing
   optional modules. Preserve native PowerShell completion and the existing PSFzf/Atuin key bindings.
 - Forward function arguments with `@args` where the existing wrapper accepts arbitrary arguments.
@@ -127,6 +142,10 @@ subset of Bash and Zsh features; do not assume full parity is required.
 - Run `zsh -n` on every modified Zsh file when Zsh is available; report when it is skipped.
 - Parse modified PowerShell files with PowerShell 7 and check formatting through the configured
   dprint PowerShell formatter when its dependencies are available; report unavailable checks.
+- For PowerShell naming or parameter changes, run targeted PSScriptAnalyzer checks such as
+  `PSUseApprovedVerbs`, `PSUseSingularNouns`, `PSAvoidUsingCmdletAliases`, and `PSReservedParams`.
+  The repository formatter settings enable formatting rules only. Also check alias resolution,
+  named and retained positional arguments, argument forwarding, and affected profile callers.
 - Run `git diff --check` and scan modified text for lines longer than 100 columns.
 - Exercise optional-command branches and compare generated strings when changing shell
   initialization, fzf previews, bindings, or reload actions.
