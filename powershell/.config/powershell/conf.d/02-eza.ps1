@@ -15,11 +15,18 @@ $ezaOptions = @(
 )
 
 Remove-Item Alias:ls -ErrorAction SilentlyContinue
-function ls { eza -1 @ezaOptions @args }
-function l { eza -lh @ezaOptions @args }
-function la { eza -A @ezaOptions @args }
-function ll { eza -lhag @ezaOptions @args }
-function ldr { eza -lhD @ezaOptions @args }
-function lt { eza -T @ezaOptions @args }
-function llt { eza -lagT @ezaOptions @args }
-Set-Alias tree lt
+function Get-EzaItem { eza -1 @ezaOptions @args }
+function Get-EzaLongItem { eza -lh @ezaOptions @args }
+function Get-EzaHiddenItem { eza -A @ezaOptions @args }
+function Get-EzaDetailedItem { eza -lhag @ezaOptions @args }
+function Get-EzaDirectory { eza -lhD @ezaOptions @args }
+function Get-EzaTree { eza -T @ezaOptions @args }
+function Get-EzaDetailedTree { eza -lagT @ezaOptions @args }
+Set-Alias -Name ls -Value Get-EzaItem
+Set-Alias -Name l -Value Get-EzaLongItem
+Set-Alias -Name la -Value Get-EzaHiddenItem
+Set-Alias -Name ll -Value Get-EzaDetailedItem
+Set-Alias -Name ldr -Value Get-EzaDirectory
+Set-Alias -Name lt -Value Get-EzaTree
+Set-Alias -Name llt -Value Get-EzaDetailedTree
+Set-Alias -Name tree -Value Get-EzaTree

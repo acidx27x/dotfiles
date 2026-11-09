@@ -2,7 +2,8 @@
 # bat help rendering alias.
 
 if (Test-Command bat) {
-  function bathelp {
+  function Show-BatHelp {
     bat --plain --language=help @args
   }
+  Set-Alias -Name bathelp -Value Show-BatHelp
 }

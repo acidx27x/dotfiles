@@ -1,35 +1,38 @@
 # ~/.config/powershell/functions.ps1
 # User-facing PowerShell functions and aliases.
 
-function current-shell {
+function Get-CurrentShell {
   "PowerShell $($PSVersionTable.PSVersion)"
 }
 
-function functions-help {
+function Get-ShellFunction {
   Get-Command -CommandType Function |
-    Where-Object { $_.Source -eq '' -and $_.Name -notlike '_*' } |
+    Where-Object {
+      $_.Source -eq '' -and $_.Name -notlike '_*' -and
+      $_.Name -notin 'Invoke-FzfPathAction', 'Invoke-FzfKeyBinding'
+    } |
     Sort-Object -Property Name |
     Select-Object -Property Name, Definition
 }
 
-function lg {
+function Start-Lazygit {
   if (Test-Command lazygit) {
     lazygit @args
   }
 }
 
-function hl {
+function Show-Highlight {
   if (Test-Command rg) {
     rg --passthru @args
   }
 }
 
-function C {
-  Set-Clipboard @args
-}
+Set-Alias -Name lg -Value Start-Lazygit
+Set-Alias -Name hl -Value Show-Highlight
+Set-Alias -Name C -Value Set-Clipboard
 
 # Print common proxy variables, redacting URL credentials.
-function proxy-status {
+function Get-Proxy {
   [CmdletBinding(PositionalBinding = $false)]
   param()
 
@@ -46,19 +49,20 @@ function proxy-status {
 }
 
 # Replace proxy endpoints, preserving bypass lists unless explicitly supplied.
-function proxy-enable {
+function Enable-Proxy {
   [CmdletBinding(PositionalBinding = $false)]
   param(
-    [ValidateNotNullOrEmpty()][string] $Http,
-    [ValidateNotNullOrEmpty()][string] $Https,
-    [ValidateNotNullOrEmpty()][string] $Socks,
-    [AllowEmptyString()][string] $NoProxy
+    [ValidateNotNullOrEmpty()][string] $HttpProxy,
+    [ValidateNotNullOrEmpty()][string] $HttpsProxy,
+    [ValidateNotNullOrEmpty()][string] $SocksProxy,
+    [AllowEmptyString()][string] $BypassList
   )
 
-  if (-not ($PSBoundParameters.ContainsKey('Http') -or
-      $PSBoundParameters.ContainsKey('Https') -or
-      $PSBoundParameters.ContainsKey('Socks'))) {
-    throw "$($MyInvocation.MyCommand.Name): supply at least one of -Http, -Https, or -Socks."
+  if (-not ($PSBoundParameters.ContainsKey('HttpProxy') -or
+      $PSBoundParameters.ContainsKey('HttpsProxy') -or
+      $PSBoundParameters.ContainsKey('SocksProxy'))) {
+    throw "$($MyInvocation.MyCommand.Name): supply at least one of " +
+    '-HttpProxy, -HttpsProxy, or -SocksProxy.'
   }
 
   # IWebProxy can be called on .NET worker threads without a PowerShell runspace.
@@ -139,51 +143,55 @@ public sealed class DotfilesProcessProxy : IWebProxy, ICredentials
 '@
   }
 
-  $previous = @(proxy-status)
+  $previous = @(Get-Proxy)
   foreach ($name in @(
       'http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY', 'all_proxy', 'ALL_PROXY'
     )) {
     Remove-Item -LiteralPath "Env:$name" -ErrorAction Ignore
   }
-  if ($PSBoundParameters.ContainsKey('Http')) {
-    $env:http_proxy = $env:HTTP_PROXY = $Http
+  if ($PSBoundParameters.ContainsKey('HttpProxy')) {
+    $env:http_proxy = $env:HTTP_PROXY = $HttpProxy
   }
-  if ($PSBoundParameters.ContainsKey('Https')) {
-    $env:https_proxy = $env:HTTPS_PROXY = $Https
+  if ($PSBoundParameters.ContainsKey('HttpsProxy')) {
+    $env:https_proxy = $env:HTTPS_PROXY = $HttpsProxy
   }
-  if ($PSBoundParameters.ContainsKey('Socks')) {
-    $env:all_proxy = $env:ALL_PROXY = $Socks
+  if ($PSBoundParameters.ContainsKey('SocksProxy')) {
+    $env:all_proxy = $env:ALL_PROXY = $SocksProxy
   }
-  if ($PSBoundParameters.ContainsKey('NoProxy')) {
-    $env:no_proxy = $env:NO_PROXY = $NoProxy
+  if ($PSBoundParameters.ContainsKey('BypassList')) {
+    $env:no_proxy = $env:NO_PROXY = $BypassList
   }
 
   [System.Net.Http.HttpClient]::DefaultProxy = [DotfilesProcessProxy]::new(
-    $Http, $Https, $Socks, $env:no_proxy
+    $HttpProxy, $HttpsProxy, $SocksProxy, $env:no_proxy
   )
 
   'Proxy enabled.'
   'Previous proxy settings:'
   $previous
   'Current proxy settings:'
-  proxy-status
+  Get-Proxy
 }
 
 # Enable the local mixed-protocol listener used by native Karing installations.
-function karing-proxy-enable {
+function Enable-KaringProxy {
   [CmdletBinding(PositionalBinding = $false)]
   param()
 
-  proxy-enable -Http 'http://127.0.0.1:3067' -Https 'http://127.0.0.1:3067' `
-    -Socks 'socks5h://127.0.0.1:3067'
+  $proxyParameters = @{
+    HttpProxy  = 'http://127.0.0.1:3067'
+    HttpsProxy = 'http://127.0.0.1:3067'
+    SocksProxy = 'socks5h://127.0.0.1:3067'
+  }
+  Enable-Proxy @proxyParameters
 }
 
 # Disable endpoints while preserving bypass lists.
-function proxy-disable {
+function Disable-Proxy {
   [CmdletBinding(PositionalBinding = $false)]
   param()
 
-  $previous = @(proxy-status)
+  $previous = @(Get-Proxy)
   foreach ($name in @(
       'http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY', 'all_proxy', 'ALL_PROXY'
     )) {
@@ -195,5 +203,5 @@ function proxy-disable {
   'Previous proxy settings:'
   $previous
   'Current proxy settings:'
-  proxy-status
+  Get-Proxy
 }

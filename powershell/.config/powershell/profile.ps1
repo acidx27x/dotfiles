@@ -14,7 +14,7 @@ if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
   }
 
   foreach ($configDirectory in 'conf.d', 'conf.local.d') {
-    foreach ($configScript in (Get-ConfigScripts (Join-Path $configRoot $configDirectory))) {
+    foreach ($configScript in (Get-ConfigScript -Path (Join-Path $configRoot $configDirectory))) {
       . $configScript
     }
   }

@@ -264,9 +264,14 @@ pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Package powershell
 The profile initializes Scoop tools when available: Atuin, bat, Broot, eza, fzf, Starship, zoxide,
 and direnv. PSFzf adds Ctrl+T file selection and Alt+C directory selection; Atuin keeps Ctrl+R
 history search. Native PowerShell Tab completion remains active. The Scoopfile installs PSFzf from
-Extras. Use Ctrl+X Ctrl+F to run `ffd` for file and directory actions, or Ctrl+X Ctrl+G to run `frg`
-for interactive ripgrep search and actions. `ffd` uses Ctrl+S to switch between files and
-directories. Local overrides can be placed in `%USERPROFILE%\.config\powershell\conf.local.d`.
+Extras. Use Ctrl+X Ctrl+F to run `Find-FzfPath` (`ffd`) for file and directory actions, or
+Ctrl+X Ctrl+G to run `Find-FzfContent` (`frg`) for interactive ripgrep search and actions.
+`Find-FzfPath` uses Ctrl+S to switch between files and directories. Local overrides can be placed in
+`%USERPROFILE%\.config\powershell\conf.local.d`.
+
+Use `Get-CurrentShell` to print the shell version and `Get-ShellFunction` to list available
+functions. Helpers use PowerShell Verb-Noun names; short commands such as `lg`, `hl`, `bathelp`,
+`br`, and the eza listing commands remain available as aliases.
 
 Atuin records new commands after the profile is loaded. To import existing PowerShell history once,
 run:
@@ -279,12 +284,12 @@ Native proxy helpers update the current process environment, inherited by child 
 refresh .NET's default proxy for new HTTP clients in the current PowerShell session:
 
 ```powershell
-proxy-enable -Http 'http://127.0.0.1:7890' -Https 'http://127.0.0.1:7890' `
-  -Socks 'socks5h://127.0.0.1:7891' -NoProxy 'localhost,127.0.0.1,::1'
-proxy-enable -Https 'http://proxy.example:8080' # Removes HTTP/SOCKS; preserves bypasses.
-karing-proxy-enable # Native Karing on port 3067; preserves bypasses.
-proxy-status # Displays eight variables with URL credentials redacted.
-proxy-disable # Removes endpoints; preserves bypasses.
+Enable-Proxy -HttpProxy 'http://127.0.0.1:7890' -HttpsProxy 'http://127.0.0.1:7890' `
+  -SocksProxy 'socks5h://127.0.0.1:7891' -BypassList 'localhost,127.0.0.1,::1'
+Enable-Proxy -HttpsProxy 'http://proxy.example:8080' # Removes HTTP/SOCKS; preserves bypasses.
+Enable-KaringProxy # Native Karing on port 3067; preserves bypasses.
+Get-Proxy # Displays eight variables with URL credentials redacted.
+Disable-Proxy # Removes endpoints; preserves bypasses.
 ```
 
 `Invoke-RestMethod` and `Invoke-WebRequest` use this .NET default unless overridden by `-Proxy`,
@@ -296,8 +301,8 @@ entries match the domain itself and its subdomains. SOCKS uses `socks5` internal
 the environment keeps the supplied `socks5h` URL. Invalid endpoint strings remain in the environment
 and are parsed only when a .NET request uses them.
 
-Enable replaces all endpoints; omitted protocols are removed. Omitting `-NoProxy` preserves existing
-bypass values; supplying it replaces both variants. `-NoProxy ''` clears bypasses: PowerShell
+Enable replaces all endpoints; omitted protocols are removed. Omitting `-BypassList` preserves
+existing bypass values; supplying it replaces both variants. `-BypassList ''` clears bypasses: PowerShell
 7.0–7.4 removes the variables, while 7.5+ retains empty values. See Microsoft's
 [environment-variable documentation](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables).
 On Windows, uppercase and lowercase names refer to the same variable, so paired status entries show

@@ -2,7 +2,7 @@
 # Broot directory switching.
 
 if (Test-Command broot) {
-  function br {
+  function Invoke-Broot {
     $cmdFile = New-TemporaryFile
 
     try {
@@ -16,4 +16,5 @@ if (Test-Command broot) {
       Remove-Item -LiteralPath $cmdFile.FullName -Force
     }
   }
+  Set-Alias -Name br -Value Invoke-Broot
 }

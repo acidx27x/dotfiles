@@ -7,7 +7,7 @@ function Test-Command {
   return $null -ne (Get-Command $Name -ErrorAction SilentlyContinue)
 }
 
-function Get-ConfigScripts {
+function Get-ConfigScript {
   param([Parameter(Mandatory)][string] $Path)
 
   if (-not (Test-Path -LiteralPath $Path -PathType Container)) {

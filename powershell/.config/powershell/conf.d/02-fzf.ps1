@@ -13,8 +13,8 @@ if (Get-Module -ListAvailable -Name PSFzf) {
   Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordSetLocation 'Alt+c'
 }
 
-function _fzf_open_path {
-  param([string] $Path, [string] $Line)
+function Invoke-FzfPathAction {
+  param([string] $Path, [string] $LineNumber)
 
   if (-not $Path -or -not (Test-Path -LiteralPath $Path)) {
     return
@@ -45,8 +45,8 @@ function _fzf_open_path {
       }
     }
     'nvim' {
-      if ($Line -match '^\d+$' -and (Test-Path -LiteralPath $Path -PathType Leaf)) {
-        nvim "+$Line" -- $Path
+      if ($LineNumber -match '^\d+$' -and (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        nvim "+$LineNumber" -- $Path
       }
       else {
         nvim -- $Path
@@ -63,9 +63,9 @@ function _fzf_open_path {
 }
 
 # fzf uses SHELL for child commands; these pickers use Windows cmd syntax.
-function ffd {
+function Find-FzfPath {
   if (-not (Test-Command fd)) {
-    Write-Warning 'ffd: fd is required'
+    Write-Warning "$($MyInvocation.MyCommand.Name): fd is required"
     return
   }
 
@@ -107,23 +107,25 @@ function ffd {
   finally {
     $env:SHELL = $previousShell
   }
-  if ($LASTEXITCODE -eq 0 -and $path) { _fzf_open_path $path }
+  if ($LASTEXITCODE -eq 0 -and $path) { Invoke-FzfPathAction -Path $path }
 }
 
-function frg {
+function Find-FzfContent {
+  param([Parameter(ValueFromRemainingArguments)][string[]] $Query)
+
   if (-not (Test-Command rg)) {
-    Write-Warning 'frg: rg is required'
+    Write-Warning "$($MyInvocation.MyCommand.Name): rg is required"
     return
   }
 
-  $query = $args -join ' '
+  $searchQuery = $Query -join ' '
   $rg = 'rg --column --line-number --no-heading --with-filename --color=always ' +
   "--colors path:none --smart-case --hidden --no-messages " +
   '--glob "!**/.git/**" --glob "!**/node_modules/**" ' +
   '--field-match-separator=\t --'
   $options = @(
     '--ansi', '--disabled', '--delimiter=\t', '--with-nth=1,2,4..',
-    '--query', $query, '--prompt', 'rg> ', '--header-first',
+    '--query', $searchQuery, '--prompt', 'rg> ', '--header-first',
     '--header', 'Type a ripgrep regex; Enter: select match',
     '--bind', "change:reload:if defined FZF_QUERY ($rg {q} || cd .) else (cd .)",
     '--bind', "start:reload:if defined FZF_QUERY ($rg {q} || cd .) else (cd .)"
@@ -149,13 +151,13 @@ function frg {
   if ($LASTEXITCODE -ne 0 -or -not $match) { return }
   $fields = $match -split "`t", 3
   if ($fields.Count -lt 3 -or $fields[1] -notmatch '^\d+$') {
-    Write-Warning 'frg: invalid ripgrep selection'
+    Write-Warning "$($MyInvocation.MyCommand.Name): invalid ripgrep selection"
     return
   }
-  _fzf_open_path $fields[0] $fields[1]
+  Invoke-FzfPathAction -Path $fields[0] -LineNumber $fields[1]
 }
 
-function _fzf_run_keybinding {
+function Invoke-FzfKeyBinding {
   param([string] $Command)
 
   $line = ''
@@ -173,12 +175,15 @@ function _fzf_run_keybinding {
   [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
 }
 
+Set-Alias -Name ffd -Value Find-FzfPath
+Set-Alias -Name frg -Value Find-FzfContent
+
 if (Get-Module -ListAvailable -Name PSReadLine) {
   Import-Module PSReadLine -ErrorAction SilentlyContinue
   Set-PSReadLineKeyHandler -Chord 'Ctrl+x,Ctrl+f' -ScriptBlock {
-    _fzf_run_keybinding 'ffd'
+    Invoke-FzfKeyBinding -Command 'Find-FzfPath'
   }
   Set-PSReadLineKeyHandler -Chord 'Ctrl+x,Ctrl+g' -ScriptBlock {
-    _fzf_run_keybinding 'frg'
+    Invoke-FzfKeyBinding -Command 'Find-FzfContent'
   }
 }
