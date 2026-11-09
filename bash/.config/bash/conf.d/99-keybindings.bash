@@ -23,6 +23,9 @@ if [[ ${BLE_VERSION:-} ]]; then
   return 0
 fi
 
+# ble.sh cannot import Readline's undo widget in vi insert mode.
+bind -m vi-insert '"\C-_": undo'
+
 # Ctrl-X Ctrl-F -> select a file or directory with fzf.
 if declare -F ffd >/dev/null; then
   bind -m vi-insert -x '"\C-x\C-f":ffd'

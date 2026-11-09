@@ -21,12 +21,31 @@ TAB: menu-complete
 # Shift-Tab cycles backwards.
 "\e[Z": menu-complete-backward
 
+# Fish/Emacs editing keys in vi insert mode.
+"\C-a": beginning-of-line
+"\C-e": end-of-line
+"\C-b": backward-char
+"\C-f": forward-char
+"\eb": backward-word
+"\ef": forward-word
+"\C-u": unix-line-discard
+"\C-k": kill-line
+"\C-w": backward-kill-word
+"\ed": kill-word
+"\e\C-?": backward-kill-word
+"\C-y": yank
+"\ey": yank-pop
+"\C-t": transpose-chars
+"\et": transpose-words
+"\eu": upcase-word
+
 # Browse history without leaving insert mode.
 "\C-p": previous-history
 "\C-n": next-history
 
 # Edit the complete command, including multiple lines, in $VISUAL or $EDITOR.
 "\C-x\C-e": edit-and-execute-command
+"\ee": edit-and-execute-command
 
 "\e[A": history-search-backward
 "\e[B": history-search-forward

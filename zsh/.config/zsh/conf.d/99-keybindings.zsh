@@ -42,6 +42,21 @@ zle -N ._zvm_accept_line _zvm_accept_line
 zvm_bindkey viins '^M' ._zvm_accept_line
 zvm_bindkey viins '^J' ._zvm_accept_line
 
+# Fish/Emacs editing keys in vi insert mode.
+zvm_bindkey viins '^A' beginning-of-line
+zvm_bindkey viins '^E' end-of-line
+zvm_bindkey viins '^B' backward-char
+zvm_bindkey viins '^F' forward-char
+zvm_bindkey viins '^U' backward-kill-line
+zvm_bindkey viins '^K' kill-line
+zvm_bindkey viins '^W' backward-kill-word
+zvm_bindkey viins '^Y' yank
+zvm_bindkey viins '^[y' yank-pop
+zvm_bindkey viins '^T' transpose-chars
+zvm_bindkey viins '^[t' transpose-words
+zvm_bindkey viins '^[u' up-case-word
+zvm_bindkey viins '^_' undo
+
 # Browse history directly, including when the current command spans lines.
 zvm_bindkey viins '^P' up-history
 zvm_bindkey viins '^N' down-history
@@ -50,6 +65,7 @@ zvm_bindkey viins '^N' down-history
 zvm_bindkey viins '^[b' backward-word
 zvm_bindkey viins '^[f' emacs-forward-word
 zvm_bindkey viins '^[d' kill-word
+zvm_bindkey viins '^[^?' backward-kill-word
 
 # zvm edit buffer workaround
 autoload -Uz edit-command-line
@@ -62,6 +78,7 @@ _my_edit_command_line() {
 zvm_define_widget _my_edit_command_line
 
 zvm_bindkey viins '^X^E' _my_edit_command_line
+zvm_bindkey viins '^[e' _my_edit_command_line
 
 if (($+functions[ffd])); then
   _my_ffd() {

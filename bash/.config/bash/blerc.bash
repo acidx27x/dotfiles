@@ -103,9 +103,31 @@ _blerc_vi_load_hook() {
   ble-bind -m vi_imap -f C-c discard-line
   ble-bind -m vi_nmap -f C-c discard-line
 
+  # Fish/Emacs editing keys in vi insert mode.
+  ble-bind -m vi_imap -f C-a '@nomarked beginning-of-line'
+  ble-bind -m vi_imap -f C-e '@nomarked end-of-line'
+  ble-bind -m vi_imap -f C-b '@nomarked backward-char'
+  ble-bind -m vi_imap -f C-f '@nomarked forward-char'
+  ble-bind -m vi_imap -f M-b '@nomarked backward-cword'
+  ble-bind -m vi_imap -f M-f '@nomarked forward-cword'
+  ble-bind -m vi_imap -f C-u kill-backward-line
+  ble-bind -m vi_imap -f C-k kill-forward-line
+  ble-bind -m vi_imap -f C-w kill-backward-cword
+  ble-bind -m vi_imap -f M-d kill-forward-cword
+  ble-bind -m vi_imap -f M-DEL kill-backward-cword
+  ble-bind -m vi_imap -f M-BS kill-backward-cword
+  ble-bind -m vi_imap -f C-y yank
+  ble-bind -m vi_imap -f M-y yank-pop
+  ble-bind -m vi_imap -f C-t transpose-chars
+  ble-bind -m vi_imap -f M-t transpose-ewords
+  ble-bind -m vi_imap -f M-u upcase-eword
+  ble-bind -m vi_imap -f C-_ vi_nmap/undo
+  ble-bind -m vi_imap -f C-p history-prev
+  ble-bind -m vi_imap -f C-n history-next
+
   # Browse history directly, including when the current command spans lines.
-  ble-bind -m vi_nmap -f C-p vi-command/history-prev
-  ble-bind -m vi_nmap -f C-n vi-command/history-next
+  ble-bind -m vi_nmap -f C-p history-prev
+  ble-bind -m vi_nmap -f C-n history-next
 
   # Navigate logical lines first; the native widgets fall back to history at
   # the top and bottom of the current input.
@@ -114,6 +136,7 @@ _blerc_vi_load_hook() {
 
   # Open the external editor with Ctrl-X Ctrl-E and return for review.
   ble-bind -m vi_imap -f 'C-x C-e' blerc/edit-in-external-editor
+  ble-bind -m vi_imap -f M-e blerc/edit-in-external-editor
   ble-bind -m vi_nmap -f 'C-x C-e' \
     'vi_nmap/@edit blerc/edit-in-external-editor'
 }
