@@ -1,0 +1,70 @@
+command_alias_start_index: 200
+keybindings:
+  prefix_table: Space
+title:
+  style: align=centre,bold
+  prefix: tmux
+  prefix_style: fg=green,align=centre,bold
+position:
+  x: R
+  y: P
+custom_variables: []
+macros: []
+items:
+  - name: Panes
+    key: p
+    menu:
+      - name: Split right
+        key: v
+        command: 'split-window -h -c "#{pane_current_path}"'
+      - name: Split below
+        key: s
+        command: 'split-window -v -c "#{pane_current_path}"'
+      - name: Left
+        key: h
+        command: select-pane -L
+      - name: Down
+        key: j
+        command: select-pane -D
+      - name: Up
+        key: k
+        command: select-pane -U
+      - name: Right
+        key: l
+        command: select-pane -R
+      - name: Zoom
+        key: z
+        command: resize-pane -Z
+  - name: Windows
+    key: w
+    menu:
+      - name: New
+        key: n
+        command: 'new-window -c "#{pane_current_path}"'
+      - name: Previous
+        key: h
+        command: previous-window
+      - name: Next
+        key: l
+        command: next-window
+      - name: Choose
+        key: w
+        command: choose-tree -Zw
+  - name: Sessions (sesh)
+    key: s
+    command: 'display-popup -E -h 90% -w 50% "sesh picker -i"'
+  - name: Find (tmux-fzf)
+    key: f
+    command: 'run-shell -b "TMUX_FZF_CLIENT=#{client_tty} $HOME/.tmux/plugins/tmux-fzf/main.sh"'
+  - name: Backup
+    key: b
+    menu:
+      - name: Save
+        key: s
+        command: 'run-shell -b "$HOME/.tmux/plugins/tmux-resurrect/scripts/save.sh"'
+      - name: Restore
+        key: r
+        command: 'run-shell -b "$HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh"'
+  - name: Reload config
+    key: r
+    command: "source-file ~/.tmux.conf"

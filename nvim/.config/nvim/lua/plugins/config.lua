@@ -1,4 +1,11 @@
 -- builtin override and common group
+require("smart-splits-backend-tmux").setup({ resize_amount = 2 })
+require("smart-splits").setup({
+  resize = { amount = 2 },
+  move = { at_edge = "stop" },
+  mux = { backend = "smart-splits-backend-tmux" },
+})
+
 require("plugins.mini-notify-config") -- vim.notify
 
 require("plugins.multinput-nvim-config") -- vim.ui.input

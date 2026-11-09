@@ -44,10 +44,18 @@ map("n", "<leader>bb", "<C-^>", "buffer: alternate")
 map("n", "<leader>q", ":close<CR>", "window: close")
 map("n", "<leader>Q", ":quit<CR>", "window: quit")
 
-map("n", ("<%s-h>"):format(alt_modifier), "<C-w>h", "window: move to left (alt/meta)")
-map("n", ("<%s-j>"):format(alt_modifier), "<C-w>j", "window: move to bottom (alt/meta)")
-map("n", ("<%s-k>"):format(alt_modifier), "<C-w>k", "window: move to top (alt/meta)")
-map("n", ("<%s-l>"):format(alt_modifier), "<C-w>l", "window: move to right (alt/meta)")
+map("n", ("<%s-h>"):format(alt_modifier), function()
+  require("smart-splits").move_cursor_left()
+end, "window: move left")
+map("n", ("<%s-j>"):format(alt_modifier), function()
+  require("smart-splits").move_cursor_down()
+end, "window: move down")
+map("n", ("<%s-k>"):format(alt_modifier), function()
+  require("smart-splits").move_cursor_up()
+end, "window: move up")
+map("n", ("<%s-l>"):format(alt_modifier), function()
+  require("smart-splits").move_cursor_right()
+end, "window: move right")
 
 -- Splitting & Resizing
 map("n", "<leader>sv", ":vsplit<CR>", "window: split vertically")
@@ -110,20 +118,18 @@ map("n", "<leader>sL", "<C-w>L", "window: move split right")
 map("n", "<leader>sx", "<C-w>x", "window: exchange splits")
 map("n", "<leader>s=", "<C-w>=", "window: equalize splits")
 
-map("n", ("<%s-Up>"):format(alt_modifier), ":resize +2<CR>", "window: increase height (alt/meta)")
-map("n", ("<%s-Down>"):format(alt_modifier), ":resize -2<CR>", "window: decrease height (alt/meta)")
-map(
-  "n",
-  ("<%s-Right>"):format(alt_modifier),
-  ":vertical resize +2<CR>",
-  "window: increase width (alt/meta)"
-)
-map(
-  "n",
-  ("<%s-Left>"):format(alt_modifier),
-  ":vertical resize -2<CR>",
-  "window: decrease width (alt/meta)"
-)
+map("n", ("<%s-Up>"):format(alt_modifier), function()
+  require("smart-splits").resize_up()
+end, "window: resize up")
+map("n", ("<%s-Down>"):format(alt_modifier), function()
+  require("smart-splits").resize_down()
+end, "window: resize down")
+map("n", ("<%s-Right>"):format(alt_modifier), function()
+  require("smart-splits").resize_right()
+end, "window: resize right")
+map("n", ("<%s-Left>"):format(alt_modifier), function()
+  require("smart-splits").resize_left()
+end, "window: resize left")
 
 -- Move focused floating windows
 local function float_move(drow, dcol)
