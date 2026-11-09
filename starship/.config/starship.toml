@@ -22,8 +22,8 @@ $character\
 right_format = "$all"
 
 [username]
-disabled = true
-show_always = true
+disabled = false
+show_always = false
 style_user = "bold fg:green"
 style_root = "bold fg:red"
 format = "[$user]($style)"
@@ -31,9 +31,8 @@ format = "[$user]($style)"
 [hostname]
 disabled = false
 ssh_only = true
-ssh_symbol = "󰣀 SSH"
 style = "bold dimmed fg:green"
-format = "[@$hostname]($style)( [$ssh_symbol](bold fg:crust bg:green))"
+format = "[@$hostname]($style)"
 
 [sudo]
 disabled = false
