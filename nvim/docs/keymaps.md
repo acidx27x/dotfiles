@@ -275,6 +275,11 @@ keys. The fzf prompt uses a nonblinking bar cursor, as do other Neovim terminal 
 files, `<A-i>` to toggle ignore rules, and `<A-f>` to follow symlinks. File results can open in a
 split with `<C-s>`, a vertical split with `<C-v>`, or a tab with `<C-t>`.
 
+Grep results keep the icon and file path visible when a match line is long. In file and grep pickers,
+press `<A-l>` to toggle wrapping of result rows; `<A-w>` toggles wrapping in the preview pane.
+The preview starts above the results. Press `<A-o>` to switch it between top and right. `<F5>` still
+positions.
+
 ## Feature and lazy-loaded mappings
 
 | Keys                                                  | Mode                      | Action                                                | Owner and loading                                                   |

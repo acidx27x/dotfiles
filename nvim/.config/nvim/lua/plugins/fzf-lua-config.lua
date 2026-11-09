@@ -16,7 +16,14 @@ fzf.setup({
     row = 0.5,
     col = 0.5,
     border = "rounded",
-    preview = { layout = "flex", border = "rounded" },
+    preview = { layout = "vertical", vertical = "up:50%", border = "rounded" },
+    on_create = function(event)
+      vim.keymap.set("t", "<M-o>", function()
+        local win = require("fzf-lua.win")
+        local position = win.__SELF():normalize_preview_layout().pos
+        win.toggle_preview_cw((position == "right" or position == "down") and -1 or 1)
+      end, { buffer = event.bufnr, nowait = true })
+    end,
   },
   hls = {
     normal = "NormalFloat",
@@ -36,12 +43,14 @@ fzf.setup({
     },
     fzf = {
       true,
+      ["alt-l"] = "toggle-wrap",
       ["ctrl-f"] = "preview-page-down",
       ["ctrl-b"] = "preview-page-up",
     },
   },
   grep = {
     rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden -e",
+    fzf_opts = { ["--no-hscroll"] = true },
   },
 })
 
