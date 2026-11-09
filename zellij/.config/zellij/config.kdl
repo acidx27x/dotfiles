@@ -3,7 +3,7 @@
 //
 keybinds clear-defaults=true {
     locked {
-        bind "Alt z" {
+        bind "Alt q" {
             SwitchToMode "normal"
         }
     }
@@ -374,7 +374,7 @@ SwitchToMode "normal"
         bind "Alt f" {
             ToggleFloatingPanes
         }
-        bind "Alt z" {
+        bind "Alt q" {
             SwitchToMode "locked"
         }
         bind "Alt i" {
