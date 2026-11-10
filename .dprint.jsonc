@@ -5,7 +5,13 @@
   "useTabs": false,
   "newLineKind": "lf",
   "incremental": false,
-  "excludes": ["**/*-lock.json", "zed/**", "ssh/**"],
+  "excludes": [
+    "**/*-lock.json",
+    "zed/**",
+    "ssh/**",
+    "windows/terminal/settings.json",
+    "windows/terminal/settings.preview.json"
+  ],
   "json": {},
   "markdown": {
     "textWrap": "always",
