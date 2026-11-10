@@ -29,8 +29,11 @@ local use_rust = blink.library_available()
 
 local function get_omnifunc()
   local func = vim.bo.omnifunc
-  if func == "" or func == "v:lua.vim.lsp.omnifunc" then
+  if func == "" or func == "v:lua.vim.lsp.omnifunc" or func == vim.lsp.omnifunc then
     return nil
+  end
+  if type(func) == "function" then
+    return func
   end
   if func:match("^v:lua%.") or vim.fn.exists("*" .. func) == 1 then
     return func
