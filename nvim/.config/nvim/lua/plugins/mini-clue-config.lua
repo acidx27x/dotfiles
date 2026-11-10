@@ -23,5 +23,5 @@ clue.setup({
     clue.gen_clues.windows(),
     clue.gen_clues.z(),
   },
-  window = { delay = 500 },
+  window = { delay = 500, config = { width = 60 } },
 })

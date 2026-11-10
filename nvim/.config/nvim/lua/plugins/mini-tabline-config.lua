@@ -23,6 +23,11 @@ require("mini.tabline").setup({
       end
     end
 
+    -- Do not show hidden buffers.
+    if tab_num == 0 then
+      return ""
+    end
+
     local base_label = MiniTabline.default_format(buf_id, label)
     return string.format("▎%s[%d/%d]%s", suffix, tab_num, buf_num, base_label)
   end,

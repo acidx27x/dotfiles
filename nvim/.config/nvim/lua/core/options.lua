@@ -62,7 +62,7 @@ vim.opt.writebackup = true
 vim.opt.swapfile = true
 vim.opt.undofile = true
 
-vim.opt.timeoutlen = 500 -- Mapping sequence timeout
+vim.opt.timeoutlen = 1000 -- Mapping sequence timeout
 vim.opt.ttimeoutlen = 5 -- Key code timeout
 vim.opt.autoread = true -- Auto reload files changed outside vim
 vim.opt.autowrite = false -- Don't auto save
