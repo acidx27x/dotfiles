@@ -19,6 +19,9 @@ default_target_type = "symbolic"
 [windows-terminal.files]
 "windows/terminal/settings.json" = "${SCOOP}/persist/windows-terminal/settings/settings.json"
 
+[windows-terminal-preview.files]
+"windows/terminal/settings.preview.json" = "${SCOOP}/persist/windows-terminal-preview/settings/settings.json"
+
 [atuin.files]
 "atuin/.atuin/config.toml" = "~/.atuin/config.toml"
 "atuin/.atuin/themes" = "~/.atuin/themes"

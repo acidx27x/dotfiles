@@ -66,9 +66,11 @@ Add or remove entries in the `apps` array to change the desired package list. Ke
 and `Info` on each entry. WezTerm comes from the `versions` bucket as `wezterm-nightly`, and
 `update_nightly` keeps nightly packages eligible for normal updates.
 
-Windows Terminal comes from `extras/windows-terminal` (stable, currently 1.25). Scoop uses portable
-mode and preserves its settings across upgrades. Install it with `scoop install extras/windows-terminal`
-or update an existing Scoop installation with `scoop update windows-terminal`. This portable edition
+The Scoop bundle includes both `extras/windows-terminal` (stable) and
+`versions/windows-terminal-preview`. Preview 1.26 supports Windows Notification Center toasts for
+terminal bells; the stable 1.25 config uses silent taskbar flashing. Scoop uses portable mode and
+preserves each edition's settings across upgrades. Install either package with `scoop install`
+or update it with `scoop update` followed by its package name. These portable editions
 cannot register as Windows' default terminal application; use Store/MSIX Terminal for that capability.
 
 To inspect the packages installed on a machine without overwriting the tracked list, export to a
@@ -111,8 +113,12 @@ are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mappe
 contains `git`, `nvim`, `powershell`, and `starship`. Profiles contain package names only and are
 validated against `global.toml` before Dotter runs.
 
-The `windows-terminal` package maps `windows/terminal/settings.json` to Scoop's persistent
-`%SCOOP%\persist\windows-terminal\settings\settings.json`. Install the Scoop package first.
+The `windows-terminal` package maps `windows/terminal/settings.json` to
+`%SCOOP%\persist\windows-terminal\settings\settings.json`. The `windows-terminal-preview` package maps
+`windows/terminal/settings.preview.json` to
+`%SCOOP%\persist\windows-terminal-preview\settings\settings.json`. Both packages are in `all`;
+use `-Package windows-terminal` or `-Package windows-terminal-preview` to select one independently.
+Install the corresponding Scoop package first.
 The PowerShell profile initializes `SCOOP` from the installed Scoop command when it is unset,
 preserving any existing value. Reopen PowerShell after deploying the profile to load it.
 See [the migration notes](windows/terminal/README.md) for shortcuts, compatibility, performance,

@@ -98,6 +98,7 @@
 
     // Desktop apps
     { "Name": "windows-terminal", "Source": "extras", "Info": "" },
+    { "Name": "windows-terminal-preview", "Source": "versions", "Info": "" },
     { "Name": "karing", "Source": "extras", "Info": "" },
     { "Name": "wezterm-nightly", "Source": "versions", "Info": "" },
 

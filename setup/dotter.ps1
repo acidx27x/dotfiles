@@ -97,6 +97,9 @@ function Get-SourcePackage {
   param([Parameter(Mandatory)][string] $Source)
 
   # Windows Terminal lives under windows/terminal rather than a top-level package directory.
+  if ($Source -match '^windows[/\\]+terminal[/\\]+settings\.preview\.json(?:["'']|$)') {
+    return 'windows-terminal-preview'
+  }
   if ($Source -match '^windows[/\\]+terminal(?:[/\\]|$)') {
     return 'windows-terminal'
   }

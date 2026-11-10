@@ -1,5 +1,16 @@
 # Windows Terminal migration
 
+Two independent configurations share the same appearance, shortcuts, shell profiles, launch size,
+and English UI. Their notification settings differ to match the supported Terminal version:
+
+| Edition       | Config                  | Dotter package             | Launch |
+| ------------- | ----------------------- | -------------------------- | ------ |
+| Stable 1.25   | `settings.json`         | `windows-terminal`         | `wt`   |
+| Preview 1.26+ | `settings.preview.json` | `windows-terminal-preview` | `wtp`  |
+
+Stable uses silent taskbar flashing. Preview adds Notification Center toasts and OSC777 support.
+Keep shared preferences aligned when editing the two files; they are ordinary Terminal JSON files.
+
 ## What carries over
 
 | WezTerm preference                | Windows Terminal mapping                                       |
@@ -10,13 +21,60 @@
 | Padding 10 horizontal, 8 vertical | `padding: "10, 8, 10, 8"`                                      |
 | Opaque background                 | `opacity: 100`, `useAcrylic: true`                             |
 | 10,000 history lines              | `historySize: 10000`                                           |
-| Bar cursor, silent bell           | `cursorShape: "bar"`, `bellStyle: "none"`                      |
+| Bar cursor                        | `cursorShape: "bar"`                                           |
 | Copy on selection                 | `copyOnSelect: true`; existing plain-text copying retained     |
 | Visible tabs                      | `alwaysShowTabs: true`                                         |
 
 The font must already be installed; the repository's Scoop setup includes it. Font rasterization and
 apparent size can differ between DirectWrite and WezTerm even with matching numeric settings.
 Copy-on-select also makes right-click paste immediately. Open hyperlinks with Ctrl+click.
+
+## Startup, notifications, and titles
+
+New windows request 256 columns by 128 rows and open centered in normal window mode. These are
+terminal cells, not pixels; Windows may constrain the actual size to fit the monitor. The Terminal
+interface uses English (`en-US`); this does not change the Windows keyboard layout or shell locale.
+Azure Cloud Shell discovery is disabled through `disabledProfileSources`.
+
+In Preview, application BEL events flash the taskbar and send a Windows toast through
+`bellStyle: ["taskbar", "notification"]`, without a terminal bell sound. Native toast notifications
+require Terminal Preview 1.26 or later; stable 1.25 does not support the `notification` value.
+Windows controls whether to show a banner and retain it in Notification Center. Enable notifications
+for Windows Terminal Preview in Windows Settings, including showing them in Notification Center.
+Stable uses `bellStyle: "taskbar"` and omits the unsupported OSC777 setting, so it has no native
+Notification Center notifications.
+
+For silent toasts, also turn off **Play a sound when a notification arrives** under Windows
+Settings > System > Notifications > Windows Terminal Preview. The toast has its own Windows sound,
+independent of Terminal's bell sound.
+
+To keep banners visible longer, use Settings > Accessibility > Visual effects > Dismiss
+notifications after this amount of time. Ordinary Terminal toasts do not support staying on screen
+until clicked: Terminal emits the default toast scenario and exposes no reminder-scenario setting.
+Enable **Show notifications in notification center** to keep alerts accessible with Win+N after
+their banners disappear; repeated Terminal notifications can replace earlier entries.
+
+`compatibility.allowOSC777: true` also lets applications send notifications with a custom title and
+message. Bell-to-toast conversion works for applications that only beep, without a separate notifier
+script. Notifications are suppressed while the Terminal window is focused and are rate-limited;
+repeated notifications can replace an earlier entry. To test, run the command below in Preview and
+switch to another application before the delay ends:
+
+```powershell
+Start-Sleep -Seconds 3; [Console]::Write([char]7)
+```
+
+This test must be checked in the desktop session; config validation alone cannot verify delivery.
+See the [1.26 release notes](https://github.com/microsoft/terminal/releases/tag/v1.26.2734.0).
+
+Applications can update tab titles because `suppressApplicationTitle` is explicitly `false`. A bell
+alone does not rename a tab: an application must send a title escape sequence as well. Manually
+renaming a tab can override application titles until that custom title is cleared.
+
+See Microsoft's
+[startup settings](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/startup)
+and
+[bell settings](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/profile-advanced).
 
 ## Shortcuts
 
@@ -63,6 +121,15 @@ be checked with your active Windows keyboard layout.
 
 ## Performance choices and diagnosis
 
+`rendering.software: false` lets Terminal use Windows' default display adapter, including a software
+adapter on systems without a hardware GPU. Terminal 1.25 has no separate fallback-only switch. Its
+renderer recognizes software adapters and selects its Direct2D backend automatically in that case.
+This is not a guarantee of recovery from every driver failure. If a problematic driver still
+prevents rendering, set `rendering.software` to `true` temporarily to force WARP, then restart
+Terminal. Keeping that switch false normally preserves hardware acceleration when it is available.
+See the
+[1.25 renderer implementation](https://github.com/microsoft/terminal/blob/v1.25.2733.0/src/renderer/atlas/AtlasEngine.r.cpp).
+
 Terminal 1.25.2733.0 includes faster app-catalog queries on supported Windows versions, lower DWM
 memory use per window, fixes for rendering lag after resume and some GPU memory leaks, and removal
 of the new-tab animation that made the app appear slower. These improvements come from the binary
@@ -84,29 +151,33 @@ benchmark or visual parity check has been performed by this migration.
 
 ## Deployment
 
-This package now targets **Scoop's stable portable Terminal**. Install or update it first:
+The two packages target Scoop's portable stable and Preview editions. Install either or both:
 
 ```powershell
 scoop install extras/windows-terminal
+scoop install versions/windows-terminal-preview
 # If already installed through Scoop:
 scoop update windows-terminal
+scoop update windows-terminal-preview
 ```
 
-The Scoop manifest enables portable mode and persists its `settings` directory. Dotter targets
-`%SCOOP%\persist\windows-terminal\settings\settings.json`, which survives version-directory changes.
-The repository's PowerShell profile initializes `SCOOP` from the installed Scoop command when it is
-unset, preserving an existing value. Reopen PowerShell after deploying the profile. To reload just
-the environment defaults in an already configured session:
+The Scoop manifests enable portable mode and persist their `settings` directories. Dotter targets
+`%SCOOP%\persist\windows-terminal\settings\settings.json` for stable and
+`%SCOOP%\persist\windows-terminal-preview\settings\settings.json` for Preview. Both survive
+version-directory changes and can coexist with separate settings. The repository's PowerShell
+profile initializes `SCOOP` from the installed Scoop command when it is unset, preserving an
+existing value. Reopen PowerShell after deploying the profile. To reload just the environment
+defaults in an already configured session:
 
 ```powershell
 . .\powershell\.config\powershell\env.ps1
 ```
 
-The package is included in Dotter's `all` profile; first deployment reports any existing unmanaged
-settings file as a conflict. Back up that file before replacing it with a managed link. Only
-`settings.json` is linked, leaving portable state files outside the repository. Launch the Scoop
-Start menu shortcut, or verify `Get-Command wt -All` to avoid opening the old Store copy by
-accident.
+Both packages are included in Dotter's `all` profile; first deployment reports any existing
+unmanaged settings file as a conflict. Back up that file before replacing it with a managed link.
+Only `settings.json` is linked, leaving portable state files outside the repository. Launch the
+Scoop Start menu shortcut for the desired edition. Scoop provides `wt` for stable and `wtp` for
+Preview; check `Get-Command wt -All` if the old Store edition still opens.
 
 Portable Terminal cannot be registered as Windows' default terminal application. Store/MSIX Terminal
 can; it can coexist with Scoop, but uses separate settings and receives separate updates. Scoop's
@@ -121,26 +192,32 @@ derived from its publisher identity. It is not a machine ID, version, or random 
 this repository. The Store config and the separate unpackaged Anaconda settings file remain separate
 from Scoop's portable settings.
 
-Preview with:
+Preview either deployment with:
 
 ```powershell
 pwsh -NoProfile -File .\setup\dotter.ps1 -Package windows-terminal -WhatIf
+pwsh -NoProfile -File .\setup\dotter.ps1 -Package windows-terminal-preview -WhatIf
 ```
 
-To apply a copy without enrolling it in Dotter, run from the repository root:
+Remove `-WhatIf` to deploy. Deployment is additive: either package leaves the other edition
+deployed. To deploy both at once, use `-Package windows-terminal,windows-terminal-preview`.
+
+To apply a Preview copy without enrolling it in Dotter, run from the repository root:
 
 ```powershell
-$target = Join-Path $env:SCOOP 'persist\windows-terminal\settings\settings.json'
+$target = Join-Path $env:SCOOP 'persist\windows-terminal-preview\settings\settings.json'
 if (Test-Path -LiteralPath $target) {
   $backup = "$target.before-wezterm-migration-$(Get-Date -Format yyyyMMdd-HHmmss).bak"
   Copy-Item -LiteralPath $target -Destination $backup -ErrorAction Stop
 }
 New-Item -ItemType Directory -Path (Split-Path $target) -Force | Out-Null
-Copy-Item -LiteralPath .\windows\terminal\settings.json -Destination $target -Force -ErrorAction Stop
+Copy-Item -LiteralPath .\windows\terminal\settings.preview.json -Destination $target -Force -ErrorAction Stop
 ```
 
 This copy remains an unmanaged file. To enroll it in Dotter later, move it aside after backing it
-up, then deploy the `windows-terminal` package. Do not force Dotter to overwrite an unmanaged file.
+up, then deploy the `windows-terminal-preview` package. For a stable copy, use `settings.json` and
+the `persist\windows-terminal\settings` destination instead. Do not force Dotter to overwrite an
+unmanaged file.
 
 After deployment, reopen Terminal and check: no settings warning, correct duskfox colors and icons,
 copy/paste, both splits, pane navigation, PowerShell completion, WSL startup, and Neovim

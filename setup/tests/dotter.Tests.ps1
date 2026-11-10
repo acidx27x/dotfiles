@@ -87,6 +87,30 @@ $oldTestBatWrites = $env:DOTFILES_TEST_BAT_WRITES
 # Check the real mappings too: fixture-only tests cannot catch stale repository source paths.
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $mappingPath = Join-Path $repositoryRoot 'windows/dotter/global.toml'
+
+# Exercise mapping and cache ownership without invoking Main or touching deployed files.
+$wrapperAst = [Management.Automation.Language.Parser]::ParseFile($wrapper, [ref] $null, [ref] $null)
+foreach ($functionName in @('Get-SourcePackage', 'Get-GlobalPackageNames')) {
+  $definition = $wrapperAst.Find({
+      param($node)
+      $node -is [Management.Automation.Language.FunctionDefinitionAst] -and
+      $node.Name -eq $functionName
+    }, $false)
+  . ([scriptblock]::Create($definition.Extent.Text))
+}
+foreach ($source in @(
+    'windows/terminal/settings.preview.json',
+    'windows\terminal\settings.preview.json',
+    'windows/terminal/settings.preview.json" = "C:/target/settings.json"'
+  )) {
+  Assert-True ((Get-SourcePackage $source) -eq 'windows-terminal-preview') `
+    "Preview source was assigned to the wrong package: $source"
+}
+Assert-True ((Get-SourcePackage 'windows/terminal/settings.json') -eq 'windows-terminal') `
+  'Stable source was assigned to the wrong package.'
+Assert-True ((Get-GlobalPackageNames $mappingPath) -contains 'windows-terminal-preview') `
+  'Real Preview mapping was rejected.'
+
 $mappingCount = 0
 foreach ($line in Get-Content -LiteralPath $mappingPath) {
   if ($line -match '^\s*(?:"(?<source>[^"]+)"|''(?<source>[^'']+)'')\s*=') {
