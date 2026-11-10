@@ -73,10 +73,6 @@
     // AI
     { "Name": "codex", "Source": "main", "Info": "" },
 
-    // Fonts
-    { "Name": "FiraCode", "Source": "nerd-fonts", "Info": "" },
-    { "Name": "FiraCode-NF", "Source": "nerd-fonts", "Info": "" },
-
     // Utils
     { "Name": "ast-grep", "Source": "main", "Info": "" },
     { "Name": "btop", "Source": "main", "Info": "" },
@@ -101,7 +97,12 @@
     { "Name": "winscp", "Source": "extras", "Info": "" },
 
     // Desktop apps
+    { "Name": "windows-terminal", "Source": "extras", "Info": "" },
     { "Name": "karing", "Source": "extras", "Info": "" },
-    { "Name": "wezterm-nightly", "Source": "versions", "Info": "" }
+    { "Name": "wezterm-nightly", "Source": "versions", "Info": "" },
+
+    // Fonts
+    { "Name": "FiraCode", "Source": "nerd-fonts", "Info": "" },
+    { "Name": "FiraCode-NF", "Source": "nerd-fonts", "Info": "" }
   ]
 }

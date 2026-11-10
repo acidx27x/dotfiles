@@ -66,6 +66,11 @@ Add or remove entries in the `apps` array to change the desired package list. Ke
 and `Info` on each entry. WezTerm comes from the `versions` bucket as `wezterm-nightly`, and
 `update_nightly` keeps nightly packages eligible for normal updates.
 
+Windows Terminal comes from `extras/windows-terminal` (stable, currently 1.25). Scoop uses portable
+mode and preserves its settings across upgrades. Install it with `scoop install extras/windows-terminal`
+or update an existing Scoop installation with `scoop update windows-terminal`. This portable edition
+cannot register as Windows' default terminal application; use Store/MSIX Terminal for that capability.
+
 To inspect the packages installed on a machine without overwriting the tracked list, export to a
 temporary file and compare it manually:
 
@@ -105,6 +110,13 @@ are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mappe
 `windows\dotter\profiles\all.toml` is the default tracked profile. The optional `minimal` profile
 contains `git`, `nvim`, `powershell`, and `starship`. Profiles contain package names only and are
 validated against `global.toml` before Dotter runs.
+
+The `windows-terminal` package maps `windows/terminal/settings.json` to Scoop's persistent
+`%SCOOP%\persist\windows-terminal\settings\settings.json`. Install the Scoop package first.
+The PowerShell profile initializes `SCOOP` from the installed Scoop command when it is unset,
+preserving any existing value. Reopen PowerShell after deploying the profile to load it.
+See [the migration notes](windows/terminal/README.md) for shortcuts, compatibility, performance,
+and backing up the existing settings before the first deployment.
 
 Dotter recursively expands the current Neovim directory mapping into file symlinks. Generated files
 such as `%LOCALAPPDATA%\nvim\nvim-pack-lock.json` and

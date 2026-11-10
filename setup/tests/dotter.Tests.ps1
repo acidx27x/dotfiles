@@ -183,6 +183,8 @@ default_target_type = "symbolic"
 "codex/config" = "${LOCALAPPDATA}/targets/codex"
 [bat.files]
 "bat/config.txt" = "${APPDATA}/bat/config"
+[windows-terminal.files]
+"windows/terminal/settings.json" = "${LOCALAPPDATA}/targets/windows-terminal/settings.json"
 '@
   [System.IO.File]::WriteAllText($fixtureGlobal, $fixtureMappings)
   foreach ($name in @('nvim', 'lazygit', 'codex')) {
@@ -191,6 +193,9 @@ default_target_type = "symbolic"
   }
   [System.IO.Directory]::CreateDirectory((Join-Path $fixtureRoot 'bat')) | Out-Null
   [System.IO.File]::WriteAllText((Join-Path $fixtureRoot 'bat/config.txt'), 'bat')
+  $terminalSource = Join-Path $fixtureRoot 'windows/terminal/settings.json'
+  [System.IO.Directory]::CreateDirectory((Split-Path $terminalSource -Parent)) | Out-Null
+  [System.IO.File]::WriteAllText($terminalSource, '{}')
   $skippingSource = Join-Path $fixtureRoot 'nvim/config/skipping.txt'
   [System.IO.File]::WriteAllText($skippingSource, 'valid filename')
   $fixtureLocal = Join-Path $testRoot 'fixture Local'
@@ -235,6 +240,29 @@ default_target_type = "symbolic"
   Assert-True (-not (Test-Path $fixtureCache)) 'Initial save failure left an orphaned cache.'
   [System.IO.File]::WriteAllText($fixtureWrapper, $wrapperText)
   & $fixtureWrapper -Package nvim, lazygit, codex *> $null
+
+  # Nested Windows sources must retain their package identity through the shared cache.
+  $terminalTarget = Join-Path $fixtureLocal 'targets/windows-terminal/settings.json'
+  & $fixtureWrapper -Package windows-terminal *> $null
+  Assert-State $fixtureState @('nvim', 'lazygit', 'codex', 'windows-terminal')
+  Assert-True `
+    -Condition ((Get-Item -LiteralPath $terminalTarget).LinkType -eq 'SymbolicLink') `
+    -Message 'Windows Terminal deployment did not create a symbolic link.'
+  $terminalEntry = @(Get-Content -LiteralPath $fixtureCache | Where-Object {
+      $_ -match '^[''"]windows[/\\]+terminal[/\\]'
+    })
+  Assert-True ($terminalEntry.Count -eq 1) 'Windows Terminal cache entry is missing.'
+  & $fixtureWrapper -Action Restow -Package codex *> $null
+  Assert-True `
+    -Condition ((Get-Content -LiteralPath $fixtureCache) -contains $terminalEntry[0]) `
+    -Message 'An unrelated deployment changed the Windows Terminal cache entry.'
+  Assert-True (Test-Path -LiteralPath $terminalTarget) 'Unrelated restow removed Windows Terminal.'
+  & $fixtureWrapper -Action Undeploy -Package windows-terminal *> $null
+  Assert-State $fixtureState @('nvim', 'lazygit', 'codex')
+  Assert-True `
+    -Condition (-not (Test-Path -LiteralPath $terminalTarget)) `
+    -Message 'Windows Terminal undeployment left its link behind.'
+  Assert-True (Test-Path -LiteralPath $terminalSource) 'Undeployment removed the source settings.'
 
   # Cached entries do not prevent restoring manually deleted links or target directories.
   $codexTargetDirectory = Join-Path $fixtureLocal 'targets/codex'

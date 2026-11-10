@@ -11,6 +11,7 @@ packages = [
   "ssh",
   "starship",
   "wezterm",
+  "windows-terminal",
   "zed",
   "zellij",
 ]

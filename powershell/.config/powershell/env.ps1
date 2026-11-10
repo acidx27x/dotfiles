@@ -6,6 +6,15 @@ if (-not $env:EDITOR -and (Test-Command nvim)) {
 }
 
 if ($IsWindows) {
+  if (-not $env:SCOOP) {
+    $scoopCommand = Get-Command scoop -CommandType ExternalScript, Application `
+      -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($scoopCommand) {
+      $env:SCOOP = Split-Path (Split-Path $scoopCommand.Source)
+    }
+    Remove-Variable scoopCommand -ErrorAction SilentlyContinue
+  }
+
   foreach ($shell in 'pwsh.exe', 'powershell.exe', 'cmd.exe') {
     $command = Get-Command $shell -CommandType Application -ErrorAction SilentlyContinue |
       Select-Object -First 1

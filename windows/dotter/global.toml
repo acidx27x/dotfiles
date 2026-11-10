@@ -16,6 +16,9 @@ default_target_type = "symbolic"
 [wezterm.files]
 "wezterm/.config/wezterm" = "~/.config/wezterm"
 
+[windows-terminal.files]
+"windows/terminal/settings.json" = "${SCOOP}/persist/windows-terminal/settings/settings.json"
+
 [atuin.files]
 "atuin/.atuin/config.toml" = "~/.atuin/config.toml"
 "atuin/.atuin/themes" = "~/.atuin/themes"

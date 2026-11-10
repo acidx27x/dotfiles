@@ -93,6 +93,18 @@ function Get-Sha256Hex {
   }
 }
 
+function Get-SourcePackage {
+  param([Parameter(Mandatory)][string] $Source)
+
+  # Windows Terminal lives under windows/terminal rather than a top-level package directory.
+  if ($Source -match '^windows[/\\]+terminal(?:[/\\]|$)') {
+    return 'windows-terminal'
+  }
+  if ($Source -match '^(?<package>[A-Za-z0-9_.-]+)[/\\]') {
+    return $Matches.package
+  }
+}
+
 function Get-GlobalPackageNames {
   param([Parameter(Mandatory)][string] $Path)
 
@@ -113,13 +125,13 @@ function Get-GlobalPackageNames {
         $symbolicDefault = $true
         continue
       }
-      # Scope cache entries by the first source directory. Keep this invariant explicit.
+      # Validate ownership with the same rules used to scope cache entries.
       if ($section -match '^(?<package>[A-Za-z0-9_.-]+)\.files$') {
         $owner = $Matches.package
         $tomlString = '(?:"(?:[^"\\]|\\.)*"|''[^'']*'')'
         if ($line -match "^\s*(?<source>$tomlString)\s*=\s*$tomlString\s*(?:#.*)?$") {
           $source = $Matches.source.Substring(1, $Matches.source.Length - 2)
-          if ($source.StartsWith("$owner/", [StringComparison]::OrdinalIgnoreCase) -and
+          if ((Get-SourcePackage -Source $source) -eq $owner -and
             $source -notmatch '(?:/|\\)\.\.(?:/|\\|$)') {
             continue
           }
@@ -290,7 +302,7 @@ function Read-SymbolicCache {
       $line -notmatch '^["''](?<package>[A-Za-z0-9_.-]+)[/\\]') {
       throw "Unsupported Dotter cache entry in '$Path'. Only package-owned symlinks are supported."
     }
-    $owner = $Matches.package
+    $owner = Get-SourcePackage -Source $line.Substring(1)
     if ($ActivePackages -notcontains $owner) {
       throw "Dotter cache contains an entry for inactive package '$owner'."
     }
