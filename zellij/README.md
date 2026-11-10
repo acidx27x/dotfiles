@@ -29,7 +29,7 @@ Most shortcuts below work outside Locked mode. Press `Alt+Z` to lock or unlock m
 | `Ctrl+H` | Move         |
 | `Ctrl+S` | Scroll       |
 | `Ctrl+O` | Session      |
-| `Ctrl+B` | Tmux         |
+| `Ctrl+A` | Tmux         |
 
 | Shortcut      | Plugin                         |
 | ------------- | ------------------------------ |
@@ -98,7 +98,7 @@ Most shortcuts below work outside Locked mode. Press `Alt+Z` to lock or unlock m
 `PageUp` and `PageDown` also work in Scroll and Search modes. In Scroll mode, `Alt+H/J/K/L` or
 `Alt+Arrow` focuses another pane and returns to Normal mode.
 
-## Session (`Ctrl+O`) and Tmux (`Ctrl+B`) modes
+## Session (`Ctrl+O`) and Tmux (`Ctrl+A`) modes
 
 | Mode    | Key                   | Action                                                  |
 | ------- | --------------------- | ------------------------------------------------------- |
@@ -115,7 +115,7 @@ Most shortcuts below work outside Locked mode. Press `Alt+Z` to lock or unlock m
 | Tmux    | `,` / `[`             | Rename tab / enter Scroll mode                          |
 | Tmux    | `Space`               | Next swap layout                                        |
 | Tmux    | `d`                   | Detach                                                  |
-| Tmux    | `Ctrl+B`              | Send a literal `Ctrl+B` to the pane                     |
+| Tmux    | `Ctrl+A`              | Send a literal `Ctrl+A` to the pane                     |
 
 `Enter` or `Esc` returns from most modes to Normal. In a rename prompt, `Enter` accepts the name;
 `Esc` undoes the rename and returns to Tab or Pane mode. `Ctrl+C` returns to Normal from rename

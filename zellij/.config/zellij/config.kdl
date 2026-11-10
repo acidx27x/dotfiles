@@ -462,7 +462,7 @@ SwitchToMode "normal"
         }
     }
     shared_except "locked" "scroll" "search" "tmux" {
-        bind "Ctrl b" {
+        bind "Ctrl a" {
             SwitchToMode "tmux"
         }
     }
@@ -629,8 +629,8 @@ SwitchToMode "normal"
         bind "[" {
             SwitchToMode "scroll"
         }
-        bind "Ctrl b" {
-            Write 2
+        bind "Ctrl a" {
+            Write 1
 SwitchToMode "normal"
         }
         bind "c" {
