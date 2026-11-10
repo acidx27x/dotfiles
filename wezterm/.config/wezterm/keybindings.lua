@@ -14,9 +14,10 @@ function module.apply_to_config(config, platform)
     config.send_composed_key_when_right_alt_is_pressed = true
   end
 
-  config.keys = {
+  local bindings = {
     -- Close only the focused pane; the default closes the whole tab.
     {
+      brief = "User | Pane: Close",
       key = "w",
       mods = modifier,
       action = act.CloseCurrentPane({
@@ -24,6 +25,7 @@ function module.apply_to_config(config, platform)
       }),
     },
     {
+      brief = "User | Pane: Split right",
       key = "|",
       mods = modifier,
       action = act.SplitPane({
@@ -37,6 +39,7 @@ function module.apply_to_config(config, platform)
       }),
     },
     {
+      brief = "User | Pane: Split down",
       key = "?",
       mods = modifier,
       action = act.SplitPane({
@@ -50,14 +53,16 @@ function module.apply_to_config(config, platform)
       }),
     },
     {
-      key = "a",
-      mods = modifier,
+      brief = "User | Pane: Select",
+      key = "q",
+      mods = "CTRL|SHIFT",
       action = act.PaneSelect({
         mode = "Activate",
         show_pane_ids = true,
       }),
     },
     {
+      brief = "User | Pane: Resize mode",
       key = "e",
       mods = modifier,
       action = act.ActivateKeyTable({
@@ -67,6 +72,7 @@ function module.apply_to_config(config, platform)
       }),
     },
     {
+      brief = "User | Window: Launcher",
       key = "o",
       mods = modifier,
       action = act.ShowLauncherArgs({
@@ -76,6 +82,7 @@ function module.apply_to_config(config, platform)
       }),
     },
     {
+      brief = "User | Window: New window in current domain",
       key = "n",
       mods = modifier .. "|ALT",
       action = act.SpawnCommandInNewWindow({
@@ -83,11 +90,144 @@ function module.apply_to_config(config, platform)
       }),
     },
     {
+      brief = "User | Workspace: Detach current domain",
       key = "d",
       mods = modifier,
       action = act.DetachDomain("CurrentPaneDomain"),
     },
+    {
+      brief = "User | Workspace: Switch",
+      key = "s",
+      mods = modifier,
+      action = act.ShowLauncherArgs({
+        flags = "FUZZY|WORKSPACES",
+        title = "Workspaces",
+      }),
+    },
+    {
+      brief = "User | Workspace: Create or switch by name",
+      key = "s",
+      mods = modifier .. "|ALT",
+      action = act.PromptInputLine({
+        description = "Workspace name",
+        action = wezterm.action_callback(function(window, pane, line)
+          if line and line ~= "" then
+            window:perform_action(act.SwitchToWorkspace({
+              name = line,
+            }), pane)
+          end
+        end),
+      }),
+    },
+    {
+      brief = "User | Tab: New tab",
+      key = "t",
+      mods = modifier,
+      action = act.SpawnTab("CurrentPaneDomain"),
+    },
+    {
+      brief = "User | Window: New window",
+      key = "n",
+      mods = modifier,
+      action = act.SpawnWindow,
+    },
+    {
+      brief = "User | Edit: Copy",
+      key = "c",
+      mods = modifier,
+      action = act.CopyTo("Clipboard"),
+    },
+    {
+      brief = "User | Edit: Paste",
+      key = "v",
+      mods = modifier,
+      action = act.PasteFrom("Clipboard"),
+    },
+    {
+      brief = "User | Edit: Search",
+      key = "f",
+      mods = modifier,
+      action = act.Search("CurrentSelectionOrEmptyString"),
+    },
+    {
+      brief = "User | Window: Command palette",
+      key = "p",
+      mods = "CTRL|SHIFT",
+      action = act.ActivateCommandPalette,
+    },
+    {
+      brief = "User | Pane: Toggle zoom",
+      key = "z",
+      mods = "CTRL|SHIFT",
+      action = act.TogglePaneZoomState,
+    },
   }
+
+  for _, direction in ipairs({
+    {
+      key = "h",
+      arrow = "LeftArrow",
+      name = "Left",
+    },
+    {
+      key = "j",
+      arrow = "DownArrow",
+      name = "Down",
+    },
+    {
+      key = "k",
+      arrow = "UpArrow",
+      name = "Up",
+    },
+    {
+      key = "l",
+      arrow = "RightArrow",
+      name = "Right",
+    },
+  }) do
+    table.insert(bindings, {
+      brief = "User | Pane: Focus " .. direction.name:lower(),
+      key = direction.key,
+      mods = "CTRL|SHIFT",
+      action = act.ActivatePaneDirection(direction.name),
+    })
+    table.insert(bindings, {
+      brief = "User | Pane: Focus " .. direction.name:lower(),
+      key = direction.arrow,
+      mods = "CTRL|SHIFT",
+      action = act.ActivatePaneDirection(direction.name),
+    })
+    table.insert(bindings, {
+      brief = "User | Pane: Resize " .. direction.name:lower(),
+      key = direction.arrow,
+      mods = "CTRL|SHIFT|ALT",
+      action = act.AdjustPaneSize({
+        direction.name,
+        1,
+      }),
+    })
+  end
+
+  config.keys = {}
+  local palette = {}
+  local palette_names = {}
+  for _, binding in ipairs(bindings) do
+    table.insert(config.keys, {
+      key = binding.key,
+      mods = binding.mods,
+      action = binding.action,
+    })
+    if not palette_names[binding.brief] then
+      table.insert(palette, {
+        brief = binding.brief,
+        action = binding.action,
+      })
+      palette_names[binding.brief] = true
+    end
+  end
+  wezterm.on("augment-command-palette", function()
+    return palette
+  end)
 
   config.key_tables = {
     resize_pane = {

@@ -83,6 +83,7 @@ and
 | Ctrl+Shift+\\        | Split right using the focused pane's profile                           |
 | Ctrl+Shift+/         | Split down using the focused pane's profile                            |
 | Ctrl+Shift+Arrow     | Move between panes                                                     |
+| Ctrl+Shift+H/J/K/L   | Focus left/down/up/right pane                                          |
 | Ctrl+Shift+Alt+Arrow | Resize panes                                                           |
 | Ctrl+Shift+Z         | Zoom the focused pane                                                  |
 | Ctrl+Shift+W         | Close the focused pane; closes the tab/window when it is the last pane |
@@ -94,6 +95,14 @@ Native shortcuts remain available, including Ctrl+Shift+T for a default-profile 
 for a duplicate tab, and Ctrl+Shift+N for a new window. Ctrl+C, Ctrl+V, and Enter continue to pass
 through to applications as in the previous Terminal config. Shortcuts involving punctuation should
 be checked with your active Windows keyboard layout.
+
+The command palette includes labels such as `User | Pane: Split right`,
+`User | Window: New window`, and `User | Edit: Copy`. Stable and Preview share the same configured
+actions and bindings. `Ctrl+Tab` and `Ctrl+Shift+Tab` retain native tab navigation.
+
+Plain `Ctrl+a` passes through to tmux. When tmux is running, these terminal shortcuts still act on
+Windows Terminal's panes and tabs; use `Ctrl+a` followed by the tmux key for actions inside tmux.
+See the [tmux shortcut comparison](../../wezterm/README.md#relationship-to-tmux-and-windows-terminal).
 
 ## Compatibility limits
 
@@ -115,9 +124,9 @@ be checked with your active Windows keyboard layout.
   not guaranteed. Mode switching still needs shell/editor support.
 - **Panes and tabs:** WezTerm's timed h/j/k/l resize table, numbered pane picker, per-pane close
   confirmation, tab index display, hidden new-tab button, and exact tab width have no equivalent
-  configured here. Use arrow bindings for pane operations. Ctrl+Shift+W can close a running process
-  without WezTerm's confirmation. Ctrl+Shift+A/E/D and Ctrl+Shift+Alt+N are not remapped to
-  approximate these behaviors.
+  configured here. Use arrow or Ctrl+Shift+H/J/K/L bindings for pane navigation. Ctrl+Shift+W can
+  close a running process without WezTerm's confirmation. Ctrl+Shift+Q/S/E/D, Ctrl+Shift+Alt+S, and
+  Ctrl+Shift+Alt+N are not remapped to approximate these behaviors.
 
 ## Performance choices and diagnosis
 

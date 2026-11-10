@@ -9,15 +9,18 @@
                 "action": "copy",
                 "singleLine": false
             },
-            "id": "User.copy.644BA8F2"
+            "id": "User.Copy",
+            "name": "User | Edit: Copy"
         },
         {
             "command": "paste",
-            "id": "User.paste"
+            "id": "User.Paste",
+            "name": "User | Edit: Paste"
         },
         {
             "command": "find",
-            "id": "User.find"
+            "id": "User.Find",
+            "name": "User | Edit: Search"
         },
         {
             "command":
@@ -26,7 +29,125 @@
                 "split": "auto",
                 "splitMode": "duplicate"
             },
-            "id": "User.splitPane.A6751878"
+            "id": "User.SplitPaneAuto",
+            "name": "User | Pane: Split automatically"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "split": "vertical",
+                "splitMode": "duplicate"
+            },
+            "id": "User.SplitPaneRight",
+            "name": "User | Pane: Split right"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "split": "horizontal",
+                "splitMode": "duplicate"
+            },
+            "id": "User.SplitPaneDown",
+            "name": "User | Pane: Split down"
+        },
+        {
+            "command": "closePane",
+            "id": "User.ClosePane",
+            "name": "User | Pane: Close"
+        },
+        {
+            "command": "togglePaneZoom",
+            "id": "User.TogglePaneZoom",
+            "name": "User | Pane: Toggle zoom"
+        },
+        {
+            "command": "commandPalette",
+            "id": "User.CommandPalette",
+            "name": "User | Window: Command palette"
+        },
+        {
+            "command": "newTab",
+            "id": "User.NewTab",
+            "name": "User | Tab: New tab"
+        },
+        {
+            "command": "newWindow",
+            "id": "User.NewWindow",
+            "name": "User | Window: New window"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "left"
+            },
+            "id": "User.FocusLeft",
+            "name": "User | Pane: Focus left"
+        },
+        {
+            "command":
+            {
+                "action": "resizePane",
+                "direction": "left"
+            },
+            "id": "User.ResizeLeft",
+            "name": "User | Pane: Resize left"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "down"
+            },
+            "id": "User.FocusDown",
+            "name": "User | Pane: Focus down"
+        },
+        {
+            "command":
+            {
+                "action": "resizePane",
+                "direction": "down"
+            },
+            "id": "User.ResizeDown",
+            "name": "User | Pane: Resize down"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "up"
+            },
+            "id": "User.FocusUp",
+            "name": "User | Pane: Focus up"
+        },
+        {
+            "command":
+            {
+                "action": "resizePane",
+                "direction": "up"
+            },
+            "id": "User.ResizeUp",
+            "name": "User | Pane: Resize up"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "right"
+            },
+            "id": "User.FocusRight",
+            "name": "User | Pane: Focus right"
+        },
+        {
+            "command":
+            {
+                "action": "resizePane",
+                "direction": "right"
+            },
+            "id": "User.ResizeRight",
+            "name": "User | Pane: Resize right"
         }
     ],
     "alwaysShowTabs": true,
@@ -43,7 +164,7 @@
     "keybindings":
     [
         {
-            "id": "Terminal.DuplicatePaneRight",
+            "id": "User.SplitPaneRight",
             "keys": "ctrl+shift+\\"
         },
         {
@@ -51,7 +172,7 @@
             "keys": "ctrl+space"
         },
         {
-            "id": "Terminal.DuplicatePaneAuto",
+            "id": "User.SplitPaneAuto",
             "keys": "alt+shift+d"
         },
         {
@@ -59,11 +180,11 @@
             "keys": "ctrl+c"
         },
         {
-            "id": "Terminal.TogglePaneZoom",
+            "id": "User.TogglePaneZoom",
             "keys": "ctrl+shift+z"
         },
         {
-            "id": "User.find",
+            "id": "User.Find",
             "keys": "ctrl+shift+f"
         },
         {
@@ -75,56 +196,84 @@
             "keys": "enter"
         },
         {
-            "id": "User.copy.644BA8F2",
+            "id": "User.Copy",
             "keys": "ctrl+shift+c"
         },
         {
-            "id": "Terminal.DuplicatePaneDown",
+            "id": "User.SplitPaneDown",
             "keys": "ctrl+shift+/"
         },
         {
-            "id": "Terminal.ClosePane",
+            "id": "User.ClosePane",
             "keys": "ctrl+shift+w"
         },
         {
-            "id": "Terminal.ResizePaneLeft",
+            "id": "User.ResizeLeft",
             "keys": "ctrl+alt+shift+left"
         },
         {
-            "id": "User.paste",
+            "id": "User.Paste",
             "keys": "ctrl+shift+v"
         },
         {
-            "id": "Terminal.ToggleCommandPalette",
+            "id": "User.CommandPalette",
             "keys": "ctrl+shift+o"
         },
         {
-            "id": "Terminal.MoveFocusLeft",
+            "id": "User.FocusLeft",
             "keys": "ctrl+shift+left"
         },
         {
-            "id": "Terminal.MoveFocusDown",
+            "id": "User.FocusDown",
             "keys": "ctrl+shift+down"
         },
         {
-            "id": "Terminal.ResizePaneDown",
+            "id": "User.ResizeDown",
             "keys": "ctrl+alt+shift+down"
         },
         {
-            "id": "Terminal.MoveFocusUp",
+            "id": "User.FocusUp",
             "keys": "ctrl+shift+up"
         },
         {
-            "id": "Terminal.ResizePaneUp",
+            "id": "User.ResizeUp",
             "keys": "ctrl+alt+shift+up"
         },
         {
-            "id": "Terminal.MoveFocusRight",
+            "id": "User.FocusRight",
             "keys": "ctrl+shift+right"
         },
         {
-            "id": "Terminal.ResizePaneRight",
+            "id": "User.ResizeRight",
             "keys": "ctrl+alt+shift+right"
+        },
+        {
+            "id": "User.FocusLeft",
+            "keys": "ctrl+shift+h"
+        },
+        {
+            "id": "User.FocusDown",
+            "keys": "ctrl+shift+j"
+        },
+        {
+            "id": "User.FocusUp",
+            "keys": "ctrl+shift+k"
+        },
+        {
+            "id": "User.FocusRight",
+            "keys": "ctrl+shift+l"
+        },
+        {
+            "id": "User.NewTab",
+            "keys": "ctrl+shift+t"
+        },
+        {
+            "id": "User.NewWindow",
+            "keys": "ctrl+shift+n"
+        },
+        {
+            "id": "User.CommandPalette",
+            "keys": "ctrl+shift+p"
         }
     ],
     "language": "en-US",

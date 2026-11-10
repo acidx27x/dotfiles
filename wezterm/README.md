@@ -15,7 +15,6 @@
 | `Ctrl+Shift+X`         | `Ctrl+Shift+X`         | Copy mode                      |
 | `Ctrl+Shift+Space`     | `Ctrl+Shift+Space`     | Quick select                   |
 | `Ctrl+Shift+P`         | `Ctrl+Shift+P`         | Command palette                |
-| `Ctrl+Shift+L`         | `Ctrl+Shift+L`         | Debug overlay                  |
 | `Ctrl+=` or `-`        | `Cmd+=` or `-`         | Increase or decrease font size |
 | `Ctrl+Shift+Arrow`     | `Ctrl+Shift+Arrow`     | Move between panes             |
 | `Ctrl+Shift+Alt+Arrow` | `Ctrl+Shift+Alt+Arrow` | Resize panes                   |
@@ -24,26 +23,60 @@
 
 ## Custom shortcuts
 
-| Shortcut    | Action                                                       |
-| ----------- | ------------------------------------------------------------ |
-| `Mod+\\`    | Split right in the current domain                            |
-| `Mod+/`     | Split down in the current domain                             |
-| `Mod+A`     | Select a pane                                                |
-| `Mod+E`     | Enter pane resize mode                                       |
-| `Mod+O`     | Open the launcher for domains, profiles, and workspaces      |
-| `Mod+Alt+N` | Open a new window in the current pane's domain and directory |
-| `Mod+D`     | Detach the current domain                                    |
-| `Mod+W`     | Close the focused pane with confirmation                     |
+| Shortcut             | Action                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| `Mod+\\`             | Split right in the current domain                            |
+| `Mod+/`              | Split down in the current domain                             |
+| `Ctrl+Shift+Q`       | Select a pane using the overlay (all platforms)              |
+| `Ctrl+Shift+H/J/K/L` | Focus left/down/up/right pane (all platforms)                |
+| `Mod+S`              | Select a workspace                                           |
+| `Mod+Alt+S`          | Create or switch to a named workspace                        |
+| `Mod+E`              | Enter pane resize mode                                       |
+| `Mod+O`              | Open the launcher for domains, profiles, and workspaces      |
+| `Mod+Alt+N`          | Open a new window in the current pane's domain and directory |
+| `Mod+D`              | Detach the current domain                                    |
+| `Mod+W`              | Close the focused pane with confirmation                     |
 
 In resize mode, `h`, `j`, `k`, and `l` resize by three cells. Press `Enter` or `Escape` to exit; the
 mode also expires after five seconds.
 
+`Ctrl+Shift+H/J/K/L` complements the arrow bindings. K and L replace the clear-scrollback and
+debug-overlay shortcuts; those actions remain in the command palette. The pane picker moves from
+`Mod+A` to `Ctrl+Shift+Q`. On macOS, these movement and picker shortcuts use `Ctrl+Shift`, preserving
+native `Cmd+H` and `Cmd+Q` behavior. `Ctrl+Tab` and `Ctrl+Shift+Tab` retain native tab navigation.
+
+The command palette includes named entries such as `User | Pane: Split right`,
+`User | Window: New window`, `User | Edit: Copy`, and `User | Workspace: Switch`. These entries reuse
+the shortcut actions; built-in palette entries remain available.
+
+## Relationship to tmux and Windows Terminal
+
+The terminal shortcuts act immediately, without a prefix. tmux retains `Ctrl+a` followed by a key.
+When tmux runs inside a terminal, terminal shortcuts operate on the outer terminal's panes and
+tabs; use `Ctrl+a` for tmux's panes, windows, and sessions. Plain `Ctrl+a` is not a terminal binding.
+
+| Action                        | tmux (after `Ctrl+a`) | WezTerm / Windows Terminal (Windows/Linux)                   |
+| ----------------------------- | --------------------- | ------------------------------------------------------------ |
+| Split right / down            | `\|` / `-`            | `Ctrl+Shift+\` / `Ctrl+Shift+/`                              |
+| Focus pane                    | `h/j/k/l`             | `Ctrl+Shift+H/J/K/L` or `Ctrl+Shift+Arrow`                   |
+| Select pane by overlay        | `q`, then pane number | `Ctrl+Shift+Q` in WezTerm; no overlay in Windows Terminal    |
+| Zoom pane                     | `z`                   | `Ctrl+Shift+Z`                                               |
+| New window / tab              | `c`                   | `Ctrl+Shift+T`                                               |
+| Previous / next window or tab | `p` / `n`             | `Ctrl+Shift+Tab` / `Ctrl+Tab`                                |
+| Close pane                    | `x` (confirmation)    | `Ctrl+Shift+W` (confirmation in WezTerm)                     |
+| Select session / workspace    | `s` (sesh picker)     | `Ctrl+Shift+S` in WezTerm; no equivalent in Windows Terminal |
+
+Windows Terminal's new tab uses its default profile; WezTerm's uses the current pane's domain. See
+the [Windows Terminal shortcuts and limits](../windows/terminal/README.md#shortcuts).
+
 ## Workspaces and current directory
 
 WezTerm calls its session-like grouping a **workspace**. A workspace groups windows and can be
-selected from the `Mod+O` launcher. It is live mux state, not a saved snapshot that this config
-restores after WezTerm exits. With `SSHMUX`, `Mod+D` detaches the remote domain; its panes stay
-available to attach again later. See the
+selected with `Mod+S` or from the `Mod+O` launcher. `Mod+Alt+S` prompts for a name: a new name creates
+a workspace using the default program/domain, and an existing name switches to it. Escape or an
+empty name leaves the current workspace unchanged. It is live mux state, not a saved snapshot that
+this config restores after WezTerm exits. With `SSHMUX`, `Mod+D` detaches the remote domain; its
+panes stay available to attach again later. See the
 [workspace guide](https://wezterm.org/recipes/workspaces.html) and
 [DetachDomain](https://wezterm.org/config/lua/keyassignment/DetachDomain.html).
 
