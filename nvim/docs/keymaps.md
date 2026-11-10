@@ -32,34 +32,34 @@ Source: [`lua/core/keymaps.lua`](../.config/nvim/lua/core/keymaps.lua). Core map
 [`core.keymap`](../.config/nvim/lua/core/keymap.lua), which defaults to `silent = true` and attaches
 `desc` labels; call options can override defaults.
 
-| Keys                                     | Mode              | Action                                                   | Overrides / conflicts                                                                                |
-| ---------------------------------------- | ----------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `<Space>`                                | Normal, Visual    | No-op leader prefix                                      | Reserves Space for leader sequences.                                                                 |
-| `<Space>nh`                              | Normal            | Clear search highlight                                   | User map.                                                                                            |
-| `<Space>vc`                              | Normal            | Toggle vertical cursor-column highlight                  | Applies to the current window.                                                                       |
-| `n` / `N`                                | Normal            | Next / previous search match, centered                   | Overrides built-in search motion with centering.                                                     |
-| `<C-d>` / `<C-u>`                        | Normal            | Half-page down / up, centered                            | Preserves motion and adds centering.                                                                 |
-| `<Space>d`, `<Space>o`, `<Space>p`       | Normal, Visual    | No-op prefix guards                                      | Intentionally stop a bare prefix from falling through.                                               |
-| `<Space>bd`                              | Normal            | `MiniBufremove.delete(0, false)`                         | Uses MiniBufremove; preserves layout.                                                                |
-| `<Space>bn` / `<Space>bp`                | Normal            | Next / previous buffer                                   | User aliases for `:bnext`/`:bprevious`.                                                              |
-| `<Space>bb`                              | Normal            | Switch to alternate buffer                               | Uses Neovim's `<C-^>` motion.                                                                        |
-| `<Space>q` / `<Space>Q`                  | Normal            | Close current window / quit                              | `<Space>q` may fail if it is the last window; use `<Space>Q` to quit.                                |
-| Selected Alt/Meta + `h/j/k/l`            | Normal            | Focus left / down / up / right window                    | One platform-selected modifier spelling.                                                             |
-| `<Space>sv` / `<Space>sh`                | Normal            | Vertical / horizontal split                              | User mappings.                                                                                       |
-| `<Space>st`                              | Normal            | Move the current split or float to a new tab             | Uses `<C-w>T` for a split; copies a sole window or float into a new tab and closes the source float. |
-| `<Space>sf`                              | Normal            | Toggle the current window between float and split        | If it is the tab's sole normal window, opens a float for the same buffer and keeps the base window.  |
-| `<Space>sH/J/K/L`                        | Normal            | Move current split to far left/bottom/top/right          | Uses Neovim's `<C-w>H/J/K/L` layout motions.                                                         |
-| `<Space>sx` / `<Space>s=`                | Normal            | Exchange current split / equalize split sizes            | Uses `<C-w>x` / `<C-w>=`.                                                                            |
-| Selected Alt/Meta + `<Up>` / `<Down>`    | Normal            | Increase / decrease window height by 2                   | One platform-selected modifier spelling.                                                             |
-| Selected Alt/Meta + `<Right>` / `<Left>` | Normal            | Increase / decrease window width by 2                    | One platform-selected modifier spelling.                                                             |
-| Selected Alt/Meta + `w/s/a/d`            | Normal            | Move focused floating window up/down/left/right          | Warns if current window is not floating.                                                             |
-| `<Space>rc`                              | Normal            | Edit config `init.lua`                                   | User utility.                                                                                        |
-| `<Space>fp`                              | Normal            | Copy current full file path to `+` register              | Requires a functioning clipboard provider.                                                           |
-| `<Space>tt` / `<Space>tv` / `<Space>th`  | Normal            | Open terminal in tab / vertical split / horizontal split | User utilities.                                                                                      |
-| `<Space>cd`                              | Normal            | Set window-local cwd to current buffer directory         | User utility; warns for invalid directory.                                                           |
-| `<Space>fu`                              | Normal            | Convert buffer line endings to Unix                      | Removes trailing CR characters and sets `fileformat=unix`; save to write the file.                   |
-| `<Space>fe`                              | Normal            | Pick Save/Reopen with Encoding, then an encoding         | Save writes the file; Reopen prompts before discarding unsaved edits.                                |
-| `<Space>fl`                              | Normal            | Pick LF or CRLF and save the file                        | Normalizes mixed line endings before writing.                                                        |
+| Keys                                     | Mode           | Action                                                   | Overrides / conflicts                                                                                |
+| ---------------------------------------- | -------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `<Space>`                                | Normal, Visual | No-op leader prefix                                      | Reserves Space for leader sequences.                                                                 |
+| `<Space>nh`                              | Normal         | Clear search highlight                                   | User map.                                                                                            |
+| `<Space>vc`                              | Normal         | Toggle vertical cursor-column highlight                  | Applies to the current window.                                                                       |
+| `n` / `N`                                | Normal         | Next / previous search match, centered                   | Overrides built-in search motion with centering.                                                     |
+| `<C-d>` / `<C-u>`                        | Normal         | Half-page down / up, centered                            | Preserves motion and adds centering.                                                                 |
+| `<Space>d`, `<Space>o`, `<Space>p`       | Normal, Visual | No-op prefix guards                                      | Intentionally stop a bare prefix from falling through.                                               |
+| `<Space>bd`                              | Normal         | `MiniBufremove.delete(0, false)`                         | Uses MiniBufremove; preserves layout.                                                                |
+| `<Space>bn` / `<Space>bp`                | Normal         | Next / previous buffer                                   | User aliases for `:bnext`/`:bprevious`.                                                              |
+| `<Space>bb`                              | Normal         | Switch to alternate buffer                               | Uses Neovim's `<C-^>` motion.                                                                        |
+| `<Space>q` / `<Space>Q`                  | Normal         | Close current window / quit                              | `<Space>q` may fail if it is the last window; use `<Space>Q` to quit.                                |
+| Selected Alt/Meta + `h/j/k/l`            | Normal         | Focus left / down / up / right window                    | One platform-selected modifier spelling.                                                             |
+| `<Space>sv` / `<Space>sh`                | Normal         | Vertical / horizontal split                              | User mappings.                                                                                       |
+| `<Space>st`                              | Normal         | Move the current split or float to a new tab             | Uses `<C-w>T` for a split; copies a sole window or float into a new tab and closes the source float. |
+| `<Space>sf`                              | Normal         | Toggle the current window between float and split        | If it is the tab's sole normal window, opens a float for the same buffer and keeps the base window.  |
+| `<Space>sH/J/K/L`                        | Normal         | Move current split to far left/bottom/top/right          | Uses Neovim's `<C-w>H/J/K/L` layout motions.                                                         |
+| `<Space>sx` / `<Space>s=`                | Normal         | Exchange current split / equalize split sizes            | Uses `<C-w>x` / `<C-w>=`.                                                                            |
+| Selected Alt/Meta + `<Up>` / `<Down>`    | Normal         | Increase / decrease window height by 2                   | One platform-selected modifier spelling.                                                             |
+| Selected Alt/Meta + `<Right>` / `<Left>` | Normal         | Increase / decrease window width by 2                    | One platform-selected modifier spelling.                                                             |
+| Selected Alt/Meta + `w/s/a/d`            | Normal         | Move focused floating window up/down/left/right          | Warns if current window is not floating.                                                             |
+| `<Space>rc`                              | Normal         | Edit config `init.lua`                                   | User utility.                                                                                        |
+| `<Space>fp`                              | Normal         | Copy current full file path to `+` register              | Requires a functioning clipboard provider.                                                           |
+| `<Space>tt` / `<Space>tv` / `<Space>th`  | Normal         | Open terminal in tab / vertical split / horizontal split | User utilities.                                                                                      |
+| `<Space>cd`                              | Normal         | Set window-local cwd to current buffer directory         | User utility; warns for invalid directory.                                                           |
+| `<Space>fu`                              | Normal         | Convert buffer line endings to Unix                      | Removes trailing CR characters and sets `fileformat=unix`; save to write the file.                   |
+| `<Space>fe`                              | Normal         | Pick Save/Reopen with Encoding, then an encoding         | Save writes the file; Reopen prompts before discarding unsaved edits.                                |
+| `<Space>fl`                              | Normal         | Pick LF or CRLF and save the file                        | Normalizes mixed line endings before writing.                                                        |
 
 The `alt_modifier` is chosen from `vim.uv.os_uname().sysname`: macOS gets `<M-...>`, other systems
 get `<A-...>`. The config intentionally does not register both aliases because the user observed
@@ -275,10 +275,10 @@ keys. The fzf prompt uses a nonblinking bar cursor, as do other Neovim terminal 
 files, `<A-i>` to toggle ignore rules, and `<A-f>` to follow symlinks. File results can open in a
 split with `<C-s>`, a vertical split with `<C-v>`, or a tab with `<C-t>`.
 
-Grep results keep the icon and file path visible when a match line is long. In file and grep pickers,
-press `<A-l>` to toggle wrapping of result rows; `<A-w>` toggles wrapping in the preview pane.
-The preview starts above the results. Press `<A-o>` to switch it between top and right. `<F5>` still
-positions.
+Grep results keep the icon and file path visible when a match line is long. In file and grep
+pickers, press `<A-l>` to toggle wrapping of result rows; `<A-w>` toggles wrapping in the preview
+pane. The preview starts above the results. Press `<A-o>` to switch it between top and right. `<F5>`
+still positions.
 
 ## Feature and lazy-loaded mappings
 

@@ -45,6 +45,13 @@ paths or pass the same parent again. A different requested path stops with an er
 After setup completes, close the current terminal and open a new one so that every process sees the
 updated environment.
 
+After importing the package list, the bootstrap uses the installed PowerShell 7 to install
+PSScriptAnalyzer 1.25.0 for the current user from PowerShell Gallery when version 1.25.0 or newer is
+not already available. The module is required by dprint's PowerShell formatter. This step is
+included in `setup\scoop.ps1` and is skipped with `-WhatIf`. If package import fails, the bootstrap
+still attempts module setup, then reports the original import error. Packages after the failed
+package may remain uninstalled.
+
 ## Package Bundle
 
 `windows\scoop\Scoopfile.jsonc` is the Windows equivalent of the repository's Brewfile. It records
@@ -264,9 +271,9 @@ pwsh -NoProfile -File .\setup\dotter.ps1 -Action Deploy -Package powershell
 The profile initializes Scoop tools when available: Atuin, bat, Broot, eza, fzf, Starship, zoxide,
 and direnv. PSFzf adds Ctrl+T file selection and Alt+C directory selection; Atuin keeps Ctrl+R
 history search. Native PowerShell Tab completion remains active. The Scoopfile installs PSFzf from
-Extras. Use Ctrl+X Ctrl+F to run `Find-FzfPath` (`ffd`) for file and directory actions, or
-Ctrl+X Ctrl+G to run `Find-FzfContent` (`frg`) for interactive ripgrep search and actions.
-`Find-FzfPath` uses Ctrl+S to switch between files and directories. Local overrides can be placed in
+Extras. Use Ctrl+X Ctrl+F to run `Find-FzfPath` (`ffd`) for file and directory actions, or Ctrl+X
+Ctrl+G to run `Find-FzfContent` (`frg`) for interactive ripgrep search and actions. `Find-FzfPath`
+uses Ctrl+S to switch between files and directories. Local overrides can be placed in
 `%USERPROFILE%\.config\powershell\conf.local.d`.
 
 Use `Get-CurrentShell` to print the shell version and `Get-ShellFunction` to list available
@@ -302,8 +309,8 @@ the environment keeps the supplied `socks5h` URL. Invalid endpoint strings remai
 and are parsed only when a .NET request uses them.
 
 Enable replaces all endpoints; omitted protocols are removed. Omitting `-BypassList` preserves
-existing bypass values; supplying it replaces both variants. `-BypassList ''` clears bypasses: PowerShell
-7.0–7.4 removes the variables, while 7.5+ retains empty values. See Microsoft's
+existing bypass values; supplying it replaces both variants. `-BypassList ''` clears bypasses:
+PowerShell 7.0–7.4 removes the variables, while 7.5+ retains empty values. See Microsoft's
 [environment-variable documentation](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables).
 On Windows, uppercase and lowercase names refer to the same variable, so paired status entries show
 the same value. Case-sensitive platforms keep them separate. Status uses `<unset>` for missing

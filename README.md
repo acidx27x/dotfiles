@@ -66,7 +66,7 @@ packages from any working directory:
 
 ```powershell
 pwsh -NoProfile -File C:\path\to\dotfiles\setup\dotter.ps1 -Package nvim -WhatIf
-pwsh -NoProfile -File C:\path\to\dotfiles\setup\dotter.ps1 -Package git,nvim
+pwsh -NoProfile -File C:\path\to\dotfiles\setup\dotter.ps1 -Package git, nvim
 ```
 
 Deploy a profile, remove one package, refresh a package, replace the complete active selection, or

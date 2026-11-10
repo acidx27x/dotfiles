@@ -102,8 +102,8 @@ subset of Bash and Zsh features; do not assume full parity is required.
   including internal helpers: `Enable-Proxy`, `Get-ConfigScript`, `Invoke-FzfPathAction`.
 - Preserve existing short interactive commands as aliases to native function names, using
   `Set-Alias -Name ... -Value ...`. Use full command and parameter names in scripts and key
-  bindings.
-  When renaming, update callers, diagnostics, catalogs, and `windows.md` examples together.
+  bindings. When renaming, update callers, diagnostics, catalogs, and `windows.md` examples
+  together.
 - Expose helper options as typed PascalCase parameters with descriptive names, such as `HttpProxy`,
   `BypassList`, `Query`, and `LineNumber`. Keep local variables in camelCase. Preserve native tool
   flags when forwarding arguments or constructing external commands.
@@ -144,8 +144,8 @@ subset of Bash and Zsh features; do not assume full parity is required.
   dprint PowerShell formatter when its dependencies are available; report unavailable checks.
 - For PowerShell naming or parameter changes, run targeted PSScriptAnalyzer checks such as
   `PSUseApprovedVerbs`, `PSUseSingularNouns`, `PSAvoidUsingCmdletAliases`, and `PSReservedParams`.
-  The repository formatter settings enable formatting rules only. Also check alias resolution,
-  named and retained positional arguments, argument forwarding, and affected profile callers.
+  The repository formatter settings enable formatting rules only. Also check alias resolution, named
+  and retained positional arguments, argument forwarding, and affected profile callers.
 - Run `git diff --check` and scan modified text for lines longer than 100 columns.
 - Exercise optional-command branches and compare generated strings when changing shell
   initialization, fzf previews, bindings, or reload actions.
