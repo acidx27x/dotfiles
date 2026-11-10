@@ -57,25 +57,46 @@ function Start-WslSshForward {
   Forward a Windows TCP port to SSH inside WSL2 in NAT mode.
   .DESCRIPTION
   Run in an elevated PowerShell terminal with sshd listening inside WSL. Configures
-  IPv4 portproxy on all Windows interfaces and a source-scoped inbound firewall rule.
+  IPv4 portproxy on all Windows interfaces and an inbound firewall rule.
+  AllowedRemoteAddress defaults to Any (all sources); supply an IP or CIDR to restrict access.
+  Supply Distro as an argument; a missing value fails without prompting.
   Returns immediately. Settings persist; rerun after the WSL IP changes.
   Use Remove-WslForward to remove all helper-created SSH and Mosh forwarding rules.
+  .PARAMETER SkipFirewall
+  Skip Windows Firewall checks and rule changes when managing access with another firewall.
+  AllowedRemoteAddress has no effect with this switch.
+  .EXAMPLE
+  Start-WslSshForward -Distro Astra1.8
+  # Connect with: ssh -p 2200 user@WINDOWS_IP
   .EXAMPLE
   Start-WslSshForward -Distro Astra1.8 -AllowedRemoteAddress '10.10.0.14'
-  # Connect with: ssh -p 2200 user@WINDOWS_IP
+  .EXAMPLE
+  Start-WslSshForward -Distro Astra1.8 -SkipFirewall
+  .NOTES
+  With SkipFirewall, no firewall rule records the TCP port for Remove-WslForward. Remove it with:
+  netsh interface portproxy delete v4tov4 listenaddress=0.0.0.0 listenport=2200
+  Replace 2200 with ListenPort if customized.
   #>
   [CmdletBinding(PositionalBinding = $false)]
   param(
-    [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidatePattern('\S')][string] $Distro,
+    [ValidateNotNullOrEmpty()][ValidatePattern('\S')][string] $Distro,
     [ValidateRange(1, 65535)][int] $ListenPort = 2200,
     [ValidateRange(1, 65535)][int] $TargetPort = 22,
-    [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string[]] $AllowedRemoteAddress
+    [ValidateNotNullOrEmpty()][string[]] $AllowedRemoteAddress = @('Any'),
+    [switch] $SkipFirewall
   )
 
   $ErrorActionPreference = 'Stop'
   $PSNativeCommandUseErrorActionPreference = $false
   $functionName = $MyInvocation.MyCommand.Name
-  foreach ($command in 'wsl.exe', 'netsh.exe', 'Get-NetFirewallRule') {
+  if (-not $PSBoundParameters.ContainsKey('Distro')) {
+    throw "${functionName}: supply -Distro as an argument."
+  }
+  $requiredCommands = @('wsl.exe', 'netsh.exe')
+  if (-not $SkipFirewall) {
+    $requiredCommands += 'Get-NetFirewallRule'
+  }
+  foreach ($command in $requiredCommands) {
     if (-not (Test-Command $command)) {
       throw "${functionName}: required command '$command' is unavailable."
     }
@@ -92,13 +113,15 @@ function Start-WslSshForward {
     throw "${functionName}: could not determine the IPv4 address of '$Distro'."
   }
   Set-WslTcpForward -Address $address -ListenPort $ListenPort -TargetPort $TargetPort
-  $rule = @{
-    Name          = "WSL-NAT-SSH-$ListenPort"
-    Protocol      = 'TCP'
-    Port          = @("$ListenPort")
-    RemoteAddress = $AllowedRemoteAddress
+  if (-not $SkipFirewall) {
+    $rule = @{
+      Name          = "WSL-NAT-SSH-$ListenPort"
+      Protocol      = 'TCP'
+      Port          = @("$ListenPort")
+      RemoteAddress = $AllowedRemoteAddress
+    }
+    Set-WslInboundRule @rule
   }
-  Set-WslInboundRule @rule
   Write-Information "TCP $ListenPort -> ${address}:$TargetPort" -InformationAction Continue
 }
 
@@ -113,12 +136,16 @@ function Start-WslMoshForward {
   after stopping; UDP sockets are closed. Run only one relay for the selected ports.
 
   Each UDP port tracks one client; another client on that port displaces it. Match the
-  client's Mosh port range to UdpPort. AllowedRemoteAddress must match the source Windows
-  sees (an IP, CIDR, or Any). Listeners bind all IPv4 interfaces; prefer a restricted source.
+  client's Mosh port range to UdpPort. AllowedRemoteAddress defaults to Any (all sources).
+  Supply an IP or CIDR to restrict access. Listeners bind all IPv4 interfaces.
   WSL restarts terminate sessions; address refresh only repairs forwarding for new ones.
   Use -Verbose for packet logging. For UDP timeouts, check firewall, VPN and routing.
+  Supply Distro as an argument; a missing value fails without prompting.
+  .PARAMETER SkipFirewall
+  Skip Windows Firewall checks and rule changes when managing access with another firewall.
+  AllowedRemoteAddress has no effect with this switch.
   .EXAMPLE
-  Start-WslMoshForward -Distro Astra1.8 -AllowedRemoteAddress '10.10.0.14'
+  Start-WslMoshForward -Distro Astra1.8
 
   From the client:
   mosh --ssh="ssh -p 2200" -p 60001:60005 user@WINDOWS_IP
@@ -126,22 +153,35 @@ function Start-WslMoshForward {
   Omit --server if mosh-server is already on the noninteractive SSH PATH.
   .EXAMPLE
   Start-WslMoshForward -Distro Astra1.8 -UdpPort 60001 -AllowedRemoteAddress '10.10.0.0/24' -Verbose
+  .EXAMPLE
+  Start-WslMoshForward -Distro Astra1.8 -SkipFirewall
   .NOTES
   After stopping, use Remove-WslForward to remove persistent forwarding and firewall rules.
+  With SkipFirewall, no firewall rule records the TCP port for Remove-WslForward. Remove it with:
+  netsh interface portproxy delete v4tov4 listenaddress=0.0.0.0 listenport=2200
+  Replace 2200 with ListenPort if customized.
   #>
   [CmdletBinding(PositionalBinding = $false)]
   param(
-    [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidatePattern('\S')][string] $Distro,
+    [ValidateNotNullOrEmpty()][ValidatePattern('\S')][string] $Distro,
     [ValidateRange(1, 65535)][int] $ListenPort = 2200,
     [ValidateRange(1, 65535)][int] $TargetPort = 22,
     [ValidateCount(1, 32)][ValidateRange(1, 65535)][int[]] $UdpPort = (60001..60005),
-    [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string[]] $AllowedRemoteAddress
+    [ValidateNotNullOrEmpty()][string[]] $AllowedRemoteAddress = @('Any'),
+    [switch] $SkipFirewall
   )
 
   $ErrorActionPreference = 'Stop'
   $PSNativeCommandUseErrorActionPreference = $false
   $functionName = $MyInvocation.MyCommand.Name
-  foreach ($command in 'wsl.exe', 'netsh.exe', 'Get-NetFirewallRule') {
+  if (-not $PSBoundParameters.ContainsKey('Distro')) {
+    throw "${functionName}: supply -Distro as an argument."
+  }
+  $requiredCommands = @('wsl.exe', 'netsh.exe')
+  if (-not $SkipFirewall) {
+    $requiredCommands += 'Get-NetFirewallRule'
+  }
+  foreach ($command in $requiredCommands) {
     if (-not (Test-Command $command)) {
       throw "${functionName}: required command '$command' is unavailable."
     }
@@ -168,11 +208,13 @@ function Start-WslMoshForward {
     }
 
     Set-WslTcpForward -Address $wslAddress -ListenPort $ListenPort -TargetPort $TargetPort
-    foreach ($rule in @(
-        @{ Name = "WSL-NAT-SSH-$ListenPort"; Protocol = 'TCP'; Port = @("$ListenPort") }
-        @{ Name = 'WSL-NAT-Mosh-UDP'; Protocol = 'UDP'; Port = [string[]]$ports }
-      )) {
-      Set-WslInboundRule @rule -RemoteAddress $AllowedRemoteAddress
+    if (-not $SkipFirewall) {
+      foreach ($rule in @(
+          @{ Name = "WSL-NAT-SSH-$ListenPort"; Protocol = 'TCP'; Port = @("$ListenPort") }
+          @{ Name = 'WSL-NAT-Mosh-UDP'; Protocol = 'UDP'; Port = [string[]]$ports }
+        )) {
+        Set-WslInboundRule @rule -RemoteAddress $AllowedRemoteAddress
+      }
     }
 
     $message = "TCP $ListenPort -> ${wslAddress}:$TargetPort; " +
