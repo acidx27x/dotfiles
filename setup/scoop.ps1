@@ -307,7 +307,45 @@ function Main {
     $importName = "scoop-import-$([Guid]::NewGuid().ToString('N')).json"
     $importFile = Join-Path ([System.IO.Path]::GetTempPath()) $importName
     [System.IO.File]::WriteAllText($importFile, $scoopJson, (New-Object System.Text.UTF8Encoding($false)))
-    Invoke-Scoop -Command $scoopCommand -Arguments @('import', $importFile)
+    $importError = $null
+    try {
+      Invoke-Scoop -Command $scoopCommand -Arguments @('import', $importFile)
+    }
+    catch {
+      $importError = $_
+      Write-Warning "Scoop package import failed: $($_.Exception.Message)"
+      Write-Warning 'Continuing with PowerShell module setup before reporting the import failure.'
+    }
+
+    Write-Info 'Installing PowerShell formatting dependencies.'
+    $pwshCommand = Join-Path $paths.User 'apps\pwsh\current\pwsh.exe'
+    $moduleSetup = @'
+$ErrorActionPreference = 'Stop'
+$minimumVersion = [version]'1.25.0'
+$module = Get-Module -ListAvailable -Name PSScriptAnalyzer |
+  Where-Object { $_.Version -ge $minimumVersion } |
+  Select-Object -First 1
+if (-not $module) {
+  $installOptions = @{
+    Name            = 'PSScriptAnalyzer'
+    Version         = $minimumVersion
+    Repository      = 'PSGallery'
+    Scope           = 'CurrentUser'
+    TrustRepository = $true
+    AcceptLicense   = $true
+    ErrorAction     = 'Stop'
+  }
+  Install-PSResource @installOptions
+}
+Import-Module PSScriptAnalyzer -MinimumVersion $minimumVersion -ErrorAction Stop
+'@
+    & $pwshCommand -NoProfile -NonInteractive -Command $moduleSetup
+    if ($LASTEXITCODE -ne 0) {
+      throw "PowerShell module setup failed with exit code $LASTEXITCODE."
+    }
+    if ($importError) {
+      throw $importError
+    }
   }
   finally {
     if ($importFile -and (Test-Path -LiteralPath $importFile)) {
