@@ -30,13 +30,6 @@ confirmations. It stays blank when there is no message or prompt.
   **Enter** to switch; **Esc** cancels. It includes windows from all sessions.
 - **Ctrl+a, Space, f** opens the full tmux-fzf launcher with its management menus.
 
-## Floating terminal
-
-**Alt+f** toggles tmux-floax directly, without the prefix. It uses the plugin's default 80% width
-and height. Hide it with **Alt+f** and reopen it to continue the same terminal session. **Ctrl+a,
-Shift+p** opens its menu for resizing, fullscreen, and embedding the floating window. Requires tmux
-3.3 or newer; install through TPM with **Ctrl+a, Shift+i**, then reload.
-
 ## Session pickers
 
 The prefix is **Ctrl+a**. Both pickers open in a centered popup, 90% wide and 60% high.
