@@ -4,6 +4,11 @@
     "actions":
     [
         {
+            "command": "find",
+            "id": "User.Find",
+            "name": "User | Edit: Search"
+        },
+        {
             "command":
             {
                 "action": "copy",
@@ -18,9 +23,9 @@
             "name": "User | Edit: Paste"
         },
         {
-            "command": "find",
-            "id": "User.Find",
-            "name": "User | Edit: Search"
+            "command": "togglePaneZoom",
+            "id": "User.TogglePaneZoom",
+            "name": "User | Pane: Toggle zoom"
         },
         {
             "command":
@@ -35,8 +40,16 @@
         {
             "command":
             {
+                "action": "newWindow"
+            },
+            "id": "User.NewWindow",
+            "name": "User | Window: New window"
+        },
+        {
+            "command":
+            {
                 "action": "splitPane",
-                "split": "vertical",
+                "split": "right",
                 "splitMode": "duplicate"
             },
             "id": "User.SplitPaneRight",
@@ -46,7 +59,7 @@
             "command":
             {
                 "action": "splitPane",
-                "split": "horizontal",
+                "split": "down",
                 "splitMode": "duplicate"
             },
             "id": "User.SplitPaneDown",
@@ -58,24 +71,39 @@
             "name": "User | Pane: Close"
         },
         {
-            "command": "togglePaneZoom",
-            "id": "User.TogglePaneZoom",
-            "name": "User | Pane: Toggle zoom"
+            "command":
+            {
+                "action": "resizePane",
+                "direction": "right"
+            },
+            "id": "User.ResizeRight",
+            "name": "User | Pane: Resize right"
         },
         {
-            "command": "commandPalette",
+            "command":
+            {
+                "action": "commandPalette"
+            },
             "id": "User.CommandPalette",
             "name": "User | Window: Command palette"
         },
         {
-            "command": "newTab",
-            "id": "User.NewTab",
-            "name": "User | Tab: New tab"
+            "command":
+            {
+                "action": "newTab",
+                "commandline": "pwsh.exe -NoLogo -NoProfile -File \"%USERPROFILE%\\.config\\powershell\\Select-WslDistribution.ps1\"",
+                "tabTitle": "WSL"
+            },
+            "id": "User.WslLauncher",
+            "name": "User | WSL: Select distribution"
         },
         {
-            "command": "newWindow",
-            "id": "User.NewWindow",
-            "name": "User | Window: New window"
+            "command":
+            {
+                "action": "newTab"
+            },
+            "id": "User.NewTab",
+            "name": "User | Tab: New tab"
         },
         {
             "command":
@@ -139,15 +167,6 @@
             },
             "id": "User.FocusRight",
             "name": "User | Pane: Focus right"
-        },
-        {
-            "command":
-            {
-                "action": "resizePane",
-                "direction": "right"
-            },
-            "id": "User.ResizeRight",
-            "name": "User | Pane: Resize right"
         }
     ],
     "alwaysShowTabs": true,
@@ -157,27 +176,37 @@
     "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
     "disabledProfileSources":
     [
-        "Windows.Terminal.Azure"
+        "Windows.Terminal.Azure",
+        "Windows.Terminal.Wsl",
+        "Microsoft.WSL"
     ],
     "initialCols": 128,
     "initialRows": 32,
     "keybindings":
     [
         {
-            "id": "User.SplitPaneRight",
-            "keys": "ctrl+shift+\\"
-        },
-        {
             "id": null,
             "keys": "ctrl+space"
+        },
+        {
+            "id": "User.SplitPaneRight",
+            "keys": "ctrl+shift+\\"
         },
         {
             "id": "User.SplitPaneAuto",
             "keys": "alt+shift+d"
         },
         {
+            "id": "User.FocusUp",
+            "keys": "ctrl+shift+k"
+        },
+        {
             "id": null,
             "keys": "ctrl+c"
+        },
+        {
+            "id": null,
+            "keys": "enter"
         },
         {
             "id": "User.TogglePaneZoom",
@@ -192,32 +221,28 @@
             "keys": "ctrl+v"
         },
         {
-            "id": null,
-            "keys": "enter"
+            "id": "User.SplitPaneDown",
+            "keys": "ctrl+shift+/"
         },
         {
             "id": "User.Copy",
             "keys": "ctrl+shift+c"
         },
         {
-            "id": "User.SplitPaneDown",
-            "keys": "ctrl+shift+/"
-        },
-        {
             "id": "User.ClosePane",
             "keys": "ctrl+shift+w"
         },
         {
-            "id": "User.ResizeLeft",
-            "keys": "ctrl+alt+shift+left"
+            "id": "User.WslLauncher",
+            "keys": "ctrl+shift+o"
         },
         {
             "id": "User.Paste",
             "keys": "ctrl+shift+v"
         },
         {
-            "id": "User.CommandPalette",
-            "keys": "ctrl+shift+o"
+            "id": "User.ResizeLeft",
+            "keys": "ctrl+alt+shift+left"
         },
         {
             "id": "User.FocusLeft",
@@ -240,6 +265,10 @@
             "keys": "ctrl+alt+shift+up"
         },
         {
+            "id": "User.CommandPalette",
+            "keys": "ctrl+shift+p"
+        },
+        {
             "id": "User.FocusRight",
             "keys": "ctrl+shift+right"
         },
@@ -256,24 +285,16 @@
             "keys": "ctrl+shift+j"
         },
         {
-            "id": "User.FocusUp",
-            "keys": "ctrl+shift+k"
-        },
-        {
             "id": "User.FocusRight",
             "keys": "ctrl+shift+l"
         },
         {
-            "id": "User.NewTab",
+            "id": "Terminal.DuplicateTab",
             "keys": "ctrl+shift+t"
         },
         {
             "id": "User.NewWindow",
             "keys": "ctrl+shift+n"
-        },
-        {
-            "id": "User.CommandPalette",
-            "keys": "ctrl+shift+p"
         }
     ],
     "language": "en-US",
@@ -335,12 +356,6 @@
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
-                "guid": "{c6d83f7a-766a-5738-87c3-bf7ac2ed5ed9}",
-                "hidden": false,
-                "name": "Astra1.8",
-                "source": "Microsoft.WSL"
-            },
-            {
                 "guid": "{a35e5e15-6136-55a8-95d6-962c2371dddd}",
                 "hidden": false,
                 "name": "Developer Command Prompt for VS 2022",
@@ -375,18 +390,6 @@
                 "hidden": false,
                 "name": "Developer PowerShell for VS 18",
                 "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{f7864d59-ce8c-5b89-aa28-11735de48c5f}",
-                "hidden": false,
-                "name": "Ubuntu-22.04",
-                "source": "Microsoft.WSL"
-            },
-            {
-                "guid": "{ff5fbf43-065c-5b0b-9e80-4a53c5670393}",
-                "hidden": false,
-                "name": "Ubuntu-24.04",
-                "source": "Microsoft.WSL"
             }
         ]
     },

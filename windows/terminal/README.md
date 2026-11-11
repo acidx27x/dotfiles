@@ -34,7 +34,15 @@ Copy-on-select also makes right-click paste immediately. Open hyperlinks with Ct
 New windows request 256 columns by 128 rows and open centered in normal window mode. These are
 terminal cells, not pixels; Windows may constrain the actual size to fit the monitor. The Terminal
 interface uses English (`en-US`); this does not change the Windows keyboard layout or shell locale.
-Azure Cloud Shell discovery is disabled through `disabledProfileSources`.
+Azure Cloud Shell and WSL profile discovery are disabled through `disabledProfileSources`. Both
+`Windows.Terminal.Wsl` and `Microsoft.WSL` are disabled to cover legacy discovery and newer
+WSL-provided profiles. Distro names and GUIDs do not belong in the shared profile list.
+
+Press `Ctrl+Shift+O` to open an fzf picker of this PC's installed WSL distributions. Enter launches
+the selected distro in its Linux home directory in that tab; Escape cancels and closes the tab. The
+picker runs `wsl.exe --list --quiet` each time, so no distro names are stored in the config. It
+requires PowerShell 7, fzf, and the `powershell` Dotter package, which deploys
+`~/.config/powershell/Select-WslDistribution.ps1`. The command palette remains on `Ctrl+Shift+P`.
 
 In Preview, application BEL events flash the taskbar and send a Windows toast through
 `bellStyle: ["taskbar", "notification"]`, without a terminal bell sound. Native toast notifications
@@ -87,12 +95,12 @@ and
 | Ctrl+Shift+Alt+Arrow | Resize panes                                                           |
 | Ctrl+Shift+Z         | Zoom the focused pane                                                  |
 | Ctrl+Shift+W         | Close the focused pane; closes the tab/window when it is the last pane |
-| Ctrl+Shift+O         | Command palette; search for a profile's new-tab action                 |
+| Ctrl+Shift+O         | Pick an installed WSL distribution and launch it in a new tab          |
 | Ctrl+Shift+C / V     | Copy / paste                                                           |
 | Ctrl+Shift+F / P     | Find / command palette                                                 |
 
-Native shortcuts remain available, including Ctrl+Shift+T for a default-profile tab, Ctrl+Shift+D
-for a duplicate tab, and Ctrl+Shift+N for a new window. Ctrl+C, Ctrl+V, and Enter continue to pass
+Ctrl+Shift+T duplicates the current tab. Native shortcuts remain available, including Ctrl+Shift+D
+for another duplicate-tab binding and Ctrl+Shift+N for a new window. Ctrl+C, Ctrl+V, and Enter pass
 through to applications as in the previous Terminal config. Shortcuts involving punctuation should
 be checked with your active Windows keyboard layout.
 
@@ -209,7 +217,12 @@ pwsh -NoProfile -File .\setup\dotter.ps1 -Package windows-terminal-preview -What
 ```
 
 Remove `-WhatIf` to deploy. Deployment is additive: either package leaves the other edition
-deployed. To deploy both at once, use `-Package windows-terminal,windows-terminal-preview`.
+deployed. To deploy both at once, use `-Package windows-terminal,windows-terminal-preview`. Include
+`powershell` when deploying the WSL picker helper:
+
+```powershell
+pwsh -NoProfile -File .\setup\dotter.ps1 -Package 'powershell,windows-terminal-preview'
+```
 
 To apply a Preview copy without enrolling it in Dotter, run from the repository root:
 
