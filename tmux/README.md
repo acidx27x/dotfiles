@@ -16,6 +16,14 @@ settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+a, r** reloads them
 `@ukiyo-fixed-location` to a city name if network-based detection picks the wrong location. After
 changing themes in the menu, reload to restore the custom tab colors.
 
+## Window navigation
+
+- **Alt+n / Alt+p** select the next / previous window, wrapping around.
+- **Ctrl+a, Tab** toggles between the current and last-used window.
+- **Ctrl+a, Shift+f** opens tmux-fzf's window switcher directly. Type to filter, then press
+  **Enter** to switch; **Esc** cancels. It includes windows from all sessions.
+- **Ctrl+a, Space, f** opens the full tmux-fzf launcher with its management menus.
+
 ## Session pickers
 
 The prefix is **Ctrl+a**. Both pickers open in a centered popup, 90% wide and 60% high.
@@ -26,7 +34,7 @@ The prefix is **Ctrl+a**. Both pickers open in a centered popup, 90% wide and 60
 | Ctrl+a, s            | Open Sesh's native picker                    |
 | Ctrl+a, L            | Return to the previous session (`sesh last`) |
 | Ctrl+a, Space, o / s | Open SessionX / Sesh through which-key       |
-| Ctrl+a, F            | Open the existing tmux-fzf launcher          |
+| Ctrl+a, F            | Open the tmux-fzf window switcher directly   |
 
 SessionX inherits `FZF_DEFAULT_OPTS_FILE` and `FZF_DEFAULT_OPTS` from the attaching Bash or Zsh
 shell. It reuses that shell's fzfrc colors and bindings, with its own reverse layout, prompt,
