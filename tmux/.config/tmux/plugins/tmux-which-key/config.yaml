@@ -71,3 +71,6 @@ items:
   - name: Reload config
     key: r
     command: "source-file ~/.tmux.conf"
+  - name: Statusline settings
+    key: T
+    command: 'run-shell "$HOME/.tmux/plugins/tmux-ukiyo/menu_items/main.sh"'

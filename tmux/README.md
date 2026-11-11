@@ -1,4 +1,18 @@
-# tmux session pickers
+# tmux
+
+## Statusline
+
+The top statusline uses Kanagawa Dragon with Powerline arrows and left-aligned window tabs. The
+right side shows only battery and weather, including temperature in Celsius and location. Weather
+uses network-based location detection and requires `curl` and internet access. Powerline arrows
+require a compatible font, such as FiraCode Nerd Font.
+
+Press **Ctrl+a, Shift+t** to open Ukiyo's interactive statusline settings menu for colors, modules,
+and options. It is also available through **Ctrl+a, Space, Shift+t** in which-key. Keep persistent
+settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+a, r** reloads them. Set
+`@ukiyo-fixed-location` to a city name if network-based detection picks the wrong location.
+
+## Session pickers
 
 The prefix is **Ctrl+a**. Both pickers open in a centered popup, 90% wide and 60% high.
 
