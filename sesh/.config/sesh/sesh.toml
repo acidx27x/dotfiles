@@ -1,0 +1,12 @@
+[tui]
+prompt = "∼ "
+pointer = "▶"
+placeholder = "Pick session"
+show_icons = true
+show_windows = true
+# Override Sesh's dim window labels with normal-intensity Iceberg text.
+window_name_format = "\u001b[22;38;2;198;200;209m#{window_name}\u001b[0m"
+preview = true
+preview_width = 60
+preview_min_width = 100
+preview_border = "line"

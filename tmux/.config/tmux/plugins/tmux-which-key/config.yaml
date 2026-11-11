@@ -52,7 +52,10 @@ items:
         command: choose-tree -Zw
   - name: Sessions (sesh)
     key: s
-    command: 'display-popup -E -h 90% -w 50% "sesh picker -i"'
+    command: 'display-popup -E -h 60% -w 90% "sesh picker -i"'
+  - name: Sessions (SessionX)
+    key: o
+    command: 'run-shell "$HOME/.tmux/plugins/tmux-sessionx/scripts/sessionx.sh"'
   - name: Find (tmux-fzf)
     key: f
     command: 'run-shell -b "TMUX_FZF_CLIENT=#{client_tty} $HOME/.tmux/plugins/tmux-fzf/main.sh"'
