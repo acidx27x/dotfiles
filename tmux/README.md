@@ -16,13 +16,26 @@ settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+a, r** reloads them
 `@ukiyo-fixed-location` to a city name if network-based detection picks the wrong location. After
 changing themes in the menu, reload to restore the custom tab colors.
 
+A second row is always reserved below the tabs for tmux messages, command prompts, and
+confirmations. It stays blank when there is no message or prompt.
+
 ## Window navigation
 
 - **Alt+n / Alt+p** select the next / previous window, wrapping around.
 - **Ctrl+a, Tab** toggles between the current and last-used window.
+- **Ctrl+a, &** asks before closing the current window. The confirmation appears below the
+  statusline; **y** closes the window and **n** or **Esc** cancels. Exiting a shell normally does
+  not ask for confirmation.
 - **Ctrl+a, Shift+f** opens tmux-fzf's window switcher directly. Type to filter, then press
   **Enter** to switch; **Esc** cancels. It includes windows from all sessions.
 - **Ctrl+a, Space, f** opens the full tmux-fzf launcher with its management menus.
+
+## Floating terminal
+
+**Alt+f** toggles tmux-floax directly, without the prefix. It uses the plugin's default 80% width
+and height. Hide it with **Alt+f** and reopen it to continue the same terminal session. **Ctrl+a,
+Shift+p** opens its menu for resizing, fullscreen, and embedding the floating window. Requires tmux
+3.3 or newer; install through TPM with **Ctrl+a, Shift+i**, then reload.
 
 ## Session pickers
 
