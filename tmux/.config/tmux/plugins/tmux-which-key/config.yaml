@@ -60,7 +60,7 @@ items:
     key: o
     command: 'run-shell "$HOME/.tmux/plugins/tmux-sessionx/scripts/sessionx.sh"'
   - name: Previous session (sesh)
-    key: L
+    key: C-l
     command: 'run-shell "sesh last"'
   - name: Find (tmux-fzf)
     key: f

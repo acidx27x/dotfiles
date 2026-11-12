@@ -6,15 +6,17 @@ The top statusline uses Kanagawa Dragon with Powerline arrows and left-aligned w
 backgrounds cycle through Dragon green, blue, violet, and orange by window number; the active tab
 has a bright yellow background, bold text, and a `●` marker. The right side shows only battery and
 weather, including temperature in Celsius and location. Weather updates automatically about every 20
-minutes; the bar redraws every 5 seconds using cached data. It uses network-based location detection
-and requires `curl` and internet access. Powerline arrows require a compatible font, such as
-FiraCode Nerd Font.
+minutes; the bar redraws every 30 seconds using cached data. It uses network-based location
+detection and requires `curl` and internet access. Powerline arrows require a compatible font, such
+as FiraCode Nerd Font.
 
 Press **Ctrl+a, Shift+t** to open Ukiyo's interactive statusline settings menu for colors, modules,
 and options. It is also available through **Ctrl+a, Space, Shift+t** in which-key. Keep persistent
 settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+a, r** reloads them. Set
 `@ukiyo-fixed-location` to a city name if network-based detection picks the wrong location. After
 changing themes in the menu, reload to restore the custom tab colors.
+
+Windows with background activity show a `!` marker in their tab.
 
 A second row is always reserved below the tabs for tmux messages, command prompts, and
 confirmations. It shows a dim horizontal separator when there is no message or prompt.
@@ -26,7 +28,7 @@ Press **Ctrl+a, Space** to open which-key, then use:
 | Keys         | Action                                                |
 | ------------ | ----------------------------------------------------- |
 | s / o        | Sesh / SessionX picker                                |
-| L            | Previous session through Sesh                         |
+| Ctrl+l       | Previous session through Sesh                         |
 | f            | Full tmux-fzf launcher                                |
 | w, f         | tmux-fzf window picker                                |
 | m, h/j/k/l   | Smart Splits movement through the existing Alt keys   |
@@ -41,6 +43,7 @@ Continuum saves and restores automatically; manual snapshots use the Backup menu
 ## Window navigation
 
 - **Alt+n / Alt+p** select the next / previous window, wrapping around.
+- **Alt+i / Alt+o** move the current window left / right, keeping it focused, without a prefix.
 - **Ctrl+a, Tab** toggles between the current and last-used window.
 - **Ctrl+a, &** asks before closing the current window. The confirmation appears below the
   statusline; **y** closes the window and **n** or **Esc** cancels. Exiting a shell normally does
@@ -48,6 +51,17 @@ Continuum saves and restores automatically; manual snapshots use the Backup menu
 - **Ctrl+a, Shift+f** opens tmux-fzf's window switcher directly. Type to filter, then press
   **Enter** to switch; **Esc** cancels. It includes windows from all sessions.
 - **Ctrl+a, Space, f** opens the full tmux-fzf launcher with its management menus.
+
+## Copy mode and panes
+
+Press **Ctrl+a, [** or **Ctrl+a, Esc** to enter vi copy mode. Use **v** to begin a selection, **V**
+for whole lines, and **Ctrl+v** to toggle rectangular selection. **y** copies without leaving copy
+mode; **Esc** cancels and returns to the terminal.
+
+Press **Ctrl+a, H/J/K/L** to resize panes left/down/up/right by five cells. These bindings repeat
+without another prefix while pressed within tmux's repeat timeout. Existing Smart Splits Alt-arrow
+resizing remains available. **Ctrl+a, < / >** swaps the current pane with the previous / next pane
+in pane index order.
 
 ## Session pickers
 
@@ -57,7 +71,7 @@ The prefix is **Ctrl+a**. Both pickers open in a centered popup, 90% wide and 60
 | -------------------- | -------------------------------------------- |
 | Ctrl+a, o            | Open SessionX                                |
 | Ctrl+a, s            | Open Sesh's native picker                    |
-| Ctrl+a, L            | Return to the previous session (`sesh last`) |
+| Ctrl+a, Ctrl+l       | Return to the previous session (`sesh last`) |
 | Ctrl+a, Space, o / s | Open SessionX / Sesh through which-key       |
 | Ctrl+a, F            | Open the tmux-fzf window switcher directly   |
 
@@ -82,7 +96,7 @@ Sesh uses its native right-side preview and keyboard controls. The preview occup
 the picker and hides below 100 columns. Its native configuration supports the prompt, pointer,
 icons, window names, and preview settings here, but cannot import fzfrc, set the full palette, or
 remap scrolling keys. Caching remains disabled; no project paths or startup commands are configured.
-**Ctrl+a, L** also provides a way back after a session closes.
+**Ctrl+a, Ctrl+l** also provides a way back after a session closes.
 
 Deploy the configuration from the repository root:
 
@@ -105,7 +119,7 @@ them.
 To verify interactively after deployment:
 
 1. Run `tmux new-session -d -s picker-existing` to add a temporary selection target. In that
-   session, run `seq 1 200` to provide preview content, then return with **Ctrl+a, L**.
+   session, run `seq 1 200` to provide preview content, then return with **Ctrl+a, Ctrl+l**.
 2. Open **Ctrl+a, o**, check the popup and preview, use **Ctrl+u / Ctrl+d** for the list and
    **Ctrl+b / Ctrl+f** for the preview, then cancel with **Esc**. Try **Alt+z**, **Alt+b**, and the
    inherited Alt toggles. Reopen and select `picker-existing` with **Enter**.
