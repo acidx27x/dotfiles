@@ -17,6 +17,18 @@ local hide_dotfiles = function(entry)
   return not vim.startswith(entry.name, ".")
 end
 
+local function set_cwd(cmd)
+  local state = files.get_explorer_state()
+  if not state then
+    return
+  end
+
+  local dir = state.branch[state.depth_focus]
+  vim.api.nvim_win_call(state.target_window, function()
+    vim.cmd({ cmd = cmd, args = { dir } })
+  end)
+end
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesExplorerOpen",
   callback = function()
@@ -29,6 +41,14 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesBufferCreate",
   callback = function(args)
     local buffer = args.data.buf_id
+
+    vim.keymap.set("n", "g~", function()
+      set_cwd("tcd")
+    end, { buffer = buffer, desc = "Set tab cwd to MiniFiles directory" })
+
+    vim.keymap.set("n", "g`", function()
+      set_cwd("lcd")
+    end, { buffer = buffer, desc = "Set window cwd to MiniFiles directory" })
 
     vim.keymap.set("n", "g.", function()
       show_hidden = not show_hidden

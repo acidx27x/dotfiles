@@ -297,22 +297,41 @@ still positions.
 | `<Space>dR` / `<Space>dt` / `<Space>d?`               | Normal                    | Restart / toggle REPL / evaluate expression           | DAP lazy group.                                                     |
 | `<Space>tw`                                           | Normal                    | Trim trailing whitespace and final blank lines        | MiniTrailspace eager.                                               |
 | `<Space>vw`                                           | Normal, Visual            | Toggle visible whitespace rendering                   | Visual Whitespace; loads on first file event or mapping use.        |
-| `<Space>oT` / `<Space>of` / `<Space>ov` / `<Space>oh` | Normal                    | Open Oil in tab / float / vertical / horizontal split | Oil; eager.                                                         |
+| `<Space>ot` / `<Space>of` / `<Space>ov` / `<Space>oh` | Normal                    | Open Oil in tab / float / vertical / horizontal split | Oil; eager.                                                         |
 
 ### Oil buffer mappings
 
-Oil disables its default keymaps and uses the following mappings inside Oil buffers. They do not
-override same keys in normal editing buffers.
+Oil keeps its default keymaps with the following overrides and additions. These mappings apply only
+inside Oil buffers.
 
-| Keys                                       | Action                                                    |
-| ------------------------------------------ | --------------------------------------------------------- |
-| `<CR>` / `<C-s>` / `<C-h>` / `<C-t>`       | Open entry here / vertical split / horizontal split / tab |
-| `<C-p>` / `<C-f>` / `<C-b>`                | Toggle preview / scroll preview down / up                 |
-| `<Space>o?` / `<Space>or`                  | Help / refresh                                            |
-| `<Space>ob` / `<Space>o-`                  | Open cwd / parent directory                               |
-| `<Space>o.` / `<Space>o,`                  | Change cwd / window-local cwd                             |
-| `<Space>ox` / `<Space>os`                  | Open external / change sort                               |
-| `<Space>oth` / `<Space>ott` / `<Space>otc` | Toggle hidden / trash / detailed columns                  |
+| Keys                                 | Action                                                    |
+| ------------------------------------ | --------------------------------------------------------- |
+| `<CR>` / `<C-s>` / `<C-h>` / `<C-t>` | Open entry here / vertical split / horizontal split / tab |
+| `<C-p>` / `<C-f>` / `<C-b>`          | Toggle preview / scroll preview down / up                 |
+| `g?` / `<C-l>`                       | Help / refresh                                            |
+| `_` / `-`                            | Open cwd / parent directory                               |
+| `` ` ``                              | Set global cwd to displayed directory                     |
+| `g~` / `` g` ``                      | Set tab / editing-window cwd to displayed directory       |
+| `gx` / `gs`                          | Open external / change sort                               |
+| `g.` / `g\` / `gc`                   | Toggle hidden / trash / detailed columns                  |
+
+The local cwd mappings target the originating editing window when Oil is floating. Backtick keeps
+Oil's default global `:cd` behavior.
+
+### MiniFiles buffer mappings
+
+`<Space>mf` toggles MiniFiles. These custom mappings apply inside its explorer buffers; built-in
+navigation and help (`g?`) remain available.
+
+| Keys        | Action                                      |
+| ----------- | ------------------------------------------- |
+| `g~`        | Set tab cwd to focused directory            |
+| `` g` ``    | Set editing-window cwd to focused directory |
+| `g.` / `gp` | Toggle hidden files / preview               |
+| `gy`        | Yank full path of entry under cursor        |
+
+The cwd mappings target MiniFiles' editing window and work in empty directories. They use the
+directory displayed in the focused explorer column, rather than the entry under the cursor.
 
 ### Snipe buffer mappings
 

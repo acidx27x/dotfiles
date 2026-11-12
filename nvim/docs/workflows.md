@@ -87,6 +87,17 @@ exact existing buffer with native `:tab sbuffer`, including unnamed, modified, a
 Completion offers valid numeric IDs; invalid IDs do not create a tab. This config places new
 horizontal splits below and vertical splits to the right.
 
+## Explorer working directories
+
+In Oil or MiniFiles, use `g~` to set the tab's cwd to the displayed directory, or `` g` `` to set
+only the editing window's cwd. Floating explorers apply these changes to their editing window.
+MiniFiles uses the focused directory column, including empty directories. Browsing alone does not
+change cwd; Oil's backtick still sets the global cwd.
+
+Use `g~` for one project per tab and `` g` `` to narrow the next `<Space>pf` or `<Space>pg` search
+in one window. `:verbose pwd` shows the effective directory and its scope. Setting the tab cwd also
+clears the editing window's local override; other windows with local overrides keep them.
+
 ## Search and edit
 
 | Keys or command         | Action                                                      |

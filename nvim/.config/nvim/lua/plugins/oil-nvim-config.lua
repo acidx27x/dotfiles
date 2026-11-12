@@ -12,9 +12,6 @@ function M.get()
     return ""
   end
 
-  local winconfig = vim.api.nvim_win_get_config(winid)
-  local is_floating = winconfig.relative ~= ""
-
   local signcol_setting = vim.wo.signcolumn
   local sign_width = 0
   if signcol_setting == "yes" or signcol_setting == "auto" then
@@ -35,7 +32,7 @@ function M.get()
   local format = ""
 
   local dir = require("oil").get_current_dir(bufnr)
-  if is_floating and dir then
+  if dir then
     dir = "cwd: " .. vim.fn.fnamemodify(dir, ":~")
     format = "%%#SignColumn#%s%%#LineNr#%s%%#WinBar#%s%%*"
   else
@@ -50,6 +47,18 @@ end
 _G.oil_winbar = M
 --
 
+local function set_cwd(cmd)
+  local dir = require("oil").get_current_dir()
+  local target = vim.w.oil_original_win or vim.api.nvim_get_current_win()
+  if not dir or not vim.api.nvim_win_is_valid(target) then
+    return
+  end
+
+  vim.api.nvim_win_call(target, function()
+    vim.cmd({ cmd = cmd, args = { dir } })
+  end)
+end
+
 require("oil").setup({
   default_file_explorer = true,
 
@@ -57,6 +66,21 @@ require("oil").setup({
   keymaps = {
     ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Scroll preview down" },
     ["<C-b>"] = { "actions.preview_scroll_up", mode = "n", desc = "Scroll preview up" },
+
+    ["g~"] = {
+      callback = function()
+        set_cwd("tcd")
+      end,
+      mode = "n",
+      desc = "Set tab cwd to Oil directory",
+    },
+    ["g`"] = {
+      callback = function()
+        set_cwd("lcd")
+      end,
+      mode = "n",
+      desc = "Set window cwd to Oil directory",
+    },
 
     ["gc"] = {
       callback = function()
