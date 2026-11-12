@@ -113,6 +113,11 @@ clears the editing window's local override; other windows with local overrides k
 Use quickfix above when you need a persistent, navigable list of matches across files. fzf-lua is
 useful for jumping to one result quickly.
 
+To find a file and browse its directory, use `<Space>pf`, search for the filename, then press
+`<C-o>` to reveal it in Oil. Enter still opens the file normally. While browsing Oil, `gf` starts
+the same file picker recursively beneath the displayed directory without changing cwd. If Oil is
+floating, it closes first and the picker returns selections to the underlying editing window.
+
 ### Project TODO markers
 
 `<Space>pp` opens fzf-lua's grep picker for standalone uppercase `TODO`, `FIXME`, `ERROR`, `HACK`,

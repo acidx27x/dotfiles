@@ -310,6 +310,7 @@ inside Oil buffers.
 | `<C-p>` / `<C-f>` / `<C-b>`          | Toggle preview / scroll preview down / up                 |
 | `g?` / `<C-l>`                       | Help / refresh                                            |
 | `_` / `-`                            | Open cwd / parent directory                               |
+| `gf`                                 | Find files recursively beneath displayed directory        |
 | `` ` ``                              | Set global cwd to displayed directory                     |
 | `g~` / `` g` ``                      | Set tab / editing-window cwd to displayed directory       |
 | `gx` / `gs`                          | Open external / change sort                               |
@@ -317,6 +318,11 @@ inside Oil buffers.
 
 The local cwd mappings target the originating editing window when Oil is floating. Backtick keeps
 Oil's default global `:cd` behavior.
+
+`gf` searches local directories with fzf-lua without changing cwd. Floating Oil closes before the
+picker opens, so selections use the underlying editing window. In the file picker (`<Space>pf` or
+Oil's `gf`), `<C-o>` reveals the selected file in Oil with the cursor on its entry; Enter keeps its
+default open-file / multiple-selection quickfix behavior.
 
 ### MiniFiles buffer mappings
 

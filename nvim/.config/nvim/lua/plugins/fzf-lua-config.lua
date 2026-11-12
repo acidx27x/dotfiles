@@ -48,6 +48,30 @@ fzf.setup({
       ["ctrl-b"] = "preview-page-up",
     },
   },
+  files = {
+    actions = {
+      ["ctrl-o"] = {
+        fn = function(selected, opts)
+          if not selected[1] then
+            return
+          end
+          local entry = require("fzf-lua.path").entry_to_file(selected[1], opts)
+          local oil = require("oil")
+          local name = vim.fs.basename(entry.path)
+          oil.open(vim.fs.dirname(entry.path), {}, function()
+            for lnum = 1, vim.api.nvim_buf_line_count(0) do
+              local item = oil.get_entry_on_line(0, lnum)
+              if item and item.name == name then
+                vim.api.nvim_win_set_cursor(0, { lnum, 0 })
+                return
+              end
+            end
+          end)
+        end,
+        desc = "reveal-file-in-Oil",
+      },
+    },
+  },
   grep = {
     rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden -e",
     fzf_opts = { ["--no-hscroll"] = true },

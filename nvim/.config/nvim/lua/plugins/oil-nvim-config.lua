@@ -67,6 +67,23 @@ require("oil").setup({
     ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Scroll preview down" },
     ["<C-b>"] = { "actions.preview_scroll_up", mode = "n", desc = "Scroll preview up" },
 
+    ["gf"] = {
+      callback = function()
+        local oil = require("oil")
+        local dir = oil.get_current_dir()
+        if not dir then
+          vim.notify("Recursive file search requires a local Oil directory", vim.log.levels.WARN)
+          return
+        end
+        if vim.w.oil_original_win then
+          oil.close()
+        end
+        require("fzf-lua").files({ cwd = dir })
+      end,
+      mode = "n",
+      desc = "Find files beneath Oil directory",
+    },
+
     ["g~"] = {
       callback = function()
         set_cwd("tcd")
