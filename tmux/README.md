@@ -17,7 +17,26 @@ settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+a, r** reloads them
 changing themes in the menu, reload to restore the custom tab colors.
 
 A second row is always reserved below the tabs for tmux messages, command prompts, and
-confirmations. It stays blank when there is no message or prompt.
+confirmations. It shows a dim horizontal separator when there is no message or prompt.
+
+## Plugin commands in which-key
+
+Press **Ctrl+a, Space** to open which-key, then use:
+
+| Keys         | Action                                                |
+| ------------ | ----------------------------------------------------- |
+| s / o        | Sesh / SessionX picker                                |
+| L            | Previous session through Sesh                         |
+| f            | Full tmux-fzf launcher                                |
+| w, f         | tmux-fzf window picker                                |
+| m, h/j/k/l   | Smart Splits movement through the existing Alt keys   |
+| m, H/J/K/L   | Smart Splits resizing through the existing Alt arrows |
+| b, s / r     | Resurrect save / restore                              |
+| P, i / u / c | TPM install / update / remove unused plugins          |
+| T            | Ukiyo statusline settings                             |
+
+Continuum saves and restores automatically; manual snapshots use the Backup menu. Reload with
+**Ctrl+a, r** after editing the menu configuration.
 
 ## Window navigation
 

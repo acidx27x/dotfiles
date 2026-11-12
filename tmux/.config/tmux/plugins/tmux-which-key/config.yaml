@@ -50,12 +50,18 @@ items:
       - name: Choose
         key: w
         command: choose-tree -Zw
+      - name: Find (tmux-fzf)
+        key: f
+        command: 'run-shell -b "TMUX_FZF_CLIENT=#{client_tty} $HOME/.tmux/plugins/tmux-fzf/scripts/window.sh switch"'
   - name: Sessions (sesh)
     key: s
     command: 'display-popup -E -h 60% -w 90% "sesh picker -i"'
   - name: Sessions (SessionX)
     key: o
     command: 'run-shell "$HOME/.tmux/plugins/tmux-sessionx/scripts/sessionx.sh"'
+  - name: Previous session (sesh)
+    key: L
+    command: 'run-shell "sesh last"'
   - name: Find (tmux-fzf)
     key: f
     command: 'run-shell -b "TMUX_FZF_CLIENT=#{client_tty} $HOME/.tmux/plugins/tmux-fzf/main.sh"'
@@ -68,6 +74,45 @@ items:
       - name: Restore
         key: r
         command: 'run-shell -b "$HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh"'
+  - name: Smart Splits
+    key: m
+    menu:
+      - name: Move left
+        key: h
+        command: send-keys -K M-h
+      - name: Move down
+        key: j
+        command: send-keys -K M-j
+      - name: Move up
+        key: k
+        command: send-keys -K M-k
+      - name: Move right
+        key: l
+        command: send-keys -K M-l
+      - name: Resize left
+        key: H
+        command: send-keys -K M-Left
+      - name: Resize down
+        key: J
+        command: send-keys -K M-Down
+      - name: Resize up
+        key: K
+        command: send-keys -K M-Up
+      - name: Resize right
+        key: L
+        command: send-keys -K M-Right
+  - name: Plugins (TPM)
+    key: P
+    menu:
+      - name: Install
+        key: i
+        command: 'run-shell "$HOME/.tmux/plugins/tpm/bindings/install_plugins"'
+      - name: Update
+        key: u
+        command: 'run-shell "$HOME/.tmux/plugins/tpm/bindings/update_plugins"'
+      - name: Remove unused
+        key: c
+        command: 'run-shell "$HOME/.tmux/plugins/tpm/bindings/clean_plugins"'
   - name: Reload config
     key: r
     command: "source-file ~/.tmux.conf"
