@@ -10,14 +10,11 @@ model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 plan_mode_reasoning_effort = "xhigh"
 
-# Options: "low", "medium", "high".
-model_verbosity = "medium"
-
 # Options: "auto", "concise", "detailed", "none".
 model_reasoning_summary = "auto"
 
-# Options include "fast" and "flex".
-service_tier = "default"
+# Optional: enable only after testing OS keyring availability on this machine.
+# cli_auth_credentials_store = "keyring"
 
 # Let Codex/model defaults handle auto-compaction unless you have a specific need.
 # model_auto_compact_token_limit = 128000
@@ -90,6 +87,9 @@ sandbox = "elevated"
 # Also may be needed.
 "~/.codex/packages/app-server-daemon" = "read"
 "~/.codex" = "read"
+"~/.codex/auth.json" = "deny"
+"~/.codex/.sandbox-secrets" = "deny"
+"~/.codex/history.jsonl" = "deny"
 
 # SSH settings and trusted host keys; private keys stay outside this grant.
 "~/.ssh/config" = "read"
@@ -107,7 +107,7 @@ sandbox = "elevated"
 
 # Required/recommended when using unbounded ** deny globs on platforms that
 # pre-expand glob matches before sandbox startup.
-glob_scan_max_depth = 3
+glob_scan_max_depth = 5
 
 [permissions.locked_folders_only.filesystem.":workspace_roots"]
 # Allow read/write access inside each workspace root supplied by the current
@@ -144,6 +144,9 @@ glob_scan_max_depth = 3
 ###############################################################################
 [permissions.locked_folders_only.network]
 enabled = true
+
+# Permit allowlisted hosts to resolve to local/private-network addresses.
+allow_local_binding = true
 
 # Proxy mode; domain rules below still apply when the network proxy is active.
 # Options: "limited", "full".
@@ -189,6 +192,7 @@ socks_url = "http://127.0.0.1:8081"
 "sum.golang.org" = "allow"
 "formulae.brew.sh" = "allow"
 "get.scoop.sh" = "allow"
+"plugins.dprint.dev" = "allow"
 
 # Other Git hosts.
 "codeberg.org" = "allow"
@@ -210,8 +214,8 @@ socks_url = "http://127.0.0.1:8081"
 # Inherit all variables except those matched by the explicit filters below.
 inherit = "all"
 
-# Use only the explicit exclusions below instead of built-in secret-name exclusions.
-ignore_default_excludes = true
+# Apply built-in secret-name exclusions as well as the explicit filters below.
+ignore_default_excludes = false
 
 [shell_environment_policy.filters]
 # Case-insensitive exclusions; variables with other names pass through.

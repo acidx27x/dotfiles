@@ -106,6 +106,7 @@ are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mappe
 | `bat`        | `%APPDATA%\bat\config`                                                      |
 | `broot`      | `%APPDATA%\dystroy\broot\config` (`conf.hjson`, `skins\iceberg-dark.hjson`) |
 | `lazygit`    | `%LOCALAPPDATA%\lazygit\config.yml`                                         |
+| `tuicr`      | `%APPDATA%\tuicr\config.toml` and `themes`                                   |
 | `zellij`     | `%APPDATA%\Zellij\config\config.kdl` and `config\layouts`                   |
 | `powershell` | `%USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`       |
 
@@ -391,7 +392,7 @@ pwsh -NoProfile -File .\setup\codex.ps1 -WhatIf
 pwsh -NoProfile -File .\setup\codex.ps1
 ```
 
-The script installs `codex-system/config.toml` into the machine-wide location. It is idempotent and
+The script installs `codex/config.toml` into the machine-wide location. It is idempotent and
 only updates an existing file carrying this repository's managed marker. It never reads, creates, or
 changes the user config, where Codex can continue writing trusted projects, model migrations,
 notices, and other machine-local settings.

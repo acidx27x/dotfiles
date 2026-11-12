@@ -31,7 +31,7 @@ if (-not $programDataRoot) {
 }
 
 $dotfilesRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$baseConfig = Join-Path $dotfilesRoot 'codex-system\config.toml'
+$baseConfig = Join-Path $dotfilesRoot 'codex\config.toml'
 $systemConfigDirectory = Join-Path $programDataRoot 'OpenAI\Codex'
 $systemConfig = Join-Path $systemConfigDirectory 'config.toml'
 

@@ -28,6 +28,8 @@
     { "Name": "git", "Source": "main", "Info": "" },
     { "Name": "git-lfs", "Source": "main", "Info": "" },
     { "Name": "delta", "Source": "main", "Info": "" },
+    { "Name": "difftastic", "Source": "main", "Info": "" },
+    { "Name": "tuicr", "Source": "main", "Info": "" },
     { "Name": "dotter", "Source": "main", "Info": "" },
     { "Name": "lazygit", "Source": "extras", "Info": "" },
 

@@ -21,6 +21,7 @@ ssh
 starship
 stow
 tmux
+tuicr
 wezterm
 wget
 worktrunk

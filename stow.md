@@ -19,8 +19,7 @@ brew install stow
 
 ## Example Repository Structure
 
-Most top-level directories are Stow packages. Setup-only directories such as `codex-system/` are
-exceptions.
+Most top-level directories are Stow packages. Setup-only directories such as `setup/` are exceptions.
 
 ```text
 ~/dotfiles/
@@ -215,7 +214,7 @@ determines link ownership from the package directories and target links.
 
 A selectable package must be an existing top-level directory and must not be one of the explicit
 repository-only or platform exclusions: `.agents`, `.aws`, `.codex`, `.git`, `brave`,
-`codex-system`, `setup`, `windows`, or `wsl`. Unknown packages and profiles fail before Stow runs.
+`setup`, `windows`, or `wsl`. Unknown packages and profiles fail before Stow runs.
 Configuration packages omitted from a default profile, such as `ssh`, remain available through
 `--package`.
 
@@ -329,8 +328,9 @@ Declare those separately before treating them as portable bootstrap dependencies
 
 Codex uses two separate configuration layers in this repository:
 
-- `codex-system/config.toml` is the portable base installed at `/etc/codex/config.toml`.
-- `codex/` contains files that are safe to Stow into `~/.codex`, including the global `AGENTS.md`.
+- `codex/config.toml` is the portable base installed at `/etc/codex/config.toml`.
+- `codex/.codex/` contains files that are safe to Stow into `~/.codex`, including the global
+  `AGENTS.md`. `codex/.stow-local-ignore` excludes the portable base from Stow.
 
 On Windows, the same portable base is installed at `%ProgramData%\OpenAI\Codex\config.toml` with
 `setup/codex.ps1`; see `windows.md` for the Windows workflow. The writable user config remains

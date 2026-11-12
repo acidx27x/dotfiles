@@ -39,6 +39,10 @@ default_target_type = "symbolic"
 [lazygit.files]
 "lazygit/.config/lazygit/config.yml" = "${LOCALAPPDATA}/lazygit/config.yml"
 
+[tuicr.files]
+"tuicr/.config/tuicr/config.toml" = "${APPDATA}/tuicr/config.toml"
+"tuicr/.config/tuicr/themes" = "${APPDATA}/tuicr/themes"
+
 [zed.files]
 "zed/.config/zed" = "${APPDATA}/Zed"
 

@@ -53,7 +53,7 @@ die_usage() {
 
 is_excluded_package() {
   case "$1" in
-    .agents | .aws | .codex | .git | brave | codex-system | setup | windows | wsl)
+    .agents | .aws | .codex | .git | brave | setup | windows | wsl)
       return 0
       ;;
   esac

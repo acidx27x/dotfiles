@@ -124,7 +124,9 @@
 
 
 [alias]
-  ds = -c delta.side-by-side=true diff
+  sdiff = -c delta.side-by-side=true diff
+  ddiff = -c diff.external=difft diff
+  dshow = -c diff.external=difft show --ext-diff
 
   amend      = commit --amend --no-edit
   amend-edit = commit --amend

@@ -1,0 +1,3 @@
+# Installed machine-wide by setup/codex.sh, never linked into the user's home.
+^/config\.toml$
+\.gitignore

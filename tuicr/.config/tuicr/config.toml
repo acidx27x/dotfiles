@@ -1,0 +1,48 @@
+username = "acidx27x"
+
+theme = "kanagawa"
+appearance = "dark"
+transparent_background = true
+
+diff_view = "side-by-side"
+show_file_list = true
+show_commits = true
+show_pr_checks = true
+show_pr_comments = true
+pr_comments_visibility = "all"
+
+mouse = true
+cursor_line = true
+scroll_offset = 5
+wrap = false
+wrap_style = "flow"
+
+leader = " "
+editor = "nvim"
+comment_vim = true
+comment_tab_width = 2
+
+backend = "libgit2"
+no_update_check = false
+diff_watch_interval_ms = 1000
+review_watch_interval_ms = 1000
+
+# First type is the default; colors follow the Kanagawa palette.
+comment_types = [
+  { id = "question", color = "#85A0C7", definition = "ask for clarification" },
+  { id = "suggestion", color = "#7AA89F", definition = "possible improvement, non-blocking" },
+  { id = "issue", color = "#E46876", definition = "must be fixed before merge" },
+  { id = "nit", label = "nitpick", color = "#E6C384", definition = "small optional tweak, style or naming" },
+  { id = "praise", color = "#98BB6C", definition = "positive feedback" },
+]
+
+[forge]
+comment_type_prefix = true
+
+[export]
+legend = true
+scope_line = true
+pr_metadata = true
+intro = "I reviewed your code and have the following comments. Please address them."
+comments_header = "## Local tuicr Comments"
+remote_comments_header = "## Existing GitHub Comments"

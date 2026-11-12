@@ -14,6 +14,8 @@ brew "neovim", args: ["HEAD"]
 # VCS
 brew "git"
 brew "git-delta"
+brew "difftastic"
+brew "tuicr"
 brew "git-lfs"
 brew "diff-so-fancy"
 brew "lazygit"
