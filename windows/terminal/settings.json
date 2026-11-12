@@ -185,7 +185,7 @@
             "keys": "ctrl+space"
         },
         {
-            "id": "User.SplitPaneAuto",
+            "id": null,
             "keys": "alt+shift+d"
         },
         {
