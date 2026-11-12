@@ -105,13 +105,14 @@ for another duplicate-tab binding and Ctrl+Shift+N for a new window. Ctrl+C, Ctr
 through to applications as in the previous Terminal config. Shortcuts involving punctuation should
 be checked with your active Windows keyboard layout.
 
-The command palette includes labels such as `User | Pane: Split right`,
-`User | Window: New window`, and `User | Edit: Copy`. Stable and Preview share the same configured
-actions and bindings. `Ctrl+Tab` and `Ctrl+Shift+Tab` retain native tab navigation.
+The command palette includes labels such as `User | Pane: Split right`, `User | Window: New window`,
+and `User | Edit: Copy`. Stable and Preview share the same configured actions and bindings.
+`Ctrl+Tab` and `Ctrl+Shift+Tab` retain native tab navigation.
 
 Plain `Ctrl+a` passes through to tmux. When tmux is running, these terminal shortcuts still act on
 Windows Terminal's panes and tabs; use `Ctrl+a` followed by the tmux key for actions inside tmux.
-See the [tmux shortcut comparison](../../wezterm/README.md#relationship-to-tmux-and-windows-terminal).
+See the
+[tmux shortcut comparison](../../wezterm/README.md#relationship-to-tmux-and-windows-terminal).
 
 ## Compatibility limits
 

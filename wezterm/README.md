@@ -45,18 +45,19 @@ mode also expires after five seconds.
 
 `Ctrl+Shift+H/J/K/L` complements the arrow bindings. K and L replace the clear-scrollback and
 debug-overlay shortcuts; those actions remain in the command palette. The pane picker moves from
-`Mod+A` to `Ctrl+Shift+Q`. On macOS, these movement and picker shortcuts use `Ctrl+Shift`, preserving
-native `Cmd+H` and `Cmd+Q` behavior. `Ctrl+Tab` and `Ctrl+Shift+Tab` retain native tab navigation.
+`Mod+A` to `Ctrl+Shift+Q`. On macOS, these movement and picker shortcuts use `Ctrl+Shift`,
+preserving native `Cmd+H` and `Cmd+Q` behavior. `Ctrl+Tab` and `Ctrl+Shift+Tab` retain native tab
+navigation.
 
 The command palette includes named entries such as `User | Pane: Split right`,
-`User | Window: New window`, `User | Edit: Copy`, and `User | Workspace: Switch`. These entries reuse
-the shortcut actions; built-in palette entries remain available.
+`User | Window: New window`, `User | Edit: Copy`, and `User | Workspace: Switch`. These entries
+reuse the shortcut actions; built-in palette entries remain available.
 
 ## Relationship to tmux and Windows Terminal
 
 The terminal shortcuts act immediately, without a prefix. tmux retains `Ctrl+a` followed by a key.
-When tmux runs inside a terminal, terminal shortcuts operate on the outer terminal's panes and
-tabs; use `Ctrl+a` for tmux's panes, windows, and sessions. Plain `Ctrl+a` is not a terminal binding.
+When tmux runs inside a terminal, terminal shortcuts operate on the outer terminal's panes and tabs;
+use `Ctrl+a` for tmux's panes, windows, and sessions. Plain `Ctrl+a` is not a terminal binding.
 
 | Action                        | tmux (after `Ctrl+a`) | WezTerm / Windows Terminal (Windows/Linux)                   |
 | ----------------------------- | --------------------- | ------------------------------------------------------------ |
@@ -75,11 +76,11 @@ the [Windows Terminal shortcuts and limits](../windows/terminal/README.md#shortc
 ## Workspaces and current directory
 
 WezTerm calls its session-like grouping a **workspace**. A workspace groups windows and can be
-selected with `Mod+S` or from the `Mod+O` launcher. `Mod+Alt+S` prompts for a name: a new name creates
-a workspace using the default program/domain, and an existing name switches to it. Escape or an
-empty name leaves the current workspace unchanged. It is live mux state, not a saved snapshot that
-this config restores after WezTerm exits. With `SSHMUX`, `Mod+D` detaches the remote domain; its
-panes stay available to attach again later. See the
+selected with `Mod+S` or from the `Mod+O` launcher. `Mod+Alt+S` prompts for a name: a new name
+creates a workspace using the default program/domain, and an existing name switches to it. Escape or
+an empty name leaves the current workspace unchanged. It is live mux state, not a saved snapshot
+that this config restores after WezTerm exits. With `SSHMUX`, `Mod+D` detaches the remote domain;
+its panes stay available to attach again later. See the
 [workspace guide](https://wezterm.org/recipes/workspaces.html) and
 [DetachDomain](https://wezterm.org/config/lua/keyassignment/DetachDomain.html).
 

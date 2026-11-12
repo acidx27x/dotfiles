@@ -112,9 +112,12 @@ function module.apply_to_config(config, platform)
         description = "Workspace name",
         action = wezterm.action_callback(function(window, pane, line)
           if line and line ~= "" then
-            window:perform_action(act.SwitchToWorkspace({
-              name = line,
-            }), pane)
+            window:perform_action(
+              act.SwitchToWorkspace({
+                name = line,
+              }),
+              pane
+            )
           end
         end),
       }),
