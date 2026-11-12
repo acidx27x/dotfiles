@@ -202,8 +202,8 @@ function module.apply_to_config(config, platform)
     })
     table.insert(bindings, {
       brief = "User | Pane: Resize " .. direction.name:lower(),
-      key = direction.arrow,
-      mods = "CTRL|SHIFT|ALT",
+      key = direction.key,
+      mods = "ALT|SHIFT",
       action = act.AdjustPaneSize({
         direction.name,
         1,

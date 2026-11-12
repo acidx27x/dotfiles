@@ -34,6 +34,7 @@ reporting is enabled. Use `Mod+V` to paste.
 | `Ctrl+Shift+H/J/K/L` | Focus left/down/up/right pane (all platforms)                |
 | `Mod+S`              | Select a workspace                                           |
 | `Mod+Alt+S`          | Create or switch to a named workspace                        |
+| `Alt+Shift+H/J/K/L`  | Resize left/down/up/right pane (all platforms)               |
 | `Mod+E`              | Enter pane resize mode                                       |
 | `Mod+O`              | Open the launcher for domains, profiles, and workspaces      |
 | `Mod+Alt+N`          | Open a new window in the current pane's domain and directory |

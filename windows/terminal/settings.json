@@ -222,7 +222,7 @@
         },
         {
             "id": "User.ResizeLeft",
-            "keys": "ctrl+alt+shift+left"
+            "keys": "alt+shift+h"
         },
         {
             "id": "User.Paste",
@@ -242,7 +242,7 @@
         },
         {
             "id": "User.ResizeDown",
-            "keys": "ctrl+alt+shift+down"
+            "keys": "alt+shift+j"
         },
         {
             "id": "User.FocusUp",
@@ -250,7 +250,7 @@
         },
         {
             "id": "User.ResizeUp",
-            "keys": "ctrl+alt+shift+up"
+            "keys": "alt+shift+k"
         },
         {
             "id": "User.FocusRight",
@@ -258,7 +258,7 @@
         },
         {
             "id": "User.ResizeRight",
-            "keys": "ctrl+alt+shift+right"
+            "keys": "alt+shift+l"
         },
         {
             "id": "User.FocusLeft",

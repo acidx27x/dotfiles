@@ -93,7 +93,7 @@ and
 | Ctrl+Shift+/         | Split down using the focused pane's profile                            |
 | Ctrl+Shift+Arrow     | Move between panes                                                     |
 | Ctrl+Shift+H/J/K/L   | Focus left/down/up/right pane                                          |
-| Ctrl+Shift+Alt+Arrow | Resize panes                                                           |
+| Alt+Shift+H/J/K/L    | Resize panes                                                           |
 | Ctrl+Shift+Z         | Zoom the focused pane                                                  |
 | Ctrl+Shift+W         | Close the focused pane; closes the tab/window when it is the last pane |
 | Ctrl+Shift+O         | Pick an installed WSL distribution and launch it in a new tab          |
