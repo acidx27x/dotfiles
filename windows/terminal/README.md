@@ -21,7 +21,7 @@ Keep shared preferences aligned when editing the two files; they are ordinary Te
 | Padding 10 horizontal, 8 vertical | `padding: "10, 8, 10, 8"`                                      |
 | Opaque background                 | `opacity: 100`, `useAcrylic: true`                             |
 | 10,000 history lines              | `historySize: 10000`                                           |
-| Bar cursor                        | `cursorShape: "bar"`                                           |
+| Block cursor fallback             | `cursorShape: "filledBox"`; applications can change it by mode |
 | Copy on selection                 | `copyOnSelect: true`; existing plain-text copying retained     |
 | Visible tabs                      | `alwaysShowTabs: true`                                         |
 
@@ -128,7 +128,7 @@ See the [tmux shortcut comparison](../../wezterm/README.md#relationship-to-tmux-
   appropriate modified-key encoding; legacy apps retain native input. No global Shift+Enter
   escape-sequence override is needed. Older shells, SSH paths, and multiplexers may still limit what
   reaches an application. Recheck completion and modified Enter after upgrading.
-- **Cursor:** the bar fallback maps directly, but this version has no profile `cursorBlink` setting.
+- **Cursor:** the fallback is a filled block; this version has no profile `cursorBlink` setting.
   Blink behavior follows the terminal/system and application control sequences; a steady cursor is
   not guaranteed. Mode switching still needs shell/editor support.
 - **Panes and tabs:** WezTerm's timed h/j/k/l resize table, numbered pane picker, per-pane close

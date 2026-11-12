@@ -317,7 +317,7 @@
             ],
             "colorScheme": "Duskfox",
             "compatibility.allowOSC777": true,
-            "cursorShape": "bar",
+            "cursorShape": "filledBox",
             "font":
             {
                 "face": "FiraCode Nerd Font",
