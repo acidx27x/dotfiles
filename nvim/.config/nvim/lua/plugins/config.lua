@@ -11,6 +11,7 @@ require("plugins.mini-notify-config") -- vim.notify
 require("plugins.multinput-nvim-config") -- vim.ui.input
 
 require("plugins.icons-config")
+require("plugins.diffview-plus-nvim-config")
 require("plugins.fzf-lua-config") -- also overrides vim.ui.select
 --
 

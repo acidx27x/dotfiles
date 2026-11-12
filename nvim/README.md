@@ -40,7 +40,7 @@ From the dotfiles repository root:
 
 Then start Neovim. The first launch installs missing packages through `vim.pack`; review and confirm
 the package prompt. First install and updates require Git and network access. See the
-[plugin inventory](docs/plugins.md) for all 47 repositories (29 eager, 18 optional) and load groups.
+[plugin inventory](docs/plugins.md) for all 50 repositories (32 eager, 18 optional) and load groups.
 
 The tracked `nvim-pack-lock.json` is deployed with this package. If an older, unlinked copy already
 exists at `~/.config/nvim/nvim-pack-lock.json`, move it aside before restowing `nvim`. Stow can then

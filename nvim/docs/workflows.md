@@ -4,6 +4,31 @@ These examples combine built-in Vim commands with this config's mappings. `<Spac
 key. Type commands beginning with `:` in Normal mode; press `<Esc>` to leave Insert mode first. The
 [keymap reference](keymaps.md) lists all custom and plugin mappings.
 
+## Git diffs and merge conflicts
+
+Gitsigns provides hunk navigation, staging, previews, and blame. `<Space>gd` opens a Diffview for
+the current file against the index; `<Space>gD` compares it against `HEAD~1`. `<Space>gt` toggles
+the repository diff, and `<Space>gT` reviews staged changes. These two repository mappings also work
+in Diffview panels. Views refresh when Gitsigns changes the index.
+
+Inside Diffview, `<Space>ge` focuses the file panel and `<Space>gE` toggles it. The default
+`<Space>b` / `<Space>e` actions are disabled so buffer and diagnostic mappings remain available.
+
+Use `:DiffviewOpen` during a conflicted merge or rebase to browse conflicts in a three-way view.
+Press `g?` inside Diffview for its mappings. `]x` / `[x` navigate conflicts, and `<Space>co` /
+`<Space>ct` choose ours / theirs. Save resolutions, then stage them from the file panel.
+`:DiffviewClose` returns to normal editing.
+
+With the Git package deployed, `git difftool` opens each changed file in Neovim;
+`git difftool --cached` reviews staged files. `git mergetool` opens each conflicted file with
+read-only ours/theirs panes and an editable merged result. Launch prompts and merge backups are
+disabled. Ordinary `git diff` continues using Delta.
+
+Git-launched sessions set `g:diffview_exit_on_close`, so `:DiffviewClose` also exits Neovim and
+returns to Git. Save the merged result with `:w` before closing; unsaved edits block exit. Use `:cq`
+to abort with a nonzero exit status. Git retains its usual merge-success checks. Normal editing
+sessions keep Neovim open when a Diffview closes.
+
 ## Quickfix: work through matches across files
 
 Quickfix is a list of file locations shared across the editor. Searches, compiler errors, and

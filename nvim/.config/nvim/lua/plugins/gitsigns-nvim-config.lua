@@ -54,19 +54,13 @@ require("gitsigns").setup({
     keyn("<leader>gB", git.blame, "git: blame")
 
     -- Diff
-    keyn("<leader>gd", git.diffthis, "git: diff")
+    keyn("<leader>gd", function()
+      require("diffview").open({ "--", vim.api.nvim_buf_get_name(bufnr) })
+    end, "git: diff file against index")
+
     keyn("<leader>gD", function()
-      git.diffthis("~")
-    end, "git: diff (~)")
-
-    -- Changes tree
-    keyn("<leader>gt", function()
-      git.diff(nil, nil, { diff = "none" })
-    end, "git: changes tree (no diff)")
-
-    keyn("<leader>gT", function()
-      git.diff(nil, nil, { diff = "unified" })
-    end, "git: changes tree (unified)")
+      require("diffview").open({ "HEAD~1", "--", vim.api.nvim_buf_get_name(bufnr) })
+    end, "git: diff file against HEAD~1")
 
     -- Quickfix
     keyn("<leader>gq", git.setqflist, "git: qflist")

@@ -21,6 +21,7 @@ local eager = {
   { src = "https://github.com/nvim-mini/mini.files" },
   { src = "https://github.com/nvim-mini/mini.hipatterns" },
   { src = "https://github.com/nvim-mini/mini.icons" },
+  { src = "https://github.com/dlyongemallo/diffview-plus.nvim" },
   { src = "https://github.com/nvim-mini/mini.move" },
   { src = "https://github.com/nvim-mini/mini.operators" },
   { src = "https://github.com/nvim-mini/mini.pairs" },

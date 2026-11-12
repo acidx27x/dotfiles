@@ -348,18 +348,20 @@ cancels; `D` closes; `<C-s>` / `<C-h>` open in vertical/horizontal splits. Hint 
 
 ## Buffer-local Git and Tree-sitter mappings
 
-| Keys                        | Mode                       | Action                                           | Activation / conflict notes                                                          |
-| --------------------------- | -------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `]c` / `[c`                 | Normal, Git buffer         | Next / previous Git hunk                         | Gitsigns on attach; falls through to built-in diff motion when `vim.wo.diff`.        |
-| `<Space>gs` / `<Space>gr`   | Normal, Visual, Git buffer | Stage / reset hunk                               | Buffer-local Gitsigns maps.                                                          |
-| `<Space>gS` / `<Space>gR`   | Normal, Git buffer         | Stage / reset whole buffer                       | Gitsigns on attach.                                                                  |
-| `<Space>gp` / `<Space>gi`   | Normal, Git buffer         | Preview hunk / inline preview                    | Gitsigns on attach.                                                                  |
-| `<Space>gb` / `<Space>gB`   | Normal, Git buffer         | Blame current line with full info / blame buffer | Gitsigns on attach.                                                                  |
-| `<Space>gd` / `<Space>gD`   | Normal, Git buffer         | Diff current buffer / diff against `~`           | Gitsigns on attach.                                                                  |
-| `<Space>gq` / `<Space>gQ`   | Normal, Git buffer         | Add current buffer / all buffers to quickfix     | Gitsigns on attach.                                                                  |
-| `<Space>gtw` / `<Space>gtb` | Normal, Git buffer         | Toggle word diff / current-line blame            | Gitsigns on attach.                                                                  |
-| `gnn`                       | Normal                     | Start node selection                             | Native parent selection; counts supported; LSP fallback without a parser.            |
-| `grn` / `grc` / `grm`       | Visual                     | Grow to parent / parent alias / shrink to child  | Native selection with counts and LSP fallback; Normal-mode `grn` remains LSP rename. |
+| Keys                        | Mode                       | Action                                             | Activation / conflict notes                                                          |
+| --------------------------- | -------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `]c` / `[c`                 | Normal, Git buffer         | Next / previous Git hunk                           | Gitsigns on attach; falls through to built-in diff motion when `vim.wo.diff`.        |
+| `<Space>gs` / `<Space>gr`   | Normal, Visual, Git buffer | Stage / reset hunk                                 | Buffer-local Gitsigns maps.                                                          |
+| `<Space>gS` / `<Space>gR`   | Normal, Git buffer         | Stage / reset whole buffer                         | Gitsigns on attach.                                                                  |
+| `<Space>gp` / `<Space>gi`   | Normal, Git buffer         | Preview hunk / inline preview                      | Gitsigns on attach.                                                                  |
+| `<Space>gb` / `<Space>gB`   | Normal, Git buffer         | Blame current line with full info / blame buffer   | Gitsigns on attach.                                                                  |
+| `<Space>gd` / `<Space>gD`   | Normal, Git buffer         | Diff current file against index / `HEAD~1`         | Gitsigns on attach; opens a file-filtered Diffview.                                  |
+| `<Space>gt` / `<Space>gT`   | Normal                     | Toggle repository Diffview / review staged changes | Global maps; available in Diffview panels and before Gitsigns attaches.              |
+| `<Space>ge` / `<Space>gE`   | Normal, Diffview           | Focus / toggle the Diffview file panel             | Buffer-local in diff views, file panels, and file history panels.                    |
+| `<Space>gq` / `<Space>gQ`   | Normal, Git buffer         | Add current buffer / all buffers to quickfix       | Gitsigns on attach.                                                                  |
+| `<Space>gtw` / `<Space>gtb` | Normal, Git buffer         | Toggle word diff / current-line blame              | Gitsigns on attach.                                                                  |
+| `gnn`                       | Normal                     | Start node selection                               | Native parent selection; counts supported; LSP fallback without a parser.            |
+| `grn` / `grc` / `grm`       | Visual                     | Grow to parent / parent alias / shrink to child    | Native selection with counts and LSP fallback; Normal-mode `grn` remains LSP rename. |
 
 ## Explicit overrides and known ambiguities
 
@@ -370,6 +372,8 @@ cancels; `D` closes; `<C-s>` / `<C-h>` open in vertical/horizontal splits. Hint 
 - MiniMove intentionally claims `<C-h/j/k/l>` in Normal and Visual modes. This means Normal-mode
   `<C-w>` remains available for built-in window operations and is the recommended route.
 - `<C-w>d` keeps Neovim's diagnostic float. The custom diagnostic actions use `<Space>e`.
+- Diffview uses `<Space>ge` / `<Space>gE` to focus / toggle its file panel. Its default `<Space>b` /
+  `<Space>e` mappings are disabled to preserve buffer and diagnostic prefixes.
 - `<C-s>ca` replaces the direct code-action behavior for that key with the preview picker. `gra`
   remains available for the direct Neovim code action.
 - DAP mappings load the DAP group on first use and then run the requested action. The same mapping

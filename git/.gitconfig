@@ -85,13 +85,28 @@
 
 
 [merge]
+  tool = nvim
   conflictStyle = zdiff3
+
+[mergetool]
+  prompt = false
+  keepBackup = false
+
+[mergetool "nvim"]
+  cmd = "nvim --cmd \"let g:diffview_exit_on_close = v:true\" -c \"lua require('diffview').merge_files(vim.fn.argv())\" -- \"$MERGED\" \"$LOCAL\" \"$REMOTE\""
 
 
 [diff]
+  tool = nvim
   algorithm = histogram
   colorMoved = default
   renames = copies
+
+[difftool]
+  prompt = false
+
+[difftool "nvim"]
+  cmd = "nvim --cmd \"let g:diffview_exit_on_close = v:true\" -c \"lua require('diffview').diff_files(vim.fn.argv())\" -- \"$LOCAL\" \"$REMOTE\""
 
 
 [filter "lfs"]
