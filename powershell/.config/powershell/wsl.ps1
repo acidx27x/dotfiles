@@ -132,13 +132,13 @@ function Start-WslMoshForward {
   .DESCRIPTION
   Run in an elevated PowerShell 7 terminal with sshd and mosh-server installed in WSL.
   TCP uses netsh portproxy; UDP uses one IPv4 socket per port. The relay runs until
-  Ctrl+C and refreshes the WSL address every 15 seconds. TCP and firewall rules persist
-  after stopping; UDP sockets are closed. Run only one relay for the selected ports.
+  Ctrl+C. TCP and firewall rules persist after stopping; UDP sockets are closed.
+  Run only one relay for the selected ports.
 
   Each UDP port tracks one client; another client on that port displaces it. Match the
   client's Mosh port range to UdpPort. AllowedRemoteAddress defaults to Any (all sources).
   Supply an IP or CIDR to restrict access. Listeners bind all IPv4 interfaces.
-  WSL restarts terminate sessions; address refresh only repairs forwarding for new ones.
+  WSL restarts terminate sessions; restart the relay to update forwarding after an IP change.
   Use -Verbose for packet logging. For UDP timeouts, check firewall, VPN and routing.
   Supply Distro as an argument; a missing value fails without prompting.
   .PARAMETER SkipFirewall
@@ -220,13 +220,17 @@ function Start-WslMoshForward {
     $message = "TCP $ListenPort -> ${wslAddress}:$TargetPort; " +
     "UDP $($ports -join ',') -> $wslAddress. Ctrl+C stops UDP."
     Write-Information $message -InformationAction Continue
-    $nextRefresh = [DateTime]::UtcNow.AddSeconds(15)
+    $readSockets = [Collections.ArrayList]::new()
+    foreach ($port in $ports) {
+      [void]$readSockets.Add($sockets[$port].Client)
+    }
     while ($true) {
-      foreach ($port in $ports) {
+      # Select waits for any UDP socket; no per-port polling or fixed sleep.
+      $ready = $readSockets.Clone()
+      [Net.Sockets.Socket]::Select($ready, $null, $null, 250000)
+      foreach ($readySocket in $ready) {
+        $port = ([Net.IPEndPoint]$readySocket.LocalEndPoint).Port
         $socket = $sockets[$port]
-        if (-not $socket.Client.Poll(1000, [Net.Sockets.SelectMode]::SelectRead)) {
-          continue
-        }
 
         $sender = [Net.IPEndPoint]::new([Net.IPAddress]::Any, 0)
         try {
@@ -254,18 +258,6 @@ function Start-WslMoshForward {
         }
         [void]$socket.Send($data, $data.Length, $destination)
       }
-
-      if ([DateTime]::UtcNow -ge $nextRefresh) {
-        $latestAddress = Get-WslAddress -Distro $Distro
-        if ($latestAddress -and -not $latestAddress.Equals($wslAddress)) {
-          Set-WslTcpForward -Address $latestAddress -ListenPort $ListenPort -TargetPort $TargetPort
-          $wslAddress = $latestAddress
-          $clients.Clear()
-          Write-Verbose "WSL address changed to $wslAddress; TCP and UDP forwarding updated."
-        }
-        $nextRefresh = [DateTime]::UtcNow.AddSeconds(15)
-      }
-      Start-Sleep -Milliseconds 10
     }
   }
   finally {
