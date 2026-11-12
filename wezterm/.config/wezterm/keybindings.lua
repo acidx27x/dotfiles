@@ -279,6 +279,27 @@ function module.apply_to_config(config, platform)
 
   -- copy-on-select = clipboard; hyperlink clicking remains functional.
   config.mouse_bindings = {
+    -- Let applications handle right-click without terminal clipboard actions.
+    {
+      event = {
+        Down = {
+          streak = 1,
+          button = "Right",
+        },
+      },
+      mods = "NONE",
+      action = act.DisableDefaultAssignment,
+    },
+    {
+      event = {
+        Up = {
+          streak = 1,
+          button = "Right",
+        },
+      },
+      mods = "NONE",
+      action = act.DisableDefaultAssignment,
+    },
     {
       event = {
         Up = {

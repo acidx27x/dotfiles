@@ -27,7 +27,8 @@ Keep shared preferences aligned when editing the two files; they are ordinary Te
 
 The font must already be installed; the repository's Scoop setup includes it. Font rasterization and
 apparent size can differ between DirectWrite and WezTerm even with matching numeric settings.
-Copy-on-select also makes right-click paste immediately. Open hyperlinks with Ctrl+click.
+Right-click opens the context menu instead of pasting immediately. Paste with Ctrl+Shift+V or the
+menu's Paste action. Open hyperlinks with Ctrl+click.
 
 ## Startup, notifications, and titles
 

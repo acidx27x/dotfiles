@@ -2,6 +2,9 @@
 
 `Mod` means `Ctrl+Shift` on Windows/Linux and `Cmd` on macOS. `Alt` means `Option` on macOS.
 
+Right-click has no terminal clipboard action; applications such as tmux receive it when mouse
+reporting is enabled. Use `Mod+V` to paste.
+
 ## Useful defaults
 
 | Windows/Linux          | macOS                  | Action                         |
