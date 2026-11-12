@@ -344,6 +344,7 @@
             "historySize": 10000,
             "opacity": 100,
             "padding": "10, 8, 10, 8",
+            "startingDirectory": "%USERPROFILE%",
             "suppressApplicationTitle": false,
             "useAcrylic": true
         },
