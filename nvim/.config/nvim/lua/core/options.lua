@@ -82,6 +82,10 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 
 vim.opt.iskeyword:append("-") -- Treat dash as part of word
+-- In tmux, forward copies through the terminal, including over SSH.
+if (vim.env.TMUX or "") ~= "" and vim.fn.executable("tmux") == 1 then
+  vim.g.clipboard = "tmux"
+end
 vim.opt.clipboard:append("unnamedplus") -- Use system clipboard
 
 -- Folding settings

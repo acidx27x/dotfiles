@@ -11,7 +11,7 @@ git:
   log:
     order: topo-order
     showGraph: when-maximised
-    showWholeGraph: false
+    showWholeGraph: true
 
   diffRenderers:
     - name: Delta
@@ -39,7 +39,7 @@ gui:
 
   filterMode: fuzzy
 
-  sidePanelWidth: 0.3
+  sidePanelWidth: 0.33
   mainPanelSplitMode: flexible
   expandFocusedSidePanel: true
   expandedSidePanelWeight: 2
