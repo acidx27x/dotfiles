@@ -303,7 +303,7 @@
         {
             "bellStyle": "taskbar",
             "colorScheme": "Duskfox",
-            "cursorShape": "filledBox",
+            "cursorShape": "emptyBox",
             "font":
             {
                 "face": "FiraCode Nerd Font",
