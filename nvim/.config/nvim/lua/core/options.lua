@@ -84,7 +84,20 @@ vim.opt.splitright = true
 vim.opt.iskeyword:append("-") -- Treat dash as part of word
 -- In tmux, forward copies through the terminal, including over SSH.
 if (vim.env.TMUX or "") ~= "" and vim.fn.executable("tmux") == 1 then
-  vim.g.clipboard = "tmux"
+  local osc52_copy = require("vim.ui.clipboard.osc52").copy("+")
+  local function copy(lines)
+    vim.fn.system({ "tmux", "load-buffer", "-" }, table.concat(lines, "\n"))
+    osc52_copy(lines)
+  end
+  vim.g.clipboard = {
+    name = "OSC 52 + tmux buffer",
+    copy = { ["+"] = copy, ["*"] = copy },
+    paste = {
+      ["+"] = { "tmux", "save-buffer", "-" },
+      ["*"] = { "tmux", "save-buffer", "-" },
+    },
+    cache_enabled = 0,
+  }
 end
 vim.opt.clipboard:append("unnamedplus") -- Use system clipboard
 

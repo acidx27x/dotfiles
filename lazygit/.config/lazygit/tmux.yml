@@ -1,4 +1,7 @@
 # Loaded by Bash/Zsh only inside tmux; config.yml keeps native platform defaults.
 os:
-  copyToClipboardCmd: "printf %s {{text}} | tmux load-buffer -w -"
+  copyToClipboardCmd: >-
+    printf %s {{text}} | tmux load-buffer - &&
+    printf '\033Ptmux;\033\033]52;c;%s\007\033\134'
+    "$(printf %s {{text}} | base64 | tr -d '\n')" > /dev/tty
   readFromClipboardCmd: "tmux save-buffer -"

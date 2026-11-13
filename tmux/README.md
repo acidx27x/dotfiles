@@ -10,9 +10,9 @@ minutes; the bar redraws every 30 seconds using cached data. It uses network-bas
 detection and requires `curl` and internet access. Powerline arrows require a compatible font, such
 as FiraCode Nerd Font.
 
-Press **Ctrl+a, Shift+t** to open Ukiyo's interactive statusline settings menu for colors, modules,
-and options. It is also available through **Ctrl+a, Space, Shift+t** in which-key. Keep persistent
-settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+a, r** reloads them. Set
+Press **Ctrl+s, Shift+t** to open Ukiyo's interactive statusline settings menu for colors, modules,
+and options. It is also available through **Ctrl+s, Space, Shift+t** in which-key. Keep persistent
+settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+s, r** reloads them. Set
 `@ukiyo-fixed-location` to a city name if network-based detection picks the wrong location. After
 changing themes in the menu, reload to restore the custom tab colors.
 
@@ -23,7 +23,7 @@ confirmations. It shows a dim horizontal separator when there is no message or p
 
 ## Plugin commands in which-key
 
-Press **Ctrl+a, Space** to open which-key, then use:
+Press **Ctrl+s, Space** to open which-key, then use:
 
 | Keys         | Action                                                |
 | ------------ | ----------------------------------------------------- |
@@ -38,42 +38,46 @@ Press **Ctrl+a, Space** to open which-key, then use:
 | T            | Ukiyo statusline settings                             |
 
 Continuum saves and restores automatically; manual snapshots use the Backup menu. Reload with
-**Ctrl+a, r** after editing the menu configuration.
+**Ctrl+s, r** after editing the menu configuration.
 
 ## Window navigation
 
 - **Alt+n / Alt+p** select the next / previous window, wrapping around.
 - **Alt+i / Alt+o** move the current window left / right, keeping it focused, without a prefix.
-- **Ctrl+a, Tab** toggles between the current and last-used window.
-- **Ctrl+a, &** asks before closing the current window. The confirmation appears below the
+- **Ctrl+s, Tab** toggles between the current and last-used window.
+- **Ctrl+s, &** asks before closing the current window. The confirmation appears below the
   statusline; **y** closes the window and **n** or **Esc** cancels. Exiting a shell normally does
   not ask for confirmation.
-- **Ctrl+a, Shift+f** opens tmux-fzf's window switcher directly. Type to filter, then press
+- **Ctrl+s, Shift+f** opens tmux-fzf's window switcher directly. Type to filter, then press
   **Enter** to switch; **Esc** cancels. It includes windows from all sessions.
-- **Ctrl+a, Space, f** opens the full tmux-fzf launcher with its management menus.
+- **Ctrl+s, Space, f** opens the full tmux-fzf launcher with its management menus.
 
 ## Copy mode and panes
 
-Press **Ctrl+a, [** or **Ctrl+a, Esc** to enter vi copy mode. Use **v** to begin a selection, **V**
+Press **Ctrl+s, [** or **Ctrl+s, Esc** to enter vi copy mode. Use **v** to begin a selection, **V**
 for whole lines, and **Ctrl+v** to toggle rectangular selection. **y** copies without leaving copy
 mode; **Esc** cancels and returns to the terminal.
 
-Press **Ctrl+a, H/J/K/L** to resize panes left/down/up/right by five cells. These bindings repeat
+Press **Ctrl+s, ]** to paste the latest tmux buffer directly, or **Ctrl+s, =** to choose an older
+buffer and press **Enter** to paste it. Release the prefix before pressing the next key; neither
+shortcut needs the right-click menu.
+
+Press **Ctrl+s, H/J/K/L** to resize panes left/down/up/right by five cells. These bindings repeat
 without another prefix while pressed within tmux's repeat timeout. Existing Smart Splits Alt-arrow
-resizing remains available. **Ctrl+a, < / >** swaps the current pane with the previous / next pane
+resizing remains available. **Ctrl+s, < / >** swaps the current pane with the previous / next pane
 in pane index order.
 
 ## Session pickers
 
-The prefix is **Ctrl+a**. Both pickers open in a centered popup, 90% wide and 60% high.
+The prefix is **Ctrl+s**. Both pickers open in a centered popup, 90% wide and 60% high.
 
 | Keys                 | Action                                       |
 | -------------------- | -------------------------------------------- |
-| Ctrl+a, o            | Open SessionX                                |
-| Ctrl+a, s            | Open Sesh's native picker                    |
-| Ctrl+a, Ctrl+l       | Return to the previous session (`sesh last`) |
-| Ctrl+a, Space, o / s | Open SessionX / Sesh through which-key       |
-| Ctrl+a, F            | Open the tmux-fzf window switcher directly   |
+| Ctrl+s, o            | Open SessionX                                |
+| Ctrl+s, s            | Open Sesh's native picker                    |
+| Ctrl+s, Ctrl+l       | Return to the previous session (`sesh last`) |
+| Ctrl+s, Space, o / s | Open SessionX / Sesh through which-key       |
+| Ctrl+s, F            | Open the tmux-fzf window switcher directly   |
 
 SessionX inherits `FZF_DEFAULT_OPTS_FILE` and `FZF_DEFAULT_OPTS` from the attaching Bash or Zsh
 shell. It reuses that shell's fzfrc colors and bindings, with its own reverse layout, prompt,
@@ -96,7 +100,7 @@ Sesh uses its native right-side preview and keyboard controls. The preview occup
 the picker and hides below 100 columns. Its native configuration supports the prompt, pointer,
 icons, window names, and preview settings here, but cannot import fzfrc, set the full palette, or
 remap scrolling keys. Caching remains disabled; no project paths or startup commands are configured.
-**Ctrl+a, Ctrl+l** also provides a way back after a session closes.
+**Ctrl+s, Ctrl+l** also provides a way back after a session closes.
 
 Deploy the configuration from the repository root:
 
@@ -111,25 +115,25 @@ also be deployed for its fzfrc. If TPM is not installed yet:
 git clone --depth=1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
-Inside tmux, press **Ctrl+a, r** to reload, then **Ctrl+a, Shift+i** to install plugins. Reload
-again after installation. Detach with **Ctrl+a, d** and run `tmux attach` from an initialized Bash
+Inside tmux, press **Ctrl+s, r** to reload, then **Ctrl+s, Shift+i** to install plugins. Reload
+again after installation. Detach with **Ctrl+s, d** and run `tmux attach` from an initialized Bash
 or Zsh shell so tmux refreshes both fzf environment variables. Reloading alone does not refresh
 them.
 
 To verify interactively after deployment:
 
 1. Run `tmux new-session -d -s picker-existing` to add a temporary selection target. In that
-   session, run `seq 1 200` to provide preview content, then return with **Ctrl+a, Ctrl+l**.
-2. Open **Ctrl+a, o**, check the popup and preview, use **Ctrl+u / Ctrl+d** for the list and
+   session, run `seq 1 200` to provide preview content, then return with **Ctrl+s, Ctrl+l**.
+2. Open **Ctrl+s, o**, check the popup and preview, use **Ctrl+u / Ctrl+d** for the list and
    **Ctrl+b / Ctrl+f** for the preview, then cancel with **Esc**. Try **Alt+z**, **Alt+b**, and the
    inherited Alt toggles. Reopen and select `picker-existing` with **Enter**.
 3. Reopen SessionX, type `picker-new-session` (an unused name), and press **Enter**. Confirm the
    name with `tmux display-message -p '#S'` and check that the usual shell starts without
    application startup commands.
-4. Open **Ctrl+a, s**, inspect its right preview, try the native navigation controls, and cancel
+4. Open **Ctrl+s, s**, inspect its right preview, try the native navigation controls, and cancel
    with **Esc**. Reopen and select `picker-existing`. Resize the terminal below 111 columns so the
    90%-wide popup is narrower than 100 columns; confirm the preview hides.
-5. Open **Ctrl+a, Space, o** and **Ctrl+a, Space, s** to check both which-key launchers. Detach and
+5. Open **Ctrl+s, Space, o** and **Ctrl+s, Space, s** to check both which-key launchers. Detach and
    reattach from each initialized shell, then use `tmux show-environment FZF_DEFAULT_OPTS_FILE` and
    `tmux show-environment FZF_DEFAULT_OPTS` to check inheritance. Repeat the SessionX scrolling and
    Alt toggle checks with each shell's fzfrc.

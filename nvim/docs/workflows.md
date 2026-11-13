@@ -4,6 +4,13 @@ These examples combine built-in Vim commands with this config's mappings. `<Spac
 key. Type commands beginning with `:` in Normal mode; press `<Esc>` to leave Insert mode first. The
 [keymap reference](keymaps.md) lists all custom and plugin mappings.
 
+## Clipboard over SSH
+
+Inside tmux, yanks send OSC 52 clipboard writes to the connected terminal and also update tmux's
+paste buffer. The terminal must allow OSC 52 writes. Normal-mode paste reads the tmux buffer; use
+the terminal's paste shortcut, such as Windows Terminal's Ctrl+Shift+V, for text copied in another
+desktop application. Outside tmux, Neovim uses its normal clipboard provider detection.
+
 ## Git diffs and merge conflicts
 
 Gitsigns provides hunk navigation, staging, previews, and blame. `<Space>gd` opens a Diffview for
