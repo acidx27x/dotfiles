@@ -11,7 +11,7 @@ git:
   log:
     order: topo-order
     showGraph: when-maximised
-    showWholeGraph: true
+    showWholeGraph: false
 
   diffRenderers:
     - name: Delta
