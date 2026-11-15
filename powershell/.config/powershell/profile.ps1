@@ -11,11 +11,18 @@ if ($IsWindows) {
 }
 
 if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
-  if (-not $env:NO_COLOR -and $env:TERM -ne 'dumb') {
-    if (-not $env:COLORTERM) { $env:COLORTERM = 'truecolor' }
-    if (-not $env:TERM) { $env:TERM = 'xterm-256color' }
+  # Colors and terminal-specific themes.
+  . (Join-Path $configRoot 'colors.ps1')
+
+  # Personal aliases; tool-specific aliases live in conf.d.
+  Set-Alias -Name lg -Value Start-Lazygit
+  Set-Alias -Name hl -Value Show-Highlight
+  Set-Alias -Name C -Value Set-Clipboard
+  if (Get-Command rg -CommandType Application -ErrorAction SilentlyContinue) {
+    Set-Alias -Name rg -Value Invoke-Ripgrep
   }
 
+  # Tool setup, followed by machine-local overrides.
   foreach ($configDirectory in 'conf.d', 'conf.local.d') {
     foreach ($configScript in (Get-ConfigScript -Path (Join-Path $configRoot $configDirectory))) {
       . $configScript

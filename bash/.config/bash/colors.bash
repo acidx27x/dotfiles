@@ -1,5 +1,9 @@
 # ~/.config/bash/colors.bash
 # Terminal color configuration and diagnostics.
+#
+# Theme settings: vivid uses iceberg-dark below; bat uses gruvbox-dark in
+# ~/.config/bat/config; fzf uses highlight #2dd4bf in ~/.config/bash/fzfrc.
+# Starship uses ~/.config/starship.toml; terminal palettes belong to the terminal config.
 
 # Choose a vivid theme before sourcing, for example:
 #   export VIVID_THEME=ansi       # terminal-palette friendly

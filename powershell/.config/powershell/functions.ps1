@@ -1,5 +1,5 @@
 # ~/.config/powershell/functions.ps1
-# User-facing PowerShell functions and aliases.
+# User-facing PowerShell functions.
 
 function Get-CurrentShell {
   "PowerShell $($PSVersionTable.PSVersion)"
@@ -28,9 +28,45 @@ function Show-Highlight {
   }
 }
 
-Set-Alias -Name lg -Value Start-Lazygit
-Set-Alias -Name hl -Value Show-Highlight
-Set-Alias -Name C -Value Set-Clipboard
+function Invoke-Ripgrep {
+  $ripgrep = Get-Command rg -CommandType Application -ErrorAction SilentlyContinue |
+    Select-Object -First 1
+  if (-not $ripgrep) {
+    Write-Error "$($MyInvocation.MyCommand.Name): rg is not installed."
+    return
+  }
+
+  $colorOptions = @()
+  if (-not $env:NO_COLOR -and $env:TERM -ne 'dumb') {
+    $colorOptions = @($ripgrepColorOptions)
+  }
+  if ($MyInvocation.ExpectingInput) {
+    $input | & $ripgrep.Source @colorOptions @args
+  }
+  else {
+    & $ripgrep.Source @colorOptions @args
+  }
+}
+
+function Get-ColorStatus {
+  foreach ($name in 'TERM', 'COLORTERM', 'NO_COLOR', 'VIVID_THEME',
+    'CLICOLOR', 'LESS', 'CARGO_TERM_COLOR') {
+    $item = Get-Item -LiteralPath "Env:$name" -ErrorAction SilentlyContinue
+    $value = if ($null -eq $item) { '<unset>' } else { $item.Value }
+    "$name=$value"
+  }
+  "LS_COLORS length=$($env:LS_COLORS.Length)"
+
+  foreach ($name in 'ls', 'tree', 'rg', 'vivid', 'eza', 'fd', 'bat', 'fzf', 'less') {
+    $command = Get-Command $name -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($command) {
+      '{0}: {1} -> {2}' -f $name, $command.CommandType, $command.Definition
+    }
+    else {
+      "${name}: missing"
+    }
+  }
+}
 
 # Print common proxy variables, redacting URL credentials.
 function Get-Proxy {

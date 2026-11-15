@@ -13,11 +13,11 @@ else
 fi
 
 # Keep direct execution useful while .zshrc supplies these modules normally.
-if ((! $+functions[set - xdg - path])); then
+if ! typeset -f set-xdg-path >/dev/null; then
   source "$_zsh_config_dir/utils.zsh" || exit 1
 fi
 
-if ((! $+functions[print - xdg - paths])); then
+if ! typeset -f print-xdg-paths >/dev/null; then
   source "$_zsh_config_dir/functions.zsh" || exit 1
 fi
 

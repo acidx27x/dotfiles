@@ -7,6 +7,9 @@ if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
 
 Import-Module PSReadLine
 Set-PSReadLineOption -EditMode Vi
+if (-not $env:NO_COLOR -and $env:TERM -ne 'dumb') {
+  Set-PSReadLineOption -Colors $psReadLineColors
+}
 
 Set-PSReadLineKeyHandler -Chord 'Ctrl+a' -Function BeginningOfLine -ViMode Insert
 Set-PSReadLineKeyHandler -Chord 'Ctrl+e' -Function EndOfLine -ViMode Insert
@@ -24,7 +27,8 @@ Set-PSReadLineKeyHandler -Chord 'Ctrl+y' -Function Yank -ViMode Insert
 Set-PSReadLineKeyHandler -Chord 'Alt+y' -Function YankPop -ViMode Insert
 Set-PSReadLineKeyHandler -Chord 'Ctrl+t' -Function SwapCharacters -ViMode Insert
 Set-PSReadLineKeyHandler -Chord 'Ctrl+_' -Function Undo -ViMode Insert
-Set-PSReadLineKeyHandler -Chord 'Tab' -Function ViTabCompleteNext -ViMode Insert
+# Native menu fallback when PSFzf is unavailable.
+Set-PSReadLineKeyHandler -Chord 'Tab' -Function MenuComplete -ViMode Insert
 Set-PSReadLineKeyHandler -Chord 'Shift+Tab' -Function ViTabCompletePrevious -ViMode Insert
 
 # PSReadLine has no transpose-words handler; swap whitespace-delimited words around the cursor.

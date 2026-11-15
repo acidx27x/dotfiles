@@ -53,6 +53,7 @@
     { "Name": "ripgrep", "Source": "main", "Info": "" },
     { "Name": "sd", "Source": "main", "Info": "" },
     { "Name": "starship", "Source": "main", "Info": "" },
+    { "Name": "vivid", "Source": "main", "Info": "" },
     { "Name": "yazi", "Source": "main", "Info": "" },
     { "Name": "zoxide", "Source": "main", "Info": "" },
 

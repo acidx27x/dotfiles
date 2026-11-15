@@ -19,6 +19,27 @@ if (Get-Module -ListAvailable -Name PSFzf) {
   Import-Module PSReadLine -ErrorAction SilentlyContinue
   Import-Module PSFzf
   Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+x,Ctrl+t' -PSReadlineChordSetLocation 'Alt+c'
+
+  Set-PSReadLineKeyHandler -Chord 'Tab' -ViMode Insert -ScriptBlock {
+    # Keep Emacs-style navigation inside the completion picker.
+    $previousOptions = $env:_PSFZF_FZF_DEFAULT_OPTS
+    try {
+      $completionOptions = if ($previousOptions) { $previousOptions } else {
+        $env:FZF_DEFAULT_OPTS
+      }
+      $navigation = '--bind=ctrl-b:backward-char,ctrl-f:forward-char,ctrl-n:down,ctrl-p:up'
+      $env:_PSFZF_FZF_DEFAULT_OPTS = "$completionOptions $navigation".Trim()
+      Invoke-FzfTabCompletion
+    }
+    finally {
+      if ($null -eq $previousOptions) {
+        Remove-Item Env:_PSFZF_FZF_DEFAULT_OPTS -ErrorAction SilentlyContinue
+      }
+      else {
+        $env:_PSFZF_FZF_DEFAULT_OPTS = $previousOptions
+      }
+    }
+  }
 }
 
 function Invoke-FzfPathAction {
