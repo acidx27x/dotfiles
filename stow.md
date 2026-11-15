@@ -189,11 +189,13 @@ deleting files inside a package:
 ```
 
 Removal planning scans the target tree without following directory symlinks, so restow and undeploy
-also remove old links beneath source subdirectories that were deleted or renamed. Only relative
-links into the affected package at the corresponding source path are owned by the wrapper. Foreign
-links and links belonging to unselected packages are preserved, including dangling ones. If deploy
-or restow would need to replace or unfold an unselected package's link, preflight reports a
-conflict; select that package too when its conversion is intended.
+also remove old links beneath source subdirectories that were deleted or renamed. Directories that
+deny access, such as macOS's protected `~/.Trash`, are skipped with a warning; links inside them
+remain untouched. Other directory-reading errors still abort the operation. Only relative links into
+the affected package at the corresponding source path are owned by the wrapper. Foreign links and
+links belonging to unselected packages are preserved, including dangling ones. If deploy or restow
+would need to replace or unfold an unselected package's link, preflight reports a conflict; select
+that package too when its conversion is intended.
 
 The package directory itself must still exist. If it has already been removed, restore it before
 undeploying. `--all` and `--replace` operate only on currently recognized packages.
@@ -241,7 +243,8 @@ or undeploy. The `brew` package repeats that exclusion in its local ignore file,
 precedence over the global one.
 
 A package's `.stow-local-ignore` continues to take precedence for that package, as defined by GNU
-Stow. The `brew` and `wsl` local rules also exclude Markdown helpers.
+Stow. The `codex` local rules explicitly exclude `.DS_Store` too. The `brew` and `wsl` local rules
+also exclude Markdown helpers.
 
 ## Add Existing Dotfiles
 

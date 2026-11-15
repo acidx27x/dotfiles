@@ -347,10 +347,24 @@ run_stow() {
 # Reuse the installed Stow planner, restricting link ownership to this operation.
 use strict;
 use warnings;
+use Errno ();
 
 {
   package Dotfiles::Stow;
   our @ISA = ('Stow');
+
+  sub unstow_contents {
+    my ($self, $package, $source, $target) = @_;
+    # macOS privacy controls can deny access even when mode bits allow reading.
+    if (opendir my $dir, $target) {
+      closedir $dir;
+    }
+    elsif ($! == Errno::EACCES() || $! == Errno::EPERM()) {
+      warn "WARNING: skipping unreadable target directory $target ($!)\n";
+      return;
+    }
+    $self->SUPER::unstow_contents($package, $source, $target);
+  }
 
   sub link_owner {
     my ($self, $target) = @_;

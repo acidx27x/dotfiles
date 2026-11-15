@@ -358,6 +358,16 @@ for action in restow undeploy; do
   done
 done
 
+# Local ignore files replace the global rules, including macOS metadata exclusions.
+new_fixture
+cp -- "$SOURCE_ROOT/codex/.stow-local-ignore" "$FIXTURE_ROOT/beta/.stow-local-ignore"
+printf 'source metadata\n' >"$FIXTURE_ROOT/beta/.DS_Store"
+printf 'target metadata\n' >"$TARGET_HOME/.DS_Store"
+snapshot_tree "$TARGET_HOME/.DS_Store" "$FIXTURE_ROOT" >"$TEST_ROOT/metadata.snapshot"
+run_wrapper deploy --package beta
+assert_symlink_to "$FIXTURE_ROOT/beta/.config/beta/config" "$TARGET_HOME/.config/beta/config"
+assert_unchanged "$TEST_ROOT/metadata.snapshot" "$TARGET_HOME/.DS_Store" "$FIXTURE_ROOT"
+
 new_fixture
 cp -- "$SOURCE_ROOT/brew/.stow-local-ignore" "$FIXTURE_ROOT/beta/.stow-local-ignore"
 run_wrapper deploy --package alpha,beta
@@ -371,6 +381,57 @@ assert_symlink_to "$FIXTURE_ROOT/alpha/.config/alpha/config" \
   "$TARGET_HOME/.config/alpha/config"
 assert_symlink_to "$FIXTURE_ROOT/beta/.config/beta/config" \
   "$TARGET_HOME/.config/beta/config"
+
+# Removal scans must tolerate protected target directories and still clean stale links.
+new_fixture
+cp -- "$SOURCE_ROOT/codex/.stow-local-ignore" "$FIXTURE_ROOT/beta/.stow-local-ignore"
+run_wrapper deploy --package alpha,beta
+mv -- "$FIXTURE_ROOT/alpha/.config/alpha" "$FIXTURE_ROOT/alpha/.config/renamed"
+mkdir -p "$TARGET_HOME/.Trash" "$TARGET_HOME/Library/Protected"
+chmod 000 "$TARGET_HOME/.Trash" "$TARGET_HOME/Library/Protected"
+snapshot_tree "$TARGET_HOME/.config" "$FIXTURE_ROOT" >"$TEST_ROOT/protected.snapshot"
+for action in restow undeploy; do
+  run_wrapper "$action" --package alpha,beta --dry-run
+  rg -q 'skipping unreadable target directory .Trash' "$TEST_ROOT/operation.log" ||
+    fail 'Protected Trash was not reported.'
+  rg -q 'skipping unreadable target directory Library/Protected' "$TEST_ROOT/operation.log" ||
+    fail 'Protected Library directory was not reported.'
+  assert_unchanged "$TEST_ROOT/protected.snapshot" "$TARGET_HOME/.config" "$FIXTURE_ROOT"
+done
+run_wrapper restow --package alpha,beta
+assert_absent "$TARGET_HOME/.config/alpha/config"
+assert_symlink_to "$FIXTURE_ROOT/alpha/.config/renamed/config" \
+  "$TARGET_HOME/.config/renamed/config"
+run_wrapper undeploy --package alpha,beta
+assert_absent "$TARGET_HOME/.config/renamed/config"
+assert_absent "$TARGET_HOME/.config/beta/config"
+chmod 700 "$TARGET_HOME/.Trash" "$TARGET_HOME/Library/Protected"
+
+# macOS privacy denials use EPERM; unrelated I/O errors must still fail preflight.
+mkdir -p "$TEST_ROOT/perl-modules"
+cat >"$TEST_ROOT/perl-modules/StowProtectedDir.pm" <<'PERL'
+package StowProtectedDir;
+use Errno qw(EPERM EIO);
+BEGIN {
+  *CORE::GLOBAL::opendir = sub (*$) {
+    if ($_[1] eq '.Trash') {
+      $! = $ENV{STOW_TEST_ERRNO} eq 'EPERM' ? EPERM : EIO;
+      return 0;
+    }
+    return CORE::opendir($_[0], $_[1]);
+  };
+}
+1;
+PERL
+PERL5LIB="$TEST_ROOT/perl-modules" PERL5OPT=-MStowProtectedDir STOW_TEST_ERRNO=EPERM \
+  run_wrapper restow --package alpha,beta
+rg -q 'skipping unreadable target directory .Trash' "$TEST_ROOT/operation.log" ||
+  fail 'macOS privacy denial was not reported.'
+snapshot_tree "$TARGET_HOME" "$FIXTURE_ROOT" >"$TEST_ROOT/before.snapshot"
+assert_fails 'cannot read directory: .Trash' \
+  env PERL5LIB="$TEST_ROOT/perl-modules" PERL5OPT=-MStowProtectedDir \
+  STOW_TEST_ERRNO=EIO HOME="$TARGET_HOME" "$WRAPPER" restow --package alpha,beta
+assert_unchanged "$TEST_ROOT/before.snapshot" "$TARGET_HOME" "$FIXTURE_ROOT"
 
 for action in deploy restow undeploy; do
   for conflict in file relative-link absolute-link live-link mismatched-link; do
