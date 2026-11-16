@@ -249,6 +249,7 @@ Defined globally in `lua/plugins/fzf-lua-config.lua`; fzf-lua is eagerly configu
 | Keys                                                      | Picker action                                                           |
 | --------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `<Space>pr` / `<Space>pf` / `<Space>pg`                   | Resume / files / live grep                                              |
+| `<Space>pF`                                               | Files including ignored paths; `.git` stays excluded                    |
 | `<Space>pb` / `<Space>pd` / `<Space>ps`                   | Buffers / workspace diagnostics / command history                       |
 | `<Space>pp` / `<Space>pk` / `<Space>p"` / `<Space>ph`     | Project TODO markers / keymaps / registers / help                       |
 | `<Space>plc` / `<Space>pld` / `<Space>pls`                | LSP declarations / definitions / document symbols                       |
@@ -271,8 +272,9 @@ Inside an fzf-lua picker, `<F1>` shows the full key help. Common defaults are `<
 selection, `<Esc>` to close, `<F2>` for fullscreen, `<F3>` to wrap the preview, and `<F4>` to toggle
 the preview. `<A-/>`, `<A-z>`, `<A-w>`, and `<A-p>` provide the same four actions without function
 keys. The fzf prompt uses a nonblinking bar cursor, as do other Neovim terminal buffers. `<C-f>` /
-`<C-b>` scroll the preview down / up by a page. File and grep pickers use `<A-h>` to toggle hidden
-files, `<A-i>` to toggle ignore rules, and `<A-f>` to follow symlinks. File results can open in a
+`<C-b>` scroll the preview down / up by a page; `<C-d>` / `<C-u>` scroll it by half a page without
+clearing the query. File and grep pickers use `<A-h>` to toggle hidden files, `<A-i>` to toggle
+ignore rules (`.git` stays excluded), and `<A-f>` to follow symlinks. File results can open in a
 split with `<C-s>`, a vertical split with `<C-v>`, or a tab with `<C-t>`.
 
 Grep results keep the icon and file path visible when a match line is long. In file and grep

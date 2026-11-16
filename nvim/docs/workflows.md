@@ -150,6 +150,10 @@ To find a file and browse its directory, use `<Space>pf`, search for the filenam
 the same file picker recursively beneath the displayed directory without changing cwd. If Oil is
 floating, it closes first and the picker returns selections to the underlying editing window.
 
+Use `<Space>pF` to include ignored files, or press `<A-i>` in the file or live grep picker to toggle
+ignore rules. `.git` stays excluded. `<C-u>` / `<C-d>` scroll the preview up / down by half a page;
+`<C-b>` / `<C-f>` scroll it by a full page.
+
 ### Project TODO markers
 
 `<Space>pp` opens fzf-lua's grep picker for standalone uppercase `TODO`, `FIXME`, `ERROR`, `HACK`,

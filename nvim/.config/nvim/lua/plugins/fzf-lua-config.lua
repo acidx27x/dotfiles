@@ -38,12 +38,16 @@ fzf.setup({
       ["<M-z>"] = "toggle-fullscreen",
       ["<M-w>"] = "toggle-preview-wrap",
       ["<M-p>"] = "toggle-preview",
+      ["<C-u>"] = "preview-half-page-up",
+      ["<C-d>"] = "preview-half-page-down",
       ["<C-f>"] = "preview-page-down",
       ["<C-b>"] = "preview-page-up",
     },
     fzf = {
       true,
       ["alt-l"] = "toggle-wrap",
+      ["ctrl-u"] = "preview-half-page-up",
+      ["ctrl-d"] = "preview-half-page-down",
       ["ctrl-f"] = "preview-page-down",
       ["ctrl-b"] = "preview-page-up",
     },
@@ -73,7 +77,7 @@ fzf.setup({
     },
   },
   grep = {
-    rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden -e",
+    rg_opts = [[--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden --glob "!.git" -e]],
     fzf_opts = { ["--no-hscroll"] = true },
   },
 })
@@ -99,6 +103,9 @@ local map = require("core.keymap")
 
 map("n", "<leader>pr", fzf.resume, "Pick: resume")
 map("n", "<leader>pf", fzf.files, "Pick: find files")
+map("n", "<leader>pF", function()
+  fzf.files({ no_ignore = true })
+end, "Pick: find files including ignored")
 map("n", "<leader>pg", fzf.live_grep, "Pick: find inside files with grep live")
 map("n", "<leader>pb", fzf.buffers, "Pick: find buffers")
 map("n", "<leader>pd", fzf.diagnostics_workspace, "Pick: find diagnostic")

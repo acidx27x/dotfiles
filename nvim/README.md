@@ -55,6 +55,10 @@ pointer, and dark selection background of the Unix picker. File icons are disabl
 pickers to avoid slow icon processing; Unix pickers use MiniIcons. File previews remain enabled on
 both platforms.
 
+`<Space>pF` finds files including ignored paths. In file and live grep pickers, `<A-i>` toggles
+ignore rules while `.git` stays excluded. `<C-u>` / `<C-d>` scroll the preview up / down by half a
+page; `<C-b>` / `<C-f>` scroll it by a full page.
+
 ## Find a mapping
 
 The [keymap reference](docs/keymaps.md) is the complete searchable list, including LSP,

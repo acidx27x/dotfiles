@@ -1,5 +1,25 @@
 # Neovim maintenance and custom-code audit
 
+## fzf-lua ignored files and preview scrolling — 2026-11-16
+
+Added `<Space>pF` for files including ignored paths, retaining upstream `.git` exclusions. The
+inherited `<A-i>` toggle already covers file and grep pickers; the custom grep options now exclude
+`.git` explicitly when ignore rules are disabled. `<C-u>` / `<C-d>` scroll previews by half a page
+instead of discarding the query; `<C-b>` / `<C-f>` retain full-page preview scrolling. These actions
+are supported by the
+[locked upstream defaults and window implementation](https://github.com/ibhagwan/fzf-lua/tree/11357ee24a9f092b1db503237eb57e2a11e48434/lua/fzf-lua).
+
+Disposable checks on Neovim 0.12.6 and locked fzf-lua `11357ee` passed for the new mapping, real
+`fd`/`rg` commands, hidden and ignored fixtures, nested `.git` directories and worktree `.git`
+files, and inherited ignore toggles in both directions. Resolved builtin/native preview bindings and
+native fzf binding parsing pass. Completed before/after `fzf-lua`, `vim.provider`, and `vim.pack`
+health reports have the same findings: the existing RPC socket restriction, missing optional
+providers/media tools, and packages/icons omitted from this scoped fixture. A temporary health
+module exposes fzf-lua's `_health.check`, which has no discoverable provider at this revision. The
+fixture clears this shell's stale `FZF_DEFAULT_OPTS_FILE` path and preseeds the RPC server variable;
+live picker interaction, full-config startup, and Windows execution remain unverified. No package
+revisions changed; the live installed fzf-lua remains at `07fce8a`.
+
 ## Windows fzf-lua colors and picker delay — 2026-11-09
 
 Set `fzf_opts["--color"] = "dark"` to preserve the preferred Unix fzf palette on both platforms,
