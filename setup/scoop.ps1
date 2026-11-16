@@ -346,6 +346,10 @@ Import-Module PSScriptAnalyzer -MinimumVersion $minimumVersion -ErrorAction Stop
     if ($importError) {
       throw $importError
     }
+
+    Write-Info 'Creating the Tig shim for LazyGit custom commands.'
+    $tigCommand = Join-Path $paths.User 'apps\git\current\usr\bin\tig.exe'
+    Invoke-Scoop -Command $scoopCommand -Arguments @('shim', 'add', 'tig', $tigCommand)
   }
   finally {
     if ($importFile -and (Test-Path -LiteralPath $importFile)) {

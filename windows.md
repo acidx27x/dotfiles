@@ -52,6 +52,10 @@ included in `setup\scoop.ps1` and is skipped with `-WhatIf`. If package import f
 still attempts module setup, then reports the original import error. Packages after the failed
 package may remain uninstalled.
 
+After successful package and module setup, the bootstrap creates a `tig` shim pointing to
+`apps\git\current\usr\bin\tig.exe` under the Scoop user root. This exposes Git's bundled Tig to
+PowerShell and LazyGit's custom commands. The `current` path follows Git upgrades.
+
 ## Package Bundle
 
 `windows\scoop\Scoopfile.jsonc` is the Windows equivalent of the repository's Brewfile. It records
