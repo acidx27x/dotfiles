@@ -69,6 +69,32 @@ without another prefix while pressed within tmux's repeat timeout. Existing Smar
 resizing remains available. **Ctrl+s, < / >** swaps the current pane with the previous / next pane
 in pane index order.
 
+## Snapshot picker
+
+Press **Ctrl+s, Shift+b** to browse Resurrect snapshots in a 90% × 80% popup. The list shows
+timestamps, session names, and window counts, newest first. A `●` marks the snapshot used by
+automatic restore. The preview shows saved windows, panes, and working directories.
+
+- **Ctrl+s** saves the current environment and refreshes the list, even when the list is empty.
+- **Tab / Shift+Tab** marks or unmarks a snapshot and moves down or up.
+- **Enter** asks before restoring one selected snapshot and makes it the automatic restore target.
+  Selecting several snapshots shows a reminder to choose only one.
+- **Alt+Backspace** lists the marked snapshots and asks once before deleting them. With no marks, it
+  deletes the highlighted snapshot. If the automatic restore target was deleted, the newest
+  remaining snapshot becomes the target. Deleting the final snapshot clears that target. Running
+  sessions stay open.
+- **Esc** closes the picker.
+
+Restoring adds missing sessions, windows, and panes; existing panes stay in place. Start with a
+fresh tmux instance to recover an older environment fully. Snapshots cover the whole server, rather
+than individual sessions. Resurrect shares captured pane contents between snapshots, so older
+layouts do not have independent scrollback backups. This configuration disables restoring programs.
+
+The picker requires `fzf` and the installed Resurrect plugin. It follows Resurrect's snapshot
+directory setting and inherits valid fzf preferences. After deploying the tmux package, reload with
+**Ctrl+s, r**. Existing manual save and restore shortcuts remain **Ctrl+s, Shift+s** and **Ctrl+s,
+Shift+r**.
+
 ## Session picker
 
 The prefix is **Ctrl+s**. SessionX opens in a centered popup, 90% wide and 60% high, with a top
