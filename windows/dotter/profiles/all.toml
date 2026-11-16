@@ -10,6 +10,7 @@ packages = [
   "powershell",
   "ssh",
   "starship",
+  "tig",
   "tuicr",
   "wezterm",
   "windows-terminal",

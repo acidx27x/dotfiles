@@ -15,6 +15,7 @@ brew "neovim", args: ["HEAD"]
 brew "git"
 brew "git-delta"
 brew "difftastic"
+brew "tig"
 brew "tuicr"
 brew "git-lfs"
 brew "diff-so-fancy"

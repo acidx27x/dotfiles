@@ -1,0 +1,82 @@
+# Commit history
+set main-view-date = relative-compact
+set main-view-id = yes
+set main-view-author-display = abbreviated
+set commit-order = default
+
+# Search
+set ignore-case = smart-case
+
+# Diffs
+set diff-context = 5
+
+# Blame: detect moved lines (-M) and copied lines (-C).
+set blame-options = -M -C
+
+# Appearance
+set line-graphics = auto
+set vertical-split = auto
+set wrap-lines = yes
+set mouse = yes
+
+# Refresh when changes are detected in another view.
+set refresh-mode = auto
+
+# Kanagawa: 256-color approximations of the lazygit/tuicr palette.
+# Inherit the terminal background; keep Git's colors from overriding this theme.
+set git-colors = no
+
+color default color187 default
+color cursor color187 color60 bold
+color cursor-blur color187 color236
+color title-focus color107 color236 bold
+color title-blur color243 color236
+color status color180 default
+color search-result color235 color180
+color delimiter color242 default
+color line-number color242 default
+color header color180 default bold
+color id color103 default
+color date color110 default
+color author color143 default
+color directory color110 default
+color overflow color168 default
+
+color main-head color107 default bold
+color main-ref color103 default
+color main-remote color110 default
+color main-tracked color109 default bold
+color main-tag color180 default bold
+color main-local-tag color180 default
+color graph-commit color110 default
+
+color diff-header color180 default bold
+color diff-index color110 default
+color diff-chunk color110 default
+color diff-stat color110 default
+color diff-add color107 default
+color diff-add2 color107 default
+color diff-del color168 default
+color diff-del2 color168 default
+
+color stat-staged color107 default
+color stat-unstaged color168 default
+color stat-untracked color180 default
+color help-group color110 default bold
+color help-action color143 default
+
+# Shared by commit graphs and blame IDs.
+color palette-0 color103 default
+color palette-1 color180 default
+color palette-2 color109 default
+color palette-3 color107 default
+color palette-4 color110 default
+color palette-5 color187 default
+color palette-6 color168 default
+color palette-7 color103 default bold
+color palette-8 color180 default bold
+color palette-9 color109 default bold
+color palette-10 color107 default bold
+color palette-11 color110 default bold
+color palette-12 color187 default bold
+color palette-13 color168 default bold

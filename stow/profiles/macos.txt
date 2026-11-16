@@ -17,6 +17,7 @@ sesh
 ssh
 starship
 stow
+tig
 tmux
 tuicr
 wezterm

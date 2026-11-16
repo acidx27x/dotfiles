@@ -117,10 +117,43 @@ customCommands:
       - type: input
         title: base ref
         key: Base
-        initialValue: HEAD
+        initialValue: origin/main
         suggestions:
           preset: branches
     command: tuicr -r {{printf "%s..%s" .Form.Base .SelectedLocalBranch.Name | quote}}
+    output: terminal
+
+  # tig: file history and blame
+  - key: "<alt+h>"
+    context: files
+    description: browse file history in tig
+    command: "tig -- {{.SelectedFile.Name | quote}}"
+    output: terminal
+
+  - key: "<alt+b>"
+    context: files
+    description: blame file in tig
+    command: "tig blame -- {{.SelectedFile.Name | quote}}"
+    output: terminal
+
+  # tig: historical file inspection
+  - key: "<alt+h>"
+    context: commitFiles
+    description: browse file history at selected commit
+    command: "tig {{.SelectedCommit.Hash}} -- {{.SelectedCommitFile.Name | quote}}"
+    output: terminal
+
+  - key: "<alt+b>"
+    context: commitFiles
+    description: blame file at selected commit
+    command: "tig blame {{.SelectedCommit.Hash}} -- {{.SelectedCommitFile.Name | quote}}"
+    output: terminal
+
+  # tuicr: focused review of one file
+  - key: "<alt+r>"
+    context: files
+    description: review selected file in tuicr
+    command: "tuicr -p {{.SelectedFile.Name | quote}}"
     output: terminal
 
   - key: "<ctrl+n>"
