@@ -27,8 +27,8 @@ Press **Ctrl+s, Space** to open which-key, then use:
 
 | Keys         | Action                                                |
 | ------------ | ----------------------------------------------------- |
-| s / o        | Sesh / SessionX picker                                |
-| Ctrl+l       | Previous session through Sesh                         |
+| s            | SessionX picker                                       |
+| Ctrl+l       | Previous session                                      |
 | f            | Full tmux-fzf launcher                                |
 | w, f         | tmux-fzf window picker                                |
 | m, h/j/k/l   | Smart Splits movement through the existing Alt keys   |
@@ -48,9 +48,11 @@ Continuum saves and restores automatically; manual snapshots use the Backup menu
 - **Ctrl+s, &** asks before closing the current window. The confirmation appears below the
   statusline; **y** closes the window and **n** or **Esc** cancels. Exiting a shell normally does
   not ask for confirmation.
-- **Ctrl+s, Shift+f** opens tmux-fzf's window switcher directly. Type to filter, then press
-  **Enter** to switch; **Esc** cancels. It includes windows from all sessions.
-- **Ctrl+s, Space, f** opens the full tmux-fzf launcher with its management menus.
+- **Ctrl+s, Shift+f** opens tmux-fzf's default category/action launcher in a 90% × 80% popup.
+  Windows, panes, commands, keybindings, and clipboard are available.
+- **Ctrl+s, Space, f** opens the same launcher. **Ctrl+s, Space, w, f** opens the window switcher
+  directly, including windows from all sessions. Type to filter, then press **Enter** to switch;
+  **Esc** cancels.
 
 ## Copy mode and panes
 
@@ -67,78 +69,78 @@ without another prefix while pressed within tmux's repeat timeout. Existing Smar
 resizing remains available. **Ctrl+s, < / >** swaps the current pane with the previous / next pane
 in pane index order.
 
-## Session pickers
+## Session picker
 
-The prefix is **Ctrl+s**. Both pickers open in a centered popup, 90% wide and 60% high.
+The prefix is **Ctrl+s**. SessionX opens in a centered popup, 90% wide and 60% high, with a top
+preview occupying 60% of the picker and Git branch labels enabled.
 
-| Keys                 | Action                                       |
-| -------------------- | -------------------------------------------- |
-| Ctrl+s, o            | Open SessionX                                |
-| Ctrl+s, s            | Open Sesh's native picker                    |
-| Ctrl+s, Ctrl+l       | Return to the previous session (`sesh last`) |
-| Ctrl+s, Space, o / s | Open SessionX / Sesh through which-key       |
-| Ctrl+s, F            | Open the tmux-fzf window switcher directly   |
+| Keys             | Action                                              |
+| ---------------- | --------------------------------------------------- |
+| Ctrl+s, s        | Open SessionX                                       |
+| Ctrl+s, Ctrl+l   | Return to the previous session (`switch-client -l`) |
+| Ctrl+s, Space, s | Open SessionX through which-key                     |
+| Ctrl+s, F        | Open the default tmux-fzf launcher                  |
 
-SessionX inherits `FZF_DEFAULT_OPTS_FILE` and `FZF_DEFAULT_OPTS` from the attaching Bash or Zsh
-shell. It reuses that shell's fzfrc colors and bindings, with its own reverse layout, prompt,
-pointer, 90% × 60% popup, and top preview occupying 60%. Selection is limited to one session. Git
-branch labels are disabled, including when returning to the session list with **Alt+b**. To enable
-them, set `@sessionx-git-branch` to `on` in `.tmux.conf`, reload, and reopen SessionX.
+SessionX initially lists running sessions. **Enter** switches to the selected session; typing an
+unused name and pressing **Enter** creates a session. **Esc** cancels. In the picker:
 
-In SessionX:
+- **Ctrl+r** renames the highlighted session; **Alt+Backspace** kills it.
+- **Alt+z** browses zoxide directories; selecting a directory creates or switches to its session.
+- **Alt+b** returns to the session list.
+- **Ctrl+w** lists windows; **Ctrl+t** changes the preview to a session/window tree.
+- **Ctrl+u / Ctrl+d** scroll the list; **Ctrl+b / Ctrl+f** scroll the preview by half a page.
 
-- **Ctrl+u / Ctrl+d** scroll the session list by half a page.
-- **Ctrl+b / Ctrl+f** scroll the preview by half a page.
-- **Alt+b** returns to the initial session list; **Alt+z** browses zoxide directories.
-- **Enter** connects to the selected session. Type an unused name and press **Enter** to create it.
-  Automatic acceptance and zoxide fallback remain off, so arbitrary names are supported.
-- **Alt+w** toggles preview wrapping; **Alt+l** toggles list wrapping; **Alt+p** toggles the
-  preview; **Alt+o** switches preview orientation. **Esc** cancels. Other keys retain SessionX
-  defaults.
+SessionX and tmux-fzf inherit `FZF_DEFAULT_OPTS_FILE` and `FZF_DEFAULT_OPTS` from the attaching Bash
+or Zsh shell, reusing its fzfrc colors and bindings. SessionX uses a reverse layout. The inherited
+**Alt+p** toggles the preview, and **Alt+o** changes its orientation.
 
-Sesh uses its native right-side preview and keyboard controls. The preview occupies at least 60% of
-the picker and hides below 100 columns. Its native configuration supports the prompt, pointer,
-icons, window names, and preview settings here, but cannot import fzfrc, set the full palette, or
-remap scrolling keys. Caching remains disabled; no project paths or startup commands are configured.
-**Ctrl+s, Ctrl+l** also provides a way back after a session closes.
+The previous-session shortcut uses tmux's native last-session tracking and requires the previous
+session to still exist. Closing the current session detaches its terminal from tmux instead of
+switching it to another session (`detach-on-destroy on`). Sesh remains installed, and its dotfiles
+configuration is retained for standalone use; tmux no longer binds it.
+
+The Bash and Zsh `tmux` wrapper opens SessionX when called without arguments outside tmux. Calls
+with arguments, calls inside tmux, and calls without the SessionX script installed run tmux
+normally. Use `command tmux` to bypass the wrapper. Starting through the picker creates an initial
+session, which remains running if you select another session; **Esc** stays in the initial session.
 
 Deploy the configuration from the repository root:
 
 ```bash
-./setup/stow.sh deploy --package tmux,sesh
+./setup/stow.sh deploy --package tmux
 ```
 
-Both the Linux and macOS default Stow profiles include Sesh. The existing Bash or Zsh package must
-also be deployed for its fzfrc. If TPM is not installed yet:
+The existing Bash or Zsh package must also be deployed for its fzfrc. SessionX requires `fzf`, with
+`zoxide` on `PATH` for directory browsing. If TPM is not installed yet:
 
 ```bash
 git clone --depth=1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
 Inside tmux, press **Ctrl+s, r** to reload, then **Ctrl+s, Shift+i** to install plugins. Reload
-again after installation. Detach with **Ctrl+s, d** and run `tmux attach` from an initialized Bash
-or Zsh shell so tmux refreshes both fzf environment variables. Reloading alone does not refresh
-them.
+again after installation. Use **Ctrl+s, Space, P, c** to remove unused TPM plugins. If an old
+SessionX binding on **Ctrl+s, o** remains on an existing server, run `tmux unbind-key o` once.
+Detach with **Ctrl+s, d** and run `tmux attach` from an initialized Bash or Zsh shell so tmux
+refreshes both fzf environment variables. Reloading alone does not refresh them.
 
 To verify interactively after deployment:
 
 1. Run `tmux new-session -d -s picker-existing` to add a temporary selection target. In that
    session, run `seq 1 200` to provide preview content, then return with **Ctrl+s, Ctrl+l**.
-2. Open **Ctrl+s, o**, check the popup and preview, use **Ctrl+u / Ctrl+d** for the list and
-   **Ctrl+b / Ctrl+f** for the preview, then cancel with **Esc**. Try **Alt+z**, **Alt+b**, and the
-   inherited Alt toggles. Reopen and select `picker-existing` with **Enter**.
-3. Reopen SessionX, type `picker-new-session` (an unused name), and press **Enter**. Confirm the
-   name with `tmux display-message -p '#S'` and check that the usual shell starts without
-   application startup commands.
-4. Open **Ctrl+s, s**, inspect its right preview, try the native navigation controls, and cancel
-   with **Esc**. Reopen and select `picker-existing`. Resize the terminal below 111 columns so the
-   90%-wide popup is narrower than 100 columns; confirm the preview hides.
-5. Open **Ctrl+s, Space, o** and **Ctrl+s, Space, s** to check both which-key launchers. Detach and
-   reattach from each initialized shell, then use `tmux show-environment FZF_DEFAULT_OPTS_FILE` and
-   `tmux show-environment FZF_DEFAULT_OPTS` to check inheritance. Repeat the SessionX scrolling and
-   Alt toggle checks with each shell's fzfrc.
-6. Switch back to your original session and remove the temporary sessions with
-   `tmux kill-session -t '=picker-existing'` and `tmux kill-session -t '=picker-new-session'`.
+2. Open **Ctrl+s, s**, check the popup, preview, list scrolling, and inherited Alt toggles, then
+   cancel with **Esc**. Reopen and select `picker-existing` with **Enter**. Use **Ctrl+s, Ctrl+l**
+   to return to your original session.
+3. Open **Ctrl+s, Space, s** to check the which-key launcher. Use **Alt+z** to select a zoxide
+   directory without an existing session and confirm that SessionX creates a session there. Test
+   creation with an unused session name, and rename it using **Ctrl+r**.
+4. Open **Ctrl+s, Shift+f** and confirm the 90% × 80% category launcher appears. Choose `window`,
+   then its switch action, and select a window. Check **Ctrl+s, Space, f** and the direct window
+   picker at **Ctrl+s, Space, w, f** too.
+5. Detach and reattach from each initialized shell, then use
+   `tmux show-environment FZF_DEFAULT_OPTS_FILE` and `tmux show-environment FZF_DEFAULT_OPTS` to
+   check inheritance.
+6. Close a temporary session while attached to it and confirm that tmux detaches rather than
+   switching to another session. Reattach and remove any remaining temporary sessions.
 
-References: [SessionX configuration](https://github.com/omerxx/tmux-sessionx#configure-%EF%B8%8F)
-and [Sesh picker configuration](https://github.com/joshmedeski/sesh#picker-tui).
+References: [SessionX](https://github.com/omerxx/tmux-sessionx#configure-%EF%B8%8F) and
+[tmux-fzf](https://github.com/sainnhe/tmux-fzf#customization).

@@ -1,6 +1,19 @@
 # ~/.config/zsh/functions.zsh
 # User-facing interactive Zsh functions.
 
+# Open SessionX for bare tmux calls outside tmux; forward all other calls unchanged.
+tmux() {
+  emulate -L zsh
+
+  local sessionx="$HOME/.tmux/plugins/tmux-sessionx/scripts/sessionx.sh"
+
+  if (($# == 0)) && [[ -z ${TMUX:-} && -x $sessionx ]]; then
+    command tmux new-session \; run-shell -b "\"\$HOME/.tmux/plugins/tmux-sessionx/scripts/sessionx.sh\""
+  else
+    command tmux "$@"
+  fi
+}
+
 # Print the currently running interactive shell.
 current-shell() {
   print -r -- "zsh ${ZSH_VERSION:-unknown}"
@@ -59,6 +72,7 @@ functions-help() {
     proxy-enable 'Replace proxy endpoints using explicit URLs and an optional bypass list.' \
     proxy-status 'Print common proxy variables.' \
     rm-zone-id 'Delete Windows Zone.Identifier metadata files.' \
+    tmux 'Open SessionX for bare tmux calls; otherwise run tmux normally.' \
     to-us-ascii 'Transliterate text files to US-ASCII.' \
     to-utf8 'Convert text files to UTF-8 without a BOM.' \
     to-utf8-bom 'Convert text files to UTF-8 with one BOM.' \
