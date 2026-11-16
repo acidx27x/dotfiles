@@ -1,4 +1,4 @@
-worktree-path = "{{ repo_path }}/../{{ repo }}-worktrees/{{ branch | sanitize }}"
+worktree-path = "{{ repo_path }}/../.{{ repo }}-worktrees/{{ branch | sanitize }}"
 
 [pre-start]
 copy = "wt step copy-ignored --require-include"
@@ -6,6 +6,10 @@ copy = "wt step copy-ignored --require-include"
 # Include branches that don't have worktrees yet
 [list]
 branches = true
+
+# Only stage tracked files for Worktrunk commits
+[commit]
+stage = "tracked"
 
 # Conservative merge behavior
 [merge]
@@ -15,3 +19,7 @@ remove = false
 # Preserve branches when removing worktrees
 [remove]
 delete-branch = false
+
+[switch.picker]
+pager = "delta --paging=never --width=$COLUMNS"
+preview = true
