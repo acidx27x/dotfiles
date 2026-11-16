@@ -121,8 +121,11 @@ See the
   WezTerm SSHMUX, domain detach/reattach, or its Lua workspace/status callbacks. Use your existing
   tmux or Zellij inside WSL/SSH when persistent sessions are needed.
 - **Directories:** duplicating a profile does not clone shell state. Directory inheritance needs
-  shell integration that reports the working directory (OSC 9;9). Existing shells may not report it;
-  otherwise expect the profile's starting directory. WSL paths need appropriate translation.
+  shell integration that reports the working directory (OSC 9;9). The PowerShell Starship hook and
+  Bash/Zsh `05-terminal-cwd` modules provide this; the latter translate local WSL paths with
+  `wslpath -w` and skip SSH sessions. Without reporting, expect the profile's starting directory.
+  See
+  [Microsoft's directory-inheritance guide](https://learn.microsoft.com/en-us/windows/terminal/tutorials/new-tab-same-directory).
 - **Keyboard protocol:** Terminal 1.25 supports Kitty keyboard negotiation natively. The old
   Ctrl+Space `sendInput` action has been removed, and Ctrl+Space is explicitly unbound at the
   Terminal level so it reaches the application. Apps that negotiate Kitty input receive the

@@ -93,12 +93,21 @@ WezTerm falls back to that domain's default cwd or the user's home directory. Se
 [shell integration](https://wezterm.org/shell-integration.html).
 
 - **WSL:** Start the tab in a WSL domain. WezTerm's WSL domain supports tracking the Linux shell's
-  cwd for new tabs and panes.
+  cwd for new tabs and panes. The Bash and Zsh `05-terminal-cwd` modules report the Linux cwd via
+  OSC 7 before each prompt, including when Starship is unavailable. Running `wsl.exe` inside a local
+  PowerShell pane does not switch that pane to a WSL domain; select `WSL:…` in the launcher instead.
 - **SSH multiplexing (`SSHMUX:host`):** New tabs and windows stay in that remote WezTerm domain and
   use its remote cwd.
 - **Plain SSH (`SSH:host`):** The remote shell must emit OSC 7, and the host alias must be listed in
   `UNIX_HOSTS` so WezTerm can respawn a shell in that remote directory. This setting only applies to
-  plain SSH domains.
+  plain SSH domains. Install the shell config on the remote host too, and ensure
+  `TERM_PROGRAM=WezTerm` reaches that shell; ordinary SSH does not guarantee this variable is
+  forwarded.
+
+The directory modules also support foot (`TERM=foot` or `foot-direct`) via OSC 7, and Windows
+Terminal in local WSL sessions via OSC 9;9 with `wslpath -w`. Ghostty and kitty use their native
+shell integrations instead. Reporting a remote directory does not make a local pane recreate an
+interactive SSH connection.
 
 For a new window in the default domain, use `Ctrl+Shift+N` on Windows/Linux or `Cmd+N` on macOS. For
 one in the current domain, use `Mod+Alt+N`.
