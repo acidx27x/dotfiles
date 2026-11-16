@@ -4,7 +4,7 @@ theme = "kanagawa"
 appearance = "dark"
 transparent_background = true
 
-diff_view = "side-by-side"
+diff_view = "unified"
 show_file_list = true
 show_commits = true
 show_pr_checks = true
