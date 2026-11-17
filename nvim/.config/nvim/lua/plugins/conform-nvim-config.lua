@@ -9,10 +9,6 @@ local function without_neocmake(client)
   return client.name ~= "neocmake"
 end
 
-local function without_ruff(client)
-  return client.name ~= "ruff"
-end
-
 local function lsp_client_only(name)
   return function(client)
     return client.name == name
@@ -25,7 +21,7 @@ end
 --   "formatting": {
 --     "format_on_save": false,
 --     "filetypes": {
---       "cpp": { "formatters": ["clang-format"], "lsp_format": "never" }
+--       "cpp": { "format_on_save": true, "formatters": ["clang-format"], "lsp_format": "never" }
 --     }
 --   }
 -- }
@@ -34,8 +30,8 @@ end
 -- Add or replace formatter names here, and set their command paths in M.setup().
 -- lsp_format = "prefer" tries an allowed LSP formatter before the external tool;
 -- "fallback" is the default, and "never" disables LSP formatting for that filetype.
--- filter receives an LSP client: clangd_only allows clangd, while the other
--- filters exclude neocmake and ruff. Omit filter to allow any LSP client.
+-- filter receives an LSP client: clangd_only allows clangd, while
+-- without_neocmake excludes neocmake. Omit filter to allow any LSP client.
 local defaults = {
   lua = { "stylua" },
   c = { "clang-format", lsp_format = "prefer", filter = clangd_only },
@@ -46,7 +42,8 @@ local defaults = {
   },
   python = {
     "ruff_format",
-    filter = without_ruff,
+    lsp_format = "prefer",
+    filter = lsp_client_only("ruff"),
   },
 }
 
@@ -112,7 +109,17 @@ function M.setup()
     formatters_by_ft = formatters_by_ft,
     formatters = {
       ["clang-format"] = { command = _G.Paths["clang-format"] },
-      gersemi = { command = _G.Paths.gersemi },
+      gersemi = {
+        command = _G.Paths.gersemi,
+        range_args = function(_, ctx)
+          return {
+            "--quiet",
+            "--line-ranges",
+            string.format("%d-%d", ctx.range.start[1], ctx.range["end"][1]),
+            "-",
+          }
+        end,
+      },
       ruff_format = { command = _G.Paths.ruff },
     },
     default_format_opts = {
@@ -120,7 +127,17 @@ function M.setup()
       lsp_format = "fallback",
     },
     format_on_save = function(bufnr)
-      if vim.b[bufnr].autosave_writing or settings(bufnr).format_on_save == false then
+      if vim.b[bufnr].autosave_writing then
+        return
+      end
+      local config = settings(bufnr)
+      local format_on_save = config.format_on_save
+      local override = type(config.filetypes) == "table"
+        and config.filetypes[vim.bo[bufnr].filetype]
+      if type(override) == "table" and override.format_on_save ~= nil then
+        format_on_save = override.format_on_save
+      end
+      if format_on_save == false then
         return
       end
       return {}

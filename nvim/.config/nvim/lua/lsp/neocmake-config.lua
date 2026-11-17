@@ -22,8 +22,12 @@ vim.lsp.config[name] = {
 
 base.enable(name, { "cmake" })
 
---[=====[ base .neocmakelint.toml
+--[=====[ base .neocmake.toml
 line_max_words = 120
 command_upcase = "ignore"
 enable_external_cmake_lint = false
+
+[included_cmakes]
+files = ["global/config.cmake"]
+glob_rules = ["global/*.cmake"]
 --]=====]

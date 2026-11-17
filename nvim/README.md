@@ -144,8 +144,11 @@ and parser commands manually:
 
 `<Space>cf` formats the current buffer or Visual selection. A manual save formats before writing by
 default; writes from auto-save.nvim do not trigger formatting. C/C++ prefers clangd's formatter and
-uses `clang-format` if clangd cannot format the buffer. Lua, CMake, and Python use `stylua`,
-`gersemi`, and `ruff format` respectively; other filetypes can use LSP formatting.
+uses `clang-format` if clangd cannot format the buffer. Python prefers Ruff LSP formatting, with
+`ruff format` as fallback. Lua and CMake use `stylua` and `gersemi` respectively; other filetypes
+can use LSP formatting.
+
+CMake Visual selections use Gersemi's native `--line-ranges` support.
 
 To disable format-on-save for one project, create `.nvim.json` in its root. Settings are resolved
 for each buffer, so they do not affect other open projects:
@@ -158,10 +161,27 @@ for each buffer, so they do not affect other open projects:
 }
 ```
 
-`format_on_save` defaults to `true`; disabling it leaves `<Space>cf` available. A filetype's
-`formatters` list replaces the global list. Set `lsp_format` to a Conform mode such as `never`,
-`fallback`, or `prefer` to control LSP use. Set `lsp_client` to an LSP name to restrict formatting
-to that client. Define additional external formatters and executable paths in
+`format_on_save` defaults to `true`; disabling it leaves `<Space>cf` available. Set
+`filetypes.<filetype>.format_on_save` to override the project-wide setting for a language. Omitted
+values inherit the project-wide setting. For example, disable format-on-save except for C++:
+
+```json
+{
+  "formatting": {
+    "format_on_save": false,
+    "filetypes": {
+      "cpp": { "format_on_save": true }
+    }
+  }
+}
+```
+
+To disable only one language, leave the project-wide setting enabled and set that filetype's
+`format_on_save` to `false`. These overrides also apply only to manual saves.
+
+A filetype's `formatters` list replaces the global list. Set `lsp_format` to a Conform mode such as
+`never`, `fallback`, or `prefer` to control LSP use. Set `lsp_client` to an LSP name to restrict
+formatting to that client. Define additional external formatters and executable paths in
 `lua/plugins/conform-nvim-config.lua`; use `:ConformInfo` to inspect availability.
 
 Useful command-line checks:

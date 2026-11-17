@@ -9,7 +9,11 @@ key. Type commands beginning with `:` in Normal mode; press `<Esc>` to leave Ins
 Inside tmux, yanks send OSC 52 clipboard writes to the connected terminal and also update tmux's
 paste buffer. The terminal must allow OSC 52 writes. Normal-mode paste reads the tmux buffer; use
 the terminal's paste shortcut, such as Windows Terminal's Ctrl+Shift+V, for text copied in another
-desktop application. Outside tmux, Neovim uses its normal clipboard provider detection.
+desktop application. SSH sessions outside tmux explicitly use Neovim's built-in OSC 52 provider.
+Local sessions outside tmux use normal clipboard provider detection. `unnamedplus` stays enabled, so
+ordinary yanks use the selected clipboard provider. OSC 52 requires terminal support; reading the
+clipboard with `p` also requires OSC 52 read support. If reads are unsupported, use the terminal's
+paste shortcut in Insert mode.
 
 ## Git diffs and merge conflicts
 

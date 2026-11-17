@@ -94,9 +94,9 @@ do not support lazy loading. Parser installation and updates also need `tree-sit
 eager because it handles directory buffers; its [requirements](https://github.com/stevearc/oil.nvim)
 are Neovim 0.10+ and only an optional icon provider. Conform needs Neovim 0.10+; its configured
 formatters are `stylua`, `clang-format`, `gersemi`, and `ruff`. C/C++ prefers clangd with
-`clang-format` fallback. CMake/Python exclude the neocmake and ruff LSP clients from fallback.
-Manual saves format by default; auto-save.nvim writes do not. Project-local `.nvim.json` settings
-are read by buffer path.
+`clang-format` fallback. Python prefers Ruff LSP formatting with `ruff format` fallback. CMake
+excludes neocmake from LSP fallback. Manual saves format by default; auto-save.nvim writes do not.
+Project-local `.nvim.json` settings are read by buffer path.
 
 The `buffer_ui` group loads on the first `BufReadPre` or `BufNewFile`, or on a relevant lazy
 mapping. Its packages load together, so invoking `<Space>ast` or `<Space>vw` also loads the other
