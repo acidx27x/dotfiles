@@ -62,6 +62,9 @@ items:
   - name: Find (tmux-fzf)
     key: f
     command: 'run-shell -b "TMUX_FZF_CLIENT=#{client_tty} $HOME/.tmux/plugins/tmux-fzf/main.sh"'
+  - name: Lazygit
+    key: g
+    command: 'display-popup -E -w 90% -h 90% -d "#{pane_current_path}" lazygit'
   - name: Workmux
     key: a
     menu:

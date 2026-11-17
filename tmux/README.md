@@ -30,6 +30,7 @@ Press **Ctrl+b, Space** to open which-key, then use:
 | s            | SessionX picker                                       |
 | Ctrl+l       | Previous session                                      |
 | f            | Full tmux-fzf launcher                                |
+| g            | Lazygit popup                                         |
 | w, f         | tmux-fzf window picker                                |
 | a            | Workmux dashboard, sidebar, and agent navigation      |
 | m, h/j/k/l   | Smart Splits movement through the existing Alt keys   |
@@ -40,6 +41,16 @@ Press **Ctrl+b, Space** to open which-key, then use:
 
 Continuum saves and restores automatically; manual snapshots use the Backup menu. Reload with
 **Ctrl+b, r** after editing the menu configuration.
+
+## Lazygit
+
+Press **Ctrl+b, g** or **Ctrl+b, Space, g** to open Lazygit in a 90% × 90% popup, starting in the
+current pane's directory. Press **q** to quit Lazygit and close the popup. Requires `lazygit` on
+tmux's `PATH`. Reload with **Ctrl+b, r** after deploying the configuration.
+
+Based on
+[jjasghar's popup binding](https://gist.github.com/jjasghar/d39f322a76732c42f9a3d1a8bdeecf10) and
+[kesoji's tmux configuration](https://github.com/kesoji/dotfiles/blob/master/tmux.conf).
 
 ## Workmux
 
