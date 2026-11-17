@@ -10,9 +10,9 @@ minutes; the bar redraws every 30 seconds using cached data. It uses network-bas
 detection and requires `curl` and internet access. Powerline arrows require a compatible font, such
 as FiraCode Nerd Font.
 
-Press **Ctrl+s, Shift+t** to open Ukiyo's interactive statusline settings menu for colors, modules,
-and options. It is also available through **Ctrl+s, Space, Shift+t** in which-key. Keep persistent
-settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+s, r** reloads them. Set
+Press **Ctrl+b, Shift+t** to open Ukiyo's interactive statusline settings menu for colors, modules,
+and options. It is also available through **Ctrl+b, Space, Shift+t** in which-key. Keep persistent
+settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+b, r** reloads them. Set
 `@ukiyo-fixed-location` to a city name if network-based detection picks the wrong location. After
 changing themes in the menu, reload to restore the custom tab colors.
 
@@ -23,7 +23,7 @@ confirmations. It shows a dim horizontal separator when there is no message or p
 
 ## Plugin commands in which-key
 
-Press **Ctrl+s, Space** to open which-key, then use:
+Press **Ctrl+b, Space** to open which-key, then use:
 
 | Keys         | Action                                                |
 | ------------ | ----------------------------------------------------- |
@@ -31,6 +31,7 @@ Press **Ctrl+s, Space** to open which-key, then use:
 | Ctrl+l       | Previous session                                      |
 | f            | Full tmux-fzf launcher                                |
 | w, f         | tmux-fzf window picker                                |
+| a            | Workmux dashboard, sidebar, and agent navigation      |
 | m, h/j/k/l   | Smart Splits movement through the existing Alt keys   |
 | m, H/J/K/L   | Smart Splits resizing through the existing Alt arrows |
 | b, s / r     | Resurrect save / restore                              |
@@ -38,40 +39,63 @@ Press **Ctrl+s, Space** to open which-key, then use:
 | T            | Ukiyo statusline settings                             |
 
 Continuum saves and restores automatically; manual snapshots use the Backup menu. Reload with
-**Ctrl+s, r** after editing the menu configuration.
+**Ctrl+b, r** after editing the menu configuration.
+
+## Workmux
+
+Workmux integration requires `workmux` on tmux's PATH. The dashboard opens in a 90% × 80% popup on
+the Worktrees tab, including worktrees that only have shell panes.
+
+| Keys           | Which-key sequence  | Action                    |
+| -------------- | ------------------- | ------------------------- |
+| Ctrl+b, Ctrl+s | Ctrl+b, Space, a, d | Dashboard (Worktrees tab) |
+| Ctrl+b, Ctrl+t | Ctrl+b, Space, a, s | Toggle sidebar            |
+| Ctrl+b, Ctrl+j | Ctrl+b, Space, a, j | Next agent                |
+| Ctrl+b, Ctrl+k | Ctrl+b, Space, a, k | Previous agent            |
+
+The sidebar is opt-in and shows agents across sessions by default, grouped by project using the
+Workmux config. Toggling it does not start an agent. Next/previous navigation cycles agents and
+follows the active sidebar filter; use SessionX or the dashboard for shell-only worktrees.
+
+Focus the sidebar with the existing pane navigation or mouse. Inside it, use **j/k** to browse,
+**Enter** to focus an agent, and **f** to toggle the current-session filter. Leave that filter off
+to navigate agents across worktrees when each worktree has its own session.
+
+Reload with **Ctrl+b, r** after deploying these changes. The Workmux config still opens one shell by
+default; use `workmux add <branch> -l agent` to explicitly start Codex.
 
 ## Window navigation
 
 - **Alt+n / Alt+p** select the next / previous window, wrapping around.
 - **Alt+i / Alt+o** move the current window left / right, keeping it focused, without a prefix.
-- **Ctrl+s, Tab** toggles between the current and last-used window.
-- **Ctrl+s, &** asks before closing the current window. The confirmation appears below the
+- **Ctrl+b, Tab** toggles between the current and last-used window.
+- **Ctrl+b, &** asks before closing the current window. The confirmation appears below the
   statusline; **y** closes the window and **n** or **Esc** cancels. Exiting a shell normally does
   not ask for confirmation.
-- **Ctrl+s, Shift+f** opens tmux-fzf's default category/action launcher in a 90% × 80% popup.
+- **Ctrl+b, Shift+f** opens tmux-fzf's default category/action launcher in a 90% × 80% popup.
   Windows, panes, commands, keybindings, and clipboard are available.
-- **Ctrl+s, Space, f** opens the same launcher. **Ctrl+s, Space, w, f** opens the window switcher
+- **Ctrl+b, Space, f** opens the same launcher. **Ctrl+b, Space, w, f** opens the window switcher
   directly, including windows from all sessions. Type to filter, then press **Enter** to switch;
   **Esc** cancels.
 
 ## Copy mode and panes
 
-Press **Ctrl+s, [** or **Ctrl+s, Esc** to enter vi copy mode. Use **v** to begin a selection, **V**
+Press **Ctrl+b, [** or **Ctrl+b, Esc** to enter vi copy mode. Use **v** to begin a selection, **V**
 for whole lines, and **Ctrl+v** to toggle rectangular selection. **y** copies without leaving copy
 mode; **Esc** cancels and returns to the terminal.
 
-Press **Ctrl+s, ]** to paste the latest tmux buffer directly, or **Ctrl+s, =** to choose an older
+Press **Ctrl+b, ]** to paste the latest tmux buffer directly, or **Ctrl+b, =** to choose an older
 buffer and press **Enter** to paste it. Release the prefix before pressing the next key; neither
 shortcut needs the right-click menu.
 
-Press **Ctrl+s, H/J/K/L** to resize panes left/down/up/right by five cells. These bindings repeat
+Press **Ctrl+b, H/J/K/L** to resize panes left/down/up/right by five cells. These bindings repeat
 without another prefix while pressed within tmux's repeat timeout. Existing Smart Splits Alt-arrow
-resizing remains available. **Ctrl+s, < / >** swaps the current pane with the previous / next pane
+resizing remains available. **Ctrl+b, < / >** swaps the current pane with the previous / next pane
 in pane index order.
 
 ## Snapshot picker
 
-Press **Ctrl+s, Shift+b** to browse Resurrect snapshots in a 90% × 80% popup. The list shows
+Press **Ctrl+b, Shift+b** to browse Resurrect snapshots in a 90% × 80% popup. The list shows
 timestamps, session names, and window counts, newest first. A `●` marks the snapshot used by
 automatic restore. The preview shows saved windows, panes, and working directories.
 
@@ -92,20 +116,20 @@ layouts do not have independent scrollback backups. This configuration disables 
 
 The picker requires `fzf` and the installed Resurrect plugin. It follows Resurrect's snapshot
 directory setting and inherits valid fzf preferences. After deploying the tmux package, reload with
-**Ctrl+s, r**. Existing manual save and restore shortcuts remain **Ctrl+s, Shift+s** and **Ctrl+s,
+**Ctrl+b, r**. Existing manual save and restore shortcuts remain **Ctrl+b, Shift+s** and **Ctrl+b,
 Shift+r**.
 
 ## Session picker
 
-The prefix is **Ctrl+s**. SessionX opens in a centered popup, 90% wide and 60% high, with a top
+The prefix is **Ctrl+b**. SessionX opens in a centered popup, 90% wide and 60% high, with a top
 preview occupying 60% of the picker and Git branch labels enabled.
 
 | Keys             | Action                                              |
 | ---------------- | --------------------------------------------------- |
-| Ctrl+s, s        | Open SessionX                                       |
-| Ctrl+s, Ctrl+l   | Return to the previous session (`switch-client -l`) |
-| Ctrl+s, Space, s | Open SessionX through which-key                     |
-| Ctrl+s, F        | Open the default tmux-fzf launcher                  |
+| Ctrl+b, s        | Open SessionX                                       |
+| Ctrl+b, Ctrl+l   | Return to the previous session (`switch-client -l`) |
+| Ctrl+b, Space, s | Open SessionX through which-key                     |
+| Ctrl+b, F        | Open the default tmux-fzf launcher                  |
 
 SessionX initially lists running sessions. **Enter** switches to the selected session; typing an
 unused name and pressing **Enter** creates a session. **Esc** cancels. In the picker:
@@ -143,25 +167,25 @@ The existing Bash or Zsh package must also be deployed for its fzfrc. SessionX r
 git clone --depth=1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
-Inside tmux, press **Ctrl+s, r** to reload, then **Ctrl+s, Shift+i** to install plugins. Reload
-again after installation. Use **Ctrl+s, Space, P, c** to remove unused TPM plugins. If an old
-SessionX binding on **Ctrl+s, o** remains on an existing server, run `tmux unbind-key o` once.
-Detach with **Ctrl+s, d** and run `tmux attach` from an initialized Bash or Zsh shell so tmux
+Inside tmux, press **Ctrl+b, r** to reload, then **Ctrl+b, Shift+i** to install plugins. Reload
+again after installation. Use **Ctrl+b, Space, P, c** to remove unused TPM plugins. If an old
+SessionX binding on **Ctrl+b, o** remains on an existing server, run `tmux unbind-key o` once.
+Detach with **Ctrl+b, d** and run `tmux attach` from an initialized Bash or Zsh shell so tmux
 refreshes both fzf environment variables. Reloading alone does not refresh them.
 
 To verify interactively after deployment:
 
 1. Run `tmux new-session -d -s picker-existing` to add a temporary selection target. In that
-   session, run `seq 1 200` to provide preview content, then return with **Ctrl+s, Ctrl+l**.
-2. Open **Ctrl+s, s**, check the popup, preview, list scrolling, and inherited Alt toggles, then
-   cancel with **Esc**. Reopen and select `picker-existing` with **Enter**. Use **Ctrl+s, Ctrl+l**
+   session, run `seq 1 200` to provide preview content, then return with **Ctrl+b, Ctrl+l**.
+2. Open **Ctrl+b, s**, check the popup, preview, list scrolling, and inherited Alt toggles, then
+   cancel with **Esc**. Reopen and select `picker-existing` with **Enter**. Use **Ctrl+b, Ctrl+l**
    to return to your original session.
-3. Open **Ctrl+s, Space, s** to check the which-key launcher. Use **Alt+z** to select a zoxide
+3. Open **Ctrl+b, Space, s** to check the which-key launcher. Use **Alt+z** to select a zoxide
    directory without an existing session and confirm that SessionX creates a session there. Test
    creation with an unused session name, and rename it using **Ctrl+r**.
-4. Open **Ctrl+s, Shift+f** and confirm the 90% × 80% category launcher appears. Choose `window`,
-   then its switch action, and select a window. Check **Ctrl+s, Space, f** and the direct window
-   picker at **Ctrl+s, Space, w, f** too.
+4. Open **Ctrl+b, Shift+f** and confirm the 90% × 80% category launcher appears. Choose `window`,
+   then its switch action, and select a window. Check **Ctrl+b, Space, f** and the direct window
+   picker at **Ctrl+b, Space, w, f** too.
 5. Detach and reattach from each initialized shell, then use
    `tmux show-environment FZF_DEFAULT_OPTS_FILE` and `tmux show-environment FZF_DEFAULT_OPTS` to
    check inheritance.

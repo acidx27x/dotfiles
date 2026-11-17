@@ -1,0 +1,72 @@
+# Match the existing Worktrunk directory convention.
+worktree_dir: "../.{project}-worktrees"
+worktree_naming: full
+base_branch: auto
+
+mode: session
+window_placement: after_current
+status_format: false
+nerdfont: true
+agent: codex
+
+# Kanagawa Dragon, with Fuji White text matching tmux.
+theme:
+  scheme: default
+  mode: dark
+  custom:
+    current_row_bg: "#282727"
+    highlight_row_bg: "#393836"
+    current_worktree_fg: "#e6c384"
+    dimmed: "#737c73"
+    text: "#dcd7ba"
+    border: "#625e5a"
+    help_border: "#393836"
+    help_muted: "#737c73"
+    header: "#8ba4b0"
+    keycap: "#e6c384"
+    info: "#8ea4a2"
+    success: "#87a987"
+    warning: "#e6c384"
+    danger: "#c4746e"
+    accent: "#8992a7"
+
+# Default to one shell; no agent command runs automatically.
+panes:
+  - focus: true
+
+# Opt in with: workmux add <branch> -l agent
+# <agent> uses the configured Codex agent.
+layouts:
+  agent:
+    panes:
+      - command: "<agent>"
+        focus: true
+      - split: horizontal
+
+# Keep resources after merging; removal still needs --keep-branch to keep branches.
+merge_keep: true
+confirm_unmerged_removal: true
+
+stale_after: 3h
+
+sidebar:
+  position: left
+  layout: tiles
+  sort: priority
+  group_by: project
+  collapse_stale: true
+
+dashboard:
+  sort_mode: priority
+  merge: >-
+    Review the changes and propose a merge plan.
+    Do not merge, rebase, commit, or remove anything.
+
+# Configure file sharing per repository in .workmux.yaml.
+files:
+  copy: []
+  symlink: []
+
+placement: local
+sandbox:
+  enabled: false

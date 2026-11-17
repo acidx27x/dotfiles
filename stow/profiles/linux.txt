@@ -25,6 +25,7 @@ tmux
 tuicr
 wezterm
 wget
+workmux
 worktrunk
 zed
 zellij
