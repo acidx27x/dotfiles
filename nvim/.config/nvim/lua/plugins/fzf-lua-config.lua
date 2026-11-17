@@ -38,21 +38,24 @@ fzf.setup({
       ["<M-z>"] = "toggle-fullscreen",
       ["<M-w>"] = "toggle-preview-wrap",
       ["<M-p>"] = "toggle-preview",
-      ["<C-u>"] = "preview-half-page-up",
-      ["<C-d>"] = "preview-half-page-down",
+      ["<C-u>"] = false,
+      ["<C-d>"] = false,
       ["<C-f>"] = "preview-page-down",
       ["<C-b>"] = "preview-page-up",
     },
     fzf = {
       true,
       ["alt-l"] = "toggle-wrap",
-      ["ctrl-u"] = "preview-half-page-up",
-      ["ctrl-d"] = "preview-half-page-down",
+      ["ctrl-u"] = "half-page-up",
+      ["ctrl-d"] = "half-page-down",
       ["ctrl-f"] = "preview-page-down",
       ["ctrl-b"] = "preview-page-up",
     },
   },
   files = {
+    fzf_opts = {
+      ["--tiebreak"] = "length",
+    },
     actions = {
       ["ctrl-o"] = {
         fn = function(selected, opts)
