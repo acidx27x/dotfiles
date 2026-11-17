@@ -18,6 +18,21 @@ changing themes in the menu, reload to restore the custom tab colors.
 
 Windows with background activity show a `!` marker in their tab.
 
+Workmux's working, waiting, and done symbols appear after the window name. The custom tab format
+reads `@workmux_status` directly, matching `status_format: false` in the Workmux configuration.
+Agent status still requires Workmux's agent hooks to be installed.
+
+Shell commands that run longer than 10 seconds and finish in a background window show `✓` for
+success or `✗` for failure. The marker clears when you visit that window, switch to its session, or
+attach to it. This also covers commands in detached sessions; the existing `!` still means output
+activity. Timing covers foreground shell commands and pipelines, including silent commands; jobs
+launched with `&` are not tracked after the prompt returns.
+
+Deploy the Bash or Zsh package with tmux, then start a new shell inside tmux (or reload its shell
+configuration) to enable command tracking. Bash uses ble.sh or bash-preexec hooks; Zsh uses its
+native preexec/precmd hooks. Reload tmux with **Ctrl+b, r** to update the tab format and clearing
+hooks.
+
 A second row is always reserved below the tabs for tmux messages, command prompts, and
 confirmations. It shows a dim horizontal separator when there is no message or prompt.
 
