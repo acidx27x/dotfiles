@@ -98,6 +98,8 @@ if (vim.env.TMUX or "") ~= "" and vim.fn.executable("tmux") == 1 then
     },
     cache_enabled = 0,
   }
+elseif (vim.env.SSH_TTY or "") ~= "" or (vim.env.SSH_CONNECTION or "") ~= "" then
+  vim.g.clipboard = "osc52"
 end
 vim.opt.clipboard:append("unnamedplus") -- Use system clipboard
 
