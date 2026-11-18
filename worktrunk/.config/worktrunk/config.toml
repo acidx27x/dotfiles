@@ -1,3 +1,5 @@
+# Change default branch with:
+# wt config state default-branch set <name>
 worktree-path = "{{ repo_path }}/../.{{ repo }}-worktrees/{{ branch | sanitize }}"
 
 [pre-start]

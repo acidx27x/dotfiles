@@ -1,3 +1,7 @@
+# In .workmux.yaml project local file add
+# main_branch: <name>
+# base_branch: <name>
+# to change default branch.
 # Match the existing Worktrunk directory convention.
 worktree_dir: "../.{project}-worktrees"
 worktree_naming: full
