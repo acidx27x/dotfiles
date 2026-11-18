@@ -235,20 +235,36 @@ SwitchToMode "normal"
         }
     }
     scroll {
-        bind "Alt left" "Alt h" {
-            MoveFocusOrTab "left"
+        bind "Alt h" {
+            MoveFocus "left"
 SwitchToMode "normal"
         }
-        bind "Alt down" "Alt j" {
+        bind "Alt j" {
             MoveFocus "down"
 SwitchToMode "normal"
         }
-        bind "Alt up" "Alt k" {
+        bind "Alt k" {
             MoveFocus "up"
 SwitchToMode "normal"
         }
-        bind "Alt right" "Alt l" {
-            MoveFocusOrTab "right"
+        bind "Alt l" {
+            MoveFocus "right"
+SwitchToMode "normal"
+        }
+        bind "Alt left" {
+            Resize "Increase left"
+SwitchToMode "normal"
+        }
+        bind "Alt down" {
+            Resize "Increase down"
+SwitchToMode "normal"
+        }
+        bind "Alt up" {
+            Resize "Increase up"
+SwitchToMode "normal"
+        }
+        bind "Alt right" {
+            Resize "Increase right"
 SwitchToMode "normal"
         }
         bind "c" {
@@ -377,17 +393,17 @@ SwitchToMode "normal"
         bind "Alt q" {
             SwitchToMode "locked"
         }
-        bind "Alt i" {
+        bind "Alt 9" {
             MoveTab "left"
         }
         bind "Alt n" {
-            NewPane
+            GoToNextTab
         }
-        bind "Alt o" {
+        bind "Alt 0" {
             MoveTab "right"
         }
         bind "Alt p" {
-            TogglePaneInGroup
+            GoToPreviousTab
         }
         bind "Alt Shift p" {
             ToggleGroupMarking
@@ -448,17 +464,53 @@ SwitchToMode "normal"
         }
     }
     shared_except "locked" "scroll" {
-        bind "Alt left" "Alt h" {
-            MoveFocusOrTab "left"
+        bind "Alt h" {
+            MessagePlugin "nvim-move" {
+                name "move_focus"
+                payload "left"
+            }
         }
-        bind "Alt down" "Alt j" {
-            MoveFocus "down"
+        bind "Alt j" {
+            MessagePlugin "nvim-move" {
+                name "move_focus"
+                payload "down"
+            }
         }
-        bind "Alt up" "Alt k" {
-            MoveFocus "up"
+        bind "Alt k" {
+            MessagePlugin "nvim-move" {
+                name "move_focus"
+                payload "up"
+            }
         }
-        bind "Alt right" "Alt l" {
-            MoveFocusOrTab "right"
+        bind "Alt l" {
+            MessagePlugin "nvim-move" {
+                name "move_focus"
+                payload "right"
+            }
+        }
+        bind "Alt left" {
+            MessagePlugin "nvim-resize" {
+                name "resize"
+                payload "left"
+            }
+        }
+        bind "Alt down" {
+            MessagePlugin "nvim-resize" {
+                name "resize"
+                payload "down"
+            }
+        }
+        bind "Alt up" {
+            MessagePlugin "nvim-resize" {
+                name "resize"
+                payload "up"
+            }
+        }
+        bind "Alt right" {
+            MessagePlugin "nvim-resize" {
+                name "resize"
+                payload "right"
+            }
         }
     }
     shared_except "locked" "scroll" "search" "tmux" {
@@ -671,6 +723,17 @@ plugins {
         welcome_screen true
     }
     // External plugins
+    // Keep letter navigation and arrow resizing in separate plugin instances.
+    nvim-move location="https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm" {
+        move_mod "alt"
+        resize_mod "alt"
+        use_arrow_keys "false"
+    }
+    nvim-resize location="https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm" {
+        move_mod "alt"
+        resize_mod "alt"
+        use_arrow_keys "true"
+    }
     forgot location="https://github.com/karimould/zellij-forgot/releases/download/0.4.2/zellij_forgot.wasm"
     harpoon location="https://github.com/Nacho114/harpoon/releases/download/v0.3.0/harpoon.wasm"
     room location="https://github.com/rvcas/room/releases/download/v1.2.1/room.wasm" {

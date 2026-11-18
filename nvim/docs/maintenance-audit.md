@@ -1,5 +1,30 @@
 # Neovim maintenance and custom-code audit
 
+## tmux and Zellij integration — 2026-11-18
+
+Smart-splits remains eager for local split navigation and resizing. Its tmux and Zellij backends are
+optional and load only when `core.tools.detect_mux()` finds a nonempty session variable and the
+matching executable. tmux takes precedence when both are present; the clipboard setup reuses the
+same detection. The inventory now contains 51 packages: 31 eager and 20 optional.
+
+Added [backend-zellij-lua](https://github.com/smart-splits-nvim/backend-zellij-lua) at
+`4e3e588795efb95548dd2ebeaf385a7823821ceb` through native `vim.pack`, preserving every existing lock
+entry. Zellij uses
+[vim-zellij-navigator 0.3.0](https://github.com/hiasr/vim-zellij-navigator/releases/tag/0.3.0) to
+route Alt navigation and arrow resizing, with separate configured instances for each key form.
+Directional navigation stays within the current Zellij tab. Neovim splits resize by two cells;
+Zellij panes use its native increment.
+
+Disposable checks on Neovim 0.12.6 pass for nine environment/executable combinations, native package
+registration, selected-backend loading, local split navigation and two-cell resizing, and clipboard
+selection. The locked Zellij backend routes all four movement and resize directions correctly with
+the external command runner stubbed, issuing no tab-switch commands. Completed before/after
+`smart-splits` and `vim.pack` health reports have no errors or warnings; the previous no-mux backend
+warning is gone. A separate simulated Zellij-session health report includes the new backend. Zellij
+0.46.0 accepts the configuration. Live key routing, pane/stack transitions, tab reordering, and
+permission prompts remain unverified because the host rejects temporary Unix socket binding,
+including outside the sandbox. Full-config startup and other platforms were not exercised.
+
 ## fzf-lua ignored files and preview scrolling — 2026-11-16
 
 Added `<Space>pF` for files including ignored paths, retaining upstream `.git` exclusions. The

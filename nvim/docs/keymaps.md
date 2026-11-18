@@ -44,14 +44,14 @@ Source: [`lua/core/keymaps.lua`](../.config/nvim/lua/core/keymaps.lua). Core map
 | `<Space>bn` / `<Space>bp`                | Normal         | Next / previous buffer                                   | User aliases for `:bnext`/`:bprevious`.                                                              |
 | `<Space>bb`                              | Normal         | Switch to alternate buffer                               | Uses Neovim's `<C-^>` motion.                                                                        |
 | `<Space>q` / `<Space>Q`                  | Normal         | Close current window / quit                              | `<Space>q` may fail if it is the last window; use `<Space>Q` to quit.                                |
-| Selected Alt/Meta + `h/j/k/l`            | Normal         | Focus left / down / up / right window                    | One platform-selected modifier spelling.                                                             |
+| Selected Alt/Meta + `h/j/k/l`            | Normal         | Focus left / down / up / right split or mux pane         | smart-splits; stays within the current Zellij tab.                                                   |
 | `<Space>sv` / `<Space>sh`                | Normal         | Vertical / horizontal split                              | User mappings.                                                                                       |
 | `<Space>st`                              | Normal         | Move the current split or float to a new tab             | Uses `<C-w>T` for a split; copies a sole window or float into a new tab and closes the source float. |
 | `<Space>sf`                              | Normal         | Toggle the current window between float and split        | If it is the tab's sole normal window, opens a float for the same buffer and keeps the base window.  |
 | `<Space>sH/J/K/L`                        | Normal         | Move current split to far left/bottom/top/right          | Uses Neovim's `<C-w>H/J/K/L` layout motions.                                                         |
 | `<Space>sx` / `<Space>s=`                | Normal         | Exchange current split / equalize split sizes            | Uses `<C-w>x` / `<C-w>=`.                                                                            |
-| Selected Alt/Meta + `<Up>` / `<Down>`    | Normal         | Increase / decrease window height by 2                   | One platform-selected modifier spelling.                                                             |
-| Selected Alt/Meta + `<Right>` / `<Left>` | Normal         | Increase / decrease window width by 2                    | One platform-selected modifier spelling.                                                             |
+| Selected Alt/Meta + `<Up>` / `<Down>`    | Normal         | Resize up / down by 2                                    | One platform-selected modifier spelling.                                                             |
+| Selected Alt/Meta + `<Right>` / `<Left>` | Normal         | Resize right / left by 2                                 | One platform-selected modifier spelling.                                                             |
 | Selected Alt/Meta + `w/s/a/d`            | Normal         | Move focused floating window up/down/left/right          | Warns if current window is not floating.                                                             |
 | `<Space>rc`                              | Normal         | Edit config `init.lua`                                   | User utility.                                                                                        |
 | `<Space>fp`                              | Normal         | Copy current full file path to `+` register              | Requires a functioning clipboard provider.                                                           |
@@ -63,7 +63,9 @@ Source: [`lua/core/keymaps.lua`](../.config/nvim/lua/core/keymaps.lua). Core map
 
 The `alt_modifier` is chosen from `vim.uv.os_uname().sysname`: macOS gets `<M-...>`, other systems
 get `<A-...>`. The config intentionally does not register both aliases because the user observed
-different Alt/Meta behavior on macOS and Linux.
+different Alt/Meta behavior on macOS and Linux. Smart-splits remains active outside a mux for local
+windows. Only the detected tmux or Zellij backend loads; detection checks the session environment
+and executable, preferring tmux if both are present. Zellij pane resizing uses its native increment.
 
 ### Custom commands and command-line abbreviation
 

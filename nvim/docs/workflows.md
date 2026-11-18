@@ -15,6 +15,20 @@ ordinary yanks use the selected clipboard provider. OSC 52 requires terminal sup
 clipboard with `p` also requires OSC 52 read support. If reads are unsupported, use the terminal's
 paste shortcut in Insert mode.
 
+## Splits across tmux and Zellij
+
+In Normal mode, `Alt+h/j/k/l` moves through Neovim splits and continues into adjacent mux panes.
+`Alt+arrows` resizes in the requested direction. Local split resizing uses two cells; Zellij pane
+resizing uses its native increment. At an outer edge, navigation stops. In Zellij, directional
+navigation stays in the current tab; use `Alt+n/p` to switch tabs and `Alt+9`/`Alt+0` to reorder
+them while keeping the moved tab focused.
+
+Smart-splits is always available for local windows. The tmux and Zellij backends are registered as
+optional packages and only the detected backend loads at startup. Detection requires a nonempty
+`TMUX` or `ZELLIJ` environment variable and the corresponding executable; tmux takes precedence when
+both are present. Zellij's navigator plugin forwards keys while Neovim is focused, without switching
+to Locked mode; see the [Zellij integration notes](../../zellij/README.md#neovim-integration).
+
 ## Git diffs and merge conflicts
 
 Gitsigns provides hunk navigation, staging, previews, and blame. `<Space>gd` opens a Diffview for

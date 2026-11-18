@@ -4,22 +4,23 @@ The source of truth is [config.kdl](.config/zellij/config.kdl). This config clea
 bindings, so only the configured shortcuts apply. `Ctrl+P`, then `n` means press the keys in
 sequence; `Ctrl+P` by itself enters Pane mode. `Shift` is written explicitly when required.
 
-Most shortcuts below work outside Locked mode. Press `Alt+Z` to lock or unlock manually.
+Most shortcuts below work outside Locked mode. Press `Alt+Q` to lock or unlock manually.
 
 ## Common shortcuts
 
-| Shortcut                     | Action                                             |
-| ---------------------------- | -------------------------------------------------- |
-| `Alt+Z`                      | Toggle Locked and Normal modes                     |
-| `Alt+H/J/K/L` or `Alt+Arrow` | Focus an adjacent pane; left/right can switch tabs |
-| `Alt+N`                      | New pane                                           |
-| `Alt+F`                      | Show or hide floating panes                        |
-| `Alt++` or `Alt+=`           | Increase pane size                                 |
-| `Alt+-`                      | Decrease pane size                                 |
-| `Alt+[` / `Alt+]`            | Previous / next swap layout                        |
-| `Alt+I` / `Alt+O`            | Move the current tab left / right                  |
-| `Alt+P` / `Alt+Shift+P`      | Toggle pane grouping / mark a group                |
-| `Ctrl+Q`                     | Quit Zellij                                        |
+| Shortcut           | Action                                            |
+| ------------------ | ------------------------------------------------- |
+| `Alt+Q`            | Toggle Locked and Normal modes                    |
+| `Alt+H/J/K/L`      | Focus an adjacent pane or stack; stay in this tab |
+| `Alt+Arrow`        | Resize toward the arrow direction                 |
+| `Alt+N` / `Alt+P`  | Next / previous tab                               |
+| `Alt+F`            | Show or hide floating panes                       |
+| `Alt++` or `Alt+=` | Increase pane size                                |
+| `Alt+-`            | Decrease pane size                                |
+| `Alt+[` / `Alt+]`  | Previous / next swap layout                       |
+| `Alt+9` / `Alt+0`  | Move the current tab left / right                 |
+| `Alt+Shift+P`      | Toggle group marking                              |
+| `Ctrl+Q`           | Detach from Zellij                                |
 
 | Shortcut | Mode entered |
 | -------- | ------------ |
@@ -95,8 +96,8 @@ Most shortcuts below work outside Locked mode. Press `Alt+Z` to lock or unlock m
 | Search | `n` / `p`                 | Next / previous result                     |
 | Search | `c` / `o` / `w`           | Toggle case / whole word / wrap            |
 
-`PageUp` and `PageDown` also work in Scroll and Search modes. In Scroll mode, `Alt+H/J/K/L` or
-`Alt+Arrow` focuses another pane and returns to Normal mode.
+`PageUp` and `PageDown` also work in Scroll and Search modes. In Scroll mode, `Alt+H/J/K/L` focuses
+another pane without changing tabs, and `Alt+Arrow` resizes a pane; both return to Normal mode.
 
 ## Session (`Ctrl+O`) and Tmux (`Ctrl+A`) modes
 
@@ -121,6 +122,23 @@ Most shortcuts below work outside Locked mode. Press `Alt+Z` to lock or unlock m
 `Esc` undoes the rename and returns to Tab or Pane mode. `Ctrl+C` returns to Normal from rename
 prompts. In Scroll and Search modes, `Ctrl+C` jumps to the bottom of scrollback and returns to
 Normal.
+
+## Neovim integration
+
+`Alt+H/J/K/L` navigates Neovim splits in Normal mode and continues into Zellij panes at an editor
+edge. It never changes Zellij tabs. `Alt+Arrow` resizes Neovim splits and hands resizing to Zellij
+when needed. The tab shortcuts remain available while Neovim is focused. Outside Neovim, these keys
+act on Zellij panes directly. New panes use `Ctrl+P`, then `n`.
+
+The Neovim configuration keeps smart-splits loaded for local splits and activates its Zellij backend
+only inside Zellij with the executable available. The Zellij side uses
+[vim-zellij-navigator 0.3.0](https://github.com/hiasr/vim-zellij-navigator/releases/tag/0.3.0), with
+separate letter-navigation and arrow-resize instances. Each instance asks for permission on first
+use; review and grant its read-state, change-state, and stdin permissions to enable routing. Start a
+new session after changing plugin aliases. Manual Locked mode (`Alt+Q`) still passes these keys to
+the focused application.
+
+Neovim splits resize by two cells. Zellij panes use Zellij's native resize increment.
 
 ## Approving a plugin permission prompt
 

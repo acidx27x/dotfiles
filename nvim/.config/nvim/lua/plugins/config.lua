@@ -1,9 +1,20 @@
 -- builtin override and common group
-require("smart-splits-backend-tmux").setup({ resize_amount = 2 })
+local mux = require("core.tools").detect_mux()
+local backend
+if mux then
+  require("plugins.spec").load(mux)
+  if mux == "tmux" then
+    backend = "smart-splits-backend-tmux"
+    require(backend).setup({ resize_amount = 2 })
+  else
+    backend = "smart-splits-backend-zellij-lua"
+    require(backend).setup({ move_cursor = { pane_or_tab = false } })
+  end
+end
 require("smart-splits").setup({
   resize = { amount = 2 },
   move = { at_edge = "stop" },
-  mux = { backend = "smart-splits-backend-tmux" },
+  mux = { backend = backend },
 })
 
 require("plugins.mini-notify-config") -- vim.notify

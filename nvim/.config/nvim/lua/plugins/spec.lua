@@ -11,7 +11,6 @@ local eager = {
   { src = "https://github.com/ibhagwan/fzf-lua" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },
   { src = "https://github.com/rebelot/kanagawa.nvim" },
-  { src = "https://github.com/smart-splits-nvim/backend-tmux" },
   { src = "https://github.com/smart-splits-nvim/smart-splits.nvim" },
   { src = "https://github.com/monkoose/matchparen.nvim" },
   { src = "https://github.com/nvim-mini/mini.bracketed" },
@@ -40,6 +39,8 @@ local eager = {
 }
 
 local optional = {
+  { src = "https://github.com/smart-splits-nvim/backend-tmux" },
+  { src = "https://github.com/smart-splits-nvim/backend-zellij-lua" },
   { src = "https://github.com/okuuva/auto-save.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/rmagatti/goto-preview" },
@@ -61,6 +62,8 @@ local optional = {
 }
 
 M.groups = {
+  tmux = { "backend-tmux" },
+  zellij = { "backend-zellij-lua" },
   buffer_ui = {
     "auto-save.nvim",
     "gitsigns.nvim",
