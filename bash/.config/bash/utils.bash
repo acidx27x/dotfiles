@@ -119,14 +119,32 @@ current-file-dir() {
   )
 }
 
+# Complete aliases with simple arguments through bash-completion's command dispatcher.
+__complete_command_alias() {
+  local target="${BASH_ALIASES[$1]:-}"
+
+  # Leave shell expressions and quoted arguments to the normal completion loader.
+  if [[ "$target" =~ ^[[:alnum:]_./:+,=@%[:space:]-]+$ ]]; then
+    local COMP_LINE="${COMP_LINE/"$1"/"$target"}"
+    local COMP_POINT=$((COMP_POINT + ${#target} - ${#1}))
+    local -a original_words=("${COMP_WORDS[@]}") alias_words
+    read -r -a alias_words <<<"$target"
+    local COMP_CWORD=$((COMP_CWORD + ${#alias_words[@]} - 1))
+    local -a COMP_WORDS=("${alias_words[@]}" "${original_words[@]:1}")
+    _command_offset 0
+  else
+    _completion_loader "$@"
+  fi
+}
+
 # Load Bash completion from Homebrew or a system location.
 load-bash-completion() {
   local completion_file
 
-  declare -p BASH_COMPLETION_VERSINFO &>/dev/null && return 0
   shopt -oq posix && return 0
 
-  if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
+  if ! declare -p BASH_COMPLETION_VERSINFO &>/dev/null &&
+    [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
     completion_file="$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
 
     if [[ -r "$completion_file" ]]; then
@@ -153,7 +171,13 @@ load-bash-completion() {
     }
   fi
 
-  declare -p BASH_COMPLETION_VERSINFO &>/dev/null
+  declare -p BASH_COMPLETION_VERSINFO &>/dev/null || return 1
+
+  if declare -p BASH_ALIASES &>/dev/null &&
+    declare -F _command_offset &>/dev/null &&
+    declare -F _completion_loader &>/dev/null; then
+    complete -D -F __complete_command_alias
+  fi
 }
 
 # Load Bash Preexec implementation from Homebrew or a system location.
