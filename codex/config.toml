@@ -321,6 +321,14 @@ terminal_title = [
 ]
 
 # Not working under wezterm under WSL.
+[tui.keymap.pager]
+scroll_down = "j"
+scroll_up = "k"
+half_page_down = "ctrl-d"
+half_page_up = "ctrl-u"
+jump_top = "g"
+jump_bottom = "shift-g"
+
 # [tui.keymap.composer]
 # submit = ["ctrl-enter", "cmd-enter"]
 # queue = []
