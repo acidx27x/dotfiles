@@ -30,7 +30,8 @@ vim.opt.signcolumn = "yes:2"
 vim.opt.colorcolumn = "120"
 vim.opt.showmatch = false
 vim.opt.matchtime = 0
-vim.opt.cmdheight = 1
+vim.opt.cmdheight = 0
+require("vim._core.ui2").enable({})
 vim.opt.updatetime = 3000
 
 vim.opt.showmode = false -- Don't show mode in command line

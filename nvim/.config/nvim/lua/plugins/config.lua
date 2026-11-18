@@ -18,6 +18,7 @@ require("smart-splits").setup({
 })
 
 require("plugins.mini-notify-config") -- vim.notify
+require("plugins.tiny-cmdline-nvim-config")
 
 require("plugins.multinput-nvim-config") -- vim.ui.input
 

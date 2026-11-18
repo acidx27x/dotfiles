@@ -1,5 +1,21 @@
 # Neovim maintenance and custom-code audit
 
+## Centered command line — 2026-11-18
+
+Added tiny-cmdline at `ac9c6557c66da6308eb523643df8778f3cbe652f` as an eager native package, enabled
+ui2 with `cmdheight=0`, and configured its Blink adapter. The inventory now contains 53 packages: 33
+eager and 20 optional. Other locked revisions are unchanged. Defaults retain rounded borders and
+bottom-positioned `/` and `?` search. Statusline indicators remain unchanged.
+
+Disposable full-config startup and terminal UI checks passed on Neovim 0.12.6 for the centered
+command window, automatic Blink completion, native search, and return to normal mode. Tests used
+copied installed packages, the upstream tiny-cmdline revision above, the existing fzf-lua dummy RPC
+address, and auto-session's headless test flag. Before/after `vim.pack` and Blink healthchecks
+retain five existing revision mismatches and Blink's dynamic-provider warning. The manually staged
+tiny-cmdline checkout also reports missing native package-operation metadata in both reports;
+installation into the normal store occurs through `vim.pack` on the next configured startup. Other
+platforms and Neovim 0.13 remain unverified.
+
 ## Workspace sessions — 2026-11-18
 
 Added [auto-session](https://github.com/rmagatti/auto-session) at

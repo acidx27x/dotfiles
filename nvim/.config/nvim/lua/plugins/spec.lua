@@ -8,6 +8,7 @@ local eager = {
   { src = "https://github.com/rmagatti/auto-session" },
   { src = "https://github.com/saghen/blink.lib" },
   { src = "https://github.com/Saghen/blink.cmp", version = "main" },
+  { src = "https://github.com/rachartier/tiny-cmdline.nvim" },
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/ibhagwan/fzf-lua" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },

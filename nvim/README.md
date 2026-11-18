@@ -40,7 +40,7 @@ From the dotfiles repository root:
 
 Then start Neovim. The first launch installs missing packages through `vim.pack`; review and confirm
 the package prompt. First install and updates require Git and network access. See the
-[plugin inventory](docs/plugins.md) for all 52 repositories (32 eager, 20 optional) and load groups.
+[plugin inventory](docs/plugins.md) for all 53 repositories (33 eager, 20 optional) and load groups.
 
 The tracked `nvim-pack-lock.json` is deployed with this package. If an older, unlinked copy already
 exists at `~/.config/nvim/nvim-pack-lock.json`, move it aside before restowing `nvim`. Stow can then
@@ -88,6 +88,12 @@ searches case insensitively from the invocation's cwd and honors the `rg` execut
 `<C-s>ca` uses fzf-lua's built-in code-action diff preview. MiniNotify initializes before feature
 modules, wraps messages within 80 columns, and enables built-in LSP progress with upstream defaults.
 Use `<Space>nd` to dismiss notifications and `:lua MiniNotify.show_history()` to read history.
+
+Tiny-cmdline centers the `:` command line using native ui2, with Blink completion following the
+floating window. Search (`/` and `?`) stays at the bottom. It inherits the rounded window border;
+`cmdheight=0` hides the idle command area. MiniStatusline shows `recording @q` beside the mode while
+recording a macro into register `q`, and hides it when recording stops. Pending commands are not
+currently shown in the statusline.
 
 `<Space>pp` searches saved project files for standalone `TODO`, `FIXME`, `ERROR`, `HACK`, `WARN`,
 `NOTE`, `HINT`, and `INFO` markers with fzf-lua and ripgrep. Hidden files are included while ignore

@@ -1,5 +1,15 @@
 local M = require("mini.statusline")
 
+local section_mode = M.section_mode
+M.section_mode = function(args)
+  local mode, hl = section_mode(args)
+  local register = vim.fn.reg_recording()
+  if register ~= "" then
+    mode = mode .. " recording @" .. register
+  end
+  return mode, hl
+end
+
 M.section_diagnostics = function(args)
   if M.is_truncated(args.trunc_width) then
     return ""
@@ -29,6 +39,13 @@ end
 
 M.setup({
   use_icons = true,
+})
+
+vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+  callback = vim.schedule_wrap(function()
+    vim.cmd.redrawstatus()
+  end),
+  desc = "Refresh the statusline macro recording indicator",
 })
 
 vim.opt.laststatus = 2 -- statusline for every window

@@ -203,6 +203,10 @@
       "rev": "6a449e6b37be61a110606e9a67a7a308774f120f",
       "src": "https://github.com/Wansmer/symbol-usage.nvim"
     },
+    "tiny-cmdline.nvim": {
+      "rev": "ac9c6557c66da6308eb523643df8778f3cbe652f",
+      "src": "https://github.com/rachartier/tiny-cmdline.nvim"
+    },
     "visimatch.nvim": {
       "rev": "c4bbb796122416d7848a4d521335de2c2f5aac3d",
       "src": "https://github.com/wurli/visimatch.nvim"
