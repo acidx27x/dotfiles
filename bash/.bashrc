@@ -135,6 +135,7 @@ alias rcp='rsync --recursive --times --progress --stats --human-readable'
 alias rmv='rsync --recursive --times --progress --stats --human-readable --remove-source-files'
 
 alias lg='lazygit'
+alias wm='workmux'
 
 alias pclear='pyroclear -r --no-save'
 
