@@ -70,7 +70,6 @@ brew "zoxide"
 # Terminal mux
 brew "wezterm", args: ["HEAD"] if OS.linux?
 cask "wezterm@nightly" if OS.mac?
-brew "herdr"
 brew "sesh"
 brew "tmux"
 brew "zellij"
@@ -104,11 +103,7 @@ brew "python3"
 # AI
 brew "bubblewrap" if OS.linux?
 cask "codex"
-#
-
-# Fonts
-cask "font-fira-code"
-cask "font-fira-code-nerd-font"
+brew "models"
 #
 
 # Utils
@@ -123,6 +118,12 @@ brew "thefuck"
 brew "tree-sitter-cli"
 brew "uchardet"
 brew "wget"
+
+# Fonts
+cask "font-fira-code"
+cask "font-fira-code-nerd-font"
+#
+
 # Mac
 cask "forklift"               if OS.mac?
 cask "instant-space-switcher" if OS.mac?  # from jurplel/tap
