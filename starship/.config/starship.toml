@@ -22,14 +22,14 @@ $character\
 right_format = "$all"
 
 [username]
-disabled = false
+disabled = true
 show_always = false
 style_user = "bold fg:green"
 style_root = "bold fg:red"
 format = "[$user]($style)"
 
 [hostname]
-disabled = false
+disabled = true
 ssh_only = true
 style = "bold dimmed fg:green"
 format = "[@$hostname]($style)"

@@ -4,11 +4,13 @@
 
 The top statusline uses Kanagawa Dragon with Powerline arrows and left-aligned window tabs. Tab
 backgrounds cycle through Dragon green, blue, violet, and orange by window number; the active tab
-has a bright yellow background, bold text, and a `●` marker. The right side shows only battery and
-weather, including temperature in Celsius and location. Weather updates automatically about every 20
-minutes; the bar redraws every 30 seconds using cached data. It uses network-based location
-detection and requires `curl` and internet access. Powerline arrows require a compatible font, such
-as FiraCode Nerd Font.
+has a bright yellow background, bold text, and a `●` marker. The right side shows battery,
+`username@hostname` via Ukiyo's built-in `ssh-session` module, then weather with temperature in
+Celsius and location. The identity follows SSH in the active pane and uses a short hostname.
+Starship's username and hostname modules are disabled. Weather updates about every 20 minutes; the
+bar redraws every 30 seconds using cached data. It uses network-based location detection and
+requires `curl` and internet access. Powerline arrows require a compatible font, such as FiraCode
+Nerd Font.
 
 Press **Ctrl+b, Shift+t** to open Ukiyo's interactive statusline settings menu for colors, modules,
 and options. It is also available through **Ctrl+b, Space, Shift+t** in which-key. Keep persistent
