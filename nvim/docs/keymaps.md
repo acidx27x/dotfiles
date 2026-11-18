@@ -284,6 +284,23 @@ pickers, press `<A-l>` to toggle wrapping of result rows; `<A-w>` toggles wrappi
 pane. The preview starts above the results. Press `<A-o>` to switch it between top and right. `<F5>`
 still positions.
 
+## Workspace sessions
+
+Defined globally in `lua/plugins/auto-session-config.lua`; auto-session loads eagerly.
+
+| Keys                       | Mode           | Action                                                      |
+| -------------------------- | -------------- | ----------------------------------------------------------- |
+| `<Space>wr`                | Normal         | Search sessions with fzf-lua                                |
+| `<Space>ws`                | Normal         | Save the current session                                    |
+| `<Space>wa`                | Normal         | Toggle session autosave                                     |
+| `<CR>`                     | Session picker | Save the current workspace and restore the selected session |
+| `<M-BS>` / `Alt+Backspace` | Session picker | Delete the selected session                                 |
+| `<C-s>`                    | Session picker | Switch to the alternate session                             |
+| `<C-y>`                    | Session picker | Copy the selected session                                   |
+
+`<C-d>` retains fzf preview scrolling. Session deletion is configured as `<M-bs>` so auto-session
+passes fzf the `alt-bs` binding. The terminal must deliver Alt+Backspace distinctly.
+
 ## Feature and lazy-loaded mappings
 
 | Keys                                                  | Mode                      | Action                                                | Owner and loading                                                   |

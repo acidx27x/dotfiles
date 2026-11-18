@@ -137,6 +137,37 @@ exact existing buffer with native `:tab sbuffer`, including unnamed, modified, a
 Completion offers valid numeric IDs; invalid IDs do not create a tab. This config places new
 horizontal splits below and vertical splits to the right.
 
+## Workspace sessions
+
+Start `nvim` or `nvim .` from the main project directory to resume its workspace. Auto-session saves
+on exit and restores file buffers, tabs, split sizes, folds, and working directories. The session
+name uses the global cwd (`:Cwd`), even when tabs (`:Twd`) and windows (`:Lwd`) use other
+directories. A tab is not a separate auto-session. Start from the same anchor directory to resume
+the complete workspace; use `<Space>wr` to select another saved workspace.
+
+The picker saves the current workspace before loading the selected session. Its summary preview is
+visible; Enter loads, Alt+Backspace deletes, Ctrl+s selects the alternate session, and Ctrl+y copies
+a session. Ctrl+d scrolls the preview. `<Space>ws` saves immediately and `<Space>wa` toggles
+autosaving. `:AutoSession restore` manually restores the session for the current directory.
+
+Opening file arguments skips automatic restore and save, so one-off edits and Git diff/merge tools
+do not replace the workspace. Starting from home, `~/proj`, or `/` also skips automatic session
+handling. Explorer-only and Git-message-only windows bypass autosaving. Sessions are not separated
+by branch, and directory changes do not automatically switch workspaces.
+
+Saving first closes Diffview tabs and debugger UI/REPL windows through their plugin APIs, then
+cleans up unsupported windows. This also applies to `<Space>ws`; a running debugger is not
+terminated. Diffview's own session replay is disabled. Modified staged Diffview buffers are not
+force-closed; a refused close skips automatic saving.
+
+Per-file `mkview`/`loadview` hooks and their helpers are commented out, retained for optional reuse.
+Auto-session preserves folds and cursor positions for each workspace window. The separate
+last-edit-position hook remains enabled for individually opened files.
+
+Session files live under `stdpath("data")/sessions`; ShaDa stays shared. Terminal processes are
+excluded from session files. Sessions capture workspace structure rather than unsaved buffer
+contents or live debugger state; keep using normal saves or auto-save.nvim for file contents.
+
 ## Explorer working directories
 
 In Oil or MiniFiles, use `g~` to set the tab's cwd to the displayed directory, or `` g` `` to set

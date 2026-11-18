@@ -1,5 +1,55 @@
 # Neovim maintenance and custom-code audit
 
+## Workspace sessions — 2026-11-18
+
+Added [auto-session](https://github.com/rmagatti/auto-session) at
+`02a5588f677970a9bc784115c62bef9e5855499b` as an eager native package, preserving every existing
+lock entry. The current inventory contains 52 packages: 32 eager and 20 optional. Sessions use
+global cwd and retain tab/window-local directories. Directory and branch changes do not switch
+sessions. File-argument launches skip automatic restore/save. Home, `~/proj`, and `/` are
+suppressed; explorer-only and Git-message-only windows bypass autosaving. Terminal processes are
+excluded; local options are included as recommended by the plugin's configuration healthcheck.
+
+`<Space>wr/ws/wa` search, save, and toggle autosave. The existing fzf-lua picker shows a summary
+preview and uses Alt+Backspace for deletion, preserving Ctrl+d preview scrolling. Auto-session's
+adapter translates `<M-bs>` into fzf's `alt-bs`; native fzf binding parsing passes.
+
+Disposable full-config checks on Neovim 0.12.6 passed for eager setup, mappings, commands,
+save/restore of files, tabs, splits, cursor positions, and global/tab/window working directories
+with the existing view hooks enabled. Picker option/action checks passed, including deleting a real
+fixture session. Startup tests passed for no arguments, one directory, and one file; the file launch
+skipped session restoration and autosaving. Auto-session's completed healthcheck reports no
+configuration issues. Before/after package health reports retain five existing
+installed-versus-locked revision mismatches (Blink, fzf-lua, Gitsigns, LSPConfig, Tree-sitter);
+copied-package tests use those installed revisions. The installed fzf-lua has no discoverable health
+provider. The host denies fzf-lua socket creation, including outside the sandbox, so functional
+tests preseeded a dummy RPC address and intercepted the picker launch. They also enabled upstream's
+headless test flag. Live picker UI, terminal modifier delivery, other platforms, and Neovim 0.13
+restart behavior remain unverified. Installation into the normal package store occurs through the
+existing native setup on the next configured startup.
+
+### Tool exclusions and file views — 2026-11-18
+
+Session saves close all Diffview views with `force = false`, plus already-loaded DAP UI and REPL
+windows. Generic unsupported-window cleanup runs afterward; running it first broke Diffview's layout
+disposal in the autosave fixture. Diffview's own `restore_session` replay is disabled. The save hook
+does not load the optional debugger or terminate its session. A refused Diffview close skips
+automatic saving. Auto-session applies hook vetoes only to automatic saves; explicit manual saves
+retain upstream's override behavior.
+
+Reproduced the original per-file view hooks recording `foldmethod=diff` from a normal file in a diff
+window, and running `loadview` despite `g:SessionLoad`. Added guards for diff windows, Diffview
+tabs, and session restoration. The hooks and their helpers are now commented out, retained for
+optional reuse; auto-session owns workspace fold/cursor persistence. The separate last-edit-position
+hook remains enabled.
+
+Disposable checks passed with actual Diffview and DAP UI/REPL windows for both manual and automatic
+session saves, inspection of the generated session script, and restoration without tool layouts.
+Original/fixed view fixtures reproduced the contamination and verified the guards. Existing
+workspace and startup fixtures still pass. Completed before/after auto-session, Diffview, and DAP
+health reports have no plugin errors or warnings; existing package-revision drift remains unchanged.
+No live debug adapter or interactive UI was exercised.
+
 ## tmux and Zellij integration — 2026-11-18
 
 Smart-splits remains eager for local split navigation and resizing. Its tmux and Zellij backends are

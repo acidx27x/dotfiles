@@ -67,7 +67,7 @@ vim.opt.ttimeoutlen = 5 -- Key code timeout
 vim.opt.autoread = true -- Auto reload files changed outside vim
 vim.opt.autowrite = false -- Don't auto save
 vim.opt.viewoptions = "folds,cursor"
-vim.opt.sessionoptions:remove("curdir")
+vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,localoptions"
 
 -- Behavior settings
 vim.opt.hidden = true -- Allow hidden buffers

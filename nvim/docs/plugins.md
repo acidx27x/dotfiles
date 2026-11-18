@@ -1,9 +1,9 @@
 # Plugin inventory
 
 The inventory comes from [`lua/plugins/spec.lua`](../.config/nvim/lua/plugins/spec.lua) and
-[`nvim-pack-lock.json`](../.config/nvim/nvim-pack-lock.json). The specs contain 51 repositories: 31
+[`nvim-pack-lock.json`](../.config/nvim/nvim-pack-lock.json). The specs contain 52 repositories: 32
 eager specs and 20 optional specs. The lockfile records revisions for `mini.operators` and Leap. The
-spec and lockfile now match all 51 configured names. MiniBracketed is installed on the next startup
+spec and lockfile now match all 52 configured names. MiniBracketed is installed on the next startup
 through the existing native package setup. The 15 stale packages from earlier removals and
 replacements were removed through `vim.pack.del()` on macOS; see the
 [maintenance status](maintenance-audit.md#unused-package-cleanup--2026-11-06). Terminal mappings use
@@ -19,6 +19,7 @@ inherits the decision for the feature that uses it.
 
 | Plugin / repository                                                         | Purpose                                                    | Setup file                                  | Dependencies / loading notes                                                                                                                                        | Recommendation                                                                                                                                 |
 | --------------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [auto-session](https://github.com/rmagatti/auto-session)                    | Workspace session persistence                              | `lua/plugins/auto-session-config.lua`       | Eager setup before VimEnter; uses existing fzf-lua picker; sessions anchored to global cwd.                                                                         | Keep; restores file/tab/split layouts and local working directories.                                                                           |
 | [blink.cmp](https://github.com/Saghen/blink.cmp)                            | Completion UI and LSP completion capabilities              | `lua/lsp/blink-cmp-config.lua`              | Eager; tracks `main` (v2); uses the Rust matcher when available, builds it with Cargo when needed, and falls back to Lua; uses `blink.lib` and `mini.icons`.        | Keep; completion capabilities are shared with LSP setup.                                                                                       |
 | [blink.lib](https://github.com/saghen/blink.lib)                            | Blink v2 runtime and build support                         | No separate setup module                    | Eager; loaded before `blink.cmp`.                                                                                                                                   | **Keep:** required by Blink v2.                                                                                                                |
 | [conform.nvim](https://github.com/stevearc/conform.nvim)                    | Formatter dispatch                                         | `lua/plugins/conform-nvim-config.lua`       | Eager; formats manual saves by default and exposes `<Space>cf`.                                                                                                     | Keep; C/C++ prefers clangd with clang-format fallback and reads project overrides.                                                             |

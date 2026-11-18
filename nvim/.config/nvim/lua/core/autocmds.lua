@@ -98,15 +98,24 @@ vim.api.nvim_create_autocmd("VimResized", {
   desc = "VimResized: auto-resize splits when window is resized",
 })
 
+-- Auto-session preserves workspace folds and cursors; keep per-file views disabled.
+--[[
 local function is_file_buffer(bufnr)
   return vim.bo[bufnr].buftype == "" and vim.api.nvim_buf_get_name(bufnr) ~= ""
 end
 
--- Save and load views only for named file buffers.
+local function should_persist_view(bufnr)
+  return is_file_buffer(bufnr)
+    and not vim.wo.diff
+    and not vim.t.diffview_view_initialized
+    and not vim.g.SessionLoad
+end
+
+-- Keep per-file views separate from diff layouts and session restoration.
 vim.api.nvim_create_autocmd("BufWinLeave", {
   group = augroup,
   callback = function(args)
-    if is_file_buffer(args.buf) then
+    if should_persist_view(args.buf) then
       vim.cmd.mkview()
     end
   end,
@@ -115,12 +124,13 @@ vim.api.nvim_create_autocmd("BufWinLeave", {
 vim.api.nvim_create_autocmd("BufWinEnter", {
   group = augroup,
   callback = function(args)
-    if is_file_buffer(args.buf) then
+    if should_persist_view(args.buf) then
       pcall(vim.cmd.loadview)
     end
   end,
   desc = "BufWinEnter: load file-buffer view",
 })
+]]
 
 -- Return to last edit position when opening files
 vim.api.nvim_create_autocmd("BufReadPost", {

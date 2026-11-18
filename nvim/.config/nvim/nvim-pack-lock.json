@@ -4,6 +4,10 @@
       "rev": "141e5b4cb5df51e659fc039e25d227360f4dffcd",
       "src": "https://github.com/okuuva/auto-save.nvim"
     },
+    "auto-session": {
+      "rev": "02a5588f677970a9bc784115c62bef9e5855499b",
+      "src": "https://github.com/rmagatti/auto-session"
+    },
     "backend-tmux": {
       "rev": "9e9e6aa9b3eb7a8d3896a993611622ac97abff52",
       "src": "https://github.com/smart-splits-nvim/backend-tmux"

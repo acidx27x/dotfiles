@@ -24,6 +24,7 @@ require("plugins.multinput-nvim-config") -- vim.ui.input
 require("plugins.icons-config")
 require("plugins.diffview-plus-nvim-config")
 require("plugins.fzf-lua-config") -- also overrides vim.ui.select
+require("plugins.auto-session-config")
 --
 
 -- ts group, lots of pluggins use it

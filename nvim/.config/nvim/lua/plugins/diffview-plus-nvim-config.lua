@@ -11,6 +11,7 @@ local panel_keymaps = {
 }
 
 diffview.setup({
+  restore_session = false,
   keymaps = {
     view = panel_keymaps,
     file_panel = panel_keymaps,

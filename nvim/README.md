@@ -40,7 +40,7 @@ From the dotfiles repository root:
 
 Then start Neovim. The first launch installs missing packages through `vim.pack`; review and confirm
 the package prompt. First install and updates require Git and network access. See the
-[plugin inventory](docs/plugins.md) for all 51 repositories (31 eager, 20 optional) and load groups.
+[plugin inventory](docs/plugins.md) for all 52 repositories (32 eager, 20 optional) and load groups.
 
 The tracked `nvim-pack-lock.json` is deployed with this package. If an older, unlinked copy already
 exists at `~/.config/nvim/nvim-pack-lock.json`, move it aside before restowing `nvim`. Stow can then
@@ -74,6 +74,7 @@ buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common m
 | `<Space>sf` / `<Space>st`               | Toggle float/split / move window to a tab                         |
 | `gd` / `grr` / `gi` / `gy` / `<C-s>dc`  | LSP definition / references / implementation / type / declaration |
 | `<C-s>h` / `<C-s>rn` / `<C-s>ca`        | LSP hover / rename / code action                                  |
+| `<Space>wr` / `<Space>ws` / `<Space>wa` | Search / save sessions / toggle session autosave                  |
 | `<Space>ha` / `<Space>ht`               | Harpoon add / menu                                                |
 | `<Space>tt/tv/th`                       | Terminal in a tab / vertical split / horizontal split             |
 | `]e` / `[e` / `]w` / `[w`               | Next / previous error or warning                                  |
@@ -139,6 +140,20 @@ and parser commands manually:
 ```
 
 `:TSInstallConfigured` adds newly configured parsers, including CMake.
+
+## Workspace sessions
+
+Auto-session restores files, tabs, splits, folds, and working directories when starting `nvim` or
+`nvim .`, and saves the workspace on exit. Sessions use the global cwd shown by `:Cwd`; tab- and
+window-local directories remain part of that workspace. Home, `~/proj`, and `/` are suppressed.
+Launching with file arguments skips automatic restore and save, including Git diff/merge tools.
+Terminal processes are excluded. Saving closes Diffview tabs and debugger UI/REPL windows first;
+ordinary source buffers remain eligible, and the debugger is not terminated.
+
+`<Space>wr` opens the fzf-lua session picker with a summary preview. Enter restores a session;
+`Alt+Backspace` deletes the selected session, `Ctrl+s` switches to the alternate session, and
+`Ctrl+y` copies one. `Ctrl+d` retains preview scrolling. `<Space>ws` saves now and `<Space>wa`
+toggles session autosave. See the [workspace workflow](docs/workflows.md#workspace-sessions).
 
 ## Formatting
 

@@ -5,6 +5,7 @@ local loaded_groups = {}
 -- https://echasnovski.com/blog/2026-03-13-a-guide-to-vim-pack
 
 local eager = {
+  { src = "https://github.com/rmagatti/auto-session" },
   { src = "https://github.com/saghen/blink.lib" },
   { src = "https://github.com/Saghen/blink.cmp", version = "main" },
   { src = "https://github.com/stevearc/conform.nvim" },
