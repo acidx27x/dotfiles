@@ -12,6 +12,7 @@ function M.setup()
     "TelescopePrompt",
     "alpha",
     "dashboard",
+    "harpoon",
     "lazygit",
     "oil",
     "prompt",
