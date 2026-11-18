@@ -22,6 +22,7 @@ pick keymaps or `:verbose map {keys}` to identify the active owner.
 | `gd` / `gy` / `<C-s>dc` / `grr` / `gi`                | Normal, LSP buffer | Definition / type / declaration / references / implementation |
 | `<C-s>h` / `<C-s>rn` / `<C-s>ca`                      | Normal, LSP buffer | Hover / rename / code action preview                          |
 | `<Space>ha` / `<Space>ht` / `<Space>hn` / `<Space>hp` | Normal, lazy       | Harpoon add / menu / next / previous                          |
+| `<Space>h1`–`<Space>h4`                             | Normal, lazy       | Jump directly to Harpoon slots 1–4                            |
 | `<Space>sv` / `<Space>sh`                             | Normal             | Open vertical / horizontal split                              |
 | `<Space>sf` / `<Space>st`                             | Normal             | Toggle float/split / move window to a tab                     |
 | `<Space>tw`                                           | Normal             | Trim trailing whitespace and final blank lines                |
@@ -312,6 +313,7 @@ passes fzf the `alt-bs` binding. The terminal must deliver Alt+Backspace distinc
 | `<Space>cf`                                           | Normal, Visual            | Format buffer or selection                            | Conform; available even when project format-on-save is disabled.    |
 | `<Space>ast`                                          | Normal                    | Toggle auto-save                                      | Buffer UI group; also loads when the first file is read or created. |
 | `<Space>ha` / `<Space>ht` / `<Space>hn` / `<Space>hp` | Normal                    | Harpoon add / menu / next / previous                  | Harpoon2 lazy group.                                                |
+| `<Space>h1`–`<Space>h4`                             | Normal                    | Jump directly to Harpoon slots 1–4                    | Harpoon2 lazy group.                                                |
 | `<C-s>` / `<C-h>` / `<C-t>`                           | Normal, Harpoon menu only | Open selected item vertically / horizontally / in tab | Buffer-local Harpoon UI maps.                                       |
 | `<Space>np`                                           | Normal                    | Toggle centered layout                                | No-Neck-Pain lazy group.                                            |
 | `<Space>sn`                                           | Normal                    | Open Snipe buffer menu                                | Snipe lazy group.                                                   |

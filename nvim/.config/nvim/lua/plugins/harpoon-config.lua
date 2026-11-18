@@ -41,4 +41,10 @@ lazy.keymap("n", "<leader>hp", "harpoon", "plugins.harpoon-config", function()
   require("harpoon"):list():prev()
 end, "harpoon: previous item")
 
+for i = 1, 4 do
+  lazy.keymap("n", "<leader>h" .. i, "harpoon", "plugins.harpoon-config", function()
+    require("harpoon"):list():select(i)
+  end, "harpoon: select item " .. i)
+end
+
 return M
