@@ -67,6 +67,39 @@ require("oil").setup({
     ["<C-f>"] = { "actions.preview_scroll_down", mode = "n", desc = "Scroll preview down" },
     ["<C-b>"] = { "actions.preview_scroll_up", mode = "n", desc = "Scroll preview up" },
 
+    ["<leader>fd"] = {
+      callback = function()
+        local dir = require("oil").get_current_dir()
+        if not dir then
+          vim.notify("Copy directory requires a local Oil directory", vim.log.levels.WARN)
+          return
+        end
+        vim.fn.setreg("+", dir)
+        print("directory:", dir)
+      end,
+      mode = "n",
+      desc = "Copy Oil directory path",
+    },
+    ["<leader>fp"] = {
+      callback = function()
+        local oil = require("oil")
+        local dir = oil.get_current_dir()
+        local entry = oil.get_cursor_entry()
+        if not dir then
+          vim.notify("Copy entry path requires a local Oil directory", vim.log.levels.WARN)
+          return
+        end
+        if not entry then
+          return
+        end
+        local path = dir .. entry.name
+        vim.fn.setreg("+", path)
+        print("file:", path)
+      end,
+      mode = "n",
+      desc = "Copy Oil entry path",
+    },
+
     ["gf"] = {
       callback = function()
         local oil = require("oil")
@@ -75,10 +108,34 @@ require("oil").setup({
           vim.notify("Recursive file search requires a local Oil directory", vim.log.levels.WARN)
           return
         end
+        local opts = { cwd = dir }
         if vim.w.oil_original_win then
+          local view = vim.fn.winsaveview()
+          local accepted = false
+          opts.fn_selected = function(selected, picker_opts)
+            local actions = require("fzf-lua.actions")
+            local key, entries = actions.normalize_selected(selected, picker_opts)
+            accepted = key ~= "esc"
+              and key ~= "ctrl-c"
+              and key ~= "ctrl-q"
+              and entries ~= nil
+              and #entries > 0
+            actions.act(selected, picker_opts)
+          end
+          opts.winopts = {
+            on_close = function()
+              vim.schedule(function()
+                if not accepted then
+                  oil.open_float(dir, {}, function()
+                    vim.fn.winrestview(view)
+                  end)
+                end
+              end)
+            end,
+          }
           oil.close()
         end
-        require("fzf-lua").files({ cwd = dir })
+        require("fzf-lua").files(opts)
       end,
       mode = "n",
       desc = "Find files beneath Oil directory",
@@ -164,7 +221,43 @@ require("oil").setup({
 
 local map = require("core.keymap")
 
-map("n", "<leader>ot", ":tabnew | Oil<CR>", "Oil: open in tab")
-map("n", "<leader>of", ":Oil --float<CR>", "Oil: open in float")
-map("n", "<leader>ov", ":vnew | Oil<CR>", "Oil: open in split vertically")
-map("n", "<leader>oh", ":new | Oil<CR>", "Oil: open in split horizontally")
+local function open_oil(layout, file_relative)
+  local oil = require("oil")
+  local dir = vim.fn.getcwd()
+  if file_relative then
+    dir = oil.get_current_dir()
+      or (vim.api.nvim_buf_get_name(0) ~= "" and vim.fn.expand("%:p:h") or dir)
+  end
+  if layout == "float" then
+    oil.open_float(dir)
+  else
+    vim.cmd(layout)
+    oil.open(dir)
+  end
+end
+
+map("n", "<leader>ot", function()
+  open_oil("tabnew", false)
+end, "Oil: open cwd in tab")
+map("n", "<leader>of", function()
+  open_oil("float", false)
+end, "Oil: open cwd in float")
+map("n", "<leader>ov", function()
+  open_oil("vnew", false)
+end, "Oil: open cwd in split vertically")
+map("n", "<leader>os", function()
+  open_oil("new", false)
+end, "Oil: open cwd in split horizontally")
+
+map("n", "<leader>oT", function()
+  open_oil("tabnew", true)
+end, "Oil: open file directory in tab")
+map("n", "<leader>oF", function()
+  open_oil("float", true)
+end, "Oil: open file directory in float")
+map("n", "<leader>oV", function()
+  open_oil("vnew", true)
+end, "Oil: open file directory in split vertically")
+map("n", "<leader>oS", function()
+  open_oil("new", true)
+end, "Oil: open file directory in split horizontally")

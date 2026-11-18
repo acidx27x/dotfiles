@@ -301,6 +301,16 @@ map("n", "<leader>fp", function()
   print("file:", path)
 end, "utils: copy current full file path")
 
+map("n", "<leader>fd", function()
+  if vim.api.nvim_buf_get_name(0) == "" then
+    vim.notify("<leader>fd: current buffer has no filename", vim.log.levels.WARN)
+    return
+  end
+  local path = vim.fn.expand("%:p:h")
+  vim.fn.setreg("+", path)
+  print("directory:", path)
+end, "utils: copy current file's directory")
+
 -- Terminal window
 map("n", "<leader>tt", ":tabnew | terminal<CR>", "terminal: open in tab")
 map("n", "<leader>tv", ":vnew | terminal<CR>", "terminal: open in split vertically")
@@ -331,20 +341,32 @@ end, {
 })
 vim.cmd("cabbrev btab BTab")
 
--- Better cd -> lcd
-map("n", "<leader>cd", function()
+-- Change cwd to the current buffer's directory
+local function change_buffer_directory(command, lhs)
   local bufname = vim.api.nvim_buf_get_name(0)
   local path = bufname ~= "" and vim.fn.expand("%:p:h") or vim.fn.getcwd()
   if vim.fn.isdirectory(path) == 1 then
-    vim.cmd("lcd " .. vim.fn.fnameescape(path))
+    vim.cmd(command .. " " .. vim.fn.fnameescape(path))
   else
     vim.notify(
-      "<leader>cd: no valid directory found, at '" .. path .. "'",
+      lhs .. ": no valid directory found, at '" .. path .. "'",
       vim.log.levels.WARN,
       { title = "User Keymaps", timeout = 1000 }
     )
   end
+end
+
+map("n", "<leader>cd", function()
+  change_buffer_directory("lcd", "<leader>cd")
 end, "buffer: change local cwd to current buffer's directory")
+
+map("n", "<leader>cD", function()
+  change_buffer_directory("tcd", "<leader>cD")
+end, "buffer: change tab cwd to current buffer's directory")
+
+map("n", "<leader>cg", function()
+  vim.cmd("cd " .. vim.fn.fnameescape(vim.fn.getcwd(-1, -1)))
+end, "editor: restore global cwd inheritance")
 
 -- Better pwd info
 local function print_workdir(scope, path)

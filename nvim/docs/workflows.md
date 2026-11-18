@@ -170,6 +170,12 @@ contents or live debugger state; keep using normal saves or auto-save.nvim for f
 
 ## Explorer working directories
 
+Open Oil at the effective cwd with `<Space>of` / `<Space>ot` / `<Space>ov` / `<Space>os` for a
+float, tab, vertical split, or horizontal split. Use `<Space>oF` / `<Space>oT` / `<Space>oV` /
+`<Space>oS` to start at the current file's directory instead; unnamed buffers fall back to cwd.
+Inside Oil, the uppercase mappings use the displayed directory. `<Space>oh` remains an alias for
+`<Space>os`.
+
 In Oil or MiniFiles, use `g~` to set the tab's cwd to the displayed directory, or `` g` `` to set
 only the editing window's cwd. Floating explorers apply these changes to their editing window.
 MiniFiles uses the focused directory column, including empty directories. Browsing alone does not
@@ -198,6 +204,8 @@ To find a file and browse its directory, use `<Space>pf`, search for the filenam
 `<C-o>` to reveal it in Oil. Enter still opens the file normally. While browsing Oil, `gf` starts
 the same file picker recursively beneath the displayed directory without changing cwd. If Oil is
 floating, it closes first and the picker returns selections to the underlying editing window.
+Canceling with `<Esc>`, `<C-c>`, or `<C-q>` restores the Oil float at the same directory and cursor
+position.
 
 Use `<Space>pF` to include ignored files, or press `<A-i>` in the file or live grep picker to toggle
 ignore rules. `.git` stays excluded. `<C-u>` / `<C-d>` scroll the preview up / down by half a page;

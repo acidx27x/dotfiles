@@ -55,8 +55,11 @@ Source: [`lua/core/keymaps.lua`](../.config/nvim/lua/core/keymaps.lua). Core map
 | Selected Alt/Meta + `w/s/a/d`            | Normal         | Move focused floating window up/down/left/right          | Warns if current window is not floating.                                                             |
 | `<Space>rc`                              | Normal         | Edit config `init.lua`                                   | User utility.                                                                                        |
 | `<Space>fp`                              | Normal         | Copy current full file path to `+` register              | Requires a functioning clipboard provider.                                                           |
+| `<Space>fd`                              | Normal         | Copy current file's absolute directory to `+` register   | Warns for unnamed buffers; requires a functioning clipboard provider.                                |
 | `<Space>tt` / `<Space>tv` / `<Space>th`  | Normal         | Open terminal in tab / vertical split / horizontal split | User utilities.                                                                                      |
 | `<Space>cd`                              | Normal         | Set window-local cwd to current buffer directory         | User utility; warns for invalid directory.                                                           |
+| `<Space>cD`                              | Normal         | Set tab-local cwd to current buffer directory            | Like `<Space>cd`, uses effective cwd for unnamed buffers and warns for invalid directories.          |
+| `<Space>cg`                              | Normal         | Restore current global cwd inheritance                   | Clears the current window's and tab's local directory overrides.                                     |
 | `<Space>fu`                              | Normal         | Convert buffer line endings to Unix                      | Removes trailing CR characters and sets `fileformat=unix`; save to write the file.                   |
 | `<Space>fe`                              | Normal         | Pick Save/Reopen with Encoding, then an encoding         | Save writes the file; Reopen prompts before discarding unsaved edits.                                |
 | `<Space>fl`                              | Normal         | Pick LF or CRLF and save the file                        | Normalizes mixed line endings before writing.                                                        |
@@ -318,7 +321,9 @@ passes fzf the `alt-bs` binding. The terminal must deliver Alt+Backspace distinc
 | `<Space>dR` / `<Space>dt` / `<Space>d?`               | Normal                    | Restart / toggle REPL / evaluate expression           | DAP lazy group.                                                     |
 | `<Space>tw`                                           | Normal                    | Trim trailing whitespace and final blank lines        | MiniTrailspace eager.                                               |
 | `<Space>vw`                                           | Normal, Visual            | Toggle visible whitespace rendering                   | Visual Whitespace; loads on first file event or mapping use.        |
-| `<Space>ot` / `<Space>of` / `<Space>ov` / `<Space>oh` | Normal                    | Open Oil in tab / float / vertical / horizontal split | Oil; eager.                                                         |
+| `<Space>ot` / `<Space>of` / `<Space>ov` / `<Space>os` | Normal                    | Open cwd in Oil: tab / float / vertical / horizontal split | Oil; eager.                                                      |
+| `<Space>oT` / `<Space>oF` / `<Space>oV` / `<Space>oS` | Normal                    | Open file directory in Oil: tab / float / vertical / horizontal split | Uses cwd for unnamed buffers.                          |
+| `<Space>oh`                                           | Normal                    | Open cwd in Oil in a horizontal split                 | Alias for `<Space>os`.                                               |
 
 ### Oil buffer mappings
 
@@ -332,6 +337,8 @@ inside Oil buffers.
 | `g?` / `<C-l>`                       | Help / refresh                                            |
 | `_` / `-`                            | Open cwd / parent directory                               |
 | `gf`                                 | Find files recursively beneath displayed directory        |
+| `<Space>fd`                          | Copy displayed directory's absolute path to clipboard     |
+| `<Space>fp`                          | Copy cursor entry's absolute path to clipboard            |
 | `` ` ``                              | Set global cwd to displayed directory                     |
 | `g~` / `` g` ``                      | Set tab / editing-window cwd to displayed directory       |
 | `gx` / `gs`                          | Open external / change sort                               |
@@ -341,7 +348,8 @@ The local cwd mappings target the originating editing window when Oil is floatin
 Oil's default global `:cd` behavior.
 
 `gf` searches local directories with fzf-lua without changing cwd. Floating Oil closes before the
-picker opens, so selections use the underlying editing window. In the file picker (`<Space>pf` or
+picker opens, so selections use the underlying editing window. Canceling with `<Esc>`, `<C-c>`, or
+`<C-q>` restores floating Oil at the same directory and cursor position. In the file picker (`<Space>pf` or
 Oil's `gf`), `<C-o>` reveals the selected file in Oil with the cursor on its entry; Enter keeps its
 default open-file / multiple-selection quickfix behavior.
 
