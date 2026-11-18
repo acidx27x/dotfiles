@@ -16,7 +16,14 @@ settings in the `@ukiyo-*` options in `~/.tmux.conf`; **Ctrl+b, r** reloads them
 `@ukiyo-fixed-location` to a city name if network-based detection picks the wrong location. After
 changing themes in the menu, reload to restore the custom tab colors.
 
-Windows with background activity show a `!` marker in their tab.
+Windows with background activity show a `!` marker in their tab, unless any pane uses the alternate
+screen or runs a known TUI. `@activity-tui-commands` covers the Brewfile's TUI tools and common
+editors, pagers, file managers, monitors, and coding agents. Matching uses the foreground command
+name, so shell aliases need no separate entry; wrappers and remote programs may not be recognized.
+The filter hides only the marker: monitoring remains enabled, and an existing activity flag may
+reappear after the TUI exits. Because the marker belongs to the window, a TUI also hides activity
+from other panes in that window, including when the TUI is a Workmux sidebar. Command completion
+markers and Workmux status icons remain visible.
 
 Workmux's working, waiting, and done symbols appear after the window name. The custom tab format
 reads `@workmux_status` directly, matching `status_format: false` in the Workmux configuration.
