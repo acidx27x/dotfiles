@@ -246,6 +246,8 @@ url = "https://developers.openai.com/mcp"
 # Feature flags
 ###############################################################################
 [features]
+code_mode = true
+
 # The newer windows MXC sandbox avoids the legacy administrator-approved setup.
 prefer_mxc = true
 
