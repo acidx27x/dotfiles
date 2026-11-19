@@ -144,6 +144,8 @@ blink.setup({
   },
 
   completion = {
+    keyword = { range = "full" },
+
     trigger = {
       show_in_snippet = false,
       show_on_backspace_after_accept = false,
