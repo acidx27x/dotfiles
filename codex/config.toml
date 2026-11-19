@@ -248,6 +248,9 @@ url = "https://developers.openai.com/mcp"
 [features]
 code_mode = true
 
+# Start regular CLI sessions without launching a shared background server.
+daemon_auto_start = false
+
 # The newer windows MXC sandbox avoids the legacy administrator-approved setup.
 prefer_mxc = true
 
