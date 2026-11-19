@@ -8,7 +8,7 @@ local alt_modifier = vim.uv.os_uname().sysname == "Darwin" and "M" or "A"
 map({ "n", "v" }, "<Space>", "<Nop>", "leader prefix")
 
 -- Normal mode mappings
-map("n", "<leader>nh", ":nohlsearch<CR>", "hlsearch: clear")
+map("n", "<leader>ns", ":nohlsearch<CR>", "hlsearch: clear")
 map("n", "<leader>vc", ":setlocal cursorcolumn!<CR>", "view: toggle cursor column")
 
 -- MiniMove uses <C-l>, so keep multicursor clearing on a separate key.
