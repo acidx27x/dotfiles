@@ -57,10 +57,12 @@ require("gitsigns").setup({
     keyn("<leader>gd", function()
       require("diffview").open({ "--", vim.api.nvim_buf_get_name(bufnr) })
     end, "git: diff file against index")
-
     keyn("<leader>gD", function()
       require("diffview").open({ "HEAD~1", "--", vim.api.nvim_buf_get_name(bufnr) })
     end, "git: diff file against HEAD~1")
+    keyn("<leader>gid", function()
+      git.diffthis(nil, { unified = true })
+    end, "git: toggle buffer diff inline")
 
     -- Quickfix
     keyn("<leader>gq", git.setqflist, "git: qflist")

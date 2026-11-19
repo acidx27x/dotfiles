@@ -18,6 +18,14 @@ diffview.setup({
     file_history_panel = panel_keymaps,
   },
   hooks = {
+    diff_buf_win_enter = function(_, winid, ctx)
+      if ctx.layout_name == "diff2_horizontal" and ctx.symbol == "b" then
+        vim.wo[winid].number = false
+        vim.wo[winid].relativenumber = false
+        vim.wo[winid].foldcolumn = "0"
+        vim.wo[winid].signcolumn = "yes:1"
+      end
+    end,
     view_closed = function()
       if vim.g.diffview_exit_on_close then
         vim.schedule(function()

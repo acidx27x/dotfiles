@@ -381,7 +381,8 @@ cancels; `D` closes; `<C-s>` / `<C-h>` open in vertical/horizontal splits. Hint 
 | `]c` / `[c`                 | Normal, Git buffer         | Next / previous Git hunk                           | Gitsigns on attach; falls through to built-in diff motion when `vim.wo.diff`.        |
 | `<Space>gs` / `<Space>gr`   | Normal, Visual, Git buffer | Stage / reset hunk                                 | Buffer-local Gitsigns maps.                                                          |
 | `<Space>gS` / `<Space>gR`   | Normal, Git buffer         | Stage / reset whole buffer                         | Gitsigns on attach.                                                                  |
-| `<Space>gp` / `<Space>gi`   | Normal, Git buffer         | Preview hunk / inline preview                      | Gitsigns on attach.                                                                  |
+| `<Space>gp` / `<Space>gP`   | Normal, Git buffer         | Preview hunk / inline hunk preview                 | Gitsigns on attach.                                                                  |
+| `<Space>gI`                 | Normal, Git buffer         | Toggle all hunks inline in the current buffer      | Gitsigns on attach; compares against the index.                                      |
 | `<Space>gb` / `<Space>gB`   | Normal, Git buffer         | Blame current line with full info / blame buffer   | Gitsigns on attach.                                                                  |
 | `<Space>gd` / `<Space>gD`   | Normal, Git buffer         | Diff current file against index / `HEAD~1`         | Gitsigns on attach; opens a file-filtered Diffview.                                  |
 | `<Space>gt` / `<Space>gT`   | Normal                     | Toggle repository Diffview / review staged changes | Global maps; available in Diffview panels and before Gitsigns attaches.              |

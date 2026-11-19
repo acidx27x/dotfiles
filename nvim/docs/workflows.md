@@ -36,6 +36,12 @@ the current file against the index; `<Space>gD` compares it against `HEAD~1`. `<
 the repository diff, and `<Space>gT` reviews staged changes. These two repository mappings also work
 in Diffview panels. Views refresh when Gitsigns changes the index.
 
+`<Space>gI` toggles an inline diff of all hunks in the current buffer against the index, including
+deleted lines. The command form is `:Gitsigns diffthis unified=true`; repeat it to close the view.
+`<Space>gP` previews only the hunk under the cursor inline. `]c` / `[c` navigate hunks in either
+view. Side-by-side Diffview hides absolute and relative line numbers and the fold column in the
+right pane, keeping one sign slot. Normal editing keeps its line numbers and gutter settings.
+
 Inside Diffview, `<Space>ge` focuses the file panel and `<Space>gE` toggles it. The default
 `<Space>b` / `<Space>e` actions are disabled so buffer and diagnostic mappings remain available.
 

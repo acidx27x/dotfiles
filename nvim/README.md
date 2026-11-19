@@ -91,9 +91,11 @@ Use `<Space>nd` to dismiss notifications and `:lua MiniNotify.show_history()` to
 
 Tiny-cmdline centers the `:` command line using native ui2, with Blink completion following the
 floating window. Search (`/` and `?`) stays at the bottom. It inherits the rounded window border;
-`cmdheight=0` hides the idle command area. MiniStatusline shows `recording @q` beside the mode while
-recording a macro into register `q`, and hides it when recording stops. Pending commands are not
-currently shown in the statusline.
+`cmdheight=0` hides the idle command area. Native messages (including `print()` output) appear above
+the statusline and dismiss after four seconds; `:messages` keeps their history. `report=0` enables
+reports even for one-line yanks and changes. MiniStatusline shows `recording @q` beside the mode
+while recording a macro into register `q`, and hides it when recording stops. Pending commands are
+not currently shown in the statusline.
 
 `<Space>pp` searches saved project files for standalone `TODO`, `FIXME`, `ERROR`, `HACK`, `WARN`,
 `NOTE`, `HINT`, and `INFO` markers with fzf-lua and ripgrep. Hidden files are included while ignore
