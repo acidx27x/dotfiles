@@ -44,11 +44,13 @@ map("n", "<leader>ed", function()
 end, "diagnostic: toggle (global)")
 
 map("n", "<leader>et", function()
-  if vim.diagnostic.config().virtual_text.current_line then
-    vim.diagnostic.config({ virtual_text = { current_line = nil } })
+  local virtual_text = vim.diagnostic.config().virtual_text
+  if virtual_text.current_line then
+    virtual_text.current_line = nil
   else
-    vim.diagnostic.config({ virtual_text = { current_line = true } })
+    virtual_text.current_line = true
   end
+  vim.diagnostic.config({ virtual_text = virtual_text })
 end, "diagnostic: show virtual text for current line (global)")
 map("n", "<leader>el", function()
   if vim.diagnostic.config().virtual_lines then

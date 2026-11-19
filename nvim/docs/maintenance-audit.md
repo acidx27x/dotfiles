@@ -1,5 +1,41 @@
 # Neovim maintenance and custom-code audit
 
+## LSP configuration — 2026-11-19
+
+Updated neocmakelsp's command to `stdio`, enabled completion snippets and file watching for CMake
+cache/File API updates, and disabled its formatter in favor of the existing Gersemi configuration.
+Linting, package scanning, and disabled semantic tokens are retained. These options were checked
+against
+[neocmakelsp 0.12.0](https://github.com/neocmakelsp/neocmakelsp/blob/v0.12.0/src/languageserver/config.rs).
+
+The shared capabilities helper now uses Blink's Neovim-default merge option instead of passing the
+native completion capabilities as overrides, which replaced Blink's completion resolve properties
+and item defaults. The behavior was checked against the
+[locked Blink revision](https://github.com/Saghen/blink.cmp/blob/3d3631f641e6e9b60066f269f435d23c524ceeb0/lua/blink/cmp/sources/lib/init.lua).
+The diagnostic current-line toggle preserves its virtual-text style, and background LSP attachment
+sets buffer-local folding options only in windows displaying that buffer. Removed the ignored
+`single_file_support` field; native standalone attachment remains available by default.
+
+Disposable checks on Neovim 0.12.6 with copied installed packages reproduced the capability,
+diagnostic-style, and folding issues before the fixes. All 18 checks pass afterward, including CMake
+watcher registration, clangd project and standalone attachment, and preservation of server-specific
+roots, capabilities, and callbacks. The four relevant packages (Blink, blink.lib, nvim-lspconfig,
+and Conform) match their locked revisions; the tracked lockfile is unchanged.
+
+Before/after `vim.lsp`, Blink, and Conform healthchecks completed without errors. Existing warnings
+cover Blink's dynamic providers, unavailable Ruff/StyLua formatters, Doxygen filetypes, and the
+Linux watch backend's performance. Clangd 23.1.5 also logs a deprecation warning for the inherited
+`offsetEncoding` extension. Ruff, ty, and Basedpyright executables are unavailable in this
+environment, so their settings were reviewed without live server validation. Basedpyright remains
+disabled. This was a scoped LSP check, not a full-config or interactive UI validation.
+
+LSP mappings now use Neovim's native `K`, `gri`, `grn`, `grr`, `grt`, `gO`, and `gra` without
+redefining them. Removed the redundant `gi`, `gy`, `<C-s>h`, `<C-s>rn`, and `<C-s>ds` aliases; `gi`
+resumes Insert mode at the last insertion position. Custom definition, previews, extra LSP actions,
+and Blink signature-help mappings are retained. A disposable clangd attachment check verified native
+and retained mappings, custom `K` preservation, and unchanged MiniBracketed diagnostic mappings in
+Normal, Visual, and Operator-pending modes. The lockfile is unchanged.
+
 ## Centered command line — 2026-11-18
 
 Added tiny-cmdline at `ac9c6557c66da6308eb523643df8778f3cbe652f` as an eager native package, enabled

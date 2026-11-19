@@ -101,7 +101,9 @@ are Neovim 0.10+ and only an optional icon provider. Conform needs Neovim 0.10+;
 formatters are `stylua`, `clang-format`, `gersemi`, and `ruff`. C/C++ prefers clangd with
 `clang-format` fallback. Python prefers Ruff LSP formatting with `ruff format` fallback. CMake
 excludes neocmake from LSP fallback. Manual saves format by default; auto-save.nvim writes do not.
-Project-local `.nvim.json` settings are read by buffer path.
+Project-local `.nvim.json` settings are read by buffer path. Neocmake also disables its formatter
+and enables completion snippets and CMake cache/File API file watching. Shared capabilities retain
+Blink's completion support alongside Neovim defaults.
 
 The `buffer_ui` group loads on the first `BufReadPre` or `BufNewFile`, or on a relevant lazy
 mapping. Its packages load together, so invoking `<Space>ast` or `<Space>vw` also loads the other

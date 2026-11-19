@@ -1,22 +1,27 @@
 local base = require("lsp.lsp-base-config")
 
 local name = "neocmake"
+local capabilities = base.get_capabilities(name)
+capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
+
 vim.lsp.config[name] = {
   on_init = base.get_on_init(name),
   on_attach = base.get_on_attach(name),
-  capabilities = base.get_capabilities(name),
+  capabilities = capabilities,
 
   name = name,
 
   cmd = {
     _G.Paths[name],
-    "--stdio",
+    "stdio",
   },
 
   init_options = {
+    format = { enable = false },
     lint = { enable = true },
     semantic_token = false, -- else got lagging
     scan_cmake_in_package = true,
+    use_snippets = true,
   },
 }
 

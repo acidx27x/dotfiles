@@ -64,24 +64,24 @@ page; `<C-b>` / `<C-f>` scroll it by a full page.
 The [keymap reference](docs/keymaps.md) is the complete searchable list, including LSP,
 buffer-local, plugin UI, and lazy-loaded mappings. Space is the leader. Common mappings:
 
-| Keys                                    | Action                                                            |
-| --------------------------------------- | ----------------------------------------------------------------- |
-| `<Space>pf` / `<Space>pg`               | Find files / live grep with fzf-lua                               |
-| `<Space>pb`                             | Pick a buffer                                                     |
-| `<Space>bd` / `<Space>bn` / `<Space>bp` | Delete / next / previous buffer                                   |
-| `<Space>bb` / `]b` / `[b`               | Alternate / next / previous buffer                                |
-| `<Space>sv` / `<Space>sh`               | Vertical / horizontal split                                       |
-| `<Space>sf` / `<Space>st`               | Toggle float/split / move window to a tab                         |
-| `gd` / `grr` / `gi` / `gy` / `<C-s>dc`  | LSP definition / references / implementation / type / declaration |
-| `<C-s>h` / `<C-s>rn` / `<C-s>ca`        | LSP hover / rename / code action                                  |
-| `<Space>wr` / `<Space>ws` / `<Space>wa` | Search / save sessions / toggle session autosave                  |
-| `<Space>ha` / `<Space>ht`               | Harpoon add / menu                                                |
-| `<Space>tt/tv/th`                       | Terminal in a tab / vertical split / horizontal split             |
-| `]e` / `[e` / `]w` / `[w`               | Next / previous error or warning                                  |
-| `<Space>is` / `<Space>it`               | Convert line or selected lines to spaces / tabs                   |
-| `>` / `<`                               | Leap forward / backward (two-character target)                    |
-| `f/F/t/T` then `;` / `,`                | One-character Leap motion; repeat / reverse it                    |
-| `<Space>xe/xx/xm/xr/xs`                 | Evaluate / exchange / multiply / replace / sort text              |
+| Keys                                     | Action                                                            |
+| ---------------------------------------- | ----------------------------------------------------------------- |
+| `<Space>pf` / `<Space>pg`                | Find files / live grep with fzf-lua                               |
+| `<Space>pb`                              | Pick a buffer                                                     |
+| `<Space>bd` / `<Space>bn` / `<Space>bp`  | Delete / next / previous buffer                                   |
+| `<Space>bb` / `]b` / `[b`                | Alternate / next / previous buffer                                |
+| `<Space>sv` / `<Space>sh`                | Vertical / horizontal split                                       |
+| `<Space>sf` / `<Space>st`                | Toggle float/split / move window to a tab                         |
+| `gd` / `grr` / `gri` / `grt` / `<C-s>dc` | LSP definition / references / implementation / type / declaration |
+| `K` / `grn` / `<C-s>ca`                  | LSP hover / rename / code action preview                          |
+| `<Space>wr` / `<Space>ws` / `<Space>wa`  | Search / save sessions / toggle session autosave                  |
+| `<Space>ha` / `<Space>ht`                | Harpoon add / menu                                                |
+| `<Space>tt/tv/th`                        | Terminal in a tab / vertical split / horizontal split             |
+| `]e` / `[e` / `]w` / `[w`                | Next / previous error or warning                                  |
+| `<Space>is` / `<Space>it`                | Convert line or selected lines to spaces / tabs                   |
+| `>` / `<`                                | Leap forward / backward (two-character target)                    |
+| `f/F/t/T` then `;` / `,`                 | One-character Leap motion; repeat / reverse it                    |
+| `<Space>xe/xx/xm/xr/xs`                  | Evaluate / exchange / multiply / replace / sort text              |
 
 `<Space>S` toggles grug-far; Visual `<Space>S` prefills the selected text. Its ripgrep engine
 searches case insensitively from the invocation's cwd and honors the `rg` executable override.
@@ -169,7 +169,15 @@ uses `clang-format` if clangd cannot format the buffer. Python prefers Ruff LSP 
 `ruff format` as fallback. Lua and CMake use `stylua` and `gersemi` respectively; other filetypes
 can use LSP formatting.
 
-CMake Visual selections use Gersemi's native `--line-ranges` support.
+CMake Visual selections use Gersemi's native `--line-ranges` support. The CMake LSP enables
+completion snippets and file watching for CMake cache and File API updates; its formatter is
+disabled so Gersemi owns formatting. Semantic tokens remain disabled for CMake.
+
+Shared LSP capabilities combine Neovim defaults with Blink's completion capabilities.
+Server-specific roots and callbacks come from nvim-lspconfig. Standalone files use Neovim's default
+support when a server does not require a workspace. LSP folding applies to windows displaying the
+attached buffer, and `<Space>et` preserves the diagnostic virtual-text style when toggling its
+current-line filter.
 
 To disable format-on-save for one project, create `.nvim.json` in its root. Settings are resolved
 for each buffer, so they do not affect other open projects:

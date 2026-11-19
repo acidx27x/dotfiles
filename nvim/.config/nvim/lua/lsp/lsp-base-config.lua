@@ -30,8 +30,6 @@ M.lsp_keymaps = function(bufnr)
 
   -- base goto smth lsp operations
   keyn("gd", vim.lsp.buf.definition, "LSP: definition")
-  keyn("gy", vim.lsp.buf.type_definition, "LSP: type definition")
-  keyn("gi", vim.lsp.buf.implementation, "LSP: implementation")
 
   local function preview(action)
     return function()
@@ -48,10 +46,8 @@ M.lsp_keymaps = function(bufnr)
   --
 
   -- additional lsp operations (C-s because lSp)
-  keyn("<C-s>h", vim.lsp.buf.hover, "LSP: hover")
   keyn("<C-s>s", vim.lsp.buf.signature_help, "LSP: signature help")
 
-  keyn("<C-s>rn", vim.lsp.buf.rename, "LSP: rename")
   keyn("<C-s>ic", vim.lsp.buf.incoming_calls, "LSP: incoming calls")
   keyn("<C-s>oc", vim.lsp.buf.outgoing_calls, "LSP: outgoing calls")
   keyn("<C-s>th", vim.lsp.buf.typehierarchy, "LSP: typehierarchy")
@@ -59,7 +55,6 @@ M.lsp_keymaps = function(bufnr)
     require("fzf-lua").lsp_code_actions({ previewer = "codeaction" })
   end, "LSP: code action (with picker preview)", { buf = bufnr })
 
-  keyn("<C-s>ds", vim.lsp.buf.document_symbol, "LSP: document symbol")
   keyn("<C-s>dh", vim.lsp.buf.document_highlight, "LSP: document highlight")
   keyn("<C-s>dc", vim.lsp.buf.declaration, "LSP: declaration")
   keyn("<C-s>cr", vim.lsp.buf.clear_references, "LSP: clear references")
@@ -84,15 +79,6 @@ M.lsp_keymaps = function(bufnr)
   keyn("<C-s>U", symbol_usage("toggle_globally"), "LSP: symbol usage toggle (global)")
   --
 
-  -- Keep Neovim's readable default LSP keys available beside the custom groups.
-  keyn("K", vim.lsp.buf.hover, "LSP: hover")
-  keyn("gri", vim.lsp.buf.implementation, "LSP: implementation (native key)")
-  keyn("grn", vim.lsp.buf.rename, "LSP: rename (native key)")
-  keyn("grr", vim.lsp.buf.references, "LSP: references (native key)")
-  keyn("grt", vim.lsp.buf.type_definition, "LSP: type definition (native key)")
-  keyn("gO", vim.lsp.buf.document_symbol, "LSP: document symbols (native key)")
-  map({ "n", "v" }, "gra", vim.lsp.buf.code_action, "LSP: code action", { buf = bufnr })
-
   -- LSP maps are buffer-local and may arrive after MiniClue's initial trigger scan.
   vim.api.nvim_buf_call(bufnr, function()
     require("mini.clue").ensure_buf_triggers()
@@ -102,13 +88,9 @@ end
 M.get_capabilities = function(server_name)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-  -- HINT: for large number of files may be useful
-  -- capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
-  --
-
   local has_blink, blink = pcall(require, "blink.cmp")
   if has_blink then
-    return blink.get_lsp_capabilities(capabilities)
+    return blink.get_lsp_capabilities(nil, true)
   else
     vim.notify(
       "blink.cmp is not installed, falling back to default lsp capabilities",
@@ -124,7 +106,9 @@ M.on_attach = function(client, bufnr)
 
   --  this options are check before action and can be overrided by custom callback on_attach
   if client.server_capabilities.foldingRangeProvider then
-    vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
+    for _, win in ipairs(vim.fn.win_findbuf(bufnr)) do
+      vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
+    end
   end
 
   if client.server_capabilities.semanticTokensProvider then
