@@ -198,7 +198,7 @@ clears the editing window's local override; other windows with local overrides k
 | `/pattern` / `?pattern` | Search forward / backward in the current buffer.            |
 | `*` / `#`               | Search forward / backward for the word under the cursor.    |
 | `n` / `N`               | Repeat the search in the same / opposite direction.         |
-| `<Space>nh`             | Clear search highlighting.                                  |
+| `<Space>ns`             | Clear search highlighting.                                  |
 | `<Space>pg`             | Live grep across project files with fzf-lua.                |
 | `:%s/old/new/gc`        | Confirm each replacement in the current buffer.             |
 | `:g/pattern/d`          | Delete every line matching a pattern in the current buffer. |

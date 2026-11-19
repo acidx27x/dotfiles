@@ -16,4 +16,6 @@ require("mini.notify").setup({
   },
 })
 
-require("core.keymap")({ "n", "v" }, "<leader>nd", MiniNotify.clear, "notifications: dismiss")
+local map = require("core.keymap")
+map({ "n", "v" }, "<leader>nd", MiniNotify.clear, "notifications: dismiss")
+map("n", "<leader>nh", MiniNotify.show_history, "notifications: show history")

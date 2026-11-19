@@ -147,7 +147,7 @@ blink.setup({
     keyword = { range = "full" },
 
     trigger = {
-      show_in_snippet = false,
+      show_in_snippet = true,
       show_on_backspace_after_accept = false,
       show_on_backspace_after_insert_enter = false,
       show_on_trigger_character = false,

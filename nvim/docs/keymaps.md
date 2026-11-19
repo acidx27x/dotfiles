@@ -36,7 +36,7 @@ Source: [`lua/core/keymaps.lua`](../.config/nvim/lua/core/keymaps.lua). Core map
 | Keys                                     | Mode           | Action                                                   | Overrides / conflicts                                                                                |
 | ---------------------------------------- | -------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `<Space>`                                | Normal, Visual | No-op leader prefix                                      | Reserves Space for leader sequences.                                                                 |
-| `<Space>nh`                              | Normal         | Clear search highlight                                   | User map.                                                                                            |
+| `<Space>ns`                              | Normal         | Clear search highlight                                   | User map.                                                                                            |
 | `<Space>vc`                              | Normal         | Toggle vertical cursor-column highlight                  | Applies to the current window.                                                                       |
 | `n` / `N`                                | Normal         | Next / previous search match, centered                   | Overrides built-in search motion with centering.                                                     |
 | `<C-d>` / `<C-u>`                        | Normal         | Half-page down / up, centered                            | Preserves motion and adds centering.                                                                 |
@@ -307,6 +307,7 @@ passes fzf the `alt-bs` binding. The terminal must deliver Alt+Backspace distinc
 | Keys                                                  | Mode                      | Action                                                                | Owner and loading                                                   |
 | ----------------------------------------------------- | ------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | `<Space>nd`                                           | Normal, Visual            | Dismiss notifications                                                 | MiniNotify; eager; LSP progress enabled.                            |
+| `<Space>nh`                                           | Normal                    | Open notification history                                             | MiniNotify; eager.                                                  |
 | `<Space>cf`                                           | Normal, Visual            | Format buffer or selection                                            | Conform; available even when project format-on-save is disabled.    |
 | `<Space>ast`                                          | Normal                    | Toggle auto-save                                                      | Buffer UI group; also loads when the first file is read or created. |
 | `<Space>ha` / `<Space>ht` / `<Space>hn` / `<Space>hp` | Normal                    | Harpoon add / menu / next / previous                                  | Harpoon2 lazy group.                                                |
@@ -422,6 +423,6 @@ buffer events occur. Native LSP global mappings are available at startup. After 
 or opening a configured filetype, inspect the buffer-local map with the same `:verbose` command.
 `<Space>pk` exposes configured mappings through fzf-lua.
 
-Notification history is available with `:lua MiniNotify.show_history()` or
-`:lua vim.print(MiniNotify.get_all())`. `<Space>nd` clears active notifications while preserving
-history. Built-in LSP-progress notifications use upstream formatting and completion expiry.
+`<Space>nh` opens notification history. `:lua vim.print(MiniNotify.get_all())` shows the underlying
+notification data. `<Space>nd` clears active notifications while preserving history. Built-in
+LSP-progress notifications use upstream formatting and completion expiry.
