@@ -104,6 +104,7 @@ brew "python3"
 brew "bubblewrap" if OS.linux?
 cask "codex"
 brew "models"
+brew "node"
 #
 
 # Utils
