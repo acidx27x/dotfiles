@@ -110,7 +110,7 @@ are omitted from these mappings; `codex/.codex/AGENTS.md` is intentionally mappe
 | `bat`        | `%APPDATA%\bat\config`                                                      |
 | `broot`      | `%APPDATA%\dystroy\broot\config` (`conf.hjson`, `skins\iceberg-dark.hjson`) |
 | `lazygit`    | `%LOCALAPPDATA%\lazygit\config.yml`                                         |
-| `tuicr`      | `%APPDATA%\tuicr\config.toml` and `themes`                                   |
+| `tuicr`      | `%APPDATA%\tuicr\config.toml` and `themes`                                  |
 | `zellij`     | `%APPDATA%\Zellij\config\config.kdl` and `config\layouts`                   |
 | `powershell` | `%USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`       |
 
@@ -298,28 +298,26 @@ PSReadLine menu as fallback. Inside the PSFzf completion list, Ctrl+N/P move dow
 move left/right within the filter text; Tab/Shift+Tab move down/up and Enter accepts a candidate.
 Escape cancels. Outside the picker, existing editing keys retain their behavior. The Scoopfile
 installs PSFzf from Extras. Use Ctrl+X Ctrl+F to run `Find-FzfPath` (`ffd`) for file and directory
-actions, or Ctrl+X
-Ctrl+G to run `Find-FzfContent` (`frg`) for interactive ripgrep search and actions. `Find-FzfPath`
-uses Ctrl+S to switch between files and directories. Local overrides can be placed in
-`%USERPROFILE%\.config\powershell\conf.local.d`.
+actions, or Ctrl+X Ctrl+G to run `Find-FzfContent` (`frg`) for interactive ripgrep search and
+actions. `Find-FzfPath` uses Ctrl+S to switch between files and directories. Local overrides can be
+placed in `%USERPROFILE%\.config\powershell\conf.local.d`.
 
 Use `Get-CurrentShell` to print the shell version and `Get-ShellFunction` to list available
 functions. Helpers use PowerShell Verb-Noun names; short commands such as `lg`, `hl`, `bathelp`,
 `br`, and the eza listing commands remain available as aliases.
 
-Personal aliases are declared in `profile.ps1`; tool-specific aliases stay in `conf.d`.
-Interactive startup loads `colors.ps1` before tool setup and machine-local overrides, matching
-the Bash and Zsh color modules. It lists the theme locations and initializes optional vivid with
-`iceberg-dark`, preserving an existing `LS_COLORS`. Set `$env:VIVID_THEME` before loading the profile
-to select another theme. `NO_COLOR` or `TERM=dumb` skips this module.
+Personal aliases are declared in `profile.ps1`; tool-specific aliases stay in `conf.d`. Interactive
+startup loads `colors.ps1` before tool setup and machine-local overrides, matching the Bash and Zsh
+color modules. It lists the theme locations and initializes optional vivid with `iceberg-dark`,
+preserving an existing `LS_COLORS`. Set `$env:VIVID_THEME` before loading the profile to select
+another theme. `NO_COLOR` or `TERM=dumb` skips this module.
 
 The color module also defines Iceberg syntax, suggestion, and selection colors for PSReadLine,
-matching Bash's ble.sh palette, and adds `-R` to `LESS` without discarding existing options.
-The `rg` alias applies Bash's ripgrep palette (cyan paths, green line/column numbers, bold red
-matches), preserving argument order and pipeline input. Explicit command options come last and
-can override the defaults. `NO_COLOR` and `TERM=dumb` bypass these color defaults.
-Use `Get-ColorStatus` to inspect color variables and command resolution, including when colors
-are disabled.
+matching Bash's ble.sh palette, and adds `-R` to `LESS` without discarding existing options. The
+`rg` alias applies Bash's ripgrep palette (cyan paths, green line/column numbers, bold red matches),
+preserving argument order and pipeline input. Explicit command options come last and can override
+the defaults. `NO_COLOR` and `TERM=dumb` bypass these color defaults. Use `Get-ColorStatus` to
+inspect color variables and command resolution, including when colors are disabled.
 
 [vivid supports Windows](https://github.com/sharkdp/vivid/releases) and generates `LS_COLORS` for
 tools such as fd. Native `Get-ChildItem` uses
@@ -363,9 +361,8 @@ the same value. Case-sensitive platforms keep them separate. Status uses `<unset
 variables and a blank value for empty variables.
 
 The first pass includes basic aliases and shared tool integrations. Follow-up candidates for
-PowerShell parity include Git pickers, encoding conversion helpers, and
-Zone.Identifier cleanup. WSL and Unix-specific helpers should only be ported when they have a native
-Windows use.
+PowerShell parity include Git pickers, encoding conversion helpers, and Zone.Identifier cleanup. WSL
+and Unix-specific helpers should only be ported when they have a native Windows use.
 
 The shared Starship configuration uses `sh` for its custom Git provider and worktree modules on Unix
 and Git for Windows' `sh.exe` on Windows. No separate generated Starship configuration is required.
@@ -419,8 +416,8 @@ pwsh -NoProfile -File .\setup\codex.ps1 -WhatIf
 pwsh -NoProfile -File .\setup\codex.ps1
 ```
 
-The script installs `codex/config.toml` into the machine-wide location. It is idempotent and
-only updates an existing file carrying this repository's managed marker. It never reads, creates, or
+The script installs `codex/config.toml` into the machine-wide location. It is idempotent and only
+updates an existing file carrying this repository's managed marker. It never reads, creates, or
 changes the user config, where Codex can continue writing trusted projects, model migrations,
 notices, and other machine-local settings.
 

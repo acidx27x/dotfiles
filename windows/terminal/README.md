@@ -87,18 +87,18 @@ and
 
 ## Shortcuts
 
-| Keys                 | Action                                                                 |
-| -------------------- | ---------------------------------------------------------------------- |
-| Ctrl+Shift+\\        | Split right using the focused pane's profile                           |
-| Ctrl+Shift+/         | Split down using the focused pane's profile                            |
-| Ctrl+Shift+Arrow     | Move between panes                                                     |
-| Ctrl+Shift+H/J/K/L   | Focus left/down/up/right pane                                          |
-| Alt+Shift+H/J/K/L    | Resize panes                                                           |
-| Ctrl+Shift+Z         | Zoom the focused pane                                                  |
-| Ctrl+Shift+W         | Close the focused pane; closes the tab/window when it is the last pane |
-| Ctrl+Shift+O         | Pick an installed WSL distribution and launch it in a new tab          |
-| Ctrl+Shift+C / V     | Copy / paste                                                           |
-| Ctrl+Shift+F / P     | Find / command palette                                                 |
+| Keys               | Action                                                                 |
+| ------------------ | ---------------------------------------------------------------------- |
+| Ctrl+Shift+\\      | Split right using the focused pane's profile                           |
+| Ctrl+Shift+/       | Split down using the focused pane's profile                            |
+| Ctrl+Shift+Arrow   | Move between panes                                                     |
+| Ctrl+Shift+H/J/K/L | Focus left/down/up/right pane                                          |
+| Alt+Shift+H/J/K/L  | Resize panes                                                           |
+| Ctrl+Shift+Z       | Zoom the focused pane                                                  |
+| Ctrl+Shift+W       | Close the focused pane; closes the tab/window when it is the last pane |
+| Ctrl+Shift+O       | Pick an installed WSL distribution and launch it in a new tab          |
+| Ctrl+Shift+C / V   | Copy / paste                                                           |
+| Ctrl+Shift+F / P   | Find / command palette                                                 |
 
 Ctrl+Shift+T duplicates the current tab. Native shortcuts remain available, including Ctrl+Shift+D
 for another duplicate-tab binding and Ctrl+Shift+N for a new window. Ctrl+C, Ctrl+V, and Enter pass
