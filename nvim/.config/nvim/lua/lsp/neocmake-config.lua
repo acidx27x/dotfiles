@@ -21,7 +21,7 @@ vim.lsp.config[name] = {
     lint = { enable = true },
     semantic_token = false, -- else got lagging
     scan_cmake_in_package = true,
-    use_snippets = true,
+    use_snippets = false,
   },
 }
 

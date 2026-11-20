@@ -48,6 +48,27 @@ local function get_omnifunc()
   end
 end
 
+local function execute_completion(source, context, item, done, apply)
+  if
+    context.accept_plain_text
+    and item.insertTextFormat == vim.lsp.protocol.InsertTextFormat.Snippet
+  then
+    -- Use Blink's preview prefix while keeping the normal completion edits and commands.
+    local parsed = require("blink.cmp.sources.snippets.utils").safe_parse(item.textEdit.newText)
+    local first = parsed and parsed.data.children[1]
+    local literal = first and first.type == vim.lsp._snippet_grammar.NodeType.Text
+    local prefix = require("blink.cmp.completion.accept.prefix")
+    item.textEdit.newText = prefix(literal and tostring(first) or item.label)
+    item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.PlainText
+  end
+
+  if source.execute then
+    return source:execute(context, item, done, apply)
+  end
+  apply()
+  done()
+end
+
 blink.setup({
   keymap = {
     ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
@@ -62,6 +83,17 @@ blink.setup({
 
     ["<C-e>"] = { "hide", "fallback" },
     ["<C-y>"] = { "accept", "fallback" },
+    ["<C-g>a"] = {
+      function(cmp)
+        local context = cmp.get_context()
+        if not context or not cmp.is_visible() or not cmp.get_selected_item() then
+          return false
+        end
+        context.accept_plain_text = true
+        return cmp.accept()
+      end,
+      "fallback",
+    },
     ["<CR>"] = false,
 
     ["<C-n>"] = {
@@ -97,10 +129,9 @@ blink.setup({
         enabled = true,
         name = "LSP",
         module = "blink.cmp.sources.lsp",
-        score_offset = 10,
-        fallbacks = function(_, enabled_sources)
-          return vim.tbl_contains(enabled_sources, "omni") and { "omni" } or { "buffer" }
-        end,
+        score_offset = 9, -- Match the buffer provider's score offset.
+        override = { execute = execute_completion },
+        fallbacks = { "omni" },
       },
       omni = {
         enabled = function()
@@ -114,13 +145,12 @@ blink.setup({
           end,
         },
         score_offset = 9,
-        fallbacks = { "buffer" },
       },
       buffer = {
         enabled = true,
         name = "BUF",
         module = "blink.cmp.sources.buffer",
-        score_offset = 8,
+        score_offset = 9,
       },
       path = {
         enabled = true,
@@ -134,6 +164,7 @@ blink.setup({
         name = "SNIP",
         module = "blink.cmp.sources.snippets",
         score_offset = 1,
+        override = { execute = execute_completion },
       },
       cmdline = {
         name = "CMD",
@@ -181,7 +212,14 @@ blink.setup({
           source_name = {
             width = { max = 30 },
             text = function(ctx)
-              return "[" .. ctx.source_name .. "]"
+              local source = "[" .. ctx.source_name .. "]"
+              if
+                ctx.source_name ~= "SNIP"
+                and ctx.item.insertTextFormat == vim.lsp.protocol.InsertTextFormat.Snippet
+              then
+                return source .. " [SNIP]"
+              end
+              return source
             end,
             highlight = "BlinkCmpSource",
           },
@@ -316,6 +354,31 @@ blink.setup({
     },
   },
 })
+
+-- Compare ranked items so a nonmatching LSP item cannot hide a buffer match.
+local fuzzy = require("blink.cmp.fuzzy")
+local rank_completions = fuzzy.fuzzy
+fuzzy.fuzzy = function(line, col, providers, range)
+  local items = rank_completions(line, col, providers, range)
+  if not (providers.lsp and providers.buffer) then
+    return items
+  end
+
+  local lsp_text = {}
+  for _, item in ipairs(items) do
+    if
+      item.source_id == "lsp"
+      and item.insertTextFormat ~= vim.lsp.protocol.InsertTextFormat.Snippet
+    then
+      local text = type(item.textEdit) == "table" and item.textEdit.newText or item.insertText
+      lsp_text[type(text) == "string" and text or item.label] = true
+    end
+  end
+
+  return vim.tbl_filter(function(item)
+    return item.source_id ~= "buffer" or not lsp_text[item.insertText]
+  end, items)
+end
 
 -- Keep ghost text for edits, but clear it after cursor-only movement.
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter", "TermEnter" }, {
