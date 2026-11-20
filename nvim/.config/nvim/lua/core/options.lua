@@ -32,9 +32,14 @@ vim.opt.showmatch = false
 vim.opt.matchtime = 0
 vim.opt.cmdheight = 0
 vim.opt.report = 0 -- Report changes and yanks even for one line.
-require("vim._core.ui2").enable({
-  msg = { targets = "msg", msg = { timeout = 3000 } }, -- Auto-dismiss messages above the statusline.
-})
+local msg = { targets = "msg" }
+local message_timeout = 3000 -- Auto-dismiss messages above the statusline.
+if not pcall(function()
+  vim.opt.messagesopt:append("timeout:" .. message_timeout)
+end) then
+  msg.msg = { timeout = message_timeout } -- Older builds configure the timeout in ui2.
+end
+require("vim._core.ui2").enable({ msg = msg })
 vim.opt.updatetime = 3000
 
 vim.opt.showmode = false -- Don't show mode in command line
