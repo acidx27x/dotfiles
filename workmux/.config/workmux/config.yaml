@@ -47,6 +47,7 @@ layouts:
         focus: true
       - split: horizontal
 
+merge_strategy: rebase
 # Keep resources after merging; removal still needs --keep-branch to keep branches.
 merge_keep: true
 confirm_unmerged_removal: true
