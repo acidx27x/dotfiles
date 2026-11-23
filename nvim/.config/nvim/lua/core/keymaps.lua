@@ -7,6 +7,14 @@ local alt_modifier = vim.uv.os_uname().sysname == "Darwin" and "M" or "A"
 
 map({ "n", "v" }, "<Space>", "<Nop>", "leader prefix")
 
+-- Bash-style command-line navigation
+map("c", "<C-a>", "<Home>", "cmdline: move to start")
+map("c", "<C-b>", "<Left>", "cmdline: move left")
+map("c", "<C-f>", "<Right>", "cmdline: move right")
+map("c", ("<%s-b>"):format(alt_modifier), "<C-Left>", "cmdline: move back a word")
+map("c", ("<%s-f>"):format(alt_modifier), "<C-Right>", "cmdline: move forward a word")
+map("c", "<C-x><C-e>", "<C-f>", "cmdline: open command-line window")
+
 -- Normal mode mappings
 map("n", "<leader>ns", ":nohlsearch<CR>", "hlsearch: clear")
 map("n", "<leader>vc", ":setlocal cursorcolumn!<CR>", "view: toggle cursor column")

@@ -267,11 +267,13 @@ blink.setup({
         function(cmp)
           return cmp.select_next({ auto_insert = true })
         end,
+        "fallback",
       },
       ["<C-p>"] = {
         function(cmp)
           return cmp.select_prev({ auto_insert = true })
         end,
+        "fallback",
       },
       ["<Left>"] = false,
       ["<Right>"] = false,

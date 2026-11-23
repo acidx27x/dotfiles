@@ -72,6 +72,16 @@ different Alt/Meta behavior on macOS and Linux. Smart-splits remains active outs
 windows. Only the detected tmux or Zellij backend loads; detection checks the session environment
 and executable, preferring tmux if both are present. Zellij pane resizing uses its native increment.
 
+### Command-line navigation
+
+| Keys                 | Action                                      |
+| -------------------- | ------------------------------------------- |
+| `<C-a>` / `<C-e>`    | Move to the start / end                     |
+| `<C-b>` / `<C-f>`    | Move left / right one character             |
+| Alt/Meta + `b` / `f` | Move back / forward one word                |
+| `<C-p>` / `<C-n>`    | Older / newer history or completion         |
+| `<C-x><C-e>`         | Open the command-line window for Vi editing |
+
 ### Custom commands and command-line abbreviation
 
 | Command / abbreviation          | Action                                        | Source             |
@@ -170,7 +180,7 @@ Neovim's built-in snippet engine. Select a snippet from completion and accept it
 | `<C-y>`             | Insert                         | Accept selected completion or snippet.                                                                                                      |
 | `<C-s>`             | Insert                         | Show or hide Blink signature help.                                                                                                          |
 | `<Tab>` / `<S-Tab>` | Insert                         | Jump to next / previous snippet placeholder. Outside snippets, Tab keeps its normal behavior and Shift-Tab accepts the selected completion. |
-| `<C-n>` / `<C-p>`   | Insert, command line, terminal | Select next / previous completion without inserting a preview.                                                                              |
+| `<C-n>` / `<C-p>`   | Insert, command line, terminal | Select next / previous completion. Command-line mode previews the selection and browses history when completion is unavailable.             |
 
 The command line uses command completions for `:` and `@`, and buffer text for `/` and `?` searches.
 Insert-mode ghost text appears while typing and clears when the cursor moves without an edit.

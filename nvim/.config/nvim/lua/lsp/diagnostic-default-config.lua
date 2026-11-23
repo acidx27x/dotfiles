@@ -55,6 +55,7 @@ map("n", "<leader>et", function()
   opts.current_line = not opts.current_line or nil
   vim.diagnostic.config({ virtual_text = opts, virtual_lines = false })
 end, "diagnostic: show virtual text for current line (global)")
+
 map("n", "<leader>el", function()
   if vim.diagnostic.config().virtual_lines then
     vim.diagnostic.config({ virtual_lines = false })
