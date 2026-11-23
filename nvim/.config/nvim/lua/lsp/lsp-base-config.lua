@@ -79,6 +79,16 @@ M.lsp_keymaps = function(bufnr)
   keyn("<C-s>U", symbol_usage("toggle_globally"), "LSP: symbol usage toggle (global)")
   --
 
+  -- Harpoon and other plugin windows use <C-s> for their own actions.
+  vim.b[bufnr].miniclue_config = {
+    triggers = { { mode = "n", keys = "<C-s>" } },
+    clues = {
+      { mode = "n", keys = "<C-s>c", desc = "+Code actions and references" },
+      { mode = "n", keys = "<C-s>d", desc = "+Document commands" },
+      { mode = "n", keys = "<C-s>w", desc = "+Workspace commands" },
+    },
+  }
+
   -- LSP maps are buffer-local and may arrive after MiniClue's initial trigger scan.
   vim.api.nvim_buf_call(bufnr, function()
     require("mini.clue").ensure_buf_triggers()

@@ -28,9 +28,9 @@ map("n", "<C-u>", "<C-u>zz", "page move: up (centered)")
 
 -- Delete without yanking
 --map({ "n", "v" }, "<leader>d", '"_d', "edit: delete without yanking")
-map({ "n", "v" }, "<leader>d", "<Nop>", "edit: prevent delete with just '<leader>d'")
-map({ "n", "v" }, "<leader>o", "<Nop>", "edit: prevent enter insert with just '<leader>o'")
-map({ "n", "v" }, "<leader>p", "<Nop>", "edit: prevent enter insert with just '<leader>p'")
+map({ "n", "v" }, "<leader>d", "<Nop>", "+Debug")
+map({ "n", "v" }, "<leader>o", "<Nop>", "+Oil file browser")
+map({ "n", "v" }, "<leader>p", "<Nop>", "+Pickers")
 
 -- Buffer navigation
 map("n", "<leader>bd", function()

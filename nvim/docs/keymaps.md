@@ -6,9 +6,10 @@ Space to begin leader mappings. Keys shown in angle brackets are special keys; `
 uppercase and require Shift.
 
 Mappings registered after an event are labeled **buffer-local** or **lazy**. Plugin UI keys are
-active only inside that plugin's buffer/window. MiniClue is configured to show descriptions for
-leader, `g`, `<C-w>`, `[`, `]`, marks, registers, completion, and `z` sequences. Use `<Space>pk` to
-pick keymaps or `:verbose map {keys}` to identify the active owner.
+active only inside that plugin's buffer/window. MiniClue shows named leader groups and descriptions
+for `g`, `<C-w>`, `[`, `]`, marks, registers, completion, and `z` sequences. In Normal mode in an
+LSP buffer, pause after `<C-s>` for LSP shortcuts. Use `<Space>pk` to pick keymaps or
+`:verbose map {keys}` to identify the active owner.
 
 ## Everyday keys
 
