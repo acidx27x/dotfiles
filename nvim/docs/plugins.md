@@ -1,9 +1,9 @@
 # Plugin inventory
 
 The inventory comes from [`lua/plugins/spec.lua`](../.config/nvim/lua/plugins/spec.lua) and
-[`nvim-pack-lock.json`](../.config/nvim/nvim-pack-lock.json). The specs contain 54 repositories: 34
+[`nvim-pack-lock.json`](../.config/nvim/nvim-pack-lock.json). The specs contain 55 repositories: 35
 eager specs and 20 optional specs. The lockfile records revisions for `mini.operators` and Leap. The
-spec and lockfile now match all 54 configured names. MiniBracketed is installed on the next startup
+spec and lockfile now match all 55 configured names. MiniBracketed is installed on the next startup
 through the existing native package setup. The 15 stale packages from earlier removals and
 replacements were removed through `vim.pack.del()` on macOS; see the
 [maintenance status](maintenance-audit.md#unused-package-cleanup--2026-11-06). Terminal mappings use
@@ -52,6 +52,7 @@ inherits the decision for the feature that uses it.
 | [mini.notify](https://github.com/nvim-mini/mini.notify)                     | Notification UI and `vim.notify` replacement               | `lua/plugins/mini-notify-config.lua`        | Eager before feature modules; native formatting/durations, wrapped width capped at 80, LSP progress enabled.                                                        | Keep.                                                                                                                                          |
 | [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)       | Parser installation and Tree-sitter features               | `lua/plugins/nvim-treesitter-config.lua`    | Eager setup; `main` branch; parsers include CMake and update with the package. Requires `tree-sitter-cli` 0.26.1 or newer.                                          | Keep; upstream API differs from legacy configs.                                                                                                |
 | [oil.nvim](https://github.com/stevearc/oil.nvim)                            | Filesystem buffer explorer                                 | `lua/plugins/oil-nvim-config.lua`           | Eager because it is the default file explorer and owns `Oil` command/maps.                                                                                          | Keep in place of Neo-tree.                                                                                                                     |
+| [oil-git.nvim](https://github.com/malewicz1337/oil-git.nvim)                | Git signs in Oil directory listings                        | `lua/plugins/oil-nvim-config.lua`           | Eager setup after Oil. Requires Git.                                                                                                                                | Keep for file and directory status while browsing.                                                                                             |
 | [quicker.nvim](https://github.com/stevearc/quicker.nvim)                    | Quickfix and location-list display                         | `lua/plugins/quicker-nvim-config.lua`       | Eager setup before the first list opens.                                                                                                                            | `<Space>ec` shows source context in a separate history entry.                                                                                  |
 
 ## Optional packages and loading triggers

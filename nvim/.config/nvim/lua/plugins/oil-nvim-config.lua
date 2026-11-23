@@ -179,6 +179,7 @@ require("oil").setup({
   lsp_file_methods = { enabled = true },
 
   win_options = {
+    signcolumn = "yes",
     winbar = "%{%v:lua.oil_winbar.get()%}",
   },
 
@@ -217,6 +218,17 @@ require("oil").setup({
       cursorcolumn = false,
     },
   },
+})
+
+require("oil-git").setup({
+  symbol_position = "signcolumn",
+  -- The plugin's default check expects two sign slots. Oil uses one here.
+  can_use_signcolumn = function()
+    return true
+  end,
+  show_file_highlights = false,
+  show_directory_highlights = false,
+  symbols = { file = { added = "A", modified = "M", renamed = "R" } },
 })
 
 local map = require("core.keymap")

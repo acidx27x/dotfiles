@@ -53,6 +53,19 @@ fzf.setup({
     },
   },
   files = {
+    git_icons = true,
+    -- Match paths relative to the picker directory, including when Oil opens it.
+    git_status_cmd = {
+      "git",
+      "-c",
+      "color.status=false",
+      "-c",
+      "status.relativePaths=true",
+      "--no-optional-locks",
+      "status",
+      "--short",
+      "--untracked-files=all",
+    },
     fzf_opts = {
       ["--tiebreak"] = "length",
     },
@@ -80,6 +93,7 @@ fzf.setup({
     },
   },
   grep = {
+    git_icons = true,
     rg_opts = [[--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden --glob "!.git" -e]],
     fzf_opts = { ["--no-hscroll"] = true },
   },

@@ -182,6 +182,10 @@ float, tab, vertical split, or horizontal split. Use `<Space>oF` / `<Space>oT` /
 Inside Oil, the uppercase mappings use the displayed directory. `<Space>oh` remains an alias for
 `<Space>os`.
 
+Oil directory listings and the fzf-lua file and grep pickers show Git status. `M` marks a modified
+file, `A` marks a staged addition, and `?` marks an untracked file. Oil also marks directories with
+changed entries.
+
 In Oil or MiniFiles, use `g~` to set the tab's cwd to the displayed directory, or `` g` `` to set
 only the editing window's cwd. Floating explorers apply these changes to their editing window.
 MiniFiles uses the focused directory column, including empty directories. Browsing alone does not

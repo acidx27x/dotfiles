@@ -3,6 +3,8 @@ local M = {}
 
 function M.setup()
   require("visual-whitespace").setup({
+    -- Whitespace overlays expose Oil's concealed entry IDs in Visual mode.
+    ignore = { filetypes = { "oil" } },
     match_types = {
       space = true,
       tab = true,
