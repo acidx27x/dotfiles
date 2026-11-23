@@ -38,6 +38,7 @@ local eager = {
   { src = "https://github.com/nvim-mini/mini.notify" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
   { src = "https://github.com/stevearc/oil.nvim" },
+  { src = "https://github.com/stevearc/quicker.nvim" },
 }
 
 local optional = {

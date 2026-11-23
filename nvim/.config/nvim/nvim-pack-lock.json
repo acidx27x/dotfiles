@@ -187,6 +187,10 @@
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
+    "quicker.nvim": {
+      "rev": "4a6883cb13fe097a20a046eb55f6dffd239276e3",
+      "src": "https://github.com/stevearc/quicker.nvim"
+    },
     "smart-splits.nvim": {
       "rev": "d3617de050f58e6f1f924b1401fba7677517c196",
       "src": "https://github.com/smart-splits-nvim/smart-splits.nvim"

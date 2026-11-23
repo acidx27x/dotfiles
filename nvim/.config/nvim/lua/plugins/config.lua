@@ -68,6 +68,7 @@ require("plugins.mini-trailspace-config")
 
 -- utils group
 require("plugins.matchparen-nvim-config")
+require("plugins.quicker-nvim-config")
 --
 
 -- Register optional feature mappings now; their callbacks load and configure plugins on use.

@@ -204,6 +204,10 @@ Source:
 `<C-w>` and `]`/`[` are MiniClue triggers. The custom diagnostic keys use `<Space>e` so `<C-w>d`
 remains a direct mapping.
 
+Inside quickfix and location lists, `<Space>es` filters by diagnostic severity and `<Space>ec` shows
+surrounding source lines. Both put their results in a new history entry. Use `:chistory` or
+`:lhistory` to find the original list. `<Space>ew` toggles word wrapping in the current list window.
+
 ## Mini.nvim mappings
 
 These are plugin-native maps created by each module setup. Source modules are named in the plugin
