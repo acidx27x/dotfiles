@@ -11,6 +11,13 @@ if ($IsWindows) {
 }
 
 if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
+  if ($IsWindows) {
+    # Use UTF-8 for the console and PowerShell pipelines into native programs.
+    $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+    [Console]::InputEncoding = $OutputEncoding
+    [Console]::OutputEncoding = $OutputEncoding
+  }
+
   # Colors and terminal-specific themes.
   . (Join-Path $configRoot 'colors.ps1')
 
