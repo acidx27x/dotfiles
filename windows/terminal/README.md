@@ -97,6 +97,7 @@ and
 | Ctrl+Shift+Z       | Zoom the focused pane                                                  |
 | Ctrl+Shift+W       | Close the focused pane; closes the tab/window when it is the last pane |
 | Ctrl+Shift+O       | Pick an installed WSL distribution and launch it in a new tab          |
+| Ctrl+Shift+Alt+R   | Rename the current tab                                                 |
 | Ctrl+Shift+C / V   | Copy / paste                                                           |
 | Ctrl+Shift+F / P   | Find / command palette                                                 |
 
@@ -104,6 +105,8 @@ Ctrl+Shift+T duplicates the current tab. Native shortcuts remain available, incl
 for another duplicate-tab binding and Ctrl+Shift+N for a new window. Ctrl+C, Ctrl+V, and Enter pass
 through to applications as in the previous Terminal config. Shortcuts involving punctuation should
 be checked with your active Windows keyboard layout.
+
+Clear the tab name and press `Enter` to restore the automatic title.
 
 The command palette includes labels such as `User | Pane: Split right`, `User | Window: New window`,
 and `User | Edit: Copy`. Stable and Preview share the same configured actions and bindings.

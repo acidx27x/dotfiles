@@ -129,6 +129,19 @@ function module.apply_to_config(config, platform)
       action = act.SpawnTab("CurrentPaneDomain"),
     },
     {
+      brief = "User | Tab: Rename tab",
+      key = "r",
+      mods = modifier .. "|ALT",
+      action = act.PromptInputLine({
+        description = "Tab name (empty to reset)",
+        action = wezterm.action_callback(function(window, _, line)
+          if line ~= nil then
+            window:active_tab():set_title(line)
+          end
+        end),
+      }),
+    },
+    {
       brief = "User | Window: New window",
       key = "n",
       mods = modifier,

@@ -38,11 +38,14 @@ reporting is enabled. Use `Mod+V` to paste.
 | `Mod+E`              | Enter pane resize mode                                       |
 | `Mod+O`              | Open the launcher for domains, profiles, and workspaces      |
 | `Mod+Alt+N`          | Open a new window in the current pane's domain and directory |
+| `Mod+Alt+R`          | Rename the current tab                                       |
 | `Mod+D`              | Detach the current domain                                    |
 | `Mod+W`              | Close the focused pane with confirmation                     |
 
 In resize mode, `h`, `j`, `k`, and `l` resize by three cells. Press `Enter` or `Escape` to exit; the
 mode also expires after five seconds.
+
+To restore the automatic tab title, submit an empty name. Press `Escape` to cancel renaming.
 
 `Ctrl+Shift+H/J/K/L` complements the arrow bindings. K and L replace the clear-scrollback and
 debug-overlay shortcuts; those actions remain in the command palette. The pane picker moves from

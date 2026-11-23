@@ -83,6 +83,11 @@
             "name": "User | Tab: New tab"
         },
         {
+            "command": "openTabRenamer",
+            "id": "User.RenameTab",
+            "name": "User | Tab: Rename tab"
+        },
+        {
             "command": "newWindow",
             "id": "User.NewWindow",
             "name": "User | Window: New window"
@@ -175,6 +180,10 @@
     "initialRows": 32,
     "keybindings":
     [
+        {
+            "id": "User.RenameTab",
+            "keys": "ctrl+shift+alt+r"
+        },
         {
             "id": "User.SplitPaneRight",
             "keys": "ctrl+shift+\\"
