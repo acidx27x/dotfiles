@@ -1,22 +1,26 @@
+local virtual_text = {
+  prefix = "▣",
+  source = "if_many",
+}
+
 vim.diagnostic.config({
   virtual_lines = false,
-
-  virtual_text = {
-    prefix = "▣",
-    source = "if_many",
-    current_line = nil, -- show all all lines
-  },
+  virtual_text = virtual_text,
 
   underline = true,
   severity_sort = true,
   update_in_insert = false,
 
-  float = {
-    prefix = "",
-    source = "if_many",
-    header = "Diagnostic",
-    severity_sort = true,
-  },
+  float = function()
+    return {
+      prefix = "",
+      source = "if_many",
+      header = "Diagnostic",
+      severity_sort = true,
+      max_width = math.min(80, math.floor(vim.o.columns * 0.75)),
+      max_height = math.min(12, math.floor(vim.o.lines * 0.5)),
+    }
+  end,
 
   signs = {
     severity_sort = true,
@@ -44,22 +48,26 @@ map("n", "<leader>ed", function()
 end, "diagnostic: toggle (global)")
 
 map("n", "<leader>et", function()
-  local virtual_text = vim.diagnostic.config().virtual_text
-  if virtual_text.current_line then
-    virtual_text.current_line = nil
-  else
-    virtual_text.current_line = true
+  local opts = vim.diagnostic.config().virtual_text
+  if type(opts) ~= "table" then
+    opts = vim.deepcopy(virtual_text)
   end
-  vim.diagnostic.config({ virtual_text = virtual_text })
+  opts.current_line = not opts.current_line or nil
+  vim.diagnostic.config({ virtual_text = opts, virtual_lines = false })
 end, "diagnostic: show virtual text for current line (global)")
 map("n", "<leader>el", function()
   if vim.diagnostic.config().virtual_lines then
     vim.diagnostic.config({ virtual_lines = false })
   else
-    vim.diagnostic.config({ virtual_lines = { current_line = true } })
+    vim.diagnostic.config({ virtual_text = false, virtual_lines = { current_line = true } })
   end
 end, "diagnostic: show virtual lines for current line (global)")
 
+map("n", "<leader>en", function()
+  vim.diagnostic.config({ virtual_text = false, virtual_lines = false })
+end, "diagnostic: hide virtual text and lines (global)")
+
+map("n", "<leader>ef", vim.diagnostic.open_float, "diagnostic: show current line in float")
 map("n", "<leader>eq", vim.diagnostic.setloclist, "diagnostic: setloclist")
 
 for _, item in ipairs({
