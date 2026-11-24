@@ -5,6 +5,7 @@
 ###############################################################################
 # Recommended default model example in current Codex sample config.
 model = "gpt-6.2-sol"
+review_model = "gpt-6.2-sol"
 
 # Supported Sol levels: "low", "medium", "high", "xhigh", "max", "ultra".
 model_reasoning_effort = "high"
@@ -113,10 +114,8 @@ glob_scan_max_depth = 5
 # Allow read/write access inside each workspace root supplied by the current
 # Codex session. A user config may add extra workspace_roots when needed.
 "." = "write"
-
-# Keep repository and Codex metadata readable but not writable.
-".git" = "read"
-".codex" = "read"
+".git" = "write"
+".codex" = "write"
 
 # Deny specific sensitive filenames while keeping examples and source files readable.
 "**/.env" = "deny"

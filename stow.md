@@ -333,9 +333,9 @@ Codex setup deploys three kinds of files:
 
 - `codex/config.toml` is the portable base installed at `/etc/codex/config.toml`.
 - `codex/.codex/AGENTS.md` is linked into `~/.codex` by Stow.
-- `codex/.codex/agents/` contains the global roles `code_explorer`, `reviewer`, and
-  `implementation_worker`. The setup script copies their TOML files into `~/.codex/agents/` so Codex
-  can discover them as regular files. The Stow package excludes the base and the roles.
+- `codex/.codex/agents/` contains the global roles `explorer`, `reviewer`, and `worker`. The setup
+  script copies their TOML files into `~/.codex/agents/` so Codex can discover them as regular
+  files. The Stow package excludes the base and the roles.
 
 On Windows, the same portable base is installed at `%ProgramData%\OpenAI\Codex\config.toml` with
 `setup/codex.ps1`; see `windows.md` for the Windows workflow. The writable user config remains

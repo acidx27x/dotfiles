@@ -417,7 +417,7 @@ pwsh -NoProfile -File .\setup\codex.ps1
 ```
 
 The script installs `codex/config.toml` into the machine-wide location and copies the global roles
-`code_explorer`, `reviewer`, and `implementation_worker` from `codex/.codex/agents/` into
+`explorer`, `reviewer`, and `worker` from `codex/.codex/agents/` into
 `%USERPROFILE%\.codex\agents\`. Codex discovers the regular role files when a session starts. Dotter
 continues to deploy the global `AGENTS.md`.
 
