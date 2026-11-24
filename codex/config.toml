@@ -152,6 +152,11 @@ enabled = true
 # Permit allowlisted hosts to resolve to local/private-network addresses.
 allow_local_binding = true
 
+# Access to all reachable Unix sockets, including tmux and Neovim.
+# For session only:
+# codex -c 'permissions.locked_folders_only.network.dangerously_allow_all_unix_sockets=true'
+dangerously_allow_all_unix_sockets = false
+
 # Proxy mode; domain rules below still apply when the network proxy is active.
 # Options: "limited", "full".
 mode = "full"
