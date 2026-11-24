@@ -1,3 +1,5 @@
 *
 !.gitignore
 !AGENTS.md
+!/agents/
+!/agents/*.toml

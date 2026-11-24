@@ -329,11 +329,13 @@ Declare those separately before treating them as portable bootstrap dependencies
 
 ## Set Up Codex
 
-Codex uses two separate configuration layers in this repository:
+Codex setup deploys three kinds of files:
 
 - `codex/config.toml` is the portable base installed at `/etc/codex/config.toml`.
-- `codex/.codex/` contains files that are safe to Stow into `~/.codex`, including the global
-  `AGENTS.md`. `codex/.stow-local-ignore` excludes the portable base from Stow.
+- `codex/.codex/AGENTS.md` is linked into `~/.codex` by Stow.
+- `codex/.codex/agents/` contains the global roles `code_explorer`, `reviewer`, and
+  `implementation_worker`. The setup script copies their TOML files into `~/.codex/agents/` so Codex
+  can discover them as regular files. The Stow package excludes the base and the roles.
 
 On Windows, the same portable base is installed at `%ProgramData%\OpenAI\Codex\config.toml` with
 `setup/codex.ps1`; see `windows.md` for the Windows workflow. The writable user config remains
@@ -349,6 +351,10 @@ Preview a clean setup, then apply it:
 The apply step may ask for `sudo` when `/etc/codex/config.toml` needs to be installed or updated. It
 creates `~/.codex` as a real directory and uses Stow's `--no-folding` option so that the directory
 itself does not become a repository symlink.
+
+After editing a role in the repository, rerun the setup script and start a new Codex session. The
+installer updates only role files carrying the repository's managed marker. A conflicting file or
+symbolic link at a managed role path stops setup.
 
 Keep machine-local settings in `~/.codex/config.toml`. That file is intentionally not tracked,
 linked, created, read, or modified by the setup script. Examples of machine-local settings include

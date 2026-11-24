@@ -409,17 +409,22 @@ The bundle installs user-scoped packages. The global root is prepared for future
 
 Codex on Windows reads machine-wide defaults from `%ProgramData%\OpenAI\Codex\config.toml` before
 the writable user config at `%USERPROFILE%\.codex\config.toml`. Install the repository's portable
-base from an elevated PowerShell 7 session:
+base and global subagent roles from an elevated PowerShell 7 session:
 
 ```powershell
 pwsh -NoProfile -File .\setup\codex.ps1 -WhatIf
 pwsh -NoProfile -File .\setup\codex.ps1
 ```
 
-The script installs `codex/config.toml` into the machine-wide location. It is idempotent and only
-updates an existing file carrying this repository's managed marker. It never reads, creates, or
-changes the user config, where Codex can continue writing trusted projects, model migrations,
-notices, and other machine-local settings.
+The script installs `codex/config.toml` into the machine-wide location and copies the global roles
+`code_explorer`, `reviewer`, and `implementation_worker` from `codex/.codex/agents/` into
+`%USERPROFILE%\.codex\agents\`. Codex discovers the regular role files when a session starts. Dotter
+continues to deploy the global `AGENTS.md`.
+
+Rerun the setup script after editing the base or a role, then start a new Codex session. The script
+updates only files carrying this repository's managed marker. A conflicting file or symbolic link at
+a managed role path stops setup. The user config remains writable for trusted projects, model
+migrations, notices, and other machine-local settings.
 
 For Windows, the installer omits Unix absolute read paths and adds `":root" = "read"` to the
 filesystem profile because the elevated sandbox requires broad read access. Workspace write limits

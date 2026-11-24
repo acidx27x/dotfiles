@@ -3,14 +3,15 @@
 set -Eeuo pipefail
 
 readonly MANAGED_MARKER="# Managed by acidx27x/dotfiles setup/codex.sh"
+readonly MANAGED_ROLE_MARKER="# Managed by acidx27x/dotfiles"
 DRY_RUN=false
 
 usage() {
   cat <<'EOF'
 Usage: setup/codex.sh [--dry-run] [--help]
 
-Install the portable Codex base config into /etc/codex and Stow the
-repository-managed Codex files into the current user's home directory.
+Install the portable Codex base config into /etc/codex, copy subagent roles to
+~/.codex/agents, and Stow the remaining managed Codex files.
 
 Options:
   --dry-run  Show the planned operations without changing files or using sudo.
@@ -67,9 +68,43 @@ parse_args() {
   done
 }
 
+role_install_action() {
+  local source="$1" target="$2"
+
+  if [[ -L "$target" ]]; then
+    die "$target is a symbolic link; refusing to replace it."
+  elif [[ ! -e "$target" ]]; then
+    printf '%s\n' install
+  elif [[ ! -f "$target" || ! -r "$target" ]]; then
+    die "$target is not a readable regular file."
+  elif cmp -s "$source" "$target"; then
+    printf '%s\n' none
+  elif grep -Fqx "$MANAGED_ROLE_MARKER" "$target"; then
+    printf '%s\n' update
+  else
+    die "$target is not managed by this repository; refusing to replace it."
+  fi
+}
+
+install_role() (
+  local source="$1" target="$2" action="$3" temporary
+
+  temporary="$(mktemp "${target%/*}/.role.XXXXXXXX")"
+  trap 'rm -f -- "$temporary"' EXIT
+  install -m 0644 "$source" "$temporary"
+  if [[ "$action" == "install" ]]; then
+    if ! mv -n -- "$temporary" "$target" || [[ -e "$temporary" ]]; then
+      die "Could not install Codex role at $target. Check the destination and retry."
+    fi
+  else
+    mv -f -- "$temporary" "$target"
+  fi
+)
+
 main() {
   local command_name script_dir dotfiles_root base_config codex_home_dir
   local system_config_dir system_config platform system_action
+  local roles_source roles_target source target role_action
 
   parse_args "$@"
 
@@ -91,6 +126,8 @@ main() {
   dotfiles_root="$(cd -- "$script_dir/.." && pwd -P)"
   base_config="$dotfiles_root/codex/config.toml"
   codex_home_dir="$HOME/.codex"
+  roles_source="$dotfiles_root/codex/.codex/agents"
+  roles_target="$codex_home_dir/agents"
   system_config_dir="/etc/codex"
   system_config="$system_config_dir/config.toml"
 
@@ -104,6 +141,9 @@ main() {
   fi
   if [[ -e "$codex_home_dir" && ! -d "$codex_home_dir" ]]; then
     die "$codex_home_dir exists but is not a directory."
+  fi
+  if [[ -L "$roles_target" || (-e "$roles_target" && ! -d "$roles_target") ]]; then
+    die "$roles_target must be a real directory."
   fi
 
   if [[ -L "$system_config_dir" ]]; then
@@ -135,6 +175,21 @@ main() {
       require_command sudo
     fi
   fi
+
+  for source in "$roles_source/"*.toml; do
+    if [[ ! -f "$source" ]] || ! grep -Fqx "$MANAGED_ROLE_MARKER" "$source"; then
+      die "Codex role is missing or lacks its managed marker: $source"
+    fi
+    target="$roles_target/${source##*/}"
+    role_action="$(role_install_action "$source" "$target")"
+    if [[ "$role_action" != "none" ]]; then
+      require_command install
+      require_command mktemp
+      if [[ "$DRY_RUN" == "true" ]]; then
+        log_dry_run "Would $role_action Codex role: $target"
+      fi
+    fi
+  done
 
   if [[ "$DRY_RUN" == "true" ]]; then
     if [[ ! -d "$codex_home_dir" ]]; then
@@ -182,6 +237,16 @@ main() {
     cd -- "$dotfiles_root"
     stow --restow --verbose --no-folding --target="$HOME" codex
   )
+
+  mkdir -p "$roles_target"
+  for source in "$roles_source/"*.toml; do
+    target="$roles_target/${source##*/}"
+    role_action="$(role_install_action "$source" "$target")"
+    if [[ "$role_action" != "none" ]]; then
+      install_role "$source" "$target" "$role_action"
+      log_info "Installed Codex role: $target"
+    fi
+  done
 
   log_info 'Codex setup complete.'
 }

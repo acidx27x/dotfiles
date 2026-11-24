@@ -1,4 +1,6 @@
 # Installed machine-wide by setup/codex.sh, never linked into the user's home.
 ^/config\.toml$
+# Codex discovers regular role files installed by setup/codex.sh.
+^/\.codex/agents(?:/|$)
 \.DS_Store
 \.gitignore
