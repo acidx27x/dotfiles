@@ -59,12 +59,13 @@ Press **Ctrl+b, Space** to open which-key, then use:
 | a            | Workmux dashboard, sidebar, and agent navigation      |
 | m, h/j/k/l   | Smart Splits movement through the existing Alt keys   |
 | m, H/J/K/L   | Smart Splits resizing through the existing Alt arrows |
-| b, s / r     | Resurrect save / restore                              |
+| b, s / r     | Save / restore the current session                    |
 | P, i / u / c | TPM install / update / remove unused plugins          |
 | T            | Ukiyo statusline settings                             |
 
-Continuum saves and restores automatically; manual snapshots use the Backup menu. Reload with
-**Ctrl+b, r** after editing the menu configuration.
+Continuum periodically saves all sessions while the statusline is active and restores saved sessions
+on server startup. The Backup menu saves and restores the current session. Reload with **Ctrl+b, r**
+after editing the menu configuration.
 
 ## Lazygit
 
@@ -130,29 +131,45 @@ in pane index order.
 
 ## Snapshot picker
 
-Press **Ctrl+b, Shift+b** to browse Resurrect snapshots in a 90% × 60% popup. The list shows
-timestamps, session names, and window counts, newest first. A `●` marks the snapshot used by
-automatic restore. The preview shows saved windows, panes, and working directories.
+Press **Ctrl+b, Shift+b** to browse tmux-persist snapshots in a 90% × 60% popup. The list groups
+snapshots by session name, with newest timestamps first within each session. A `●` marks that
+session's automatic restore target. The preview shows saved windows, panes, and working directories.
 
-- **Ctrl+s** saves the current environment and refreshes the list, even when the list is empty.
+- **Ctrl+s** saves the session that opened the picker and refreshes the list, even when it is empty.
 - **Tab / Shift+Tab** marks or unmarks a snapshot and moves down or up.
-- **Enter** asks before restoring one selected snapshot and makes it the automatic restore target.
-  Selecting several snapshots shows a reminder to choose only one.
+- **Enter** asks before restoring one selected snapshot and makes it that session's automatic
+  restore target. Selecting several snapshots shows a reminder to choose only one.
 - **Alt+Backspace** opens a review of the marked snapshots, or the highlighted snapshot if none are
-  marked. Press **Y** to delete or **Esc** to cancel. If the automatic restore target was deleted,
-  the newest remaining snapshot becomes the target. Deleting the final snapshot clears that target.
-  Running sessions stay open.
+  marked. Press **Y** to delete or **Esc** to cancel. If a session's automatic restore target was
+  deleted, its newest remaining snapshot takes over. If none remain, the target is cleared. Running
+  sessions stay open. Deleting history for a session without a target leaves it without one.
 - **Esc** closes the picker.
 
-Restoring adds missing sessions, windows, and panes; existing panes stay in place. Start with a
-fresh tmux instance to recover an older environment fully. Snapshots cover the whole server, rather
-than individual sessions. Resurrect shares captured pane contents between snapshots, so older
-layouts do not have independent scrollback backups. This configuration disables restoring programs.
+Restoring adds missing windows and panes to the selected session, creating the session if needed.
+tmux-persist may replace the pane of an existing one-pane session. To recover an older snapshot
+fully, close the target session before restoring. Each snapshot stores that session's layout and
+captured scrollback. This configuration disables launching saved programs.
 
-The picker requires `fzf` and the installed Resurrect plugin. It follows Resurrect's snapshot
-directory setting and inherits valid fzf preferences. After deploying the tmux package, reload with
-**Ctrl+b, r**. Existing manual save and restore shortcuts remain **Ctrl+b, Shift+s** and **Ctrl+b,
-Shift+r**.
+The picker requires `fzf` and tmux-persist. It follows the plugin's snapshot directory and inherits
+valid fzf preferences. **Ctrl+b, Shift+s** saves the current session, and **Ctrl+b, Shift+r**
+restores its latest snapshot. tmux-persist reserves `all`, `quiet`, and `_deferred_focus_restore` in
+its single-session restore command. Manual save also treats `all` and `quiet` as reserved.
+
+### Migrating from Resurrect
+
+With Resurrect active, press **Ctrl+b, Shift+s** to save the current server before deploying. Deploy
+the tmux package, reload with **Ctrl+b, r**, install tmux-persist with **Ctrl+b, Shift+i**, and
+reload again. On first load, tmux-persist uses an existing default Resurrect directory if no
+`~/.tmux/persist` exists. If you customized the Resurrect directory, set `@persist-dir` to that path
+before loading the plugin. Its migration imports the legacy `last` snapshot, or the newest legacy
+snapshot if there is no usable `last`, into one snapshot per session, with any matching scrollback
+present in the shared legacy archive. The legacy files stay in place. The picker lists the imported
+versions and new tmux-persist snapshots. After verifying the import, use **Ctrl+b, Space, P, c** to
+remove the unused Resurrect plugin through TPM.
+
+Continuum uses tmux-persist's compatibility scripts for its periodic save and server-start restore.
+tmux-persist's detach and session-creation hooks are disabled to keep that schedule. Persist prunes
+snapshots older than 30 days from active histories, without Resurrect's minimum of five backups.
 
 ## Session picker
 
@@ -169,9 +186,8 @@ preview occupying 60% of the picker and Git branch labels enabled.
 SessionX initially lists running sessions. **Enter** switches to the selected session; typing an
 unused name and pressing **Enter** creates a session. **Esc** cancels. In the picker:
 
-- **Ctrl+r** renames the highlighted session; **Alt+Backspace** kills it. The deletion updates
-  Resurrect's latest snapshot. Deleting the last session clears the automatic restore target. Older
-  snapshots remain available in the snapshot picker.
+- **Ctrl+r** renames the highlighted session. **Alt+Backspace** kills it and clears its automatic
+  restore target. Its saved versions remain available in the snapshot picker.
 - **Alt+z** browses zoxide directories; selecting a directory creates or switches to its session.
 - **Alt+b** returns to the session list.
 - **Ctrl+w** lists windows; **Ctrl+t** changes the preview to a session/window tree.

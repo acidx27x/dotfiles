@@ -85,10 +85,10 @@ items:
     menu:
       - name: Save
         key: s
-        command: 'run-shell -b "$HOME/.tmux/plugins/tmux-resurrect/scripts/save.sh"'
+        command: 'run-shell -b "bash \"$HOME/.config/tmux/scripts/snapshots.sh\" save #{q:session_name}"'
       - name: Restore
         key: r
-        command: 'run-shell -b "$HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh"'
+        command: 'run-shell -b "bash \"$HOME/.config/tmux/scripts/snapshots.sh\" restore #{q:session_name}"'
   - name: Smart Splits
     key: m
     menu:
