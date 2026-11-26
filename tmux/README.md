@@ -130,7 +130,7 @@ in pane index order.
 
 ## Snapshot picker
 
-Press **Ctrl+b, Shift+b** to browse Resurrect snapshots in a 90% × 80% popup. The list shows
+Press **Ctrl+b, Shift+b** to browse Resurrect snapshots in a 90% × 60% popup. The list shows
 timestamps, session names, and window counts, newest first. A `●` marks the snapshot used by
 automatic restore. The preview shows saved windows, panes, and working directories.
 
@@ -138,10 +138,10 @@ automatic restore. The preview shows saved windows, panes, and working directori
 - **Tab / Shift+Tab** marks or unmarks a snapshot and moves down or up.
 - **Enter** asks before restoring one selected snapshot and makes it the automatic restore target.
   Selecting several snapshots shows a reminder to choose only one.
-- **Alt+Backspace** lists the marked snapshots and asks once before deleting them. With no marks, it
-  deletes the highlighted snapshot. If the automatic restore target was deleted, the newest
-  remaining snapshot becomes the target. Deleting the final snapshot clears that target. Running
-  sessions stay open.
+- **Alt+Backspace** opens a review of the marked snapshots, or the highlighted snapshot if none are
+  marked. Press **Y** to delete or **Esc** to cancel. If the automatic restore target was deleted,
+  the newest remaining snapshot becomes the target. Deleting the final snapshot clears that target.
+  Running sessions stay open.
 - **Esc** closes the picker.
 
 Restoring adds missing sessions, windows, and panes; existing panes stay in place. Start with a
@@ -169,7 +169,9 @@ preview occupying 60% of the picker and Git branch labels enabled.
 SessionX initially lists running sessions. **Enter** switches to the selected session; typing an
 unused name and pressing **Enter** creates a session. **Esc** cancels. In the picker:
 
-- **Ctrl+r** renames the highlighted session; **Alt+Backspace** kills it.
+- **Ctrl+r** renames the highlighted session; **Alt+Backspace** kills it. The deletion updates
+  Resurrect's latest snapshot. Deleting the last session clears the automatic restore target. Older
+  snapshots remain available in the snapshot picker.
 - **Alt+z** browses zoxide directories; selecting a directory creates or switches to its session.
 - **Alt+b** returns to the session list.
 - **Ctrl+w** lists windows; **Ctrl+t** changes the preview to a session/window tree.

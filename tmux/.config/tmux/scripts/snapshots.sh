@@ -44,8 +44,8 @@ confirm() {
 
 main() {
   local save_script restore_script snapshot_dir selection action file newest
-  local self preview_command header row notice=''
-  local -a files
+  local self preview_command preview_label_command header row notice=''
+  local -a files rows picker_options
   if ! command -v fzf >/dev/null 2>&1; then
     printf '%s: fzf is required.\n' "${BASH_SOURCE[0]}" >&2
     return 127
@@ -65,22 +65,26 @@ main() {
   mkdir -p -- "$snapshot_dir" || return
   self=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/${BASH_SOURCE[0]##*/}
   printf -v preview_command 'bash %q preview %q/{1}' "$self" "$snapshot_dir"
+  # The second field ends with the 19-character timestamp, after the auto-restore marker.
+  preview_label_command="timestamp={2}; printf '%s' \"\${timestamp:+ [ \${timestamp: -19} ] }\""
   # Ignore a stale inherited options-file path, while retaining valid fzf preferences.
   if [[ -n "${FZF_DEFAULT_OPTS_FILE:-}" && ! -r "$FZF_DEFAULT_OPTS_FILE" ]]; then
     unset FZF_DEFAULT_OPTS_FILE
   fi
-  header=$'Enter: restore   Ctrl+s: save now   Alt+Backspace: delete   Esc: close\n'
-  header+=$'Tab / Shift+Tab: mark snapshots   ● latest auto-restore snapshot\n'
-  header+='Restore one snapshot at a time; empty list: Ctrl+s to save'
+  picker_options=(
+    --no-tmux --height=100% --layout=reverse --border=rounded --highlight-line
+    --delimiter=$'\t' --with-nth=2.. --pointer='▶'
+  )
+  header='enter=󰿄  ctrl+s=󰆓  alt+bspace=󱂧  tab=✓  esc=󰌍  ● auto-restore'
   while true; do
-    selection=$(snapshot_rows | fzf --no-tmux --height=100% --multi \
-      --layout=reverse --delimiter=$'\t' --with-nth=2.. \
-      --prompt='Snapshots ∼ ' \
+    selection=$(snapshot_rows | fzf "${picker_options[@]}" --multi \
+      --border-label=' Resurrect snapshots ' --prompt='∼ ' --marker='✓' --info=inline \
       --header="$notice$header" \
       --bind='enter:print(enter)+accept,ctrl-s:print(ctrl-s)+accept' \
       --bind='alt-backspace:print(delete)+accept' \
       --bind='tab:toggle+down,btab:toggle+up' \
-      --preview="$preview_command" --preview-window=up,60% \
+      --bind="focus:transform-preview-label($preview_label_command)" \
+      --preview="$preview_command" --preview-window=up,60%,border-bottom \
       --with-shell='bash -c') || {
       # fzf returns 1 when accepting an empty list, even after print(ctrl-s).
       [[ "$selection" == ctrl-s ]] || return 0
@@ -92,9 +96,13 @@ main() {
       continue
     fi
     files=()
+    rows=()
     while IFS= read -r row; do
       file=${row%%$'\t'*}
-      [[ -n "$file" && -f "$snapshot_dir/$file" ]] && files+=("$snapshot_dir/$file")
+      if [[ -n "$file" && -f "$snapshot_dir/$file" ]]; then
+        files+=("$snapshot_dir/$file")
+        rows+=("$row")
+      fi
     done <<<"${selection#*$'\n'}"
     [[ ${#files[@]} -gt 0 ]] || continue
     case "$action" in
@@ -111,9 +119,12 @@ main() {
         return
         ;;
       delete)
-        printf '\nSelected snapshots:\n'
-        printf '  %s\n' "${files[@]##*/}"
-        confirm "Delete ${#files[@]} snapshot(s)? Running sessions will stay open." || continue
+        selection=$(printf '%s\n' "${rows[@]}" | fzf "${picker_options[@]}" \
+          --no-input --no-preview --no-multi --info=hidden \
+          --border-label=' Delete snapshots ' --header='y=󰿄 delete  esc=󰌍 cancel' \
+          --bind='enter:ignore,double-click:ignore' \
+          --bind='y:print(delete)+accept,Y:print(delete)+accept,n:abort,N:abort') || continue
+        [[ ${selection%%$'\n'*} == delete ]] || continue
         rm -- "${files[@]}" || return
         if [[ -L "$snapshot_dir/last" && ! -e "$snapshot_dir/last" ]]; then
           newest=$(snapshot_files | head -n 1)
