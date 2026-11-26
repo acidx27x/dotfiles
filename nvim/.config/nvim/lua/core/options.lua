@@ -42,6 +42,7 @@ end
 require("vim._core.ui2").enable({ msg = msg })
 vim.opt.updatetime = 3000
 
+vim.opt.showtabline = 0 -- Hide the tabline
 vim.opt.showmode = false -- Don't show mode in command line
 vim.opt.pumheight = 10 -- Popup menu height
 vim.opt.pumblend = 0 -- Popup menu transparency

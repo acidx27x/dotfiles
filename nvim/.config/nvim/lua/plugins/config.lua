@@ -42,7 +42,10 @@ require("plugins.mini-bracketed-config")
 
 require("plugins.mini-statusline-config")
 
-require("plugins.mini-tabline-config")
+local showtabline = vim.o.showtabline
+if showtabline ~= 0 then
+  require("plugins.mini-tabline-config")
+end
 
 require("plugins.mini-comment-config")
 
