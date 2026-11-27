@@ -210,8 +210,8 @@ surrounding source lines. Both put their results in a new history entry. Use `:c
 
 ## Mini.nvim mappings
 
-These are plugin-native maps created by each module setup. Source modules are named in the plugin
-inventory. MiniClue can display their descriptions where supplied.
+These are maps provided by the Mini.nvim modules. Source modules are named in the plugin inventory.
+MiniClue can display their descriptions where supplied.
 
 | Keys                         | Mode                                            | Action                                          | Notes                                                                                                                                                   |
 | ---------------------------- | ----------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -224,8 +224,9 @@ inventory. MiniClue can display their descriptions where supplied.
 | `<Space>xe/xx/xm/xr/xs`      | Normal / Visual                                 | Evaluate / exchange / multiply / replace / sort | `mini.operators`; each key starts with Space. Repeat the last key in Normal mode for a line, or follow with a motion. Sort compares case insensitively. |
 | `(`, `[`, `{`, `)`, `]`, `}` | Insert                                          | Pair open/close behavior                        | `mini.pairs`; quotes `'`, `"`, and backtick are also customized for close-open behavior.                                                                |
 
-Use Visual Line mode with `<Space>xs` to sort selected lines. Other selection types use
-`mini.operators`' normal splitting behavior. The custom prefixes preserve LSP `gr…` and native `gx`.
+Visual `gc` reselects the affected whole lines. Use Visual Line mode with `<Space>xs` to sort
+selected lines. Other selection types use `mini.operators`' normal splitting behavior. The sorted
+text stays selected. The custom prefixes preserve LSP `gr…` and native `gx`.
 
 ## Editing and jumping
 
@@ -247,8 +248,9 @@ one-character search in the same direction, and `,` searches in the opposite dir
 label after the two characters, even for a single match, because automatic jumping is disabled. Leap
 dims the search area using the Kanagawa `Comment` highlight.
 
-Visual `<Space>fu` only affects lines containing a literal trailing CR. Files read with DOS format
-have a buffer-wide `fileformat` setting, so use Normal `<Space>fu` to convert those files.
+Visual `<Space>is`, `<Space>it`, and `<Space>fu` reselect the affected whole lines. `<Space>fu` only
+removes literal trailing CR characters in Visual mode. Files read with DOS format have a buffer-wide
+`fileformat` setting, so use Normal `<Space>fu` to convert those files.
 
 `<Space>fe` uses `vim.ui.select`, which this config displays through fzf-lua. The encoding picker
 offers UTF-8, UTF-8 with BOM, US-ASCII, Latin-1, Windows-1251, and an input for other encoding
@@ -282,9 +284,10 @@ ripgrep regex and is independent of MiniHipatterns highlighting. File and live g
 `cwd` to search another directory. Both include hidden paths by default while respecting ignore
 rules.
 
-`<Space>pf` fuzzy-matches file paths. `<Space>pg` searches file contents with ripgrep patterns. Use
-`:FzfLua grep_project` to fuzzy-filter project lines by their content; this scans every line first
-and can be slower in large projects.
+`<Space>pf` fuzzy-matches file paths. `<Space>pg` searches file contents with ripgrep patterns. In
+Visual mode, `<Space>pg` starts live grep with a nonblank single-line selection as literal search
+text. Use `:FzfLua grep_project` to fuzzy-filter project lines by their content. This scans every
+line first and can be slower in large projects.
 
 Inside an fzf-lua picker, `<F1>` shows the full key help. Common defaults are `<CR>` to open a
 selection, `<Esc>` to close, `<F2>` for fullscreen, `<F3>` to wrap the preview, and `<F4>` to toggle
@@ -333,12 +336,17 @@ passes fzf the `alt-bs` binding. The terminal must deliver Alt+Backspace distinc
 | `<Space>S`                                            | Normal / Visual           | Toggle grug-far / prefill visual selection                            | grug-far lazy group; ripgrep engine, ignore case.                   |
 | `<Space>db` / `<Space>dB`                             | Normal                    | Toggle breakpoint / set conditional breakpoint                        | DAP lazy group.                                                     |
 | `<Space>dc` / `<Space>ds` / `<Space>dn` / `<Space>do` | Normal                    | Continue / step into / step over / step out                           | DAP lazy group.                                                     |
-| `<Space>dR` / `<Space>dt` / `<Space>d?`               | Normal                    | Restart / toggle REPL / evaluate expression                           | DAP lazy group.                                                     |
+| `<Space>dR` / `<Space>dt`                             | Normal                    | Restart / toggle REPL                                                 | DAP lazy group.                                                     |
+| `<Space>d?`                                           | Normal, Visual            | Evaluate the expression under the cursor or in the selection          | DAP lazy group. Use a nonblank characterwise or linewise selection. |
 | `<Space>tw`                                           | Normal                    | Trim trailing whitespace and final blank lines                        | MiniTrailspace eager.                                               |
 | `<Space>vw`                                           | Normal, Visual            | Toggle visible whitespace rendering                                   | Visual Whitespace; loads on first file event or mapping use.        |
 | `<Space>ot` / `<Space>of` / `<Space>ov` / `<Space>os` | Normal                    | Open cwd in Oil: tab / float / vertical / horizontal split            | Oil; eager.                                                         |
 | `<Space>oT` / `<Space>oF` / `<Space>oV` / `<Space>oS` | Normal                    | Open file directory in Oil: tab / float / vertical / horizontal split | Uses cwd for unnamed buffers.                                       |
 | `<Space>oh`                                           | Normal                    | Open cwd in Oil in a horizontal split                                 | Alias for `<Space>os`.                                              |
+
+Visual `<Space>cf` keeps the formatted output selected for characterwise and linewise selections,
+including when formatting changes the line count. Visual Block uses Conform's whole-buffer
+formatting behavior.
 
 ### Oil buffer mappings
 

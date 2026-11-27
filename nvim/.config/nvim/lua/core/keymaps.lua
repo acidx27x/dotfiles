@@ -186,21 +186,36 @@ map(
   ":setlocal noexpandtab<CR>:.retab! -indentonly<CR>",
   "indent: convert line to tabs"
 )
+
+local function reselect_lines(command)
+  return function()
+    return command .. (vim.fn.mode() == "V" and "gv" or "gvV")
+  end
+end
+
 map(
   "x",
   "<leader>is",
-  ":<C-u>setlocal expandtab | '<,'>retab -indentonly<CR>",
-  "indent: convert selected lines to spaces"
+  reselect_lines(":<C-u>setlocal expandtab | '<,'>retab -indentonly<CR>"),
+  "indent: convert selected lines to spaces",
+  { expr = true }
 )
 map(
   "x",
   "<leader>it",
-  ":<C-u>setlocal noexpandtab | '<,'>retab! -indentonly<CR>",
-  "indent: convert selected lines to tabs"
+  reselect_lines(":<C-u>setlocal noexpandtab | '<,'>retab! -indentonly<CR>"),
+  "indent: convert selected lines to tabs",
+  { expr = true }
 )
 
 map("n", "<leader>fu", ":%s/\\r$//e<CR>:setlocal ff=unix<CR>", "file: convert line endings to Unix")
-map("x", "<leader>fu", ":s/\\r$//e<CR>", "file: remove CR from selected lines")
+map(
+  "x",
+  "<leader>fu",
+  reselect_lines(":s/\\r$//e<CR>"),
+  "file: remove CR from selected lines",
+  { expr = true }
+)
 
 local encodings = {
   { label = "UTF-8", value = "utf-8" },

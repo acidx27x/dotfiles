@@ -37,5 +37,19 @@ end, "DAP: toggle REPL")
 lazy.keymap("n", "<leader>d?", "dap", "dap.config", function()
   require("dapui").eval(nil, { enter = true })
 end, "DAP: evaluate under cursor")
+lazy.keymap("x", "<leader>d?", "dap", "dap.config", function()
+  local mode = vim.fn.mode()
+  if mode == "\22" then
+    vim.notify("DAP evaluation requires a characterwise or linewise selection", vim.log.levels.WARN)
+    return
+  end
+  local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
+  local expr = table.concat(lines, "\n")
+  if not expr:find("%S") then
+    vim.notify("DAP evaluation requires a nonblank expression", vim.log.levels.WARN)
+    return
+  end
+  require("dapui").eval(expr, { enter = true })
+end, "DAP: evaluate selection")
 
 return M

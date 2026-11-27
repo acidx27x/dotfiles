@@ -124,6 +124,14 @@ map("n", "<leader>pF", function()
   fzf.files({ no_ignore = true })
 end, "Pick: find files including ignored")
 map("n", "<leader>pg", fzf.live_grep, "Pick: find inside files with grep live")
+map("x", "<leader>pg", function()
+  local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = vim.fn.mode() })
+  if #lines ~= 1 or not lines[1]:find("%S") then
+    vim.notify("Live grep requires a nonblank single-line selection", vim.log.levels.WARN)
+    return
+  end
+  fzf.live_grep({ search = lines[1] })
+end, "Pick: live grep selection")
 map("n", "<leader>pb", fzf.buffers, "Pick: find buffers")
 map("n", "<leader>pd", fzf.diagnostics_workspace, "Pick: find diagnostic")
 map("n", "<leader>ps", fzf.command_history, "Pick: find command history")

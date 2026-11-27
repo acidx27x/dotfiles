@@ -146,8 +146,63 @@ function M.setup()
   })
 end
 
+local selection_ns = vim.api.nvim_create_namespace("conform-visual-selection")
+
 map({ "n", "v" }, "<leader>cf", function()
-  require("conform").format({ async = false })
+  local conform = require("conform")
+  local mode = vim.fn.mode()
+  if mode ~= "v" and mode ~= "V" then
+    conform.format({ async = false })
+    return
+  end
+
+  local buf = vim.api.nvim_get_current_buf()
+  local anchor, cursor = vim.fn.getpos("v"), vim.fn.getpos(".")
+  local start_row, start_col = math.min(anchor[2], cursor[2]) - 1, 0
+  local end_row, end_col = math.max(anchor[2], cursor[2]), 0
+  if mode == "v" then
+    local region = vim.fn.getregionpos(anchor, cursor, { type = mode })
+    local first, last = region[1][1], region[#region][2]
+    start_row, start_col = first[2] - 1, first[3] - 1
+    end_row, end_col = last[2] - 1, last[3]
+  end
+
+  -- Track both sides of the selection, including text inserted at the boundaries.
+  local mark = vim.api.nvim_buf_set_extmark(buf, selection_ns, start_row, start_col, {
+    end_row = end_row,
+    end_col = end_col,
+    right_gravity = false,
+    end_right_gravity = true,
+  })
+  conform.format({ async = false }, function(_, did_edit)
+    local row, col, bounds =
+      unpack(vim.api.nvim_buf_get_extmark_by_id(buf, selection_ns, mark, { details = true }))
+    vim.api.nvim_buf_del_extmark(buf, selection_ns, mark)
+    if not did_edit then
+      return
+    end
+
+    local last_row, last_col = bounds.end_row, bounds.end_col
+    if row == last_row and col == last_col then
+      vim.cmd.normal({ "\27", bang = true })
+      return
+    end
+    if mode == "V" then
+      last_row = last_col == 0 and last_row - 1 or last_row
+      last_col = 0
+    elseif vim.o.selection ~= "exclusive" then
+      if last_col == 0 then
+        last_row = last_row - 1
+        last_col = #vim.fn.getline(last_row + 1)
+      else
+        local line = vim.fn.getline(last_row + 1)
+        last_col = vim.fn.byteidx(line, vim.fn.charidx(line, last_col - 1))
+      end
+    end
+    vim.fn.setpos(".", { 0, row + 1, col + 1, 0 })
+    vim.cmd.normal({ "o", bang = true })
+    vim.fn.setpos(".", { 0, last_row + 1, last_col + 1, 0 })
+  end)
 end, "format: buffer or selection")
 
 return M
